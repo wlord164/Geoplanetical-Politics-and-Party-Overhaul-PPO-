@@ -2,7 +2,9 @@
 
 const { createHash } = require("node:crypto");
 const { workerFunctions: organizingWorker, rendererFunctions: organizingRenderer } = require("./party-organizing.cjs");
-const { workerFunctions: congressWorker, rendererFunctions: congressRenderer } = require("./party-congress.cjs");
+const { workerFunctions: congressWorker } = require("./party-congress-model.cjs");
+const { rendererFunctions: congressRenderer } = require("./party-congress.cjs");
+const { sharedFunctions: congressVoting, workerFunctions: congressVoteWorker } = require("./party-congress-vote.cjs");
 const { workerFunctions: supportWorker, rendererFunctions: supportRenderer } = require("./party-support-base.cjs");
 const { workerFunctions: aiWorker } = require("./party-ai.cjs");
 const { patchLawLabels, patchLawVoteSnapshots } = require("./party-law-labels.cjs");
@@ -233,7 +235,9 @@ function mountPartyButtons() {
     .gpm-organizing-action button { justify-self: start; }
     .gpm-organizing-action label { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }
     .gpm-party-congress { display: grid; gap: var(--gap-2); }
-    .gpm-party-congress .hc-svg { max-height: 180px; }
+    .gpm-congress-control { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }
+    .gpm-congress-size { max-width: 100%; accent-color: var(--text-2); }
+    .gpm-party-congress button { justify-self: start; }
     .gpm-party-profile { display: grid; gap: var(--gap-2); min-width: 0; }
     .gpm-party-profile-tabs { display: flex; flex-wrap: wrap; gap: var(--gap-2); }
     .gpm-party-profile-tabs [aria-selected="true"] { border-color: var(--text-2); color: var(--text); }
@@ -458,13 +462,13 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '<span>${o("pol.family."+Vx(i))}</span>', '${partyIdeologyBadge(i)}');
   js = replaceOnce(js, '<div class="pa-axis" data-tip="${b(k)}"><div><span>${o(`political.ideology.${v}.neg`)}</span>', '<div class="pa-axis" data-tip="${b(k)}"><div><span>${o(`political.ideology.${v}.neg`)}</span><b class="gpm-axis-score">${partyAxisScore(i.ideology?.[v])}</b>');
   js = replaceOnce(js, 'f=p?"pol.family."+Vx(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?"myparty.hero.titleParty":f,g].filter(_=>st(_)).map(_=>o(_))', 'f=p?partyIdeologyLabel(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?o("myparty.hero.titleParty"):f,st(g)?o(g):""].filter(Boolean)');
-  js = replaceOnce(js, 'Je("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\nJe("btn-start").addEventListener("click",()=>`);
+  js = replaceOnce(js, 'Je("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressVoting.join("\n")}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\nJe("btn-start").addEventListener("click",()=>`);
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
-  js = replaceOnce(js, 'this._mpWire(e,t),YF(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,this),bindPartyOrganizing(e,t,this),YF(this,e,t)');
-  js = replaceOnce(js, '_mpWireReadings(e){', '_mpWireReadings(e){if(e.querySelector(".gpm-party-congress"))this._wireHemicycle(e);');
+  js = replaceOnce(js, 'this._mpWire(e,t),YF(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,this),bindPartyCongress(e,t,p,this),bindPartyOrganizing(e,t,this),YF(this,e,t)');
+  js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
-  js = replaceOnce(js, refresh, `${refresh},this._mpRefreshReading(t,"gpm-congress",renderPartyCongress(e,c,this)),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,this),bindPartyOrganizing(t,e,this)`);
+  js = replaceOnce(js, refresh, `${refresh},bindPartyCongress(t,e,c,this),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,this),bindPartyOrganizing(t,e,this)`);
   js = replaceOnce(js, 'sFe($k,null,"new",!1,e,void 0,a)', 'sFe($k,null,"new",!1,gpmNewParty?{...e,partyModCreate:gpmNewParty}:e,void 0,a)');
   js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
   js = replaceOnce(js, '_bPolElectorat(e,t){', '_bPolElectorat(e,t){bindElectorateWidth(e);');
@@ -479,7 +483,7 @@ function patchRenderer(bytes) {
 function patchWorker(bytes) {
   if (sha256(bytes) !== workerHash) throw new Error(`Unsupported Geoplanetical simulation. This mod targets ${version}.`);
   let js = bytes.toString("utf8");
-  js = replaceOnce(js, 'async function lvt(e,t,a=[]){', `const gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nasync function lvt(e,t,a=[]){`);
+  js = replaceOnce(js, 'async function lvt(e,t,a=[]){', `const gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function lvt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(La.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Pe("advancePartyModDay",()=>advancePartyModDay(e)),t.has(La.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:', 'organization:partyOrganizationForMerger(t),campaigns:');
   js = replaceOnce(js, 'function Lka(e,t){return q0a(e,t),gMa(e,t),e._reviewPartyParliamentAi(t)}', 'function Lka(e,t){return q0a(e,t),gMa(e,t),advancePartyModAI(e,t),e._reviewPartyParliamentAi(t)}');
@@ -494,7 +498,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'function Gcr(e){let t=e?.player;', 'function Gcr(e){let gpmElectorate,t=e?.player;');
   js = replaceOnce(js, 'electorate:kr(o._electorateBreakdown(n)),electoral:', 'electorate:(gpmElectorate=kr(o._electorateBreakdown(n))),electoral:');
   js = replaceOnce(js, 'party:tDo(r)}}var aDo', 'party:tDo(r,gpmElectorate)}}var aDo');
-  js = replaceOnce(js, 'outreach:F0a(e,t,a),negotiations:hMa(e,t,a)', 'outreach:F0a(e,t,a),organizing:partyOrganizingView(e,t,a),congress:partyCongressView(e,t,a),supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:hMa(e,t,a)');
+  js = replaceOnce(js, 'outreach:F0a(e,t,a),negotiations:hMa(e,t,a)', 'outreach:F0a(e,t,a),organizing:partyOrganizingView(e,t,a),congress:partyCongressView(e,t,a,gpmElectorate),supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:hMa(e,t,a)');
   js = replaceOnce(js, 'function Ero(e,t){', `${isCustomParty}\nfunction Ero(e,t){`);
   js = replaceOnce(js, 'if((y.support||0)<.06&&(g.support||0)<.06&&Hp(y.ideology,g.ideology)<.35)', 'if(!isCustomParty(y)&&!isCustomParty(g)&&(y.support||0)<.06&&(g.support||0)<.06&&Hp(y.ideology,g.ideology)<.35)');
   js = replaceOnce(js, 'let m=i.find(f=>(f._starve||0)>=24);', 'let m=i.find(f=>!isCustomParty(f)&&(f._starve||0)>=24);');

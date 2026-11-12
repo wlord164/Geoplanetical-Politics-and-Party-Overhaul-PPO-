@@ -16,7 +16,11 @@ Back a live, unresolved peaceful mobilization to organize among the groups takin
 
 Meetings and backing share a +50% local voting-weight cap per party and bloc. Each new project's quoted gain is scaled by the fraction of the cap still available. Existing bonuses halve every 180 days. These bonuses affect the bloc vote calculation and flow through the game's normal national support calculation. They represent a relative boost to your party's weight within a bloc.
 
-In My Party, open Party Congress to see your party's platform and its tracked political figures grouped by ideology in the Assembly semicircle. Each dot represents one living figure. Hover over a group to see the names of its figures. The labels use all four of the game's ideological dimensions.
+In My Party, open Party Congress to see estimated ideological factions in an Assembly-style semicircle. Each dot represents one modeled delegate. Congress starts at 100 delegates.
+
+Use the slider to propose a new count between 50 and 200 and check the projected vote. Hold size vote to ask the existing delegates to approve the change. Factions weigh their expected representation and the size of the change. More than half of the current delegates must vote yes. An approved count and the last vote result are stored in the campaign save.
+
+The estimate combines your party's platform with its supporters' electorate-bloc leanings and the political figures the game tracks. Factions use the same four-axis ideology labels as Assembly. Hover over a faction to highlight its seats and see any associated figures.
 
 Open Support Base beside Party Congress to see which electorate blocs contribute the most to your party's estimated voters. The bar and large percentage show the bloc's share of your party's support. The smaller percentage shows your party's estimated support within that bloc.
 
