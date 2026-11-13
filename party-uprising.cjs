@@ -6,8 +6,11 @@ const officialNames = require("./party-official-country-names.cjs");
 const { workerFunctions: naming } = require("./party-uprising-names.cjs");
 const { workerFunctions: regimes } = require("./party-uprising-regimes.cjs");
 const { workerFunctions: continuity } = require("./party-uprising-continuity.cjs");
+const preparationCode = readFileSync(join(__dirname, "party-uprising-preparations.js"), "utf8");
+const uprisingCode = readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
 const workerCode = "const gpmUprisingOfficialNames = " + JSON.stringify(officialNames) + ";\n" +
-  [...naming, ...regimes, ...continuity].join("\n") + "\n" + readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
+  [...naming, ...regimes, ...continuity].join("\n") + "\n" +
+  uprisingCode.replace("const gpmUprising = (() => {", "$&\n" + preparationCode);
 
 function patchUprisingWorker(source, replaceOnce) {
   const anchors = [
@@ -15,6 +18,10 @@ function patchUprisingWorker(source, replaceOnce) {
       "registerPartyCongressSize();\n" + workerCode + "\nconst gpmRegionalRules"],
     ["this.sim=b,o?retirePartyCongresses(b)",
       "this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)"],
+    ['if (party.gpmForeignFunding) advancePartyForeignFunding(sim, country, party);',
+      'if (party.gpmForeignFunding) advancePartyForeignFunding(sim, country, party);\n      if (party.gpmUprisingPreparations) gpmUprising.advancePreparations(sim, country, party);'],
+    ['t.parties.map(a=>({...a,view:{color:o_(a)',
+      't.parties.map(({gpmUprisingPreparations,gpmForeignFunding,...a})=>({...a,view:{color:o_(a)'],
     ['(a==="gpm.foreignFunding"?',
       '(a==="gpm.uprising"?gpmUprising.view(r):a==="gpm.foreignFunding"?'],
     ['e._onWarEnd&&e._onWarEnd(u)}function p3t(',

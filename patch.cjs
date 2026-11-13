@@ -506,7 +506,7 @@ function patchRenderer(bytes) {
     return Ky === "en" && Object.hasOwn(gpmOfficialCountryNames, key) ? gpmOfficialCountryNames[key] : null;
   }
   function R1e(e){
-    const officialName = e.startsWith("country.") ? gpmOfficialCountryName(e.slice(8)) : null;
+    const officialName = typeof e === "string" && e.startsWith("country.") ? gpmOfficialCountryName(e.slice(8)) : null;
     if (officialName) return officialName;
     let t=ld[Ky];`);
   const savedCountryName = '!Object.hasOwn(a,"customName")&&a.name?a.name:lp(a.key||e.playerKey,a.name||t)';
