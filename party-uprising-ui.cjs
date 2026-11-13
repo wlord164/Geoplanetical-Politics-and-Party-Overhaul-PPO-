@@ -64,14 +64,16 @@ function gpmUprisingPanel(state) {
     const summary = data.warStatus === "suspended"
       ? b(data.breakawayName) + " and " + b(data.parentName)
       : b(data.breakawayName) + " is at war with " + b(data.parentName);
-    return "<p><strong>" + summary + "</strong></p><p>" + note + "</p>"
+    const restoration = data.restoresOriginalName ? "<p>Breakaway victory restores <strong>"
+      + b(data.victoryName) + "</strong>.</p>" : "";
+    return "<p><strong>" + summary + "</strong></p><p>" + note + "</p>" + restoration
       + actions(button("war", "Open War Theatre"));
   }
   if (data.phase === "settled") {
     const victory = data.result === "breakaway";
     if (data.result === "breakaway" || data.result === "government") {
       return victory
-        ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.breakawayName)
+        ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.victoryName || data.breakawayName)
           + seatOutcome + ".</p><p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
           + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")
         : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(party) + " is banned.</p>";
@@ -81,21 +83,23 @@ function gpmUprisingPanel(state) {
   if (!data.available || data.phase !== "ready" || typeof data.quoteId !== "string") {
     return "<p>" + b(gpmUprisingReason(data.reason)) + "</p>" + actions(button("refresh", "Refresh", state.loading));
   }
-  const name = state.selectedName || data.breakawayName;
+  const name = data.restoresOriginalName ? data.breakawayName : state.selectedName || data.breakawayName;
   const options = (data.names || []).map(option => '<option' + (option === name ? " selected" : "")
     + ">" + b(option) + "</option>").join("");
-  const nameField = !state.confirm && data.names?.length > 1
+  const nameField = !data.restoresOriginalName && !state.confirm && data.names?.length > 1
     ? '<select aria-label="Breakaway name" data-gpm-uprising-name>' + options + "</select>"
     : b(name);
   const victorySeats = data.singleParty ? " and holds every seat in its single-party assembly."
     : " under the new constitution. The reunited assembly keeps its sitting members until an election.";
+  const nameOutcome = data.restoresOriginalName ? "Victory restores <strong>" + b(data.victoryName) + "</strong>."
+    : "The reunited country keeps the breakaway name.";
   const heading = state.confirm ? "Confirm declaration" : "Declaration preview";
   const controls = state.confirm
     ? actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading))
     : actions(button("review", "Review Declaration", state.loading), button("refresh", "Refresh", state.loading));
   return "<p><strong>" + heading + "</strong></p>"
     + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + b(party)
-    + "</dd><dt>Breakaway</dt><dd>" + nameField
+    + "</dd><dt>" + (data.restoresOriginalName ? "Wartime name" : "Breakaway") + "</dt><dd>" + nameField
     + "</dd><dt>Government</dt><dd>" + b(data.government)
     + "</dd><dt>Starting region</dt><dd>" + b(region)
     + "</dd><dt>Current base national support</dt><dd>" + b(before) + "</dd></dl>"
@@ -103,7 +107,7 @@ function gpmUprisingPanel(state) {
     + " and starts a civil war with " + b(data.parentName) + ".</p>"
     + '<div class="gpm-uprising-outcomes">'
     + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country'
-    + victorySeats + "</p><p>The reunited country keeps the breakaway name. The founding charter takes effect nationwide.</p>"
+    + victorySeats + "</p><p>" + nameOutcome + " The founding charter takes effect nationwide.</p>"
     + charter + "<p>Base national support rises from " + b(before) + " to " + b(after) + " at reunification.</p></div>"
     + '<div class="sh-inset"><strong>Government victory</strong><p>The incumbent reunites the country and bans your party. '
     + "The campaign continues with the incumbent.</p></div></div>"
@@ -198,11 +202,12 @@ function gpmBindUprising(profile, view, ui) {
     if (state.loading || state.busy || !state.confirm || !state.data?.available || !isCurrent()) return;
     state.busy = true;
     state.status = "Declaring the uprising…";
-    const quoteId = state.data.quoteId;
+    const { quoteId, restoresOriginalName, breakawayName } = state.data;
+    const name = restoresOriginalName ? breakawayName : state.selectedName;
     state.paint();
     let result;
     try {
-      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name: state.selectedName }]);
+      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name }]);
       if (result?.ok) {
         if (ze === session) {
           await gpmSyncUprisingControl(session);

@@ -1,0 +1,161 @@
+"use strict";
+
+function gpmUprisingSystemFromBlueprint(blueprint) {
+  const systems = {
+    "parliamentary-republic": "democracy",
+    "presidential-republic": "democracy",
+    "semi-presidential": "democracy",
+    "one-party-state": "one-party",
+    theocracy: "clerical",
+    "constitutional-monarchy": "democracy",
+    "executive-monarchy": "executive-monarchy",
+    "absolute-monarchy": "absolute-monarchy",
+    "military-junta": "military",
+    "dominant-party": "dominant-party",
+  };
+  return Object.hasOwn(systems, blueprint) ? systems[blueprint] : null;
+}
+
+function gpmUprisingSystemFromProfile(profile) {
+  const systems = {
+    parliamentary_republic: "democracy",
+    presidential_republic: "democracy",
+    decentralized_republic: "democracy",
+    council_republic: "democracy",
+    socialist_single_party: "one-party",
+    nationalist_single_party: "one-party",
+    theocracy: "clerical",
+  };
+  return Object.hasOwn(systems, profile?.regime) ? systems[profile.regime] : null;
+}
+
+function gpmUprisingRevolutionaryName(countryKey, originalName) {
+  const demonyms = {
+    "012": "Algerian",
+    "032": "Argentine",
+    "036": "Australian",
+    "040": "Austrian",
+    "050": "Bangladeshi",
+    "056": "Belgian",
+    "076": "Brazilian",
+    "100": "Bulgarian",
+    "104": "Burmese",
+    "124": "Canadian",
+    "144": "Sri Lankan",
+    "152": "Chilean",
+    "156": "Chinese",
+    "158": "Taiwanese",
+    "170": "Colombian",
+    "191": "Croatian",
+    "192": "Cuban",
+    "203": "Czech",
+    "208": "Danish",
+    "214": "Dominican",
+    "218": "Ecuadorian",
+    "231": "Ethiopian",
+    "246": "Finnish",
+    "250": "French",
+    "268": "Georgian",
+    "276": "German",
+    "300": "Greek",
+    "320": "Guatemalan",
+    "332": "Haitian",
+    "348": "Hungarian",
+    "352": "Icelandic",
+    "356": "Indian",
+    "360": "Indonesian",
+    "364": "Iranian",
+    "368": "Iraqi",
+    "372": "Irish",
+    "376": "Israeli",
+    "380": "Italian",
+    "392": "Japanese",
+    "398": "Kazakh",
+    "400": "Jordanian",
+    "404": "Kenyan",
+    "408": "North Korean",
+    "410": "South Korean",
+    "414": "Kuwaiti",
+    "422": "Lebanese",
+    "434": "Libyan",
+    "458": "Malaysian",
+    "484": "Mexican",
+    "496": "Mongolian",
+    "504": "Moroccan",
+    "524": "Nepali",
+    "528": "Dutch",
+    "554": "New Zealand",
+    "566": "Nigerian",
+    "578": "Norwegian",
+    "586": "Pakistani",
+    "604": "Peruvian",
+    "608": "Philippine",
+    "616": "Polish",
+    "620": "Portuguese",
+    "634": "Qatari",
+    "642": "Romanian",
+    "643": "Russian",
+    "682": "Saudi",
+    "688": "Serbian",
+    "702": "Singaporean",
+    "704": "Vietnamese",
+    "706": "Somali",
+    "710": "South African",
+    "724": "Spanish",
+    "729": "Sudanese",
+    "752": "Swedish",
+    "756": "Swiss",
+    "760": "Syrian",
+    "764": "Thai",
+    "788": "Tunisian",
+    "792": "Turkish",
+    "804": "Ukrainian",
+    "818": "Egyptian",
+    "826": "British",
+    "840": "American",
+    "858": "Uruguayan",
+    "862": "Venezuelan",
+    "887": "Yemeni",
+  };
+  // Compound and overseas identities need short forms for the 40-character title.
+  const shortNames = {
+    "028": "Antigua-Barbuda",
+    "070": "Bosnian",
+    "140": "Central African",
+    "178": "Brazzaville",
+    "180": "DR Congo",
+    "226": "Equatoguinean",
+    "238": "Falklands",
+    "239": "South Georgia",
+    "258": "Polynesian",
+    "260": "French Austral",
+    "334": "Heard-McDonald",
+    "580": "N. Marianas",
+    "584": "Marshallese",
+    "598": "Papua New Guinea",
+    "612": "Pitcairn",
+    "652": "St Barthélemy",
+    "654": "St Helena",
+    "659": "St Kitts-Nevis",
+    "666": "St Pierre-Miquelon",
+    "670": "Vincentian",
+    "678": "São Toméan",
+    "780": "Trinidad-Tobago",
+    "796": "Turks and Caicos",
+    "850": "U.S. Virgin",
+    "876": "Wallis-Futuna",
+    "n:Indian Ocean Ter.": "Christmas-Cocos",
+  };
+  const key = String(countryKey).padStart(3, "0");
+  const suffix = " Revolutionary Government";
+  const place = (demonyms[key] || shortNames[key] ||
+    gpmUprisingCountryRoot(key, originalName)).replace(/^the\s+/iu, "");
+  const max = 40 - Array.from(suffix).length;
+  if (Array.from(place).length <= max) return place + suffix;
+  // Preserve a whole geographic word where a compound fallback exceeds the limit.
+  const prefix = place.split(/[\s\-–—,]+/u).find(word => word && Array.from(word).length <= max);
+  return (prefix || place.replace(/\s+/gu, "").slice(0, max)) + suffix;
+}
+
+module.exports = { workerFunctions: [gpmUprisingSystemFromBlueprint, gpmUprisingSystemFromProfile,
+  gpmUprisingRevolutionaryName] };

@@ -5,13 +5,16 @@ const { join } = require("node:path");
 const officialNames = require("./party-official-country-names.cjs");
 const { workerFunctions: naming } = require("./party-uprising-names.cjs");
 const { workerFunctions: regimes } = require("./party-uprising-regimes.cjs");
+const { workerFunctions: continuity } = require("./party-uprising-continuity.cjs");
 const workerCode = "const gpmUprisingOfficialNames = " + JSON.stringify(officialNames) + ";\n" +
-  [...naming, ...regimes].join("\n") + "\n" + readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
+  [...naming, ...regimes, ...continuity].join("\n") + "\n" + readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
 
 function patchUprisingWorker(source, replaceOnce) {
   const anchors = [
     ["registerPartyCongressSize();\nconst gpmRegionalRules",
       "registerPartyCongressSize();\n" + workerCode + "\nconst gpmRegionalRules"],
+    ["this.sim=b,o?retirePartyCongresses(b)",
+      "this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)"],
     ['(a==="gpm.foreignFunding"?',
       '(a==="gpm.uprising"?gpmUprising.view(r):a==="gpm.foreignFunding"?'],
     ['e._onWarEnd&&e._onWarEnd(u)}function p3t(',

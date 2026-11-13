@@ -27,7 +27,7 @@ function gpmUprisingStatus(sim) {
     campaignActive: n0(sim),
     noOccupation: sim.world.provinces.every(province => !province.__occupier ||
       ![parentKey, state?.childKey].includes(province.__occupier)),
-    warCount: sim.wars.size,
+    warCount: sim.wars?.size || 0,
     state,
     control: { countryKey: control.countryKey, partyId: control.partyId,
       campaignId: control.campaignId, controlsExecutive: control.controlsExecutive },
@@ -234,6 +234,20 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional) {
   sim._reclassRegime(country, true);
 }
 
+function gpmUprisingStartingIdentity(country, customName = null) {
+  const system = gpmUprisingSystemFromBlueprint(country.pol?.constitution?.blueprint);
+  const name = customName || gpmUprisingOfficialNames[country.key] || country.name;
+  return system && name ? { system, name, custom: !!customName } : null;
+}
+
+function gpmUprisingCaptureStartingIdentities(sim) {
+  for (const country of sim.countries.values()) {
+    if (country.__born || country.gpmUprisingStartingIdentity) continue;
+    const identity = gpmUprisingStartingIdentity(country, sim.customNames?.[country.key]);
+    if (identity) country.gpmUprisingStartingIdentity = identity;
+  }
+}
+
 function gpmUprisingProvince(sim, parent, founder) {
   const owned = M6(sim, parent.key).filter(province => ke(province) === parent.key);
   const population = owned.reduce((sum, province) => sum + (province.__pop || 0), 0);
@@ -268,7 +282,7 @@ function gpmUprisingProposal(sim, parent, founder) {
   if (!incumbentParty || incumbentParty.legal === false || z0a(parent.pol).has(founderId) ||
       parent.pol.chambers.some(chamber => (chamber.composition?.[founderId] || 0) > 0))
     return { reason: "unsupported_party_roles" };
-  if (sim.wars.size || [...sim.conflicts.values()].some(conflict =>
+  if (sim.wars?.size || [...(sim.conflicts?.values() || [])].some(conflict =>
     conflict.participants?.[parentKey] && (conflict.status === "active" || conflict.status === "suspended")))
     return { reason: "existing_war" };
   const province = gpmUprisingProvince(sim, parent, founder);
@@ -282,15 +296,21 @@ function gpmUprisingProposal(sim, parent, founder) {
   const parentName = sim.customNames?.[parentKey] || gpmUprisingOfficialNames[parentKey] || parent.name;
   const seed = parentKey === "422" && founder.nameDesc?.gpmTag === "ASBP" ? undefined :
     ba(JSON.stringify([sim.rngSeed0, Wo(sim).campaignId, parentKey, founderId, profile.regime]));
-  const identity = gpmUprisingIdentity(parentKey, parentName, profile, seed);
+  const starting = parent.gpmUprisingStartingIdentity ||
+    (!parent.__born ? gpmUprisingStartingIdentity(parent) : null);
+  const restoresOriginalName = !!starting && starting.system === gpmUprisingSystemFromProfile(profile);
+  const identity = restoresOriginalName
+    ? { name: gpmUprisingRevolutionaryName(parentKey, starting.name) }
+    : gpmUprisingIdentity(parentKey, parentName, profile, seed);
   const names = [identity.name, ...(identity.alternatives || [])]
     .filter((name, index, list) => lSt(name) === name && name && list.indexOf(name) === index);
   if (!names.length) return { reason: "name" };
   const victorySupport = Math.min(1, founderSupport + victoryGain);
   const charter = gpmUprisingCharter(parent, founder);
   const quoteId = JSON.stringify([sim.day, parentKey, founderId, province.__provKey, incumbent, founderSupport,
-    ba(JSON.stringify([profile, names, charter.changes]))]);
-  return { province, incumbent, founderSupport, victorySupport, charter, quoteId, names, profile, parentName };
+    ba(JSON.stringify([profile, names, charter.changes, restoresOriginalName ? starting : null]))]);
+  return { province, incumbent, founderSupport, victorySupport, charter, quoteId, names, profile, parentName,
+    restoration: restoresOriginalName ? starting : null };
 }
 
 function gpmUprisingView(sim) {
@@ -309,6 +329,8 @@ function gpmUprisingView(sim) {
     parentName: state?.parentName || proposal.parentName || gpmUprisingOfficialNames[parent?.key] || parent?.name,
     breakawayName: state?.breakawayName || child?.name || proposal.names?.[0] ||
       (state && parent?.key === "422" ? "Democratic People's Republic of Lebanon" : null),
+    victoryName: state?.victoryName || state?.breakawayName || proposal.restoration?.name || proposal.names?.[0],
+    restoresOriginalName: state ? !!state.restoresOriginalName : !!proposal.restoration,
     names: proposal.names || [], provinceKey: province?.__provKey, regionName: province?.__name,
     government: profile?.label, singleParty: profile?.singleParty, ceremonial: profile?.ceremonial,
     nationalSupport: state ? state.founderSupport : proposal.founderSupport,
@@ -327,7 +349,7 @@ function gpmUprisingOpen(sim, country, input) {
   const proposal = gpmUprisingProposal(sim, parent, founder);
   if (proposal.reason) return { ok: false, reason: proposal.reason };
   if (input.quoteId !== proposal.quoteId) return { ok: false, reason: "stale" };
-  const { province, incumbent, founderSupport, victorySupport, charter, profile, parentName, names } = proposal;
+  const { province, incumbent, founderSupport, victorySupport, charter, profile, parentName, names, restoration } = proposal;
   const breakawayName = input.name ?? names[0];
   if (!names.includes(breakawayName)) return { ok: false, reason: "name" };
   const parentKey = parent.key;
@@ -384,7 +406,8 @@ function gpmUprisingOpen(sim, country, input) {
     selectedTargetActorKey: parentKey, casusBelli: "coercion" }, { category: "guerre", severity: "danger" });
   parent[statusField] = { version: 1, id: childKey, childKey, warId: war.id, phase: "active",
     openedDay: sim.day, provinceKey, founderId, founderSupport, victorySupport, charter, incumbent,
-    parentName, breakawayName, profile };
+    parentName, breakawayName, victoryName: restoration?.name || breakawayName,
+    restoresOriginalName: !!restoration, restoreCustomName: !!restoration?.custom, profile };
   return { ok: true, ...gpmUprisingView(sim) };
 }
 
@@ -435,7 +458,13 @@ function gpmUprisingSettleCase(sim, parent, state) {
     state.profile ||= gpmUprisingProfile(founder);
     state.breakawayName ||= child.name;
     gpmUprisingGovernment(sim, parent, founder, state.profile, false);
-    if (!uSt(sim, parentKey, state.breakawayName)) throw new Error("Uprising country name is invalid");
+    state.victoryName ||= state.breakawayName;
+    // The normal display path supplies PPO's scenario title when the native override is empty.
+    if (state.restoresOriginalName && !state.restoreCustomName) {
+      uSt(sim, parentKey, "");
+    } else if (!uSt(sim, parentKey, state.victoryName)) {
+      throw new Error("Uprising country name is invalid");
+    }
     state.appliedLaws = gpmApplyUprisingCharter(sim, parent, state.charter);
   } else {
     Rb(parent, founderId).bannedYear = sim._simYear || 2026;
@@ -458,5 +487,6 @@ function gpmUprisingSettle(sim) {
 
 Pyt("gpm.party.uprising.declare", { apply: gpmUprisingOpen });
 return { view: gpmUprisingView, matches: gpmUprisingMatches, record: gpmUprisingRecordResult,
+  captureStartingIdentities: gpmUprisingCaptureStartingIdentities,
   settle: gpmUprisingSettle, inspect: gpmUprisingStatus };
 })();
