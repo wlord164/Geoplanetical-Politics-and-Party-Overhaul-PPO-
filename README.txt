@@ -4,6 +4,21 @@ This Windows patch targets Steam build 26596096, game version 1.1.2. Install Nod
 
 Close Geoplanetical and use Extract All on the ZIP. Open the extracted folder and double-click Install Party Mod.cmd. Keep the files together so install.cjs is beside the launcher. The installer can upgrade earlier releases and keeps the original game backups. Once it reports success, start the game through Steam.
 
+The English interface uses official country titles for the January 1, 2026 scenario, including Lebanese Republic, Democratic People's Republic of Korea, and United States of America. The list covers 212 playable entries and 25 map-only entries. Places without a separate formal title use their established country or territory name. Custom country names in saves take precedence. Use the short country name or official title in the new-game country search.
+
+The list follows the UK FCDO geographical names index and UN country naming references. Where usage differs, it uses the local title for Afghanistan (Islamic Emirate of Afghanistan), Taiwan (Republic of China), and Northern Cyprus (Turkish Republic of Northern Cyprus). The game's January 2026 scenario uses Republic of Nauru, before the later change to Republic of Naoero. These are scenario display labels.
+
+Naming sources:
+https://www.gov.uk/government/publications/geographical-names-and-information
+https://conferences.unite.un.org/unterm/download/country
+https://mfa.gov.af/en/En/
+https://english.president.gov.tw/page/94
+https://pio.mfa.gov.ct.tr/en/administration/
+https://www.un.org/en/about-us/member-states/naoero
+
+Contains public sector information licensed under the Open Government Licence v3.0.
+https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+
 To rename a party, load a campaign and go to My Party. Click Rename Party, choose a party in your country, and enter its name and optional abbreviation. Save the campaign to keep the change.
 
 In Politics > Electorate, use the Panel width slider and expand a voter bloc. The Vote split lists every party in the estimate with its color, abbreviation, and vote share to up to two decimal places. Hover over an abbreviation to see the full party name. The slider remembers your preferred width for Electorate.

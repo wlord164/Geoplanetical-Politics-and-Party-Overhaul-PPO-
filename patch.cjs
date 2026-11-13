@@ -1,6 +1,7 @@
 "use strict";
 
 const { createHash } = require("node:crypto");
+const officialCountryNames = require("./party-official-country-names.cjs");
 const { workerFunctions: organizingWorker, rendererFunctions: organizingRenderer } = require("./party-organizing.cjs");
 const { workerFunctions: congressWorker } = require("./party-congress-model.cjs");
 const { rendererFunctions: congressRenderer } = require("./party-congress.cjs");
@@ -495,6 +496,20 @@ function bindPartyProfile(host, view, ui) {
 function patchRenderer(bytes) {
   if (sha256(bytes) !== rendererHash) throw new Error(`Unsupported Geoplanetical renderer. This mod targets ${version}.`);
   let js = bytes.toString("utf8");
+  // Patch display lookups, leaving country IDs, native search aliases, and save data intact.
+  js = replaceOnce(js, 'const __geoWorker = typeof document ===',
+    `const gpmOfficialCountryNames = ${JSON.stringify(officialCountryNames)};\nconst __geoWorker = typeof document ===`);
+  const countryName = 'function R1e(e){let t=ld[Ky];';
+  js = replaceOnce(js, countryName, `function gpmOfficialCountryName(key) {
+    return Ky === "en" && Object.hasOwn(gpmOfficialCountryNames, key) ? gpmOfficialCountryNames[key] : null;
+  }
+  function R1e(e){
+    const officialName = e.startsWith("country.") ? gpmOfficialCountryName(e.slice(8)) : null;
+    if (officialName) return officialName;
+    let t=ld[Ky];`);
+  const savedCountryName = '!Object.hasOwn(a,"customName")&&a.name?a.name:lp(a.key||e.playerKey,a.name||t)';
+  js = replaceOnce(js, savedCountryName,
+    '!Object.hasOwn(a,"customName")&&a.name&&!(gpmOfficialCountryName(a.key||e.playerKey)&&Px(a.key||e.playerKey).includes(a.name))?a.name:lp(a.key||e.playerKey,a.name||t)');
   js = replaceOnce(js, 'function Sa(e,t=e?.countryKey){', 'function Sa(e,t=e?.countryKey){if(e?.nameDesc?.gpmName)return e.nameDesc.gpmName;');
   js = replaceOnce(js, 's=i?VI(`${i}:${r.id}`)?.tag:null;s&&n.add(s)', 's=r.nameDesc?.gpmName?r.nameDesc.gpmTag:i?VI(`${i}:${r.id}`)?.tag:null;s&&n.add(s)');
   js = replaceOnce(js, 'c=s?.tag||R1t(l,n);n.add(c)', 'c=(r.nameDesc?.gpmName?r.nameDesc.gpmTag:s?.tag)||R1t(l,n);n.add(c)');
