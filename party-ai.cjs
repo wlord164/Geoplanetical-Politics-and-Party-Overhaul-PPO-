@@ -55,6 +55,7 @@ function advancePartyModAI(sim, country) {
       electionIn = Math.min(electionIn, contest.nextDay - day);
     }
   }
+  advancePartyRegionalAI(sim, country, electionIn);
   // Give parties a buffer for resources before the native campaign opens.
   if (electionIn <= 90) return;
   const groups = dIe(country);

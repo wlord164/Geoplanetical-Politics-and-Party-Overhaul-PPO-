@@ -8,6 +8,8 @@ const { sharedFunctions: congressVoting, workerFunctions: congressVoteWorker } =
 const { workerFunctions: supportWorker, rendererFunctions: supportRenderer } = require("./party-support-base.cjs");
 const { workerFunctions: aiWorker } = require("./party-ai.cjs");
 const { patchLawLabels, patchLawVoteSnapshots } = require("./party-law-labels.cjs");
+const { rules: regionalRules, workerFunctions: regionalWorker } = require("./party-regional-campaign.cjs");
+const { style: regionalMapStyle, rendererFunctions: regionalRenderer } = require("./party-regional-map.cjs");
 
 const version = "1.1.2";
 const rendererHash = "ad4c79040ba28d87006fd72e8e335e1d2129a6866e9f9bb3d85fc948f52591e7";
@@ -238,13 +240,15 @@ function mountPartyButtons() {
     .gpm-congress-control { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }
     .gpm-congress-size { max-width: 100%; accent-color: var(--text-2); }
     .gpm-party-congress button { justify-self: start; }
-    .gpm-party-profile { display: grid; gap: var(--gap-2); min-width: 0; }
-    .gpm-party-profile-tabs { display: flex; flex-wrap: wrap; gap: var(--gap-2); }
-    .gpm-party-profile-tabs [aria-selected="true"] { border-color: var(--text-2); color: var(--text); }
+    .gpm-party-profile { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-2); }
+    .gpm-party-profile-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--gap-1); }
+    .gpm-party-profile-tabs .k { min-width: 0; height: auto; min-height: var(--h-ctl); padding: var(--gap-1) var(--gap-2); white-space: normal; overflow-wrap: anywhere; text-align: center; }
+    .gpm-party-profile-tabs [aria-selected="true"] { border-color: var(--text-2); color: var(--text); background: var(--body-2); }
     .gpm-party-profile [hidden] { display: none; }
     .gpm-party-profile small { color: var(--text-2); }
     .gpm-party-profile .hc-legend { flex-wrap: wrap; }
     .gpm-party-profile .hc-leg-item { white-space: normal; }
+    .gpm-party-congress .hc-svg { max-width: none; }
     .gpm-party-support-base { display: grid; gap: var(--gap-2); }
     .gpm-support-blocs { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--gap-2); }
     .gpm-support-bloc { display: grid; gap: var(--gap-1); }
@@ -253,6 +257,7 @@ function mountPartyButtons() {
     .gpm-support-track { height: 6px; border-radius: 3px; overflow: hidden; background: var(--line, #474950); }
     .gpm-support-track > span { display: block; height: 100%; border-radius: inherit; background: var(--accent, #c9ae79); }
   `;
+  style.textContent += gpmRegionalMapStyle;
   document.head.append(style);
   const choice = document.getElementById("setup-role-note");
   const create = document.createElement("button");
@@ -414,17 +419,19 @@ function bindElectorateWidth(view) {
 
 function renderPartyProfile(view, party, ui) {
   if (!party || !view.party?.congress) return "";
-  return `<div class="wide gpm-party-profile">
+  return `<div class="gpm-party-profile">
     <div class="gpm-party-profile-tabs" role="tablist" aria-label="Party profile">
-      <button class="k" type="button" role="tab" id="gpm-tab-congress" aria-controls="gpm-panel-congress" aria-selected="true">Party Congress</button>
-      <button class="k" type="button" role="tab" id="gpm-tab-support" aria-controls="gpm-panel-support" aria-selected="false" tabindex="-1">Support Base</button>
+      <button class="k" type="button" role="tab" id="gpm-tab-congress" data-gpm-profile-focus="congress" aria-controls="gpm-panel-congress" aria-selected="true">Party Congress</button>
+      <button class="k" type="button" role="tab" id="gpm-tab-support" data-gpm-profile-focus="support" aria-controls="gpm-panel-support" aria-selected="false" tabindex="-1">Support Base</button>
+      ${view.party.regionalCampaign ? '<button class="k" type="button" role="tab" id="gpm-tab-regional" data-gpm-profile-focus="regional" aria-controls="gpm-panel-regional" aria-selected="false" tabindex="-1">Regional Campaigning</button>' : ""}
     </div>
     <div class="mp-reading" id="gpm-panel-congress" role="tabpanel" aria-labelledby="gpm-tab-congress" data-mp-reading="gpm-congress">${renderPartyCongress(view, party, ui)}</div>
-    <div class="mp-reading" id="gpm-panel-support" role="tabpanel" aria-labelledby="gpm-tab-support" data-mp-reading="gpm-support" hidden>${renderPartySupportBase(view, ui)}</div>
+    <div class="mp-reading" id="gpm-panel-support" role="tabpanel" aria-labelledby="gpm-tab-support" data-mp-reading="gpm-support" tabindex="0" hidden>${renderPartySupportBase(view, ui)}</div>
+    ${view.party.regionalCampaign ? '<div class="mp-reading" id="gpm-panel-regional" role="tabpanel" aria-labelledby="gpm-tab-regional" hidden>' + gpmRenderRegionalOverview() + '</div>' : ""}
   </div>`;
 }
 
-function bindPartyProfile(host, ui) {
+function bindPartyProfile(host, view, ui) {
   const profile = host.querySelector(".gpm-party-profile");
   if (!profile) return;
   const tabs = Array.from(profile.querySelectorAll('[role="tab"]'));
@@ -436,6 +443,7 @@ function bindPartyProfile(host, ui) {
       button.tabIndex = selected ? 0 : -1;
       profile.querySelector("#" + button.getAttribute("aria-controls")).hidden = !selected;
     }
+    if (tab.id === "gpm-tab-regional") gpmBindRegionalOverview(profile, view, ui);
     if (focus) tab.focus();
   };
   select(tabs.find(tab => tab.id === ui._gpmPartyProfileTab) || tabs[0]);
@@ -465,10 +473,10 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, 'Je("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressVoting.join("\n")}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\nJe("btn-start").addEventListener("click",()=>`);
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
-  js = replaceOnce(js, 'this._mpWire(e,t),YF(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,this),bindPartyCongress(e,t,p,this),bindPartyOrganizing(e,t,this),YF(this,e,t)');
-  js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size"].find(y=>a?.hasAttribute(y))');
+  js = replaceOnce(js, 'this._mpWire(e,t),YF(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,this),bindPartyCongress(e,t,p,this),bindPartyOrganizing(e,t,this),YF(this,e,t)');
+  js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
-  js = replaceOnce(js, refresh, `${refresh},bindPartyCongress(t,e,c,this),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,this),bindPartyOrganizing(t,e,this)`);
+  js = replaceOnce(js, refresh, `${refresh},bindPartyCongress(t,e,c,this),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,this),bindPartyOrganizing(t,e,this)`);
   js = replaceOnce(js, 'sFe($k,null,"new",!1,e,void 0,a)', 'sFe($k,null,"new",!1,gpmNewParty?{...e,partyModCreate:gpmNewParty}:e,void 0,a)');
   js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
   js = replaceOnce(js, '_bPolElectorat(e,t){', '_bPolElectorat(e,t){bindElectorateWidth(e);');
@@ -477,6 +485,13 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '${b(i(E.id))} \\xB7 ${$(L)}', '${b(i(E.id))} \\xB7 ${$(L,!1,2)}');
   js = replaceOnce(js, 'this._chipById(n,E.id,{win:L===0})}<b class="num">${$(Math.round(E.v*100))}', 'this._chipById(n,E.id,{win:L===0})}<b class="num">${$(E.v*100,!1,2)}');
   js = patchLawLabels(js, replaceOnce);
+  js = replaceOnce(js, "\nmountPartyButtons();\n", `\nconst gpmRegionalMapStyle = ${JSON.stringify(regionalMapStyle)};\n${regionalRenderer.join("\n")}\nmountPartyButtons();\n`);
+  js = replaceOnce(js, 'Nf("publicFacilityPlannerActive","closePublicFacilityPlanner")',
+    'Nf("publicFacilityPlannerActive","closePublicFacilityPlanner"),Nf("gpmRegionalActive","closeGpmRegionalMap")');
+  js = replaceOnce(js, 'if(cn!=="game")return;if(he.warRoomActive)', 'if(cn!=="game")return;if(gpmRegionalGlobeClick(he,t))return;if(he.warRoomActive)');
+  js = replaceOnce(js, '_refreshTabUnsafe(e=null){', '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);');
+  js = replaceOnce(js, 'showScreen(e){for(let t of document.querySelectorAll(".screen"))',
+    'showScreen(e){if(e!=="game")gpmCloseRegionalMap(this);for(let t of document.querySelectorAll(".screen"))');
   return Buffer.from(js);
 }
 
@@ -507,6 +522,24 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'comp:e.nameDesc.comp||null}:null}function Qcr', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null}:null}function Qcr');
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
+  js = replaceOnce(js, "registerPartyCongressSize();\nasync function lvt",
+    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\nregisterPartyRegionalCampaign();\nasync function lvt`);
+  js = replaceOnce(js, 'id:r.__provId,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,partyPerf:',
+    'id:r.__provId,key:r.__provKey,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,day:e.day||0,partyPerf:');
+  js = replaceOnce(js, 'function vIe(e,t,a=null){', 'function vIe(e,t,a=null,gpmApplyRegions=true){');
+  js = replaceOnce(js, 'return{id:p.id,name:p.name||"",pop:p.pop||0,shares:X0a',
+    'return{id:p.id,key:p.key,name:p.name||"",pop:p.pop||0,shares:X0a');
+  js = replaceOnce(js, 'if(m>0)for(let g in p.shares)p.shares[g]/=m;let f=null,y=-1;',
+    'if(m>0)for(let g in p.shares)p.shares[g]/=m;if(gpmApplyRegions)p.shares=partyRegionalShares(e,p.shares,p.key,t.day);let f=null,y=-1;');
+  // Regional seat rules use the adjusted local shares. National rules use their population-weighted change.
+  js = replaceOnce(js, 'if(s.transfer)return lLr(s,t,a,{rulingId:r,rig:mIe(e,o),polity:n,electoralMap:i});let l={},c=0;',
+    'if(s.transfer)return lLr(s,t,a,{rulingId:r,rig:mIe(e,o),polity:n,electoralMap:i});if(n&&["direct","equal-per-state","delegated"].includes(e.selectMode||"direct"))t=partyRegionalNationalShares(n,i,t);let l={},c=0;');
+  js = replaceOnce(js, 'reportOrder:[]},C=r.parties.filter(X=>b[X.id]!=null).map(X=>({id:X.id,votes:Math.max(0,S[X.id]||0)}))',
+    'reportOrder:[]},gpmNational=partyRegionalNationalShares(r,Ix(e,t),S),C=r.parties.filter(X=>b[X.id]!=null).map(X=>({id:X.id,votes:Math.max(0,gpmNational[X.id]||0)}))');
+  js = replaceOnce(js, 'u=d2t(e,t,c,i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}',
+    'u=d2t(e,t,partyRegionalNationalShares(t.pol,Ix(e,t),c),i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}');
+  js = replaceOnce(js, 'congress:partyCongressView(e,t,a,gpmElectorate),supportBase:',
+    'congress:partyCongressView(e,t,a,gpmElectorate),regionalCampaign:partyRegionalCampaignView(e,t,a),supportBase:');
   return Buffer.from(js);
 }
 
@@ -514,6 +547,7 @@ function advancePartyModDay(sim) {
   for (const country of sim.countries.values()) {
     for (const party of country.pol?.parties || []) {
       if (party.gpmOrganizing) advancePartyOrganizing(sim, country, party);
+      if (party.gpmRegional) advancePartyRegionalCampaign(sim, country, party);
     }
   }
 }
@@ -527,7 +561,8 @@ function retirePartyCongresses(sim) {
 function partyOrganizationForMerger(party) {
   if (!party.organization) return null;
   const organization = structuredClone(party.organization);
-  const reservedForOrganizing = (party.gpmOrganizing?.projects || []).reduce((sum, project) => sum + project.activistsK, 0);
+  const reservedForOrganizing = [...(party.gpmOrganizing?.projects || []), ...(party.gpmRegional?.projects || [])]
+    .reduce((sum, project) => sum + project.activistsK, 0);
   organization.activistsK = GN(Math.min(1e5, organization.activistsK + reservedForOrganizing));
   return organization;
 }
