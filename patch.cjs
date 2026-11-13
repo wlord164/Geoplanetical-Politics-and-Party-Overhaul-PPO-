@@ -1,3 +1,5 @@
+const { patchUprisingWorker } = require("./party-uprising.cjs");
+const { patchUprisingRenderer } = require("./party-uprising-ui.cjs");
 "use strict";
 
 const { createHash } = require("node:crypto");
@@ -540,7 +542,7 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '_refreshTabUnsafe(e=null){', '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);');
   js = replaceOnce(js, 'showScreen(e){for(let t of document.querySelectorAll(".screen"))',
     'showScreen(e){if(e!=="game")gpmCloseRegionalMap(this);for(let t of document.querySelectorAll(".screen"))');
-  return Buffer.from(js);
+  return patchUprisingRenderer(Buffer.from(js));
 }
 
 function patchWorker(bytes) {
@@ -599,7 +601,7 @@ function patchWorker(bytes) {
   // Publish only the funding summary, never the stored outcome rolls or exposure day.
   js = replaceOnce(js, 'n.pol.parties=Fcr(t.pol);',
     'n.pol.parties=Fcr(t.pol).map(({gpmForeignFunding,...party})=>party);');
-  return Buffer.from(js);
+  return Buffer.from(patchUprisingWorker(js, replaceOnce));
 }
 
 function advancePartyModDay(sim) {
