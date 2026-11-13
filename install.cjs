@@ -6,6 +6,11 @@ const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
 const executableHash = "a53d56e974d6a8b8a3669fdf3de5a4278b250a51fbd43a1561f2ac1cb269daf6";
 const previousPatches = [{
+  archive: "8e58b7c7f6a3e4a3780fc8577bf5fa312e69cad4526e751def042c434f8d8802",
+  worker: "53e3dce7aa8651fd2833189612412629efdf668868eb5cc4040a23a8bcccbd59",
+  renderer: "af7ebb84b286a694844bedf5e250e0180a16b1373f44a9f886aa567c00800db3",
+  executable: "7f61e44bfeae019af2520b272aa6919acd2f98750d57bb770435bf2b25838704",
+}, {
   archive: "5fb54c5fe31f02cb69f7777bc0ac52ecfc4b1170d799956973ddcb120644d791",
   worker: "63deec24022266047700503888430087ef8e2d785eead7df6970a43f1038c3f6",
   renderer: "1bab71a38a94bf9dad3ce66307ee8fe49f4ce2db327ea697bc2eef4dc2267293",

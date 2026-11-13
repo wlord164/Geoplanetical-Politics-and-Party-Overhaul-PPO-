@@ -96,7 +96,7 @@ function partyRegionalNationalShares(polity, map, supports) {
   return partyRegionalNormalize(supports, adjusted, total);
 }
 
-function partyRegionalQuote(sim, country, party, kind, region) {
+function partyRegionalQuote(sim, country, party, kind, region, relocateHeadquarters = false) {
   const rule = gpmRegionalRules[kind];
   if (!party?.organization || party.legal === false) return { ok: false, reason: "party" };
   if (!region || !rule) return { ok: false, reason: "region" };
@@ -121,7 +121,7 @@ function partyRegionalQuote(sim, country, party, kind, region) {
   let reason = null;
   if (record?.projects.some(project => project.kind === kind)) reason = "active";
   else if (kind === "headquarters" && record?.headquarters &&
-    partyRegionalProvince(sim, country, record.headquarters.id, record.headquarters.key)) reason = "headquarters";
+    partyRegionalProvince(sim, country, record.headquarters.id, record.headquarters.key) && (!relocateHeadquarters || hasHeadquarters)) reason = "headquarters";
   else if (kind === "rally" && day < availableDay) reason = "cooldown";
   else if (kind === "investment" && presence >= 1) reason = "saturated";
   else if (organization.treasuryM < cash) reason = "budget";
@@ -134,8 +134,8 @@ function partyRegionalQuote(sim, country, party, kind, region) {
   };
 }
 
-function partyRegionalStart(sim, country, party, kind, region) {
-  const quote = partyRegionalQuote(sim, country, party, kind, region);
+function partyRegionalStart(sim, country, party, kind, region, relocateHeadquarters = false) {
+  const quote = partyRegionalQuote(sim, country, party, kind, region, relocateHeadquarters);
   if (!quote.ok) return quote;
   const day = sim.day || 0;
   const record = party.gpmRegional ??= { regions: {}, projects: [], headquarters: null };
