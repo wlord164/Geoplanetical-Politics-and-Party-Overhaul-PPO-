@@ -1,5 +1,21 @@
 "use strict";
 
+function gpmActiveIdeologyPreset(party, presets = gpmPresets) {
+  const id = party?.nameDesc?.gpmIdeologyPreset;
+  const values = Object.hasOwn(presets, id) ? presets[id].values : null;
+  return values?.every((value, index) => {
+    const current = party.ideology?.[["econ", "social", "gov", "nat"][index]];
+    return Number.isFinite(current) && Math.abs(value / 100 - current) <= .2;
+  }) ? id : null;
+}
+
+function gpmIdeologyLawTarget(platform, lawId, current, year) {
+  const target = platform?.laws?.[lawId];
+  if (target === undefined || lawId !== "coal_phaseout_deadline") return target;
+  const deadline = Math.max(target, (Number.isFinite(year) ? year : 2026) + 10);
+  return current > 0 ? Math.min(current, deadline) : deadline <= 2100 ? deadline : undefined;
+}
+
 function gpmUprisingProfile(party, presets = gpmPresets) {
   const axis = id => {
     const value = party?.ideology?.[id];
@@ -9,14 +25,54 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
   const social = axis("social");
   const gov = axis("gov");
   const nat = axis("nat");
-  const axes = [econ, social, gov, nat];
-  const savedPreset = party?.nameDesc?.gpmIdeologyPreset;
-  const values = Object.hasOwn(presets, savedPreset) ? presets[savedPreset].values : null;
   // The founding preset helps distinguish ideologies with similar scores, while
   // a materially changed party uses its current positions.
-  const preset = values?.every((value, index) => Math.abs(value / 100 - axes[index]) <= .2)
-    ? savedPreset : null;
-  let regime;
+  const preset = gpmActiveIdeologyPreset(party, presets);
+  const newRegimes = {
+    islamicDemocracy: "islamic_democracy",
+    islamicRepublican: "islamic_republic",
+    islamicFundamentalist: "islamic_emirate",
+    fascist: "fascist_party_state",
+    maoist: "maoist_party_state",
+    democraticConfederalist: "democratic_confederation",
+    anarchoSyndicalist: "syndicalist_federation",
+    ecosocialist: "ecosocialist_republic",
+  };
+  let regime = Object.hasOwn(newRegimes, preset) ? newRegimes[preset] : null;
+  if (regime) {
+    const singleParty = ["fascist_party_state", "maoist_party_state"].includes(regime);
+    const clerical = ["islamic_emirate", "islamic_republic"].includes(regime);
+    const emirate = regime === "islamic_emirate";
+    const confederal = ["democratic_confederation", "syndicalist_federation"].includes(regime);
+    const labels = {
+      islamic_democracy: "Islamic parliamentary democracy",
+      islamic_republic: "Islamic republic",
+      islamic_emirate: "Islamic emirate",
+      fascist_party_state: "Fascist one-party state",
+      maoist_party_state: "Maoist revolutionary state",
+      democratic_confederation: "Democratic confederation",
+      syndicalist_federation: "Federation of worker councils",
+      ecosocialist_republic: "Ecosocialist parliamentary republic",
+    };
+    return {
+      preset, econ, gov, nat, social, regime, singleParty, label: labels[regime],
+      ceremonial: !singleParty && !clerical,
+      headSelection: singleParty ? "party" : clerical ? "clerical" : "elected",
+      headGovExists: Number(!singleParty && !emirate),
+      ...(!singleParty && !clerical ? { headBallot: "parliament" } : {}),
+      ...(!singleParty && !emirate ? { headGovSelection: "parliament" } : {}),
+      cabinetAccountability: singleParty || emirate ? "head" : "parliament",
+      parliamentPower: emirate || preset === "fascist" ? "advisory" : "sovereign",
+      partyLegality: singleParty ? .1 : emirate ? .15 : clerical ? .55 : .95,
+      execConstraints: singleParty || emirate ? .15 : clerical ? .5 : .85,
+      commissionIndep: singleParty || emirate ? .2 : clerical ? .55 : .9,
+      suffrage: singleParty || emirate ? .55 : clerical ? .75 : .95,
+      emergencyPowers: singleParty || emirate ? "broad" : "limited",
+      dissolutionPower: singleParty || clerical ? "none" : "constructive",
+      judicialReview: !singleParty && !emirate,
+      ...(confederal ? { stateStructure: "confederal" } : {}),
+    };
+  }
   if (preset === "religiousTraditionalist") {
     regime = "theocracy";
   } else if (["corporatistNationalist", "authoritarianUltranationalist"].includes(preset) ||
@@ -70,4 +126,7 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
   };
 }
 
-module.exports = { workerFunctions: [gpmUprisingProfile], gpmUprisingProfile };
+module.exports = {
+  workerFunctions: [gpmActiveIdeologyPreset, gpmIdeologyLawTarget, gpmUprisingProfile],
+  gpmActiveIdeologyPreset, gpmIdeologyLawTarget, gpmUprisingProfile,
+};

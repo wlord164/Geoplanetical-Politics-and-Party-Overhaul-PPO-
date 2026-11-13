@@ -23,7 +23,7 @@ function gpmRenderForeignFunding() {
 }
 
 function gpmForeignFundingMoney(amountM) {
-  return nr(amountM * 1e6 * sx(), cx());
+  return rr(amountM * 1e6 * hA(), gA());
 }
 
 function gpmForeignFundingDonorName(donor) {
@@ -191,12 +191,12 @@ async function gpmLoadForeignFunding(panel, state, ui) {
   gpmPaintForeignFunding(panel, state, ui);
   try {
     if (!state.countries) {
-      const result = await et(state.session, "gpm.foreignFunding");
+      const result = await at(state.session, "gpm.foreignFunding");
       if (!isCurrent()) return;
       state.countries = [...(result?.countries || [])].sort((a, b) => U(a).localeCompare(U(b), cs()));
     }
     if (countryKey) {
-      const result = await et(state.session, "gpm.foreignFunding", { countryKey });
+      const result = await at(state.session, "gpm.foreignFunding", { countryKey });
       if (!isCurrent()) return;
       state.donors = result?.donors || [];
       state.quotesDay = result?.day;
@@ -230,9 +230,9 @@ async function gpmSubmitForeignFunding(panel, state, ui, action) {
   try {
     const result = await Te(state.session, "applyPlayerAction", [{ ...input, verb: "gpm.party.funding." + action }]);
     state.status = result?.ok ? "" : gpmForeignFundingReason(result?.reason);
-    const snapshot = await et(state.session, G.POLITICS);
+    const snapshot = await at(state.session, G.POLITICS);
     if (state.session !== ui._mpSession) return;
-    const current = Ka(state.session, snapshot)?.party?.foreignFunding;
+    const current = Va(state.session, snapshot)?.party?.foreignFunding;
     if (current?.partyId === data.partyId) state.data = current;
     ui.refreshHUD?.(state.session);
     ui.refreshTab?.(state.session);

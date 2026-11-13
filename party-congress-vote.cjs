@@ -164,10 +164,10 @@ function partyCongressForecastKey(vote) {
 
 function registerPartyCongressSize() {
   for (const [verb, kind] of [["gpm.party.congressSize", "size"], ["gpm.party.congressPriority", "priority"]]) {
-    Pyt(verb, {
+    n5t(verb, {
       apply(sim, country, input) {
-        if (country.key !== sim.playerKey || Go(country) !== input.partyId) return { ok: false, reason: "party" };
-        const party = WN(country, input.partyId);
+        if (country.key !== sim.playerKey || Uo(country) !== input.partyId) return { ok: false, reason: "party" };
+        const party = YL(country, input.partyId);
         if (!party?.organization || party.legal === false) return { ok: false, reason: "party" };
         if (kind === "size" && input.bargain != null && typeof input.bargain !== "string") {
           return { ok: false, reason: "bargain" };

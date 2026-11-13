@@ -61,7 +61,7 @@ function gpmRegionalReason(quote, ui) {
 }
 
 function gpmRegionalRegionName(region) {
-  return Gt(region.key, region.name);
+  return Ut(region.key, region.name);
 }
 
 function gpmRenderRegionalOverview() {
@@ -183,7 +183,7 @@ function gpmBindRegionalOverview(profile, view, ui) {
     .filter(feature => feature?.geometry && byId.get(feature.__provId)?.key === feature.__provKey);
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (ui._gpmSupportGeometry?.world !== world || ui._gpmSupportGeometry?.signature !== signature) {
-    ui._gpmSupportGeometry = { world, signature, layout: XS(features, 620, 350, { pad: 10 }) };
+    ui._gpmSupportGeometry = { world, signature, layout: ok(features, 620, 350, { pad: 10 }) };
   }
   const layout = ui._gpmSupportGeometry.layout;
   const svg = (paths, width, height) => `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Estimated regional party support">
@@ -226,7 +226,7 @@ function gpmRenderRegionalMap(ui, state) {
   const active = panel.contains(document.activeElement) ? document.activeElement : null;
   const focusTarget = active?.matches("[data-gpm-region-select]") ? "[data-gpm-region-select]" :
     active?.matches("[data-gpm-region-action]") ? '[data-gpm-region-action="' + active.dataset.gpmRegionAction + '"]' : null;
-  const money = amount => nr(amount * 1e6 * sx(), cx());
+  const money = amount => rr(amount * 1e6 * hA(), gA());
   const pct = value => new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 }).format(value);
   const points = value => (value > 0 ? "+" : "") + (value * 100).toFixed(2) + " pp";
   const regionName = key => {
@@ -294,7 +294,7 @@ function gpmRefreshRegionalMap(ui, snapshot = null) {
     gpmCloseRegionalMap(ui);
     return;
   }
-  const view = Ka(state.session, snapshot);
+  const view = Va(state.session, snapshot);
   const data = view?.party?.regionalCampaign;
   if (!data) return;
   if (data.partyId !== state.data.partyId || data.countryKey !== state.data.countryKey) {
@@ -353,7 +353,7 @@ async function gpmSubmitRegionalAction(ui, kind) {
     if (result?.ok) {
       // Block a second submission against stale quotes until the worker publishes a fresh view.
       state.pending.set(kind, result.endDay);
-      try { snapshot = await et(state.session, G.POLITICS); }
+      try { snapshot = await at(state.session, G.POLITICS); }
       catch (error) { console.error("[PPO] Regional campaign refresh failed", error); }
     }
   } catch (error) {
@@ -373,16 +373,16 @@ async function gpmOpenRegionalMap(ui, button, provinceKey) {
   if (ui.gpmRegionalActive || session !== ze || !ui.globe || button.disabled) return;
   button.disabled = true;
   try {
-    if (ui.globe.activeBody === "moon") await pue("earth");
+    if (ui.globe.activeBody === "moon") await Pue("earth");
     await ui.acquireSimulationViewLease("gpm-regional", [G.POLITICS]);
-    const view = Ka(session);
+    const view = Va(session);
     const data = view?.party?.regionalCampaign;
     if (!button.isConnected || session !== ze || !data || ui.globe.activeBody === "moon") {
       await ui.releaseSimulationViewLease("gpm-regional");
       return;
     }
-    Xve(ui);
-    if (TRt()) Zg(false);
+    mve(ui);
+    if (sCt()) Xg(false);
     ui.closeModule();
     ui.deselectCountry();
     const panel = document.createElement("aside");
@@ -396,7 +396,7 @@ async function gpmOpenRegionalMap(ui, button, provinceKey) {
       previousStrategic: globe._forceStrategic, previousMap: globe._choroNextKey };
     ui.gpmRegionalActive = state;
     ui.closeGpmRegionalMap = () => gpmCloseRegionalMap(ui);
-    Je("screen-game").append(panel);
+    Xe("screen-game").append(panel);
     panel.addEventListener("click", event => {
       if (event.target.closest("[data-gpm-region-close]")) gpmCloseRegionalMap(ui, true);
       const action = event.target.closest("[data-gpm-region-action]")?.dataset.gpmRegionAction;
@@ -407,11 +407,11 @@ async function gpmOpenRegionalMap(ui, button, provinceKey) {
         gpmSelectRegionalProvince(ui, event.target.value === "" ? null : Number(event.target.value));
       }
     });
-    Ok("gpm-regional");
+    jk("gpm-regional");
     globe._forceStrategic = true;
     globe.setDataMapIdentity("gpm-regional");
-    Xu();
-    const country = ay(data.countryKey);
+    Ju();
+    const country = sy(data.countryKey);
     if (country) globe.focusCountry(country, 3.45);
     gpmRenderRegionalMap(ui, state);
     panel.querySelector("[data-gpm-region-close]").focus({ preventScroll: true });
@@ -432,8 +432,8 @@ function gpmCloseRegionalMap(ui, returnToParty = false) {
   state.globe.clearChoropleth();
   state.globe.setDataMapIdentity(state.previousMap);
   state.globe._forceStrategic = state.previousStrategic;
-  Dk("gpm-regional");
-  Xu();
+  Gk("gpm-regional");
+  Ju();
   if (returnToParty && state.session === ze) ui.openModule("politics", "myparty");
   ui.releaseSimulationViewLease("gpm-regional").catch(error => console.error("[PPO] Regional campaign view release failed", error));
 }

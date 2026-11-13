@@ -2,10 +2,30 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { createHash } = require("node:crypto");
 const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
-const executableHash = "a53d56e974d6a8b8a3669fdf3de5a4278b250a51fbd43a1561f2ac1cb269daf6";
+const executableHash = "6c0f558ebc1674d309480e5f268280583424a920f8556a756e01c3136c41b675";
+const workerHash = "c38f7da0de30b5df6818e6884ff1b2763154351016b10163b3369533564a6fda";
+const archiveHash = "be810dd717afc249fc1b46ec349440d4732f4ce2aa3b58f77d3fcfd6972efd48";
+const archivePayloadHash = "fdeda8a30d6d51fa831e4ba07f52ace98575631be1d00e4d78a23581d6d3015b";
+const previousStock = {
+  archive: "519dda4117db8ef49eb77a66ed2a9ee9c5a53225fa91847868654f586109e34a",
+  payload: "e45165ccaea35062b9697aff48f9c67258dc53002708d75dad7d2ccff1fee05c",
+  executable: "a53d56e974d6a8b8a3669fdf3de5a4278b250a51fbd43a1561f2ac1cb269daf6",
+  worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
+};
 const previousPatches = [{
+  archive: "df7ee2ef470b384fe3c71c1c2c3f02831555ff9de7c0545034eaa19adce1adf5",
+  worker: "58b5731bf91984af193cbf908072e1b132fa1c906d93ff35c935ab6f1e12a774",
+  renderer: "457e95fe3583d381c63b989e07c5bdbdd0e1e7abc418271563e6643e6d0c82bf",
+  executable: "69a89259692a4fd97256ef2f269ec91c729a13433dd963c625e5e648cdefea89",
+}, {
+  archive: "f939f835f77e86f518d980f89f337e9295a36cdb75cdaee9cdc0ef06ab3e7e2b",
+  worker: "5e8027a637282474ff7500effb6f69dda46c1837909b48508e0602e4e88d638e",
+  renderer: "4f841245d253a8530cef68f146a2f85a4949da66bbd939e348c4426a8d015cb7",
+  executable: "3ddcc7e8653b7cd45ebc25459e9a0c96adb2b913c15d85db07a9056a2351fc18",
+}, {
   archive: "8e58b7c7f6a3e4a3780fc8577bf5fa312e69cad4526e751def042c434f8d8802",
   worker: "53e3dce7aa8651fd2833189612412629efdf668868eb5cc4040a23a8bcccbd59",
   renderer: "af7ebb84b286a694844bedf5e250e0180a16b1373f44a9f886aa567c00800db3",
@@ -125,6 +145,31 @@ const previousPatches = [{
   worker: "75df017bb79b93c3c7fcac238d264302301d5564a658e3e3d2861968103b19f3",
   renderer: "d43fd81e48bacd38486274a8dc569ead62f89297d4c9705f103fe594caafd97b",
   executable: "cf19db8f5f3ff9e2b7ecb671179b2f82202e04ca2edcefbc082b55e540a72d9c",
+}, {
+  archive: "480715f2d9781acc754132ef5a7c269a89ec4634007a2373320f133f8571a0a8",
+  worker: "82a4f3c60b0c6af0d39dcba683d41272c7e2bf5845cd83c2ea5a4a610a19dcdc",
+  renderer: "f7827f00e45adaf9419c89b432dc093aedc4d57a2bc45e9b230225280f965b7e",
+  executable: "38a2dde1a3d4b0052d521f48423b4ebe91af58ec2a13af7efc8105a6e99021f4",
+}, {
+  archive: "f163b6ae1a088cb26d32552b9246ddecb5281b3bbbd8af169facfcef85a088ae",
+  worker: "531311d7732ac9de87b7ebf021cf5bdec06f9a19c4d707ef6dec16443fe7445f",
+  renderer: "c2eaa33df6610761ff35d1d53eaf32d7159f1ff13ffcd915341e5e2ae862a0e9",
+  executable: "0778c2604c604d1b4506c3825aa2ff6264075b9c16206b333fb22b9b0c7c4a45",
+}, {
+  archive: "5376cf0c315a09f4a42f26651dff594575600c64024222b76dd37d74af942757",
+  worker: "f266f85c87ae883d7576796c67509156dc9c2b1bab444dc2053f247bf2f8ca7c",
+  renderer: "7e61c172dad114269f846d11d83f6d6eee13ed9718609c30af1c0f018d5ca4a6",
+  executable: "a04df5f9c534f88f731f6168712210796927347431fcbb7706e53f6104539e5b",
+}, {
+  archive: "60e47decdd1d692a8382cdbd9df625e8fc88ee21df848e9566f99aa7085fe091",
+  worker: "50aeed9960ac61e93c60851515d88167f4e1976b93a6f976a7c3123c5242700a",
+  renderer: "af8265031c09aa9bd1eed24a1a1a73390b274b2ada2380dbec3c3f48117cfebc",
+  executable: "fcefedea00868ba0c9d5aeb19943ebb8b266f3c49989e929878dcb343278f837",
+}, {
+  archive: "05d568a42efbc8387a095c30c902a52c09bf5eb1a9726954ec2e6f8e44ad2859",
+  worker: "6f0473149235a906c7925a965c8ea84c63060942529e6f0601177cd2524a8f25",
+  renderer: "26dc8c3f9609e1bec666ff639659bac09980416bd3d2fb5c738d878dba89c394",
+  executable: "533502e76e61f2f021063ff105e6f6c258923701362f04ffbcef8eabe8929965",
 }];
 
 function steamGamePath() {
@@ -132,13 +177,22 @@ function steamGamePath() {
   const steam = output.match(/InstallPath\s+REG_\w+\s+(.+)/i)?.[1].trim();
   if (!steam) throw new Error("Steam installation not found. Pass the Geoplanetical folder as an argument.");
   const steamApps = path.join(steam, "steamapps");
-  const config = fs.readFileSync(path.join(steamApps, "libraryfolders.vdf"), "utf8");
+  const libraryConfig = path.join(steamApps, "libraryfolders.vdf");
+  const config = fs.existsSync(libraryConfig) ? fs.readFileSync(libraryConfig, "utf8") : "";
   const libraries = [steam, ...Array.from(config.matchAll(/"path"\s+"([^"\r\n]+)"/g), match => match[1].replaceAll("\\\\", "\\"))];
+  const games = new Map();
   for (const library of libraries) {
-    const game = path.join(library, "steamapps", "common", "Geoplanetical");
-    if (fs.existsSync(path.join(game, "Geoplanetical.exe"))) return game;
+    const apps = path.join(library, "steamapps");
+    const manifest = path.join(apps, "appmanifest_940230.acf");
+    if (!fs.existsSync(manifest)) continue;
+    const folder = fs.readFileSync(manifest, "utf8").match(/"installdir"\s+"([^"\r\n]+)"/)?.[1];
+    if (!folder || folder === "." || folder === ".." || path.basename(folder) !== folder) continue;
+    const game = path.join(apps, "common", folder);
+    if (fs.existsSync(path.join(game, "Geoplanetical.exe"))) games.set(game.toLowerCase(), game);
   }
-  throw new Error("Geoplanetical was not found in a Steam library.");
+  if (games.size === 1) return games.values().next().value;
+  throw new Error(games.size ? "More than one Steam installation was found. Pass the Geoplanetical folder as an argument."
+    : "Geoplanetical was not found in a Steam library. Pass the Geoplanetical folder as an argument.");
 }
 
 function openArchive(file) {
@@ -189,10 +243,47 @@ function patchedArchiveHeader(header, renderer, worker) {
   updateEntry(entries["app.bundle.js"], renderer);
   updateEntry(entries["simulation-worker.bundle.js"], worker);
   const json = Buffer.from(JSON.stringify(header.json));
-  if (json.length > header.length) throw new Error("The updated archive header does not fit this build");
-  const bytes = Buffer.alloc(header.length, 0x20);
+  const bytes = Buffer.alloc(Math.max(header.length, json.length), 0x20);
   json.copy(bytes);
   return bytes;
+}
+
+function writePatchedArchive(original, target, headerBytes) {
+  const header = openArchive(original);
+  if (headerBytes.length === header.length) {
+    fs.copyFileSync(original, target, fs.constants.COPYFILE_EXCL);
+    const fd = fs.openSync(target, "r+");
+    try {
+      if (fs.writeSync(fd, headerBytes, 0, headerBytes.length, 16) !== headerBytes.length)
+        throw new Error("Could not finish the game archive");
+    } finally { fs.closeSync(fd); }
+    return;
+  }
+  // ASAR entry offsets are relative to the payload. Only the header pickle
+  // grows, so every packaged file can be copied at its existing offset.
+  const aligned = Math.ceil(headerBytes.length / 4) * 4;
+  const prefix = Buffer.alloc(16);
+  prefix.writeUInt32LE(4, 0);
+  prefix.writeUInt32LE(aligned + 8, 4);
+  prefix.writeUInt32LE(aligned + 4, 8);
+  prefix.writeUInt32LE(headerBytes.length, 12);
+  const input = fs.openSync(original, "r");
+  try {
+    const output = fs.openSync(target, "wx");
+    try {
+      fs.writeFileSync(output, prefix);
+      fs.writeFileSync(output, headerBytes);
+      fs.writeFileSync(output, Buffer.alloc(aligned - headerBytes.length));
+      const chunk = Buffer.allocUnsafe(16 * 1024 * 1024);
+      const size = fs.fstatSync(input).size;
+      for (let offset = header.offset; offset < size;) {
+        const count = fs.readSync(input, chunk, 0, Math.min(size - offset, chunk.length), offset);
+        if (!count) throw new Error("The original game archive was truncated while copying");
+        fs.writeFileSync(output, chunk.subarray(0, count));
+        offset += count;
+      }
+    } finally { fs.closeSync(output); }
+  } finally { fs.closeSync(input); }
 }
 
 function getFiles(game) {
@@ -206,8 +297,35 @@ function getFiles(game) {
     backupExecutable: executable + ".party-mod-original" };
 }
 
+function verifyArchivePayload(file, { offset }, expected = archivePayloadHash) {
+  const hash = createHash("sha256");
+  const chunk = Buffer.allocUnsafe(16 * 1024 * 1024);
+  const fd = fs.openSync(file, "r");
+  try {
+    let position = offset;
+    for (let count; (count = fs.readSync(fd, chunk, 0, chunk.length, position)); position += count) {
+      hash.update(chunk.subarray(0, count));
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+  if (hash.digest("hex") !== expected) {
+    throw new Error(`Archive data failed integrity verification: ${path.basename(file)}. Use Steam Verify Integrity before retrying.`);
+  }
+}
+
+function verifiedArchiveHash(file) {
+  const header = openArchive(file);
+  verifyArchivePayload(file, header);
+  return header.hash;
+}
+
 function buildPatch(archive, worker, executable) {
   const header = openArchive(archive);
+  if (header.hash !== archiveHash) {
+    throw new Error(`The original game archive must be from Geoplanetical ${version}. Backups from older Steam builds cannot be used for this version.`);
+  }
+  verifyArchivePayload(archive, header);
   const entries = header.json.files.renderer.files;
   const rendererBytes = patchRenderer(readEntry(archive, header, entries["app.bundle.js"]));
   const workerBytes = patchWorker(fs.readFileSync(worker));
@@ -219,7 +337,7 @@ function buildPatch(archive, worker, executable) {
 function installedHashes(files, allowMissing = false) {
   return Object.fromEntries(Object.keys(previousPatches[0]).map(key => {
     const file = files[key];
-    const hash = fs.existsSync(file) ? (key === "archive" ? openArchive(file).hash : sha256(fs.readFileSync(file))) : null;
+    const hash = fs.existsSync(file) ? (key === "archive" ? verifiedArchiveHash(file) : sha256(fs.readFileSync(file))) : null;
     if (!hash && !allowMissing) throw new Error(`The active ${key} file is missing. Run Restore Original Game before updating.`);
     return [key, hash];
   }));
@@ -233,38 +351,77 @@ function patchHashes(patch) {
   return Object.fromEntries(Object.entries(patch).map(([key, bytes]) => [key, sha256(bytes)]));
 }
 
+function hasStockFiles(archive, worker, executable, stock) {
+  return [archive, worker, executable].every(file => fs.existsSync(file)) &&
+    openArchive(archive).hash === stock.archive &&
+    sha256(fs.readFileSync(worker)) === stock.worker &&
+    sha256(fs.readFileSync(executable)) === stock.executable;
+}
+
+function isCurrentStock(files) {
+  return hasStockFiles(files.archive, files.worker, files.executable, {
+    archive: archiveHash, worker: workerHash, executable: executableHash,
+  });
+}
+
+function isKnownRenderer(renderer, patch) {
+  if (!fs.existsSync(renderer)) return true;
+  const hash = sha256(fs.readFileSync(renderer));
+  return hash === sha256(patch.renderer) || previousPatches.some(previous => previous.renderer === hash);
+}
+
 function install(files) {
   const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
   const backups = [[archive, backupArchive], [worker, backupWorker], [executable, backupExecutable]];
-  const upgrading = backups.some(([, backup]) => fs.existsSync(backup));
-  if (upgrading && !backups.every(([, backup]) => fs.existsSync(backup))) throw new Error("Some original game backups are missing. Restore the Steam files before updating.");
-  if (!upgrading && fs.existsSync(renderer)) throw new Error("Another patch has added a renderer file. Restore the original game before installing.");
+  const hasBackups = backups.some(([, backup]) => fs.existsSync(backup));
+  if (hasBackups && !backups.every(([, backup]) => fs.existsSync(backup))) throw new Error("Some original game backups are missing. Restore the Steam files before updating.");
+  const activeStock = hasBackups && isCurrentStock(files);
+  const steamUpdated = activeStock && hasStockFiles(backupArchive, backupWorker, backupExecutable, previousStock);
+  const upgrading = hasBackups && !steamUpdated;
+  if (steamUpdated) verifyArchivePayload(backupArchive, openArchive(backupArchive), previousStock.payload);
+  const detachedRenderer = fs.existsSync(renderer);
   const originalArchive = upgrading ? backupArchive : archive;
   const patch = buildPatch(originalArchive, upgrading ? backupWorker : worker, upgrading ? backupExecutable : executable);
-  if (upgrading) {
-    const current = installedHashes(files);
-    if (matchesPatch(current, patchHashes(patch))) return;
-    if (!previousPatches.some(previous => matchesPatch(current, previous))) throw new Error("The existing patch differs from the supported releases. No game files were replaced.");
+  if ((activeStock && !isKnownRenderer(renderer, patch)) || (!hasBackups && detachedRenderer)) {
+    throw new Error("An unrecognized renderer file is present. Restore the original game before installing.");
   }
-  const staged = fs.mkdtempSync(path.join(path.dirname(archive), ".party-mod-"));
+  if (upgrading) {
+    if (activeStock) {
+      verifyArchivePayload(archive, openArchive(archive));
+    } else {
+      const current = installedHashes(files);
+      if (matchesPatch(current, patchHashes(patch))) return;
+      if (!previousPatches.some(previous => matchesPatch(current, previous))) throw new Error("The existing patch differs from the supported releases. No game files were replaced.");
+    }
+  }
+  const staged = fs.mkdtempSync(path.join(path.dirname(archive),
+    steamUpdated ? ".party-mod-previous-1.1.2-" : ".party-mod-"));
   const newArchive = path.join(staged, "app.asar");
   const newWorker = path.join(staged, "simulation-worker.bundle.js");
   const newRenderer = path.join(staged, "app.bundle.js");
   const newExecutable = path.join(staged, "Geoplanetical.exe");
+  const legacyDirectory = path.join(staged, "steam-1.1.2");
   const installed = [];
   const moved = [];
   let committed = false;
   try {
-    fs.copyFileSync(originalArchive, newArchive, fs.constants.COPYFILE_EXCL);
-    const fd = fs.openSync(newArchive, "r+");
-    try {
-      if (fs.writeSync(fd, patch.archive, 0, patch.archive.length, 16) !== patch.archive.length) throw new Error("Could not finish the game archive");
-    } finally { fs.closeSync(fd); }
+    writePatchedArchive(originalArchive, newArchive, patch.archive);
     fs.writeFileSync(newWorker, patch.worker, { flag: "wx" });
     fs.writeFileSync(newRenderer, patch.renderer, { flag: "wx" });
     fs.writeFileSync(newExecutable, patch.executable, { flag: "wx" });
-    if (openArchive(newArchive).hash !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
-    const replacements = upgrading ? [archive, worker, renderer, executable].map(file => [file, path.join(staged, "previous-" + path.basename(file))]) : backups;
+    if (verifiedArchiveHash(newArchive) !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
+    if (steamUpdated) {
+      fs.mkdirSync(legacyDirectory);
+      const legacyFiles = backups.map(([, backup]) => backup);
+      if (detachedRenderer) legacyFiles.push(renderer);
+      for (const file of legacyFiles) {
+        const saved = path.join(legacyDirectory, path.basename(file));
+        fs.renameSync(file, saved);
+        moved.push([file, saved]);
+      }
+    }
+    const replacements = upgrading ? [archive, worker, renderer, executable].filter(file => fs.existsSync(file))
+      .map(file => [file, path.join(staged, "previous-" + path.basename(file))]) : backups;
     for (const [file, saved] of replacements) {
       fs.renameSync(file, saved);
       moved.push([file, saved]);
@@ -281,6 +438,8 @@ function install(files) {
   } finally {
     for (const file of [newArchive, newWorker, newRenderer, newExecutable]) if (fs.existsSync(file)) fs.unlinkSync(file);
     if (committed && upgrading) for (const [, saved] of moved) fs.unlinkSync(saved);
+    if (!committed && fs.existsSync(legacyDirectory) && !fs.readdirSync(legacyDirectory).length)
+      fs.rmdirSync(legacyDirectory);
     if (!fs.readdirSync(staged).length) fs.rmdirSync(staged);
   }
 }
@@ -290,7 +449,9 @@ function restore(files) {
   if (![backupArchive, backupWorker, backupExecutable].every(file => fs.existsSync(file))) throw new Error("The three original backup files are required for a restore.");
   const patch = buildPatch(backupArchive, backupWorker, backupExecutable);
   const current = installedHashes(files, true);
-  if (!matchesPatch(current, patchHashes(patch)) && !previousPatches.some(previous => matchesPatch(current, previous))) {
+  const repairedBySteam = current.archive === archiveHash && current.worker === workerHash &&
+    current.executable === executableHash && isKnownRenderer(renderer, patch);
+  if (!repairedBySteam && !matchesPatch(current, patchHashes(patch)) && !previousPatches.some(previous => matchesPatch(current, previous))) {
     throw new Error("The active game files changed since installation. Keep the updated files and use Steam Verify Integrity if needed.");
   }
   const staged = fs.mkdtempSync(path.join(path.dirname(archive), ".party-mod-restore-"));

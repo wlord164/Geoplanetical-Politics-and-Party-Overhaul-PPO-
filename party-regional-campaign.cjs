@@ -16,7 +16,7 @@ const rules = {
 function partyRegionalProvince(sim, country, id, key) {
   if (!Number.isSafeInteger(id) || id < 0 || typeof key !== "string" || !key) return null;
   const province = sim.world?.provinces?.[id];
-  return province?.__provKey === key && province.__lean && province.__pop > 0 && ni(province, country.key)
+  return province?.__provKey === key && province.__lean && province.__pop > 0 && fi(province, country.key)
     ? province : null;
 }
 
@@ -91,7 +91,7 @@ function partyRegionalNormalize(supports, adjusted, total) {
 
 function partyRegionalNationalShares(polity, map, supports) {
   if (!map?.regions?.length || !polity.parties.some(party => party.gpmRegional)) return supports;
-  const regions = vIe(polity, map, supports, false);
+  const regions = Ywe(polity, map, supports, false);
   const { adjusted, total } = partyRegionalNationalTotals(polity, regions, supports, map.day);
   return partyRegionalNormalize(supports, adjusted, total);
 }
@@ -109,9 +109,9 @@ function partyRegionalQuote(sim, country, party, kind, region, relocateHeadquart
   const priority = partyCongressActivePriority(party, day);
   const cash = Math.round(rule.cash * (1 + scale) * (kind === "rally" ? 1 - .25 * presence : 1)
     * partyCongressPriorityCost(kind, priority?.kind) * 1e6) / 1e6;
-  const activistsK = GN(rule.activists * (1 + scale));
+  const activistsK = zL(rule.activists * (1 + scale));
   const rally = partyRegionalRallyWeight(local?.rally, day + rule.days);
-  const fit = Math.exp(-.4 * Hp(party.ideology, region.lean) ** 2);
+  const fit = Math.exp(-.4 * om(party.ideology, region.lean) ** 2);
   const credibility = party.organization.credibility ?? .5;
   const chance = Math.max(.25, Math.min(.9, .34 + .30 * fit + .16 * credibility + .10 * presence + (hasHeadquarters ? .06 : 0)));
   const rallyGain = Math.max(0, Math.min(gpmRegionalRules.rallyLimit - rally, .24 + .08 * fit + .08 * presence));
@@ -141,9 +141,9 @@ function partyRegionalStart(sim, country, party, kind, region, relocateHeadquart
   const record = party.gpmRegional ??= { regions: {}, projects: [], headquarters: null };
   const nextTreasury = Math.round((party.organization.treasuryM - quote.cash) * 1e6) / 1e6;
   party.organization.treasuryM = partyForeignFundingTreasury(party, nextTreasury);
-  party.organization.activistsK = GN(party.organization.activistsK - quote.activistsK);
+  party.organization.activistsK = zL(party.organization.activistsK - quote.activistsK);
   // The result is bound to the project at commitment and survives a save/reload.
-  const salt = YNr(JSON.stringify([sim.rngSeed0, country.key, party.id, region.key, day]));
+  const salt = tGr(JSON.stringify([sim.rngSeed0, country.key, party.id, region.key, day]));
   const roll = ((Math.imul(salt ^ (salt >>> 16), 0x45d9f3b) >>> 0) / 0x100000000);
   const strongInvestment = kind === "investment" && roll < quote.chance;
   record.projects.push({
@@ -165,7 +165,7 @@ function advancePartyRegionalCampaign(sim, country, party) {
     const eligible = province && party.legal !== false;
     if (eligible && day < project.endDay) continue;
     record.projects.splice(record.projects.indexOf(project), 1);
-    party.organization.activistsK = GN(Math.min(1e5, party.organization.activistsK + project.activistsK));
+    party.organization.activistsK = zL(Math.min(1e5, party.organization.activistsK + project.activistsK));
     const local = record.regions[project.key] ??= { presence: 0 };
     if (!eligible) {
       local.lastAction = { kind: project.kind, result: "cancelled", day };
@@ -193,13 +193,13 @@ function advancePartyRegionalCampaign(sim, country, party) {
 
 function registerPartyRegionalCampaign() {
   for (const kind of ["rally", "investment", "headquarters"]) {
-    Pyt("gpm.party.regional." + kind, {
+    n5t("gpm.party.regional." + kind, {
       apply(sim, country, input) {
-        if (country.key !== sim.playerKey || Go(country) !== input.partyId) return { ok: false, reason: "party" };
+        if (country.key !== sim.playerKey || Uo(country) !== input.partyId) return { ok: false, reason: "party" };
         const province = partyRegionalProvince(sim, country, input.provinceId, input.provinceKey);
         if (!province) return { ok: false, reason: "region" };
         const region = { id: province.__provId, key: province.__provKey, pop: province.__pop, lean: province.__lean };
-        return partyRegionalStart(sim, country, WN(country, input.partyId), kind, region);
+        return partyRegionalStart(sim, country, YL(country, input.partyId), kind, region);
       },
     });
   }
@@ -207,18 +207,18 @@ function registerPartyRegionalCampaign() {
 
 function partyRegionalNationalForecast(sim, country, map, partyId) {
   const polity = country.pol;
-  const elections = Object.values(ot(country)?.contests || {});
+  const elections = Object.values(Xe(country)?.contests || {});
   const directChambers = (polity.chambers || []).filter(chamber =>
     ["direct", "equal-per-state", "delegated"].includes(chamber.selectMode || "direct"));
   const election = elections.filter(contest => Number.isFinite(contest.nextDay)
     && directChambers.some(chamber => contest.targetOrganId === "chamber:" + chamber.id))
     .sort((a, b) => a.nextDay - b.nextDay)[0];
   const chamber = directChambers.find(item => election?.targetOrganId === "chamber:" + item.id) || directChambers[0];
-  const rules = chamber ? V0a(chamber) : null;
-  const base = election ? sx(sim, country, { kind: "legislative", contestId: election.id, election })
+  const rules = chamber ? f1a(chamber) : null;
+  const base = election ? iE(sim, country, { kind: "legislative", contestId: election.id, election })
     : Object.fromEntries(polity.parties.map(party => [party.id, party.support || 0]));
-  const supports = Dh(polity, base);
-  const estimates = vIe(polity, map, supports, false);
+  const supports = r6(polity, base);
+  const estimates = Ywe(polity, map, supports, false);
   const totalsByDay = new Map();
   const projected = ({ adjusted, total }) => partyRegionalNormalize(supports, adjusted, total);
   const totalsAt = day => {
@@ -229,7 +229,7 @@ function partyRegionalNationalForecast(sim, country, map, partyId) {
     return totalsByDay.get(day);
   };
   const current = totalsAt(map.day).shares;
-  const seats = chamber && c7(chamber, rules.transfer ? supports : current, chamber.seats, {
+  const seats = chamber && O7(chamber, rules.transfer ? supports : current, chamber.seats, {
     rulingId: polity.institutionState?.government?.leadPartyId || null,
     integrity: polity.regime.electoralIntegrity,
     polity, electoralMap: rules.transfer ? map : null,
@@ -274,10 +274,10 @@ function partyRegionalProjectProjection(polity, partyId, region, estimate, local
 }
 
 function partyRegionalCampaignView(sim, country, partyId) {
-  const party = WN(country, partyId);
+  const party = YL(country, partyId);
   if (!party?.organization) return null;
-  const map = Ix(sim, country);
-  const raw = new Map(vIe(country.pol, map, null, false).map(region => [region.id, region.shares]));
+  const map = PE(sim, country);
+  const raw = new Map(Ywe(country.pol, map, null, false).map(region => [region.id, region.shares]));
   const record = party.gpmRegional;
   const day = sim.day || 0;
   const forecast = partyRegionalNationalForecast(sim, country, map, partyId);
@@ -334,12 +334,12 @@ function partyRegionalCampaignView(sim, country, partyId) {
 function advancePartyRegionalAI(sim, country, electionIn) {
   if (country.key !== sim.playerKey) return;
   const kind = electionIn <= 70 ? "rally" : "investment";
-  const map = Ix(sim, country);
+  const map = PE(sim, country);
   if (!map.regions.length) return;
   const regions = new Map(map.regions.filter(region => region.pop > 0).map(region => [region.id, region]));
-  const estimates = vIe(country.pol, map);
+  const estimates = Ywe(country.pol, map);
   for (const party of country.pol.parties) {
-    if (!party.organization || party.legal === false || JNr(sim, country, party.id)) continue;
+    if (!party.organization || party.legal === false || iGr(sim, country, party.id)) continue;
     let best = null;
     for (const estimate of estimates) {
       const region = regions.get(estimate.id);

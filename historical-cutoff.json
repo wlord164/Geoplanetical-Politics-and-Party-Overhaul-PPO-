@@ -1,0 +1,2997 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-01-01",
+  "decisions": [
+    {
+      "id": "per-vraem-insurgency",
+      "disposition": "active",
+      "evidenceDate": "2025-12-23",
+      "note": "November 8 reporting identifies reciprocal combat in Ayacucho with the VRAEM remnant. Separate May and December government accounts identify continuing operations against the same organization, and the local emergency remained in force on January 1. The November contact provides the fighting evidence. The December government action concerned logistics.",
+      "sources": [
+        "https://rpp.pe/peru/actualidad/ayacucho-tres-heridos-deja-enfrentamiento-entre-las-fuerzas-del-orden-y-sendero-luminoso-en-el-vraem-noticia-1663116",
+        "https://andina.pe/agencia/noticia-fuerzas-del-orden-asestan-duro-golpe-a-remanentes-sendero-luminoso-1029382.aspx",
+        "https://www.gob.pe/institucion/mindef/noticias/1304116-fuerzas-del-orden-golpean-logistica-de-remanentes-terroristas-y-detienen-a-dos-personas",
+        "https://busquedas.elperuano.pe/api/visor_html/2461555-1",
+        "https://www.gob.pe/institucion/mpfn/noticias/1319131-fiscalia-de-dd-hh-logra-condena-de-11-anos-de-carcel-para-miembro-de-sendero-luminoso-en-el-vraem"
+      ],
+      "confidence": "medium",
+      "patch": {
+        "name": "Government of Peru and the Militarized Communist Party of Peru",
+        "mode": "regional",
+        "regions": [
+          {
+            "key": "PER-586",
+            "name": "Ayacucho",
+            "note": "The fighting was localized to part of the VRAEM. The stock map uses Ayacucho as its regional marker and preserves Peruvian ownership."
+          }
+        ]
+      }
+    },
+    {
+      "id": "som-puntland-north-east-dispute",
+      "disposition": "unverified",
+      "evidenceDate": "2025-10-31",
+      "note": "EUAA identifies the October 31 Boocame clash between Puntland and forces loyal to the newly formed North-Eastern State. The independent September CHS review identifies a recurring localized frontier dispute, while December research and humanitarian access data establish ongoing overlapping claims and insecurity without direct combat by those parties at the cutoff.",
+      "sources": [
+        "https://www.euaa.europa.eu/somalia-security-situation/27-sool-sanaag-cayn-and-north-eastern-state-nes",
+        "https://chs-doha.org/en/Publications/Pages/From-Las-Anood-to-the-North-Eastern-State-%28NES%29-Implications-for-Somalia%E2%80%93Somaliland-Mediation-and-Regional-Stability.aspx",
+        "https://riftvalley.net/wp-content/uploads/2025/12/RVI20251212_SDP-SSC-K-report_FINAL.pdf",
+        "https://documents.un.org/doc/undoc/gen/n25/242/24/pdf/n2524224.pdf"
+      ]
+    },
+    {
+      "id": "som-somaliland-north-east-dispute",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-12",
+      "note": "December Rift Valley interviews document militarized positions around Oog, Qorilugud and Buhodle and competing control. EUAA reports a mix of security incidents spanning April 2025 to March 2026 but no exact December Somaliland–NES fighting. Distinguish territorial dispute from a confirmed opening front.",
+      "sources": [
+        "https://riftvalley.net/wp-content/uploads/2025/12/RVI20251212_SDP-SSC-K-report_FINAL.pdf",
+        "https://www.euaa.europa.eu/somalia-security-situation/27-sool-sanaag-cayn-and-north-eastern-state-nes",
+        "https://www.euaa.europa.eu/somalia-security-situation/272-sanaag"
+      ]
+    },
+    {
+      "id": "syr-suwayda-government",
+      "disposition": "active",
+      "evidenceDate": "2025-12-23",
+      "note": "Repeated December clashes between Syrian Interior Ministry forces and the Suwayda National Guard establish an ongoing localized conflict despite the July truce and Amman roadmap.",
+      "sources": [
+        "https://english.enabbaladi.net/archives/2025/12/four-killed-as-interior-ministry-forces-and-suwayda-factions-clash-despite-truce/",
+        "https://www.euaa.europa.eu/syria-security-situation/2133-security-trends",
+        "https://digitallibrary.un.org/record/4090418/files/A_80_414--S_2025_586-EN.pdf"
+      ],
+      "patch": {
+        "name": "Syrian Transitional Government vs Suwayda National Guard"
+      }
+    },
+    {
+      "id": "ucdp-nonstate-12341",
+      "disposition": "unverified",
+      "evidenceDate": "2025-08-20",
+      "note": "Community representatives reached a separate agreement in January 2025. UCDP records later violence in August. In January 2026, the council specifically revoked an older 2017 arrangement. That later action does not establish reciprocal fighting by the cutoff or a lasting truce under the 2025 accord.",
+      "sources": [
+        "https://truthnigeria.com/2025/01/fulani-agatu-tribal-leaders-sign-peace-agreement/",
+        "https://www.vanguardngr.com/2025/01/benue-agatu-indigenes-fulani-herdsmen-dialogue-resolve-to-end-decades-of-hostilities/amp/",
+        "https://truthnigeria.com/2026/01/agatu-chairman-revokes-peace-deal-with-fulani-orders-immediate-exit/",
+        "https://ucdp.uu.se/year/2025",
+        "https://dip-aws.euaa.europa.eu/nigeria-security-situation/211-benue",
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-14736",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-31",
+      "note": "The exact farmer–herder relationship is documented in Lim-Pendé earlier in 2025. December tension is documented, while the UN identifies a separate fight between 3R and armed herders. Exact January 1 combat is unverified.",
+      "sources": [
+        "https://minusca.unmissions.org/sites/default/files/2026-03/HRD%20-%20Monthly%20Report%20-%20December%202025.pdf",
+        "https://fews.net/west-africa/central-african-republic/key-message-update/december-2025",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-15051",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-01",
+      "note": "UCDP documents the Ron-Kulere dyad in Bokkos through August. A December 1 report identifies a local group of assailants and a Fulani victim in Bokkos, but does not verify the assailants as the exact Ron-Kulere armed actor. Do not infer identity from the local government's territory.",
+      "sources": [
+        "https://ucdp.uu.se/year/2025",
+        "https://dip-aws.euaa.europa.eu/nigeria-security-situation/217-plateau",
+        "https://www.zagazola.org/index.php/breaking-news/young-fulani-man-killed-six-cows-poisoned-in-separate-farmland-incidents-in-plateau-state"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-15214",
+      "disposition": "unverified",
+      "evidenceDate": "2025-07-17",
+      "note": "Research and UCDP establish armed attacks in Irigwe areas of Bassa through mid-2025. The December Plateau incidents verified in the EUAA year-end report are in different local government areas and cannot establish the exact Irigwe dyad's status.",
+      "sources": [
+        "https://ucdp.uu.se/year/2025",
+        "https://cradil.org/wp-content/uploads/2025/08/Post-Conflict-Assessment-Report-April-June-2025-.pdf",
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-15914",
+      "disposition": "active",
+      "evidenceDate": "2025-12-28",
+      "note": "A December 28 clash at Petaka in Douentza, Mopti, identifies Dan Na Ambassagou and JNIM as the opponents. Independent December field reporting identifies Petaka in the JNIM–Dozo clash area, a FIDH investigation associates the Petaka post with Dan Na Ambassagou, and December SIPRI research documents the continuing rivalry. The conflict remains local to central Mali.",
+      "sources": [
+        "https://observatorioterrorismo.com/analisis/actividad-yihadista-en-el-magreb-y-africa-occidental-diciembre-2025/",
+        "https://fr.scribd.com/document/980691890/INSO-Mali-Rapport-Mensuel-De-cembre-2025",
+        "https://www.fidh.org/IMG/pdf/rapport_d_enquete_te_fidh_-_dans_le_centre_du_mali_victimes_et_bourreaux_vivent_ensemble.pdf",
+        "https://www.sipri.org/sites/default/files/WORKING%20PAPER%20N%C2%B05%20-%20EN%20%28WEB%29.pdf",
+        "https://ucdp.uu.se/year/2025"
+      ],
+      "confidence": "medium",
+      "patch": {
+        "name": "Dan Na Ambassagou vs Jama'at Nusrat al-Islam wal-Muslimin (JNIM)",
+        "regions": [
+          {
+            "key": "MLI-2809",
+            "name": "Mopti",
+            "note": "Recorded clashes around Petaka in Douentza. Province-wide military control and civil administration are unspecified."
+          }
+        ],
+        "geographicContext": [
+          "Petaka, Douentza, Mopti"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-nonstate-15915",
+      "disposition": "active",
+      "evidenceDate": "2025-12-17",
+      "note": "The UN envoy reported that the STC had deployed into Hadramawt and Al Mahra. The authorities and STC remained in conflict over control in southern and eastern Yemen at the opening.",
+      "sources": [
+        "https://osesgy.unmissions.org/en/node/77743"
+      ],
+      "patch": {
+        "replaceSources": true
+      }
+    },
+    {
+      "id": "ucdp-nonstate-16135",
+      "disposition": "active",
+      "evidenceDate": "2025-12-31",
+      "note": "The US Lead Inspector General report covering the second half of 2025 attributes mid-December renewed hostilities to the SDF and Syrian National Army and says the April ceasefire was disrupted. This records the late-2025 relationship independently of the Damascus–SDF conflict.",
+      "sources": [
+        "https://media.defense.gov/2026/Feb/19/2003876973/-1/-1/1/OPERATION%20INHERENT%20RESOLVE_2026.PDF",
+        "https://warwatch.ch/situations/armed-conflicts-in-syria/classification/"
+      ],
+      "patch": {
+        "name": "Syrian National Army vs Syrian Democratic Forces"
+      }
+    },
+    {
+      "id": "ucdp-nonstate-17267",
+      "disposition": "unverified",
+      "evidenceDate": "2025-01-31",
+      "note": "UCDP’s most recent attributable event for this exact alignment in its 2025 release is in January. Contemporary research confirms the existence of relevant groups and rivalries but does not verify that CJNG and Sangre Nueva Zeta were still fighting Los Rojos as this exact alignment at the cutoff.",
+      "sources": [
+        "https://ucdp.uu.se/year/2025",
+        "https://inap.mx/wp-content/uploads/2025/03/RIS2-FINAL-24032025_c.pdf",
+        "https://www.unilim.fr/trahs/7365%26file%3D1/"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17327",
+      "disposition": "unverified",
+      "evidenceDate": "2025-07-29",
+      "note": "The July Chiure mobilization and engagement identifies local Naparama. December reporting verifies Islamic State Mozambique fighting the Mozambican and Rwandan security forces and leaving Chiure, without attributable renewed Islamic State–Naparama fighting.",
+      "sources": [
+        "https://acleddata.com/system/files/2025-08/mozamqique-conflict-monitor-14-july-3-august-2025-en.pdf",
+        "https://acleddata.com/update/mozambique-conflict-monitor-update-10-december-2025",
+        "https://acleddata.com/update/mozambique-conflict-monitor-update-14-january-2026",
+        "https://acleddata.com/system/files/2026-01/MCM-Update-14-January-2026-ENG-1.pdf",
+        "https://ucdp.uu.se/country/541"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17412",
+      "disposition": "unverified",
+      "evidenceDate": "2025-10-04",
+      "note": "October raids between armed elements from the Gawaar and Lou Nuer communities followed an earlier cessation pledge. Fighting around Waat and Riang Payam in December involved South Sudanese government forces and SPLA-IO, a different dyad.",
+      "sources": [
+        "https://www.radiotamazuj.org/en/news/article/30-dead-in-cattle-raiding-upsurge-in-nyirol-ayod",
+        "https://peacekeeping.un.org/en/news/feuding-communities-sign-cessation-of-hostilities-agreement-at-unmiss-supported",
+        "https://www.radiotamazuj.org/news/article/clashes-resume-between-sspdf-spla-io-in-jonglei",
+        "https://www.sudanspost.com/spla-io-claims-capture-of-sspdf-waat-base-in-wednesday-morning-attack/",
+        "https://digitallibrary.un.org/record/4102065/files/S_2026_58-EN.pdf",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17428",
+      "disposition": "active",
+      "evidenceDate": "2025-12-18",
+      "note": "The Brazilian Forum on Public Security’s 2025 field research describes the expansion of Comando Vermelho and increased conflict with regional factions including Bonde dos 40. A federal justice ministry planning document independently describes the current Maranhão dispute between these named groups. Localized non-state conflict in Maranhão at medium confidence.",
+      "sources": [
+        "https://publicacoes.forumseguranca.org.br/items/31644463-47b2-47d5-a192-84ecaf223d4b",
+        "https://www.gov.br/mj/pt-br/assuntos/sua-protecao/politicas-sobre-drogas/anexos-transparencia/TED%205-2025-plano-de-trabalho.pdf",
+        "https://fontesegura.forumseguranca.org.br/mortes-violentas-intencionais-na-amazonia-legal/"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17429",
+      "disposition": "active",
+      "evidenceDate": "2025-12-31",
+      "note": "Brazilian Public Security Forum fieldwork documents a continuing B40–PCC rivalry in eastern Maranhão. A December 31 killing in Teresina was later attributed by police to a suspected PCC operative and a B40-linked target. Earlier reporting differed about the affiliation of other suspects. This establishes a localized armed rivalry with qualified attribution. The simulation does not assign either faction territorial control.",
+      "sources": [
+        "https://forumseguranca.org.br/wp-content/uploads/2025/11/cartografias-violencia-amazonia-2025.pdf#page=72",
+        "https://a10mais.com/amp/blogs/balanco-geral/pcc-x-b40-delegado-fala-sobre-prisao-de-homem-que-matou-rival-em-teresina-criminoso-ainda-intimidava-familiares-da-vitima-43633.html",
+        "https://portalclubenews.com/2026/03/13/irmaos-suspeitos-de-matar-homem-e-colocar-fogo-no-corpo-sao-presos-em-teresina/",
+        "https://www.gp1.com.br/blog/brunno-suenio/2025/12/16/dhpp-encerra-inquerito-sobre-morte-de-adolescente-em-disputa-de-faccoes-na-zona-leste-de-teresina-404466.html",
+        "https://ucdp.uu.se/year/2025",
+        "https://www.mppi.mp.br/internet/wp-content/uploads/2025/10/Revista-7-Edicao-2025-v1.pdf",
+        "https://www.gp1.com.br/pi/piaui/noticia/2025/5/29/denarc-deflagra-operacao-e-cumpre-mandados-contra-o-bonde-dos-40-em-teresina-595471.html",
+        "https://fontesegura.forumseguranca.org.br/mortes-violentas-intencionais-na-amazonia-legal/"
+      ],
+      "confidence": "medium",
+      "patch": {
+        "name": "Bonde dos 40 and Primeiro Comando da Capital",
+        "mode": "regional",
+        "regions": [
+          {
+            "key": "BRA-622",
+            "name": "Piauí",
+            "note": "Police linked the Teresina incident to faction rivalry. It did not establish province-wide control."
+          },
+          {
+            "key": "BRA-593",
+            "name": "Maranhão",
+            "note": "Eastern Maranhão is a wider rivalry area identified in 2025 fieldwork. No province-wide control is assigned."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ucdp-nonstate-17674",
+      "disposition": "active",
+      "evidenceDate": "2025-12-02",
+      "note": "The Defensoría del Pueblo’s December early warning explicitly describes the ongoing open dispute between EGC and ACSN around the Sierra Nevada de Santa Marta in Magdalena, La Guajira and Cesar. Model a localized non-state conflict without assigning entire provinces as faction territory.",
+      "sources": [
+        "https://www.defensoria.gov.co/documents/20123/3553199/AT%2B020-25%2BSNSM.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17769",
+      "disposition": "unverified",
+      "evidenceDate": "2025-04-19",
+      "note": "UCDP's coding and an April report support a rivalry between Benue militias, including a reported response attributed to a commander called Full Fire. Competing contemporary accounts attribute the deaths differently. Broader regional insecurity does not independently establish continuing Chain Guys–Full Force fighting on 1 January.",
+      "sources": [
+        "https://ucdp.uu.se/country/475",
+        "https://zagazola.org/index.php/breaking-news/exclusive-militia-supremacy-battle-fuels-deadly-attacks-in-benue-community-as-17-killed",
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17908",
+      "disposition": "unverified",
+      "evidenceDate": "2025-09-30",
+      "note": "UNMISS documented attacks by armed Murle elements against Toposa communities in Q2 and attacks by armed Toposa elements against Murle communities in Q3. The April reconciliation pledge did not end violence. Another exact incident took place in February 2026. The available record does not settle January 1 status.",
+      "sources": [
+        "https://www.ecoi.net/en/file/local/2132282/brief-violence-ss-q2-2025.pdf#page=4",
+        "https://monusco.unmissions.org/sites/default/files/2026-01/quarterly_brief_on_violence_affecting_civilians_july-september_2025.pdf",
+        "https://unmiss.unmissions.org/en/node/29087",
+        "https://unsco.unmissions.org/sites/default/files/2025-10/unmiss_hrd_brief_on_violence_affecting_civilians_january_to_march_2025_goss_response.pdf",
+        "https://www.radiotamazuj.org/en/news/article/kapoeta-north-authorities-accuse-murle-youths-of-killing-14-civilians",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-17958",
+      "disposition": "active",
+      "evidenceDate": "2025-12-09",
+      "note": "Police-sourced December reporting explicitly names an ongoing Los Lobos–Sao Box rivalry in El Oro. Later December local reporting corroborates the Sao Box faction’s presence and serious violence. Its reporting does not independently establish the identity of the opposing attacker in that later incident. Sao Box is a Los Lobos splinter and is called Los Lobos Box in the source catalog.",
+      "sources": [
+        "https://www.ecuavisa.com/la-noticia-a-fondo/el-oro-cierra-2025-como-la-cuarta-provincia-mas-violenta-marcada-por-la-disputa-entre-los-lobos-y-los-sao-box-20251209-0032.html",
+        "https://www.eluniverso.com/noticias/seguridad/alias-ronquillo-perfil-de-presunto-cabecilla-de-los-sao-box-asesinado-en-un-centro-comercial-de-machala-nota/"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18339",
+      "disposition": "active",
+      "evidenceDate": "2025-12-22",
+      "note": "Medium-confidence inference of a continuing local conflict in Guayas. Ecuadorian police named the Fénix–Igualitos rivalry in earlier fighting, UCDP records the exact pairing through November 30, the December EUAA assessment identifies the split, and Ecuadorian police still recorded Fénix activity in December. The December record does not independently attribute new bilateral fighting.",
+      "sources": [
+        "https://ucdp.uu.se/year/2025",
+        "https://www.eluniverso.com/noticias/seguridad/los-tiguerones-fraccionados-la-disputa-que-genera-guerra-por-control-de-territorio-en-socio-vivienda-nota/",
+        "https://www.ecoi.net/en/file/local/2134866/2025_12_EUAA_COI_Query_Response_Q49_Ecuador_Information_on_Criminality_in_Guayas_Province.pdf",
+        "https://noticias.policia.gob.ec/policia-nacional-aislo-a-dos-adolescentes-presuntamente-vinculados-al-gdo-tiguerones-fenix-por-extorsion-en-guayaquil/",
+        "https://acleddata.com/report/ecuadors-noboa-declared-war-22-gangs-his-new-term-he-faces-many-more"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18365",
+      "disposition": "unverified",
+      "evidenceDate": "2025-02-13",
+      "note": "The Secretary-General's report documents the January Magwi attack by Murle and Acholi armed elements against Bor herders. A February 13 local consultation agreed on cattle withdrawal and an investigation. Those measures do not establish a ceasefire signed by all three exact parties or a continued organized front in December.",
+      "sources": [
+        "https://digitallibrary.un.org/record/4080550?ln=en",
+        "https://peacekeeping.un.org/en/news/unmiss-peacekeepers-help-strengthen-security-for-civilians-caught-in-the",
+        "https://catholicradionetwork.org/2025/02/14/bor-community-agrees-to-withdraw-cattle-from-equatoria-region/"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18479",
+      "disposition": "ended",
+      "evidenceDate": "2025-07-05",
+      "note": "The Fulani and Ngambaye parties signed the Mandakao reconciliation agreement on 5 July to end the specific Logone Occidental episode. The national human rights commission records the accord. Keep it as a concluded local conflict with reconciliation measures, distinct from violence elsewhere in Chad.",
+      "sources": [
+        "https://www.onama.td/la-paix-scellee-entre-peulh-et-ngambaye-a-mandakao/",
+        "https://cndh.td/uploads/files/68c3a89cce4b3-RAPPORT_FINAL_DE_MISSION_MANDAKAO_version_Revue.pdf",
+        "https://ucdp.uu.se/country/483"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18507",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-06",
+      "note": "The African Union documented the Ethiopian government's December agreement with the Amhara Fano Popular Organization. It does not establish the status of the distinct clash between the Amhara Fano National Force and AFPO. Do not assign the government's agreement to the non-state pair.",
+      "sources": [
+        "https://au.int/en/pressreleases/20251204/au-hails-landmark-peace-agreement-ethiopia",
+        "https://www.ebc.et/english/Home/NewsDetails?NewsId=3995",
+        "https://martinplaut.com/2026/01/18/ethiopia-fano-forces-statement-on-their-complete-unification-establishment-of-the-amhara-fano-national-movement-and-leadership/",
+        "https://www.criticalthreats.org/analysis/chad-rsf-sudan-africa-drc-peace-ethiopia-fano-shabaab-somalia-togo-burkina-ecowas-aes-africa-file-january-22-2026",
+        "https://academic.oup.com/view-large/565034269",
+        "https://www.ena.et/web/eng/w/eng_7865703",
+        "https://www.cgra.be/sites/default/files/rapporten/coi_focus_ethiopie._veiligheidssituatie_in_amhara_20260528.pdf",
+        "https://www.cambridge.org/core/journals/nationalities-papers/article/from-peaceful-activism-to-insurgency-the-militarization-of-the-amhara-fano-in-post2018-ethiopia/F18CE956D131475D2546BBA132BF564F"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18554",
+      "disposition": "ended",
+      "evidenceDate": "2025-09-30",
+      "note": "Ghana's government reported restored calm after the August Gbinyiri episode and began mediation. UNICEF reports most displaced people had returned by the end of September. Treat the acute hostilities as concluded while the land dispute and government-led mediation remained unresolved on 1 January.",
+      "sources": [
+        "https://www.unicef.org/media/175281/file/C%C3%B4te%20d%E2%80%99Ivoire-Humanitarian-SitRep-30-September-2025.pdf.pdf",
+        "https://gna.org.gh/2025/09/gbinyiri-crisis-over-8000-refugees-return-home-from-ivory-coast/",
+        "https://www.mint.gov.gh/government-receives-gbinyiri-mediation-committee-report-on-inter-communal-conflict-resolution/"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18565",
+      "disposition": "active",
+      "evidenceDate": "2025-12-27",
+      "note": "The August Luac-Jang–Jalwau peace commitments did not hold throughout the period. Monitoring records suspected Jalwau-linked violence against Luac-Jang on 26 November and a further incident against Luac-Jang in the same area on 27 December with unidentified perpetrators. The evidence supports continuing local violence after the commitments. Pan-Juaj participated earlier and Warrap authorities reported its return and reconciliation in August, so its involvement on 1 January is unverified.",
+      "sources": [
+        "https://unsco.unmissions.org/sites/default/files/2025-10/unmiss_hrd_brief_on_violence_affecting_civilians_january_to_march_2025_goss_response.pdf",
+        "https://unmiss.unmissions.org/sites/default/files/secretary-generals_report_on_the_situation_in_south_sudan_4_november_2025.pdf",
+        "https://www.warrap.gov.ss/governor-bol-wek-agoth-oversees-reconciliation-and-return-of-pan-juac-clan-in-tonj-east/",
+        "https://dev.foresight-prep.cloud.iom.int/countries/south-sudan",
+        "https://digitallibrary.un.org/record/4102065/files/S_2026_58-EN.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18693",
+      "disposition": "ceasefire",
+      "evidenceDate": "2025-12-05",
+      "note": "Yakuman and Yangukun agreed to a local peace framework in Enga on November 21. Police reported early violations. December 5 police-sourced reporting says Yakuman had ceased fighting under the agreement. Represent an imperfect ceasefire framework with continued monitoring, at medium confidence.",
+      "sources": [
+        "https://rpngc.gov.pg/updates-on-wapenamanda-peace-accord/",
+        "https://www.pnghausbung.com/3-suspects-arrested-m4-rifle-confiscated-in-wapenamanda/"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18694",
+      "disposition": "unverified",
+      "evidenceDate": "2025-11-04",
+      "note": "The UN identified a November 4 armed clash between Boulala and Kreda elements. Chadian authorities called for mediation immediately afterward. December evidence does not establish a second exact event or an implemented ceasefire.",
+      "sources": [
+        "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F772&t=pdf",
+        "https://tchadinfos.com/2025/11/06/affrontements-meurtriers-dans-le-hadjer-lamis-le-mediateur-de-la-republique-appelle-au-dialogue-et-a-la-paix/",
+        "https://ucdp.uu.se/country/483",
+        "https://www.atpe.td/conflit-de-dibebe-le-premier-ministre-aux-cotes-des-blesses/",
+        "https://minusca.unmissions.org/sites/default/files/2025-12/28th_sg_report_on_the_situation_in_central_africa_and_the_activities_of_the_unoca.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18741",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-01",
+      "note": "The recorded Sudanese armed factions' alignment changed in 2025, and the neutral protection formation changed its position. Evidence for those shifts and for the broader civil war does not establish ongoing combat between the exact organizations.",
+      "sources": [
+        "https://dip-aws.euaa.europa.eu/coi/1-general-description-security-situation/12-actors-conflict",
+        "https://sudantribune.com/article/295916",
+        "https://slma.net/en/the-military-alliance-between-the-sudan-liberation-movement-army-and-the-congregation-of-the-sudan-liberation-forces/",
+        "https://sudantribune.com/article/297098",
+        "https://www.government.nl/site/binaries/site-content/collections/documents/2025/12/01/general-country-of-origin-information-report-on-sudan-december-2025/General%2BCountry%2Bof%2BOrigin%2BInformation%2BReport%2Bon%2BSudan%2BDecember%2B2025.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18745",
+      "disposition": "unverified",
+      "evidenceDate": "2025-10-22",
+      "note": "September reporting identifies Mushere communities in the Bokkos violence. A December incident in Tenti identifies the area but does not identify the exact armed Mushere and Fulani participants. The named December evidence is insufficient to carry the exact dyad into the campaign.",
+      "sources": [
+        "https://zagazola.org/index.php/security-analysis/12",
+        "https://dip-aws.euaa.europa.eu/country-guidance-nigeria/b-assessment-indiscriminate-violence-state",
+        "https://ucdp.uu.se/year/2025",
+        "https://www.zagazola.org/index.php/breaking-news/one-killed-three-injured-as-gunmen-attack-farmers-in-plateau",
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18803",
+      "disposition": "unverified",
+      "evidenceDate": "2025-06-26",
+      "note": "The broader intercommunal violence in Taraba was ongoing. The December army report concerns government operations against unidentified armed groups and does not identify the two armed communities in the candidate dyad.",
+      "sources": [
+        "https://www.euaa.europa.eu/nigeria-security-situation/225-taraba",
+        "https://www.premiumtimesng.com/regional/nnorth-east/840748-nigeria-army-destroys-bandits-camps-in-taraba-arrest-suspect.html",
+        "https://placng.org/i/wp-content/uploads/2025/06/House-of-Reps-first-votes-and-proceedings-Thursday-15-May-2025.pdf",
+        "https://ucdp.uu.se/year/2025",
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18854",
+      "disposition": "unverified",
+      "note": "The UN documents the July communal fighting and a multi-party ceasefire. December incidents document state–National Guard or internal Druze friction and do not confirm an ongoing exact tribal matchup. The documented Syrian government–Suwayda National Guard front is represented separately.",
+      "sources": [
+        "https://www.ecoi.net/en/file/local/2139064/a-hrc-61-crp-7.pdf",
+        "https://english.enabbaladi.net/archives/2025/12/suwayda-recurring-clashes-widen-the-gap-with-damascus/",
+        "https://digitallibrary.un.org/record/4090418/files/A_80_414--S_2025_586-EN.pdf",
+        "https://www.euaa.europa.eu/syria-security-situation/2133-security-trends"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-18856",
+      "disposition": "unverified",
+      "note": "The UN documents the July communal fighting and a multi-party ceasefire. December incidents document state–National Guard or internal Druze friction and do not confirm an ongoing exact tribal matchup. The documented Syrian government–Suwayda National Guard front is represented separately.",
+      "sources": [
+        "https://www.ecoi.net/en/file/local/2139064/a-hrc-61-crp-7.pdf",
+        "https://english.enabbaladi.net/archives/2025/12/suwayda-recurring-clashes-widen-the-gap-with-damascus/",
+        "https://digitallibrary.un.org/record/4090418/files/A_80_414--S_2025_586-EN.pdf",
+        "https://www.euaa.europa.eu/syria-security-situation/2133-security-trends"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-5282",
+      "disposition": "unverified",
+      "evidenceDate": "2025-11-18",
+      "note": "The October agreement at Todonyang and Lotira covered local cross-border security. November reporting of renewed violence elsewhere on the border involves the same communities. The December parliamentary record supports persistent border insecurity but does not verify ongoing organized combat or a ceasefire covering the exact dyad throughout the area.",
+      "sources": [
+        "https://standardmedia.co.ke/health/amp/north-eastern/article/2001533982/five-injured-in-renewed-clashes-along-kenyaethiopia-border",
+        "https://www.parliament.go.ke/sites/default/files/2025-12/MOTIONS%20TRACKER%20AS%20AT%20THURSDAY%2C%204TH%20DECEMBER%202025.pdf",
+        "https://parliament.go.ke/sites/default/files/2025-03/Hansard%20Report%20-%20Thursday%2C%2027th%20February%202025%20%28P%29.pdf",
+        "https://the-star.co.ke/news/2025-11-20-two-herders-fatally-shot-in-attack-in-turkana",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-5558",
+      "disposition": "active",
+      "evidenceDate": "2025-12-31",
+      "note": "Independent year-end reporting documents continuing violence in Barkin Ladi and Jos South on 16 and 31 December. It records residents' attribution to Fulani armed groups, and a local retrospective reports suspected Berom armed reprisals in December. Represent local armed networks and allow for contested attribution, without assigning combatant status to ethnic communities.",
+      "sources": [
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf",
+        "https://zagazola.org/index.php/security-analysis/12",
+        "https://ucdp.uu.se/country/475"
+      ]
+    },
+    {
+      "id": "ucdp-nonstate-9951",
+      "disposition": "unverified",
+      "evidenceDate": "2025-04-01",
+      "note": "December reports describe insecurity and armed banditry in Zamfara, while field research documents local armed group structures. The identifiable December evidence does not establish that the exact Bungudu group pairing remained active.",
+      "sources": [
+        "https://www.euaa.europa.eu/nigeria-security-situation/237-zamfara",
+        "https://pure.diis.dk/ws/files/27709770/Battle_for_the_bush_DIIS_WP_2025_12.pdf",
+        "https://ucdp.uu.se/year/2025",
+        "https://www.euaa.europa.eu/sites/default/files/publications/2026-02/2026_01_EUAA_COI_Query_Response_Q4_Nigeria_Major_political_security_human_rights_developments.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-state-12102",
+      "disposition": "active",
+      "evidenceDate": "2025-12-30",
+      "note": "UN Group of Experts report S/2025/858 paragraphs 14, 36–38 and 48 document Rwanda Defence Force combat against FDLR elements alongside other parties in eastern DRC, including renewed clashes from October. Paragraph 39 separately names FDLR splinter RUD-Urunana. Represent this as a cross-border non-state conflict in DRC, with Rwanda as a belligerent.",
+      "sources": [
+        "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
+      ],
+      "patch": {
+        "countryKeys": [
+          "180",
+          "646"
+        ],
+        "geographicContext": [
+          "Eastern Democratic Republic of the Congo"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-state-12287",
+      "disposition": "merged",
+      "canonicalId": "ucdp-state-18458",
+      "evidenceDate": "2025-12-19",
+      "note": "Pakistan’s official statement attributed the December 19 event to the Hafiz Gul Bahadur group. The EUAA identifies that group as leader of the Ittehad-ul-Mujahideen Pakistan umbrella, and UCDP also codes that December event under the existing IMP relationship. Retain the HGB actor’s identity and roll the documented cutoff activity into the active IMP row. Keep the TTP relationship separate.",
+      "sources": [
+        "https://mofa.gov.pk/press-releases/demarche-to-the-afghan-taliban-regime-on-terrorist-attacks-against-pakistan-perpetrated-from-afghan-soil",
+        "https://dip-aws.euaa.europa.eu/pakistan-country-focus/329-hafiz-gul-bahadur-hgb",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-state-12556",
+      "disposition": "active",
+      "evidenceDate": "2025-12-12",
+      "note": "In December Jaish al-Adl joined the newly announced Mobarizoun Popular Front, also called the Popular Fighters Front. The front publicly claimed recent fighting in Sistan and Baluchestan that state media independently reported, though the claim of responsibility remains an attribution. Carry the continuing relationship as medium confidence and display the umbrella with the historic faction name. The front’s December manifesto is a declared program.",
+      "sources": [
+        "https://www.iranintl.com/en/202512128655",
+        "https://www.rferl.org/amp/jaish-al-adl-new-group-iran-opposition/33621554.html",
+        "https://www.criticalthreats.org/analysis/iran-updates-december-2025"
+      ]
+    },
+    {
+      "id": "ucdp-state-14685",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-18",
+      "note": "The Indian government listed a specific NSCN(K) organization in September. December reporting separately records ULFA-I activity. Neither establishes a coordinated operation by the UNLFW umbrella at the cutoff, and the named factions' separate ceasefires and organization sizes cannot be transferred to the umbrella.",
+      "sources": [
+        "https://www.mha.gov.in/sites/default/files/AdjudicationNSCNK_09042026.pdf",
+        "https://www.satp.org/south-asia-intelligence-review-Volume-25-No-2",
+        "https://arunachaltimes.in/index.php/2025/12/04/2-hard-core-ulfa-i-militants-surrender-in-namsai/",
+        "https://timesofindia.indiatimes.com/city/guwahati/2-ulfa-i-militants-surrender-in-arunachal-arms-ammo-seized/articleshow/125724451.cms",
+        "https://www.mha.gov.in/sites/default/files/2025-09/ArunachalAFSPANotificationdt26092025_30092025.pdf",
+        "https://ucdp.uu.se/year/2025",
+        "https://www.mha.gov.in/sites/default/files/2025-12/InsurgencyNE_18122025.pdf",
+        "https://rsis.edu.sg/wp-content/uploads/2026/01/CTTA-Annual-2026.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-state-16617",
+      "disposition": "active",
+      "evidenceDate": "2025-12-31",
+      "note": "Year-end reporting documents fighting across the existing southern fronts alongside the separate PLC–STC clash. The Geneva Academy identifies the STC and PLC as independent participants in fighting Ansar Allah. Represent the southern front as regional and keep its forces separate.",
+      "sources": [
+        "https://sanaacenter.org/the-yemen-review/oct-dec-2025",
+        "https://warwatch.ch/situations/armed-conflicts-in-yemen/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "ucdp-state-17247",
+      "disposition": "ceasefire",
+      "evidenceDate": "2025-12-22",
+      "note": "The Iván Mordisco faction announced a unilateral holiday suspension through 7 January. The statement does not extend to the separate EMC splinter or third-party fronts.",
+      "patch": {
+        "ceasefireEndsOn": "2026-01-07",
+        "ceasefireKind": "Unilateral holiday pause"
+      },
+      "sources": [
+        "https://www.europapress.es/internacional/noticia-disidencias-farc-lideradas-ivan-mordisco-anuncian-tregua-temporal-navidad-colombia-20251222145101.html"
+      ]
+    },
+    {
+      "id": "ucdp-state-17738",
+      "disposition": "ceasefire",
+      "evidenceDate": "2025-05-06",
+      "note": "The Oman-mediated agreement applied to the United States and the Sana’a authorities. The United Kingdom took part in earlier operations and is not a party to this ceasefire.",
+      "sources": [
+        "https://www.fm.gov.om/en/24568/",
+        "https://warwatch.ch/situations/armed-conflicts-in-yemen/?tab=tab-2"
+      ],
+      "patch": {
+        "name": "United States vs Ansar Allah",
+        "countryKeys": [
+          "840",
+          "887"
+        ],
+        "sides": [
+          [
+            "ucdp-actor-3"
+          ],
+          [
+            "ucdp-actor-123"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "ucdp-state-18188",
+      "disposition": "unverified",
+      "evidenceDate": "2025-12-29",
+      "note": "The ACLED period report around January 1 notes disputed attribution of a mine incident linked in some accounts to Naparama. Continued mobilization is better evidenced than direct combat with state forces by the cutoff. The Islamic State Mozambique front is tracked separately.",
+      "sources": [
+        "https://acleddata.com/update/mozambique-conflict-monitor-update-14-january-2026",
+        "https://opais.co.mz/confronto-entre-naparamas-e-policia-faz-oito-mortos-em-mogovolas/",
+        "https://opais.co.mz/koxukhuro-diz-que-confrontos-entre-policias-e-garimpeiros-resultaram-em-38-mortos-em-mogovolas/",
+        "https://acleddata.com/update/cabo-ligado-update-7-20-april-2025",
+        "https://acleddata.com/update/cabo-ligado-update-30-june-13-july-2025",
+        "https://acleddata.com/system/files/2026-01/MCM-Update-14-January-2026-ENG-1.pdf",
+        "https://ucdp.uu.se/country/541"
+      ]
+    },
+    {
+      "id": "ucdp-state-18195",
+      "disposition": "ended",
+      "evidenceDate": "2025-10-10",
+      "note": "The Geneva Academy dates the end of 2025 Israel–Ansar Allah hostilities to the October Gaza ceasefire. This relationship is absent from the opening roster.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-yemen/?tab=tab-2",
+        "https://www.securitycouncilreport.org/monthly-forecast/2025-12/yemen-85.php"
+      ]
+    },
+    {
+      "id": "ucdp-state-18287",
+      "disposition": "active",
+      "evidenceDate": "2025-12-05",
+      "note": "The UN Secretary-General reports December 5 government operations against remaining CMSPR elements in Ouham. UCDP independently identifies the exact government–CMSPR dyad as active again in December, following earlier attacks documented by UN monitors. Geneva Academy classifies the attacks as sporadic and below the legal threshold for a non-international armed conflict. PPO models this armed relationship locally in Ouham.",
+      "sources": [
+        "https://digitallibrary.un.org/record/4102997/files/S_2026_71-EN.pdf",
+        "https://ucdp.uu.se/country/482",
+        "https://digitallibrary.un.org/record/4084252/files/S_2025_385-EN.pdf",
+        "https://warwatch.ch/situations/non-international-armed-conflicts-in-central-african-republic/",
+        "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F385&t=pdf",
+        "https://minusca.unmissions.org/sites/default/files/hrd_-_q2_-_quarterly_report_-_april_to_june.pdf"
+      ],
+      "confidence": "medium",
+      "patch": {
+        "name": "Government of the Central African Republic vs Military Coalition for the Salvation of the People and Recovery (CMSPR)",
+        "regions": [
+          {
+            "key": "CAF-810",
+            "name": "Ouham",
+            "note": "Broad stock province for the December operations. Province-wide control and administration are unspecified."
+          }
+        ],
+        "geographicContext": [
+          "Ouham"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-state-18485",
+      "disposition": "active",
+      "evidenceDate": "2025-12-24",
+      "note": "FARDC and Convention pour la Révolution Populaire fought in Djugu on 24 December after earlier December operations. Initialize an active regional conflict in Ituri without assigning provincial control.",
+      "sources": [
+        "https://www.radiookapi.net/2025/12/24/actualite/securite/affrontements-sanglants-entre-fardc-et-milice-crp-djugu-la-veille-de",
+        "https://monusco.unmissions.org/fr/node/103526"
+      ],
+      "patch": {
+        "name": "Armed Forces of the Democratic Republic of the Congo vs Convention pour la Révolution Populaire (CRP)"
+      }
+    },
+    {
+      "id": "ucdp-state-18806",
+      "disposition": "unverified",
+      "note": "UN humanitarian reporting documents the wider Gaza ceasefire, ongoing casualties and pre-cutoff insecurity. It does not independently attribute continuing fighting to this named armed organization. Its distinct identity is retained in the evidence ledger. Do not infer the exact dyad from combat involving other Palestinian armed groups.",
+      "sources": [
+        "https://www.ochaopt.org/content/humanitarian-situation-update-351-gaza-strip",
+        "https://www.ochaopt.org/content/gaza-humanitarian-response-situation-report-no-56",
+        "https://www.ochaopt.org/content/gaza-humanitarian-response-situation-report-no-58",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-state-481",
+      "disposition": "unverified",
+      "note": "UN humanitarian reporting documents the wider Gaza ceasefire, ongoing casualties and pre-cutoff insecurity. It does not independently attribute continuing fighting to this named armed organization. Its distinct identity is retained in the evidence ledger. Do not infer the exact dyad from combat involving other Palestinian armed groups.",
+      "sources": [
+        "https://www.ochaopt.org/content/humanitarian-situation-update-351-gaza-strip",
+        "https://www.ochaopt.org/content/gaza-humanitarian-response-situation-report-no-56",
+        "https://www.ochaopt.org/content/gaza-humanitarian-response-situation-report-no-58",
+        "https://ucdp.uu.se/year/2025"
+      ]
+    },
+    {
+      "id": "ucdp-state-624",
+      "disposition": "ceasefire",
+      "evidenceDate": "2025-12-21",
+      "note": "ELN announced a unilateral holiday suspension of offensives against state security forces through 3 January. Other ELN armed-group fronts have their own status.",
+      "patch": {
+        "ceasefireEndsOn": "2026-01-03",
+        "ceasefireKind": "Unilateral holiday pause"
+      },
+      "sources": [
+        "https://efe.com/mundo/2025-12-21/guerrilla-eln-colombia-cese-fuego-fiestas-navidenas/"
+      ]
+    },
+    {
+      "id": "ucdp-state-781",
+      "disposition": "ended",
+      "evidenceDate": "2025-10-26",
+      "note": "Geneva Academy dates the end of the Türkiye–PKK armed conflict to April 2025. Dissolution, arms disposal and withdrawal were underway by October. The separate occupation entry for Iraq remains.",
+      "sources": [
+        "https://warwatch.ch/situations/non-international-armed-conflict-in-turkiye/classification/",
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A52025SC0756"
+      ]
+    },
+    {
+      "id": "warwatch-3103",
+      "disposition": "active",
+      "evidenceDate": "2025-12-31",
+      "note": "War WATCH's retrospective classification places the Senegal–MFDC armed conflict in effect at campaign start, with low reported violence in 2025. Its analysis distinguishes Salif Sadio's residual faction from Diakaye and Badiate factions that reached agreements. Preserve the separate southern-front ceasefire and describe the ongoing conflict as low intensity, without treating the aggregate as a fully active national front.",
+      "sources": [
+        "https://warwatch.ch/situations/non-international-armed-conflict-in-senegal/?tab=tab-2",
+        "https://warwatch.ch/wp-json/warwatch/v1/all-map-data?date=2025-12",
+        "https://www.un.org/sg/en/content/highlight/2025-02-25.html"
+      ],
+      "patch": {
+        "name": "Government of Senegal vs MFDC (Salif Sadio faction)"
+      }
+    },
+    {
+      "id": "warwatch-3155",
+      "disposition": "dormant",
+      "evidenceDate": "2025-12-31",
+      "note": "War WATCH assesses the Ethiopia–Sudan international armed conflict as legally ongoing in December 2025 because no general close of military operations or stable peace was established. Its legal classification and account of the border dispute do not establish fresh combat at the cutoff. The opening front remains dormant with no fighting, pressure, settlement offer, or territory transfer.",
+      "sources": [
+        "https://warwatch.ch/situations/international-armed-conflict-between-ethiopia-and-sudan/classification/",
+        "https://warwatch.ch/wp-json/warwatch/v1/all-map-data?date=2025-12",
+        "https://dip-aws.euaa.europa.eu/coi/216-gedaref/2162-conflict-dynamics-and-tactics"
+      ],
+      "confidence": "medium",
+      "patch": {
+        "name": "Ethiopia–Sudan border conflict",
+        "mode": "regional"
+      }
+    },
+    {
+      "id": "warwatch-3391",
+      "disposition": "ended",
+      "evidenceDate": "2025-10-10",
+      "note": "This is the legal entry for the same 2025 Israel–Ansar Allah hostilities, which ended with the October Gaza ceasefire.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-yemen/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "warwatch-3515",
+      "disposition": "merged",
+      "evidenceDate": "2025-12-31",
+      "canonicalId": "ucdp-state-16177",
+      "note": "War WATCH describes an umbrella of separate Baloch armed groups. Keep the documented BRAS front and reference this umbrella classification there. The umbrella itself has no shared fighting force.",
+      "sources": [
+        "https://warwatch.ch/situations/non-international-armed-conflicts-in-pakistan/classification/"
+      ]
+    },
+    {
+      "id": "warwatch-4163",
+      "disposition": "ended",
+      "evidenceDate": "2024-10-26",
+      "note": "The Geneva Academy identifies a short-lived 2024 interstate episode and no further attacks in 2025. The profile's combined date span does not establish a war on January 1.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-iraq-2023-07-01/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "warwatch-4177",
+      "disposition": "ended",
+      "evidenceDate": "2024-11-30",
+      "note": "The Geneva Academy explicitly dates the first Israel–Islamic Resistance in Iraq conflict to an end in November 2024 and reports no flare in 2025.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-iraq-2023-07-01/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "warwatch-554",
+      "disposition": "occupation",
+      "evidenceDate": "2025-12-31",
+      "note": "Geneva Academy assesses an ongoing occupation on Iraqi territory, with hostilities against the PKK ending in April 2025. Represents the assessed legal status at country level, without assigning any whole province to Türkiye.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-iraq-2023-07-01/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "warwatch-556",
+      "disposition": "ended",
+      "evidenceDate": "2024-01-31",
+      "note": "The Geneva Academy reports that strikes outside the Iraqi invitation ended in January 2024 and did not recur in 2025. Iraq's invited coalition relationship is a separate conflict.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-iraq-2023-07-01/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "warwatch-560",
+      "disposition": "ended",
+      "evidenceDate": "2024-07-31",
+      "note": "The Geneva Academy reports declassification after the 2024 decline and no exchanges during 2025 between the United States and the Islamic Resistance in Iraq.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-iraq-2023-07-01/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "warwatch-568",
+      "disposition": "ended",
+      "evidenceDate": "2024-01-15",
+      "note": "The Geneva Academy identifies a short-lived January 2024 episode and no further incidents between the two states in 2024 or 2025.",
+      "sources": [
+        "https://warwatch.ch/situations/armed-conflicts-in-iraq-2023-07-01/?tab=tab-2"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "syr-suwayda-local-groups",
+      "name": "Suwayda National Guard",
+      "shortName": "National Guard"
+    },
+    {
+      "id": "ucdp-actor-7514",
+      "name": "Syrian National Army",
+      "shortName": "SNA"
+    },
+    {
+      "id": "ucdp-actor-209",
+      "name": "Hamas",
+      "shortName": "Islamic Resistance Movement"
+    },
+    {
+      "id": "ucdp-actor-356",
+      "name": "Tehrik-e Taliban Pakistan",
+      "shortName": "TTP",
+      "strength": {
+        "range": "Around 6,000 fighters",
+        "asOf": "2025-12-08",
+        "confidence": "medium",
+        "note": "The UN estimates about 6,000 fighters across TTP and its more than a dozen constituent groups. The game uses one TTP pool and does not add separate unverified counts for its affiliates.",
+        "sources": [
+          "https://documents.un.org/doc/undoc/gen/n25/317/31/pdf/n2531731.pdf"
+        ],
+        "gamePersonnel": 6000
+      }
+    },
+    {
+      "id": "ucdp-actor-130",
+      "strength": {
+        "range": "Approximately 150,000 soldiers",
+        "asOf": "2025-12-08",
+        "confidence": "medium",
+        "note": "UN estimate for soldiers. Police, intelligence personnel, and other security services are excluded.",
+        "sources": [
+          "https://documents.un.org/doc/undoc/gen/n25/317/31/pdf/n2531731.pdf"
+        ],
+        "gamePersonnel": 150000,
+        "components": [
+          {
+            "kind": "regulars",
+            "estimate": "About 150,000 soldiers. The same UN report separately estimates about 200,000 police, which are excluded from the game army.",
+            "asOf": "2025-11-11",
+            "source": "https://www.ecoi.net/en/file/local/2134271/n2531731.pdf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "is-khorasan",
+      "strength": {
+        "range": "Approximately 2,000 fighters",
+        "asOf": "2025-07-31",
+        "confidence": "medium",
+        "note": "UN assessment of the branch as a whole, shared across its fronts.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+        ],
+        "gamePersonnel": 2000
+      }
+    },
+    {
+      "id": "is-iraq-syria",
+      "strength": {
+        "range": "Up to 3,000 fighters",
+        "asOf": "2025-07-31",
+        "confidence": "medium",
+        "note": "One UN estimate across Iraq and Syria. It represents the combined pool across both countries.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+        ],
+        "gamePersonnel": 2500
+      }
+    },
+    {
+      "id": "is-west-africa",
+      "strength": {
+        "range": "8,000–12,000 fighters",
+        "asOf": "2025-07-31",
+        "confidence": "medium",
+        "note": "Range reported by some UN Member States, for ISWAP across its theater.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+        ],
+        "gamePersonnel": 10000
+      }
+    },
+    {
+      "id": "is-somalia",
+      "strength": {
+        "range": "600–800 fighters",
+        "asOf": "2025-07-31",
+        "confidence": "low",
+        "note": "Earlier-2025 UN range. Continued attrition makes this a broad scale reference for the opening scenario.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+        ],
+        "gamePersonnel": 600
+      }
+    },
+    {
+      "id": "is-mozambique",
+      "strength": {
+        "range": "300–400 fighters",
+        "asOf": "2025-07-31",
+        "confidence": "medium",
+        "note": "Estimate given by regional UN Member States for the Mozambique branch.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+        ],
+        "gamePersonnel": 350
+      }
+    },
+    {
+      "id": "ucdp-actor-6288",
+      "shortName": "SDF",
+      "administrationName": "Democratic Autonomous Administration of North and East Syria",
+      "strength": {
+        "range": "Approximately 70,000–100,000 including internal-security forces",
+        "asOf": "2025-10",
+        "confidence": "medium",
+        "note": "IISS identifies the estimated range and specifies that internal-security forces are included. A later report using December conditions put the SDF at about 100,000. The lower in-game pool applies to the coalition once, and its YPG/YPJ components and affiliated civilian institutions do not receive additional pools.",
+        "sources": [
+          "https://www.iiss.org/globalassets/global-content---content--migration/research-reports/2025/10/syria-report/pub25_114-csdp_nsags-in-syria_v7.pdf",
+          "https://oig.usaid.gov/sites/default/files/2026-02/OIR_Q1Dec25_Final.pdf"
+        ],
+        "gamePersonnel": 60000
+      },
+      "laws": [
+        {
+          "name": "Social Contract of North and East Syria",
+          "status": "in_force",
+          "note": "Local councils, cantonal administration, co-chairs, and recognition of Arabic, Kurdish and Syriac in the autonomous administration.",
+          "source": "https://rojavainformationcenter.org/storage/2023/12/Social-Contract-English-Final.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-123",
+      "administrationName": "Government of Change and Construction",
+      "strength": {
+        "range": "Up to 350,000 reported by 2024",
+        "asOf": "2024-10-11",
+        "confidence": "low",
+        "note": "UN panel aggregate includes reported mobilization that it could not independently verify. The game uses a smaller pool.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4079905/files/S_2024_731-EN.pdf"
+        ],
+        "gamePersonnel": 90000
+      },
+      "laws": [
+        {
+          "name": "Supreme Political Council administration",
+          "status": "in_practice",
+          "note": "The Sana'a-based institutions operate under Ansar Allah with a separate government and supervisory network.",
+          "source": "https://bti-project.org/en/reports/country-report/YEM"
+        },
+        {
+          "name": "Zakat regulations",
+          "status": "in_practice",
+          "note": "The Sana'a-based administration applies its own interpretation of zakat and collects it in territory under its authority.",
+          "source": "https://bti-project.org/en/reports/country-report/YEM"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-6254",
+      "laws": [
+        {
+          "name": "Republic of Yemen constitutional framework",
+          "status": "in_force",
+          "note": "The state framework specifies Islam as the state religion and political pluralism. The PLC serves as the transitional executive under the 2022 transfer of authority.",
+          "source": "https://www.wipo.int/wipolex/en/legislation/details/19992"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-61",
+      "strength": {
+        "range": "850,000–1 million active Defense Forces",
+        "asOf": "2025-08-26",
+        "confidence": "medium",
+        "note": "The August 2025 Factbook estimate cited by the UK Home Office describes all active Defense Forces. Native stock formations remain in use.",
+        "sources": [
+          "https://www.gov.uk/government/publications/ukraine-country-policy-and-information-notes/country-policy-and-information-note-military-service-ukraine-june-2022-accessible"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Wartime martial law",
+          "status": "in_force",
+          "note": "The October 2025 extension was in force at the campaign opening.",
+          "source": "https://zakon.rada.gov.ua/laws/show/4643-20"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-57",
+      "strength": {
+        "range": "1.5 million authorized military positions",
+        "asOf": "2024-12-01",
+        "confidence": "high",
+        "note": "Presidential decree establishing the authorized force ceiling. This is distinct from filled positions, theater strength, and readiness. Native stock formations remain in use.",
+        "sources": [
+          "https://www.publicnow.com/view/00661805DBF5296B1572784B16B931D953A7571B"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Military duty and military service",
+          "status": "in_force",
+          "note": "Federal law 53-FZ provides the framework for conscription and contract service.",
+          "source": "https://www.consultant.ru/document/cons_doc_LAW_18260/"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-116",
+      "laws": [
+        {
+          "name": "Federal parliamentary republic",
+          "status": "in_force",
+          "note": "The 2005 constitution defines a federal parliamentary system and recognizes the Kurdistan Region.",
+          "source": "https://www.constituteproject.org/constitution/Iraq_2005"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-95",
+      "laws": [
+        {
+          "name": "Federal constitutional framework",
+          "status": "in_force",
+          "note": "The provisional framework establishes federal power sharing and Islam as the state religion. Federal and member-state institutions contest the implementation of later amendments.",
+          "source": "https://www.constituteproject.org/constitution/Somalia_2012"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-17",
+      "laws": [
+        {
+          "name": "Law 2421 of 2024",
+          "status": "enacted",
+          "note": "Revised assistance, comprehensive reparations and land restitution for victims of the Colombian armed conflict. Retain the existing Total Peace law alongside it.",
+          "source": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=250056"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-7922",
+      "strength": {
+        "range": "250–800 across two government estimates; group claim about 1,100",
+        "asOf": "2024",
+        "confidence": "low",
+        "note": "UNODC’s 2024 characterization reports diverging military intelligence and Peace Commissioner estimates and a higher self-reported number. These are historic organization estimates without a verified January 2026 fighter roster.",
+        "sources": [
+          "https://saga.unodc.org.co/es/autodefensas-conquistadores-de-la-sierra-nevada"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-775",
+      "strength": {
+        "range": "Tens of thousands of members, associates and facilitators worldwide",
+        "asOf": "2025-05",
+        "confidence": "medium",
+        "note": "DEA’s network-wide scope includes affiliates and facilitators. This is not a fighter count and cannot be allocated to competing Sinaloa factions without separate evidence.",
+        "sources": [
+          "https://www.dea.gov/sites/default/files/2025-07/2025NationalDrugThreatAssessment.pdf",
+          "https://www.dea.gov/press-releases/2025/09/08/dea-surge-targets-sinaloa-cartel-networks-worldwide"
+        ]
+      }
+    },
+    {
+      "id": "warwatch-actor-3419",
+      "laws": [
+        {
+          "name": "National Guard Law of 2025",
+          "status": "enacted",
+          "note": "The July 2025 law sets out the National Guard’s organization and public security mandate.",
+          "source": "https://www.diputados.gob.mx/LeyesBiblio/iniclave/66/CD-LXVI-I-1E-037/03_dof_037_16jul25.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-141",
+      "laws": [
+        {
+          "name": "Armed Forces (Special Powers) Act notification S.O. 4380(E)",
+          "status": "enacted",
+          "note": "The September 2025 notification extended the disturbed-area designation in specified areas of Arunachal Pradesh for six months from October 1.",
+          "source": "https://www.mha.gov.in/sites/default/files/2025-09/ArunachalAFSPANotificationdt26092025_30092025.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-8009",
+      "strength": {
+        "range": "Thousands of members",
+        "asOf": "2024-06-06",
+        "confidence": "medium",
+        "note": "The U.S. Treasury described the broader Los Lobos organization in June 2024. The estimate provides no individual faction or starting combat roster.",
+        "sources": [
+          "https://home.treasury.gov/news/press-releases/jy2394"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-1151",
+      "strength": {
+        "range": "More than 18,800 members, associates, facilitators and brokers worldwide",
+        "asOf": "2023-07",
+        "confidence": "low",
+        "note": "DEA testimony reported a historic network-wide total including noncombat affiliates. The measure is stale and cannot supply a January 2026 combat roster or a particular Mexican dyad’s strength.",
+        "sources": [
+          "https://www.dea.gov/sites/default/files/2023-07/Administrator%20Written%20SFR%20July%202023%20%28Final%29.pdf"
+        ]
+      }
+    },
+    {
+      "id": "sdn-saf",
+      "ideology": "Military-led transitional state with an appointed civilian cabinet and allied movements of differing political outlooks.",
+      "ideologySources": [
+        "https://moj.gov.sd/posts/post/952",
+        "https://www.euaa.europa.eu/coi/sudan-country-focus/1-country-overview"
+      ],
+      "strength": {
+        "range": "120,000–200,000 regular personnel estimated at the outbreak of war",
+        "asOf": "2023-04",
+        "confidence": "low",
+        "note": "EUAA's February 2025 report consolidates outbreak-era estimates for conventional and special forces. This is a historical scale reference. Later wartime mobilization and allied militias do not yield a comparable day-one roster.",
+        "sources": [
+          "https://dip-aws.euaa.europa.eu/coi/sudan/2025/security-situation/12-actors-conflict/121-major-state-and-non-state-armed-groups"
+        ],
+        "gamePersonnel": 85000,
+        "readiness": 0.65
+      }
+    },
+    {
+      "id": "sdn-rsf",
+      "ideology": "RSF-led paramilitary coalition whose published Tasis charter calls for secular, decentralized government and equal citizenship. These are the coalition's declared commitments.",
+      "ideologySources": [
+        "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf",
+        "https://www.euaa.europa.eu/coi/sudan-country-focus/1-country-overview"
+      ],
+      "strength": {
+        "range": "Over 100,000 estimated fighters",
+        "asOf": "2025-10-29",
+        "confidence": "low",
+        "note": "Associated Press reporting at the end of October gives an approximate force under Hemedti. The game value is for the RSF core. The al-Hilu faction retains its own profile.",
+        "sources": [
+          "https://apnews.com/article/d22aba25401c5e4981b9ddd9612d5ecd"
+        ],
+        "gamePersonnel": 65000,
+        "readiness": 0.6
+      }
+    },
+    {
+      "id": "sdn-joint-force",
+      "ideology": "Heterogeneous Darfuri coalition built around armed signatories of the Juba Peace Agreement. The SAF-aligned component includes groups with distinct political programs.",
+      "ideologySources": [
+        "https://www.peaceagreements.org/agreements/2325/",
+        "https://acleddata.com/report/two-years-war-sudan-how-saf-gaining-upper-hand"
+      ],
+      "laws": [
+        {
+          "name": "Juba Peace Agreement, Darfur track",
+          "status": "charter",
+          "note": "The agreement commits its signatories to Darfuri representation, regional institutions, power sharing and transitional justice. The coalition is represented as an armed partner.",
+          "source": "https://www.peaceagreements.org/agreements/2325/"
+        }
+      ]
+    },
+    {
+      "id": "sdn-splmn-hilu",
+      "ideology": "Secular federalism and regional self-government under al-Hilu's New Sudan program. The movement backed the Tasis coalition in 2025 while retaining its own institutions.",
+      "ideologySources": [
+        "https://www.sudanembassy.de/index.php/11-newsblog/4008-text-of-declaration-of-principles-between-transitional-government-of-sudan-and-sudan-people-s-liberation-movement-north",
+        "https://www.euaa.europa.eu/coi/sudan-country-focus/1-country-overview"
+      ],
+      "strength": {
+        "range": "Approximately 20,000 fighters in a 2024 source estimate",
+        "asOf": "2024-06",
+        "confidence": "low",
+        "note": "A person close to the movement gave this figure to a reporter visiting the Nuba Mountains. The movement declined to confirm it. The game uses a smaller independent pool.",
+        "sources": [
+          "https://www.pulitzer.org/node/declan-walsh-and-staff-new-york-times"
+        ],
+        "gamePersonnel": 10000,
+        "readiness": 0.55
+      },
+      "laws": [
+        {
+          "name": "Nuba regional civilian administration",
+          "status": "in_practice",
+          "note": "Field reporting describes regional courts, schools and civil registration operating under the movement in the areas it administers.",
+          "source": "https://www.pulitzer.org/node/declan-walsh-and-staff-new-york-times"
+        }
+      ]
+    },
+    {
+      "id": "sdn-sla-aw",
+      "administrationName": "SLM/A Civil Authority",
+      "ideology": "Secular, liberal, democratic federalism and equal citizenship in the movement's constitution. The faction supported a separate anti-war political declaration in December 2025.",
+      "ideologySources": [
+        "https://slma.net/wp-content/uploads/2022/01/THE-CONSTITUTIONAL-OF-SUDAN-LIBERATION-MOVEMENT-ARMY-2021-1.pdf",
+        "https://sudantribune.com/article/308287"
+      ],
+      "objectives": [
+        "Maintain local civil administration in areas of Jebel Marra",
+        "Pursue a negotiated civilian and federal transition"
+      ],
+      "laws": [
+        {
+          "name": "SLM/A Civil Authority",
+          "status": "in_practice",
+          "note": "The movement's constitution provides for a civil authority in its administered areas. The authority reported on civilian administration and aid coordination at Tawila in April 2025.",
+          "source": "https://slma.net/en/report-from-civil-authority-of-the-sudan-liberation-movement-liberated-territories-tawila/"
+        },
+        {
+          "name": "Federal and secular constitutional program",
+          "status": "charter",
+          "note": "The movement constitution advocates a secular, democratic, liberal and federal Sudan with equal citizenship.",
+          "source": "https://slma.net/wp-content/uploads/2022/01/THE-CONSTITUTIONAL-OF-SUDAN-LIBERATION-MOVEMENT-ARMY-2021-1.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-8885",
+      "shortName": "AFC/M23",
+      "administrationName": "AFC/M23 parallel administration",
+      "ideology": "Rwanda-backed Congolese armed and political coalition. M23 originally framed its program around security and rights for Congolese Tutsi communities. The broader AFC calls for replacing the government in Kinshasa.",
+      "ideologySources": [
+        "https://www.ecoi.net/en/file/local/2135591/320-m23-offensive-great-lakes_1.pdf",
+        "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
+      ],
+      "objectives": [
+        "Maintain its separate administration in controlled areas of the Kivus",
+        "Press its national political demands through the Doha process"
+      ],
+      "strength": {
+        "range": "15,000–27,000 estimated personnel in late 2025",
+        "asOf": "2025-12-19",
+        "confidence": "low",
+        "note": "Crisis Group interviewed two UN security experts in October and December. Some questioned whether new recruits were ready or willing to fight. The separate December UN expert report could not substantiate public recruitment figures. The game uses a smaller M23 pool and excludes Rwandan forces.",
+        "sources": [
+          "https://www.ecoi.net/en/file/local/2135591/320-m23-offensive-great-lakes_1.pdf",
+          "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
+        ],
+        "gamePersonnel": 10000,
+        "readiness": 0.55
+      },
+      "laws": [
+        {
+          "name": "Parallel Kivu civil administration",
+          "status": "in_practice",
+          "note": "The UN documented appointments to local authorities, parallel courts and fiscal administration, and changes to land administration and education under AFC/M23 control.",
+          "source": "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-9529",
+      "shortName": "CRP/FRP",
+      "ideology": "Thomas Lubanga's anti-Kinshasa armed political movement in Ituri. It claimed to represent multiple Ituri groups, some of which rejected the affiliation.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf"
+      ],
+      "objectives": [
+        "Replace the Congolese government, as stated in the movement's founding statute"
+      ],
+      "laws": [
+        {
+          "name": "CRP/FRP founding statute",
+          "status": "charter",
+          "note": "The UN Group of Experts documents the founding statute signed in January 2025. It establishes the movement and sets its political objective.",
+          "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-528",
+      "ideology": "Rwandan Hutu extremist armed movement formed from former Rwandan military and militia networks after the 1994 genocide. Its leadership claimed a refugee-protection mission in 2025.",
+      "ideologySources": [
+        "https://home.treasury.gov/news/press-releases/tg1815",
+        "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
+      ],
+      "objectives": [
+        "Preserve the armed movement's presence in eastern DRC",
+        "Seek a role in the peace process from which its leaders said they were excluded"
+      ],
+      "strength": {
+        "range": "About 1,150 estimated FOCA combatants in October 2024",
+        "asOf": "2024-10",
+        "confidence": "low",
+        "note": "Historical MONUSCO JMAC estimate reproduced in a later UN retrospective. The figure excludes RUD-Urunana, CNRD and FPP splinters. No comparable January 2026 figure was verified.",
+        "sources": [
+          "https://peacekeeping.un.org/sites/default/files/2026-02/ddrrr_retrospective_study_final_0_compressed.pdf"
+        ],
+        "gamePersonnel": 900,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "ucdp-actor-6716",
+      "ideology": "Al-Qaida-aligned Salafi-jihadist coalition. In parts of central Mali its Katiba Macina branch seeks to impose its interpretation of Islamic governance.",
+      "ideologySources": [
+        "https://main.un.org/securitycouncil/en/content/jamaa-nusrat-ul-islam-wa-al-muslimin-jnim",
+        "https://www.sipri.org/sites/default/files/WORKING%20PAPER%20N%C2%B05%20-%20EN%20%28WEB%29.pdf"
+      ],
+      "objectives": [
+        "Extend the coalition's regional influence across the Sahel",
+        "Expand local authority through coercion and local agreements"
+      ],
+      "strength": {
+        "range": "6,000–7,000 estimated fighters across the regional network",
+        "asOf": "2025-07-28",
+        "confidence": "medium",
+        "note": "Africa Center estimate for the network as a whole. The game uses one shared pool across the countries where JNIM appears.",
+        "sources": [
+          "https://africacenter.org/wp-content/uploads/2025/09/Deaths-Linked-to-MIGs-In-Last-Decade.pdf",
+          "https://www.washingtonpost.com/world/2025/06/08/jnim-militants-west-africa-sahel-terrorism/"
+        ],
+        "gamePersonnel": 5000,
+        "readiness": 0.6
+      },
+      "laws": [
+        {
+          "name": "Localized coercive administration",
+          "status": "in_practice",
+          "note": "SIPRI fieldwork documents local accords, movement restrictions and compulsory payments claimed as zakat by Katiba Macina in parts of central Mali. Practices varied across the surveyed localities.",
+          "source": "https://www.sipri.org/sites/default/files/WORKING%20PAPER%20N%C2%B05%20-%20EN%20%28WEB%29.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-717",
+      "ideology": "Al-Qaida-aligned Salafi-jihadism with a program to replace Somalia's federal government and bring Somali-inhabited areas under its strict interpretation of Islamic law.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4097699/",
+        "https://www.euaa.europa.eu/country-guidance-somalia/52-parties-or-organisations"
+      ],
+      "objectives": [
+        "Replace Somalia's federal government",
+        "Extend its parallel governing institutions"
+      ],
+      "laws": [
+        {
+          "name": "Parallel courts and taxation",
+          "status": "in_practice",
+          "note": "EUAA documents parallel courts applying the group's strict interpretation of Islamic law, as well as taxation and governance structures in areas under its control.",
+          "source": "https://www.euaa.europa.eu/country-guidance-somalia/security-situation-somalia-recent-events"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-89",
+      "ideology": "Constitutional multiparty republic with decentralized provinces. The government pursues restoration of state authority in the eastern provinces.",
+      "ideologySources": [
+        "https://www.wipo.int/wipolex/en/text/492212",
+        "https://au.int/sites/default/files/documents/45656-doc-2025.11.15_-_SIGNED_Framework_Peace_Agreement_EN.pdf"
+      ],
+      "laws": [
+        {
+          "name": "Constitution of the Democratic Republic of the Congo",
+          "status": "in_force",
+          "note": "The constitution establishes a secular republic, political pluralism and provincial institutions. These are national legal provisions.",
+          "source": "https://www.wipo.int/wipolex/en/text/492212"
+        }
+      ]
+    },
+    {
+      "id": "mmr-sspc",
+      "ideology": "Military-led authoritarianism and constitutional military tutelage",
+      "ideologySources": [
+        "https://bangkok.ohchr.org/sites/default/files/documents/2025-12/OHCHRMyanmar-Background-paper-on-military-elections-Nov25.pdf",
+        "https://www.wipo.int/wipolex/en/text/496926"
+      ],
+      "governingProgram": "Military-led interim rule and restricted electoral participation. The military’s seat quota is a constitutional provision relevant when parliament sits.",
+      "governingProgramSources": [
+        "https://www.wipo.int/wipolex/en/text/496926",
+        "https://www.moi.gov.mm/nlm/file-download/download/public/4307"
+      ]
+    },
+    {
+      "id": "mmr-nug",
+      "ideology": "Federal democracy and civilian government",
+      "ideologySources": [
+        "https://www.nucc-federal.org/",
+        "https://www.nugmyanmar.org/joint-declaration/"
+      ],
+      "governingProgram": "The Federal Democracy Charter describes interim civilian institutions and a federal democratic transition. CRPH legislation supplies enacted rules for the NUG’s own administration.",
+      "governingProgramSources": [
+        "https://www.nucc-federal.org/",
+        "https://crphmyanmar.org/legislation/"
+      ]
+    },
+    {
+      "id": "mmr-aa",
+      "ideology": "Arakan self-determination and confederal autonomy",
+      "ideologySources": [
+        "https://thediplomat.com/2024/09/arakan-army-commander-in-chief-twan-mrat-naing-on-the-future-of-rakhine-state/",
+        "https://ispmyanmar.com/united-league-of-arakan-ula/"
+      ],
+      "governingProgram": "The ULA established its own regional administration. Its preferred constitutional settlement is a political objective.",
+      "governingProgramSources": [
+        "https://ispmyanmar.com/united-league-of-arakan-ula/",
+        "https://fln.dk/media/sgidgldo/myan892.pdf"
+      ]
+    },
+    {
+      "id": "mmr-kio",
+      "ideology": "Kachin self-determination and federal self-government",
+      "ideologySources": [
+        "https://ispmyanmar.com/kachin-independence-organization-kio/"
+      ],
+      "governingProgram": "The Kachin Independence Council is the KIO’s administrative authority and implements policies and internal rules in areas it administers.",
+      "governingProgramSources": [
+        "https://ispmyanmar.com/kachin-independence-organization-kio/"
+      ]
+    },
+    {
+      "id": "mmr-knu",
+      "ideology": "Karen self-determination and democratic federalism",
+      "ideologySources": [
+        "https://www.knuhq.org/policy-law",
+        "https://ispmyanmar.com/karen-national-union-knu/"
+      ],
+      "governingProgram": "The KNU constitution and sector policies guide the organization’s own administration.",
+      "governingProgramSources": [
+        "https://www.knuhq.org/policy-law"
+      ]
+    },
+    {
+      "id": "mmr-cnf",
+      "ideology": "Chin self-determination and democratic federalism",
+      "ideologySources": [
+        "https://ispmyanmar.com/chin-national-front-cnf/",
+        "https://knuhq.org/admin/resources/statements/pdf/NUG-ERO-Postion_Statement__EN__Final_30012024.pdf"
+      ],
+      "governingProgram": "The CNF helped establish the Chinland Council under a 2023 constitution with allied Chin organizations. The council does not represent every Chin group.",
+      "governingProgramSources": [
+        "https://ispmyanmar.com/chin-national-front-cnf/",
+        "https://ispmyanmar.com/st-01/"
+      ]
+    },
+    {
+      "id": "mmr-cndf",
+      "ideology": "Chin regional resistance within the Chin Brotherhood",
+      "ideologySources": [
+        "https://ispmyanmar.com/st-01/",
+        "https://ispmyanmar.com/chin-national-front-cnf/"
+      ],
+      "ideologyNote": "This label describes a documented political alignment. A distinct ideological manifesto has not been verified."
+    },
+    {
+      "id": "mmr-knpp",
+      "ideology": "Karenni self-determination and democratic federalism",
+      "ideologySources": [
+        "https://knuhq.org/admin/resources/statements/pdf/NUG-ERO-Postion_Statement__EN__Final_30012024.pdf",
+        "https://www.nugmyanmar.org/joint-declaration/"
+      ]
+    },
+    {
+      "id": "mmr-mndaa",
+      "ideology": "Kokang self-administration within Myanmar",
+      "ideologySources": [
+        "https://ispmyanmar.com/myanmar-national-democratic-alliance-army-mndaa-2/",
+        "https://mmpeacemonitor.org/en/eng-ero-profiles/myanmar-national-truth-and-justice-party-myanmar-national-democratic-alliance-army-kokang-army-mntjp-mndaa/"
+      ],
+      "governingProgram": "The political wing’s stated objective was genuine Kokang self-administration within Myanmar.",
+      "governingProgramSources": [
+        "https://mmpeacemonitor.org/en/eng-ero-profiles/myanmar-national-truth-and-justice-party-myanmar-national-democratic-alliance-army-kokang-army-mntjp-mndaa/"
+      ]
+    },
+    {
+      "id": "mmr-tnla",
+      "ideology": "Ta’ang self-determination and federal autonomy",
+      "ideologySources": [
+        "https://ispmyanmar.com/wp-content/uploads/2024/03/20240315-ISP-Insight-V02N04-Princelings-2-ENG.pdf"
+      ],
+      "governingProgram": "The PSLF called for locally accountable civilian government, based on equality and self-determination. The statement is a political program.",
+      "governingProgramSources": [
+        "https://ispmyanmar.com/wp-content/uploads/2024/03/20240315-ISP-Insight-V02N04-Princelings-2-ENG.pdf"
+      ]
+    },
+    {
+      "id": "mmr-uwsa",
+      "ideology": "Wa regional autonomy under a centralized party administration",
+      "ideologySources": [
+        "https://ispmyanmar.com/united-wa-state-party-uwsp/"
+      ],
+      "governingProgram": "The Wa State People’s Government administers public services, the judiciary and local policing under the UWSP Central Committee. The UWSP sought formal state status for the Wa region.",
+      "governingProgramSources": [
+        "https://ispmyanmar.com/united-wa-state-party-uwsp/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-130",
+      "ideology": "Taliban Islamist emirate governed under its interpretation of Islamic law",
+      "ideologySources": [
+        "https://unama.unmissions.org/sites/default/files/moral_oversight_report_english_final.pdf",
+        "https://unama.unmissions.org/en/press-releases/report-on-the-implementation-enforcement-and-impact-of-pvpv-law-in-afghanistan"
+      ],
+      "governingProgram": "The de facto authorities enacted and enforced the Law on the Promotion of Virtue and Prevention of Vice.",
+      "governingProgramSources": [
+        "https://unama.unmissions.org/en/press-releases/report-on-the-implementation-enforcement-and-impact-of-pvpv-law-in-afghanistan"
+      ]
+    },
+    {
+      "id": "ucdp-actor-8114",
+      "ideology": "Anti-Taliban opposition advocating representative government",
+      "ideologySources": [
+        "https://www.afintl.com/en/202511108855"
+      ],
+      "governingProgram": "The NRF leader called for a political settlement allowing Afghans to choose their government and guaranteeing access to education for women and girls.",
+      "governingProgramSources": [
+        "https://www.afintl.com/en/202511108855"
+      ]
+    },
+    {
+      "id": "ucdp-actor-356",
+      "ideology": "Islamist insurgency seeking a sharia-based order and tribal-region autonomy",
+      "ideologySources": [
+        "https://acleddata.com/report/battle-borderlands-tehreek-i-taliban-pakistan-challenges-states-control",
+        "https://doi.org/10.1111/mepo.12787"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7542",
+      "ideology": "Baloch ethnonationalist separatist coalition",
+      "ideologySources": [
+        "https://warwatch.ch/situations/non-international-armed-conflicts-in-pakistan/classification/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-4364",
+      "ideology": "Sunni Baluch minority-rights insurgency and wider Baluch opposition coalition",
+      "ideologySources": [
+        "https://www.iranintl.com/en/202512128655",
+        "https://www.rferl.org/amp/jaish-al-adl-new-group-iran-opposition/33621554.html"
+      ],
+      "governingProgram": "The Popular Fighters Front’s December manifesto calls for civic, political and media action against inequality and discrimination. The manifesto is a declaration of intent.",
+      "governingProgramSources": [
+        "https://www.iranintl.com/en/202512128655"
+      ]
+    },
+    {
+      "id": "ucdp-actor-195",
+      "ideology": "Maoist communism",
+      "ideologySources": [
+        "https://www.mha.gov.in/en/divisionofmha/left-wing-extremism-division",
+        "https://www.mha.gov.in/sites/default/files/2024-10/34CPIMaoist_28102024.pdf"
+      ],
+      "governingProgram": "The party advocates replacing India’s existing state through a New Democratic Revolution.",
+      "governingProgramSources": [
+        "https://www.mha.gov.in/en/divisionofmha/left-wing-extremism-division"
+      ],
+      "strength": {
+        "range": "24 active armed cadres in Gadchiroli and parts of Gondia in a mid-2025 estimate; national total unverified",
+        "asOf": "2025-08",
+        "confidence": "low",
+        "note": "The MP-IDSA estimate covers only the Maharashtra theater. December parliamentary reports count yearly casualties, arrests and surrenders across India, not fighters remaining. A nationwide opening force cannot be inferred from these figures.",
+        "sources": [
+          "https://idsa.in/publisher/issuebrief/left-wing-extremism-in-maharashtra-counterinsurgency-strategies-and-current-challenges",
+          "https://www.mha.gov.in/MHA1/Par2017/pdfs/par2025-pdfs/RS11122025/1187.pdf"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-169",
+      "ideology": "Marxism–Leninism–Maoism",
+      "ideologySources": [
+        "https://www.bannedthought.net/Philippines/CPP/2016/CPP-ConstitutionAndProgram-2016-English.pdf"
+      ],
+      "governingProgram": "The party’s 2016 constitution and program set out a people’s democratic revolution and a subsequent socialist transition.",
+      "governingProgramSources": [
+        "https://www.bannedthought.net/Philippines/CPP/2016/CPP-ConstitutionAndProgram-2016-English.pdf"
+      ],
+      "strength": {
+        "range": "Around 780 New People's Army members, government estimate",
+        "asOf": "2025-12-04",
+        "confidence": "low",
+        "note": "The Philippine government task force estimated roughly 780 NPA members nationwide. The CPP disputed the figure. This estimate excludes the cumulative total of former members or supporters counted separately during the year.",
+        "sources": [
+          "https://www.pna.gov.ph/index.php/articles/1265716",
+          "https://newsinfo.inquirer.net/2151168/npa-membership-down-to-780-over-5000-seek-amnesty-govt"
+        ],
+        "gamePersonnel": 800
+      }
+    },
+    {
+      "id": "ucdp-actor-744",
+      "ideology": "Marxist-rooted revolutionary socialism",
+      "ideologySources": [
+        "https://www.euaa.europa.eu/sites/default/files/publications/2022-12/2022_12_COI_Report_Colombia_Country_Focus_EN.pdf",
+        "https://www.ecoi.net/en/document/1457527.html"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7214",
+      "ideology": "Paramilitary successor organization with contested political claims",
+      "ideologySources": [
+        "https://www.defensa.gob.es/documents/2073105/2519511/iberoamerica_gobernanza_y_crimen_organizado_2025_dieeea31_eng.pdf/49e72c32-76d8-22e7-005a-2148c9a91d02?t=1745823085509",
+        "https://www.euaa.europa.eu/colombia-country-focus/311-autodefensas-gaitanistas-de-colombia-agc"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7922",
+      "ideology": "Paramilitary successor organization without a verified political program",
+      "ideologySources": [
+        "https://saga.unodc.org.co/es/autodefensas-conquistadores-de-la-sierra-nevada"
+      ],
+      "ideologyNote": "Documented informal coercive governance is separate from a formal political platform."
+    },
+    {
+      "id": "per-mpcp",
+      "ideology": "Maoist-derived communism",
+      "ideologySources": [
+        "https://ceeep.mil.pe/2024/08/29/desafios-de-la-inteligencia-militar-en-la-lucha-contra-el-terrorismo-en-el-valle-de-los-rios-apurimac-ene-y-mantaro-vraem/?lang=en"
+      ]
+    },
+    {
+      "id": "ucdp-actor-1151",
+      "ideology": "Organized criminal network without a verified political program",
+      "ideologySources": [
+        "https://www.dea.gov/sites/default/files/2025-07/2025NationalDrugThreatAssessment.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-775",
+      "ideology": "Organized criminal network without a verified political program",
+      "ideologySources": [
+        "https://www.dea.gov/sites/default/files/2025-07/2025NationalDrugThreatAssessment.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-8009",
+      "ideology": "Organized criminal network without a verified political program",
+      "ideologySources": [
+        "https://home.treasury.gov/news/press-releases/jy2394"
+      ]
+    },
+    {
+      "id": "ucdp-actor-209",
+      "ideology": "Palestinian nationalism within a Sunni Islamist framework",
+      "ideologySources": [
+        "https://translations.meforum.org/documents/hamas-2017/",
+        "https://www.congress.gov/crs_external_products/RL/PDF/RL34074/RL34074.46.pdf"
+      ],
+      "governingProgram": "Hamas’s 2017 policy document states its political objectives, including Palestinian self-determination and a sovereign state. It accepts a state on the 1967 lines as a national consensus formula while retaining broader territorial claims.",
+      "governingProgramSources": [
+        "https://translations.meforum.org/documents/hamas-2017/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-208",
+      "ideology": "Sunni Islamism and Palestinian nationalism",
+      "ideologySources": [
+        "https://www.nationalsecurity.gov.au/what-australia-is-doing/terrorist-organisations/listed-terrorist-organisations/palestinian-islamic-jihad",
+        "https://ecfr.eu/special/mapping_palestinian_politics/palestinian_islamic_jihad/"
+      ],
+      "ideologyNote": "Palestinian Islamic Jihad is distinct from Hamas and its political administration."
+    },
+    {
+      "id": "ucdp-actor-212",
+      "ideology": "Palestinian armed nationalist coalition with Islamic principles",
+      "ideologySources": [
+        "https://www.dcaf.ch/sites/default/files/publications/documents/Entry-Points%28EN%29.pdf"
+      ],
+      "ideologyNote": "DCAF interviews describe a Gaza-based umbrella drawn from several factions, with a limited shared ideological platform."
+    },
+    {
+      "id": "ucdp-actor-9806",
+      "ideology": "Palestinian armed opposition to the Oslo process",
+      "ideologySources": [
+        "https://ecfr.eu/special/mapping_palestinian_politics/mujahideen-movement/"
+      ],
+      "ideologyNote": "This describes the group’s founding alignment. Its independent governing program is unverified."
+    },
+    {
+      "id": "ucdp-actor-366",
+      "ideology": "Lebanese Shia Islamist political and armed movement",
+      "ideologySources": [
+        "https://translations.meforum.org/documents/hezbollah-political-document-2009/",
+        "https://www.everycrsreport.com/files/20110103_R41446_638709eb9f613cd2d487e6a55d197870c312798b.pdf"
+      ],
+      "governingProgram": "Hezbollah’s 2009 political document argues for a sovereign Lebanese state and opposition to political sectarianism while maintaining its armed resistance program. This is the group’s own program.",
+      "governingProgramSources": [
+        "https://translations.meforum.org/documents/hezbollah-political-document-2009/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-123",
+      "ideology": "Zaydi Shia revivalism and Islamist politics",
+      "ideologySources": [
+        "https://www.prio.org/publications/14155",
+        "https://www.congress.gov/crs_external_products/R/PDF/R43960/R43960.38.pdf"
+      ],
+      "governingProgram": "Ansar Allah used the Supreme Political Council and existing state institutions to administer areas under its control. Its movement institutions exercise additional authority alongside those bodies.",
+      "governingProgramSources": [
+        "https://sanaacenter.org/the-yemen-review/june-2022/18144"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7344",
+      "ideology": "Southern Yemeni secessionism and federalism",
+      "ideologySources": [
+        "https://en.stcaden.com/posts/11021",
+        "https://efile.fara.gov/docs/7596-Exhibit-AB-20250521-1.pdf"
+      ],
+      "governingProgram": "The 2023 Southern National Charter advocated restoration of an independent federal southern state. Treat this as the opening political program. The STC's subsequent constitutional declaration falls after the cutoff.",
+      "governingProgramSources": [
+        "https://en.stcaden.com/posts/11013",
+        "https://en.stcaden.com/posts/11021"
+      ]
+    },
+    {
+      "id": "ucdp-actor-8622",
+      "ideology": "Hadrami regional autonomy",
+      "ideologySources": [
+        "https://www.yemenmonitor.com/en/Details/ArtMID/908/ArticleID/158909",
+        "https://sanaacenter.org/the-yemen-review/jan-mar-2025/24562"
+      ],
+      "governingProgram": "The alliance’s leaders called for Hadramawt self-governance and local political and administrative authority.",
+      "governingProgramSources": [
+        "https://www.yemenmonitor.com/en/Details/ArtMID/908/ArticleID/137506",
+        "https://sanaacenter.org/the-yemen-review/jan-mar-2025/24562"
+      ]
+    },
+    {
+      "id": "ucdp-actor-881",
+      "ideology": "Salafi-jihadism aligned with al-Qaeda",
+      "ideologySources": [
+        "https://main.un.org/securitycouncil/en/sanctions/1267/aq_sanctions_list/summaries/entity/al-qaida-in-the-arabian-peninsula-%28aqap%29",
+        "https://www.nationalsecurity.gov.au/what-australia-is-doing/terrorist-organisations/listed-terrorist-organisations/al-qaida-in-the-arabian-peninsula-aqap"
+      ]
+    },
+    {
+      "id": "ucdp-actor-323",
+      "ideology": "Kurdish self-determination and democratic confederalism",
+      "ideologySources": [
+        "https://www.demparti.org.tr/en/call-for-peace-and-democratic-society/20770/",
+        "https://www.demparti.org.tr/en/final-declaration-of-international-peace-and-democratic-society-conference/22402/"
+      ],
+      "ideologyNote": "Historical faction profile. The 2025 dissolution and disarmament are reflected in the cutoff review."
+    },
+    {
+      "id": "warwatch-actor-3242",
+      "ideology": "Sahrawi nationalism, self-determination and independence",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4091601/files/S_2025_664-EN.pdf",
+        "https://ictpolicyafrica.org/en/document/iynr7udq57b?raw=true"
+      ],
+      "governingProgram": "Polisario’s October 2025 proposal called for a UN/AU-supervised referendum that included independence. The Sahrawi Arab Democratic Republic’s constitution describes its own institutions.",
+      "governingProgramSources": [
+        "https://digitallibrary.un.org/record/4091601/files/S_2025_664-EN.pdf",
+        "https://ictpolicyafrica.org/en/document/iynr7udq57b?raw=true"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7595",
+      "ideology": "Oromo self-determination and opposition to ethnic marginalization",
+      "ideologySources": [
+        "https://acleddata.com/report/ethiopia-actor-profiles",
+        "https://www.fnnmedia.org/blog/2021/4/29/olas-propositions-resolving-political-and-economic-instability-ethiopia/"
+      ],
+      "governingProgram": "The OLA’s published platform proposes self-determination and protection of rights for groups within regional states.",
+      "governingProgramSources": [
+        "https://www.fnnmedia.org/blog/2021/4/29/olas-propositions-resolving-political-and-economic-instability-ethiopia/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-8118",
+      "ideology": "Amhara rights and interests across a decentralized movement",
+      "ideologySources": [
+        "https://acleddata.com/report/ethiopia-actor-profiles",
+        "https://acleddata.com/update/ethiopia-situation-update-16-april-2025"
+      ],
+      "ideologyNote": "Fano factions lacked a common ideology and unified leadership in the cited period."
+    },
+    {
+      "id": "ucdp-actor-9545",
+      "ideology": "Amhara rights advocacy and cultural traditionalism",
+      "ideologySources": [
+        "https://ethioreference.com/wp-content/uploads/2025/10/AFPO-Manifesto_Bilingual_20October2025-2.pdf"
+      ],
+      "governingProgram": "The AFPO manifesto calls for preservation of Amhara culture and rights and an inclusive Ethiopian government. It says a fuller ideology is still being developed.",
+      "governingProgramSources": [
+        "https://ethioreference.com/wp-content/uploads/2025/10/AFPO-Manifesto_Bilingual_20October2025-2.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-4226",
+      "ideology": "Federal democracy and power-sharing reform",
+      "ideologySources": [
+        "https://www.peaceagreements.org/agreements/2112/",
+        "https://digitallibrary.un.org/record/4094953/files/S_2025_768-EN.pdf"
+      ],
+      "governingProgram": "The SPLM-IO signed the 2018 power-sharing agreement. The 2025 UN report documents the fracture of that arrangement and the movement’s stated reform agenda.",
+      "governingProgramSources": [
+        "https://www.peaceagreements.org/agreements/2112/",
+        "https://digitallibrary.un.org/record/4094953/files/S_2025_768-EN.pdf"
+      ]
+    },
+    {
+      "id": "warwatch-actor-2319",
+      "ideology": "Inclusive federalism and opposition to centralized rule",
+      "ideologySources": [
+        "https://efile.fara.gov/docs/6614-Informational-Materials-20230314-10.pdf",
+        "https://www.nassouthsudan.com/blog/2020/03/05/nas-policy-document-on-federalism-a-foreword-by-chairman-thomas-cirillo/"
+      ],
+      "governingProgram": "The National Salvation Front’s 2020 platform proposes a federal political system for South Sudan. It is the movement’s proposal.",
+      "governingProgramSources": [
+        "https://efile.fara.gov/docs/6614-Informational-Materials-20230314-10.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-6288",
+      "ideology": "Multiethnic coalition aligned with decentralized democratic self-government",
+      "ideologySources": [
+        "https://rojavainformationcenter.org/2023/12/aanes-social-contract-2023-edition/",
+        "https://daanes.org/en/about/"
+      ],
+      "governingProgram": "The allied civilian administration’s 2023 Social Contract provides for elected local institutions, gender equality and regional self-government. Attribute the contract to DAANES.",
+      "governingProgramSources": [
+        "https://nordundostsyrien.de/wp-content/uploads/2024/01/The-Social-Contract-of-the-Democratic-Autonomous-Administration-of-the-North-and0AEast-Syria-Region.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-114",
+      "ideology": "Islamic republic under guardianship of the Islamic jurist",
+      "ideologySources": [
+        "https://translations.meforum.org/documents/iran-constitution-velayat-e-faqih/"
+      ],
+      "governingProgram": "The Iranian Constitution vests supervisory authority in the Supreme Leader and requires laws and regulations to conform to Islamic criteria.",
+      "governingProgramSources": [
+        "https://translations.meforum.org/documents/iran-constitution-velayat-e-faqih/"
+      ],
+      "ideologyNote": "State profile included to contextualize the Iranian opposition profile in the earlier supplement."
+    },
+    {
+      "id": "mmr-cnf",
+      "strength": {
+        "range": "More than 5,000",
+        "asOf": "2025-08-21",
+        "confidence": "medium",
+        "note": "ISP–Myanmar’s estimate is for the CNF/CNA organization. A rounded scenario personnel pool of 5,000 is based on the published lower bound.",
+        "sources": [
+          "https://ispmyanmar.com/chin-national-front-cnf/"
+        ],
+        "gamePersonnel": 5000
+      },
+      "laws": [
+        {
+          "name": "Chinland Constitution of 2023",
+          "status": "in_force",
+          "note": "The Chinland Council adopted its own interim constitution in December 2023. Its authority is local and the CNO/CNDF and other Chin Brotherhood organizations did not join this governing framework.",
+          "source": "https://mmpeacemonitor.org/en/en-interviews/there-were-also-talks-about-a-meeting-with-these-three-groups-which-havent-able-to-participate-after-the-conference-thats-why-we-have-kept-the-door-open-for-them-to-participate/"
+        }
+      ]
+    },
+    {
+      "id": "mmr-cndf",
+      "strength": {
+        "range": "CNDF-only total unverified",
+        "asOf": "2025-03-15",
+        "confidence": "low",
+        "note": "A contemporaneous interview-based report estimated approximately 600 across a local CNDF-led coalition of 16 groups. The figure is a coalition deployment, so it cannot establish CNDF’s total or justify a faction-level scenario pool.",
+        "sources": [
+          "https://www.aljazeera.com/news/2025/3/15/inch-by-inch-myanmar-rebels-close-in-on-key-military-base-in-chin-state"
+        ]
+      },
+      "laws": [
+        {
+          "name": "CNO-supported local schooling",
+          "status": "in_practice",
+          "note": "The CNO education department organized public schooling and recruited volunteer teachers in parts of Falam Township from 2022. This documents a local service arrangement.",
+          "source": "https://mmpeacemonitor.org/en/en-news/volunteer-teachers-recruited-for-public-schools-in-cdf-controlled-areas-in-falam/"
+        }
+      ],
+      "ideology": "Chin autonomy and federal democracy",
+      "ideologySources": [
+        "https://www.bnionline.net/en/news/chin-people-form-cno-cndf",
+        "https://cnocndf.org/about"
+      ]
+    },
+    {
+      "id": "mmr-knpp",
+      "strength": {
+        "range": "More than 2,000",
+        "asOf": "2024",
+        "confidence": "medium",
+        "note": "BNI–Myanmar Peace Monitor reports this estimate for the Karenni Army. It excludes separate Karenni resistance organizations. A rounded scenario pool of 2,000 represents the published lower bound.",
+        "sources": [
+          "https://www.bnionline.net/sites/bnionline.net/files/publication_docs/bni-peace-reference-book-2023-2024_english-version.pdf"
+        ],
+        "gamePersonnel": 2000
+      },
+      "laws": [
+        {
+          "name": "Interim Arrangements for Karenni State",
+          "status": "in_force",
+          "note": "The Karenni State Consultative Council’s interim framework was confirmed as amended on 26 October 2024. The KNPP chair also chairs the cross-organization Interim Executive Council, which administers this framework.",
+          "source": "https://ieckarenni.org/interim-arrangements-for-karenni-state/"
+        },
+        {
+          "name": "Karenni State Interim Taxation Policy",
+          "status": "in_force",
+          "note": "The Karenni State Consultative Council enacted this policy on 6 December 2025. Attribute it to the shared Karenni interim institutions.",
+          "source": "https://ieckarenni.org/karenni-state-interim-taxation-policy/"
+        },
+        {
+          "name": "Karenni State Interim Local Governance Policy",
+          "status": "in_force",
+          "note": "The Karenni State Consultative Council enacted this policy on 6 December 2025. Attribute it to the shared Karenni interim institutions.",
+          "source": "https://ieckarenni.org/karenni-state-interim-local-governance-policy/"
+        }
+      ],
+      "governingProgram": "The KNPP participates in the cross-organization Karenni interim institutions. Its chair Khu Oo Reh also chairs the Interim Executive Council.",
+      "governingProgramSources": [
+        "https://ieckarenni.org/chairperson/",
+        "https://ieckarenni.org/interim-arrangements-for-karenni-state/"
+      ]
+    },
+    {
+      "id": "mmr-mndaa",
+      "strength": {
+        "range": "About 10,000",
+        "asOf": "2025-06-17",
+        "confidence": "medium",
+        "note": "ISP–Myanmar’s Kokang organization estimate is used as a rounded scenario pool of 10,000. The January 2025 ceasefire status applies independently of personnel scale.",
+        "sources": [
+          "https://ispmyanmar.com/myanmar-national-democratic-alliance-army-mndaa-2/"
+        ],
+        "gamePersonnel": 10000
+      },
+      "laws": [
+        {
+          "name": "Kokang Regional Administrative Committee",
+          "status": "in_practice",
+          "note": "The MNTJP/MNDAA operated a regional administrative committee in Kokang. Its local administration is distinct from an assumption of blanket control over neighboring Shan State.",
+          "source": "https://ispmyanmar.com/myanmar-national-democratic-alliance-army-mndaa-2/"
+        }
+      ]
+    },
+    {
+      "id": "mmr-tnla",
+      "strength": {
+        "range": "About 10,000",
+        "asOf": "2025-08-20",
+        "confidence": "medium",
+        "note": "ISP–Myanmar’s estimate for the TNLA is used as a rounded scenario pool of 10,000. The October 2025 ceasefire status applies independently of personnel scale.",
+        "sources": [
+          "https://ispmyanmar.com/taang-national-liberation-army-tnla/"
+        ],
+        "gamePersonnel": 10000
+      },
+      "laws": [
+        {
+          "name": "PSLF local administration",
+          "status": "in_practice",
+          "note": "The political wing operated departments for local administration, justice, education, health and revenue in areas it administered. These are documented institutions.",
+          "source": "https://ispmyanmar.com/taang-national-liberation-army-tnla/"
+        }
+      ]
+    },
+    {
+      "id": "mmr-uwsa",
+      "strength": {
+        "range": "25,000–30,000 troops plus about 10,000 reservists in one study; ISP–Myanmar estimates over 45,000 without the same breakdown",
+        "asOf": "2025-06-17",
+        "confidence": "medium",
+        "note": "Sources use different scopes. A rounded scenario pool of 30,000 is anchored in the regular-force estimate and excludes the separately reported reserve component. The Wa administration is not a combatant in the main Myanmar war at the cutoff.",
+        "components": [
+          {
+            "kind": "regulars",
+            "estimate": "25,000–30,000 troops",
+            "asOf": "2025",
+            "source": "https://www.govinfo.gov/content/pkg/GOVPUB-D214-PURL-gpo212798/pdf/GOVPUB-D214-PURL-gpo212798.pdf"
+          },
+          {
+            "kind": "reserves",
+            "estimate": "About 10,000 reservists",
+            "asOf": "2025",
+            "source": "https://www.govinfo.gov/content/pkg/GOVPUB-D214-PURL-gpo212798/pdf/GOVPUB-D214-PURL-gpo212798.pdf"
+          }
+        ],
+        "sources": [
+          "https://ispmyanmar.com/united-wa-state-party-uwsp/",
+          "https://www.govinfo.gov/content/pkg/GOVPUB-D214-PURL-gpo212798/pdf/GOVPUB-D214-PURL-gpo212798.pdf"
+        ],
+        "gamePersonnel": 30000
+      },
+      "laws": [
+        {
+          "name": "Wa State People’s Government",
+          "status": "in_practice",
+          "note": "The regional administration implements policies set by the UWSP Central Committee and administers local policing, courts and public services. The military relationship remains governed by bilateral ceasefire arrangements.",
+          "source": "https://ispmyanmar.com/united-wa-state-party-uwsp/"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-8118",
+      "ideology": "Decentralized Amhara armed movement focused on Amhara interests and community security. Some factions emphasize Amhara self-government while others favor a wider Ethiopian national identity.",
+      "ideologySources": [
+        "https://acleddata.com/update/epo-december-2023-monthly-fano-insurgency-main-hurdles-unifying-fano",
+        "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible"
+      ],
+      "strength": {
+        "range": "Coalition-wide strength unverified",
+        "asOf": "2025-06",
+        "confidence": "low",
+        "note": "The UK country report finds an exact total unclear. A frequently cited Tigray-war figure combines Fano with the former Amhara Regional Special Forces and does not measure the factions present at the scenario opening.",
+        "sources": [
+          "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible",
+          "https://www.osar.ch/fileadmin/user_upload/Publikationen/Herkunftslaenderberichte/Afrika/Aethiopien/250825_ETH_membership_FANO.pdf"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-9545",
+      "shortName": "AFPO",
+      "ideology": "Amhara-interest armed faction within the wider Fano movement. A delegation led by Masresha Sete signed a regional peace agreement in December 2025. Its signature represented that delegation.",
+      "ideologySources": [
+        "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible",
+        "https://www.ena.et/web/eng/w/eng_7850523",
+        "https://www.cgra.be/sites/default/files/rapporten/coi_focus_ethiopie._veiligheidssituatie_in_amhara_20260528.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-9546",
+      "shortName": "AFNF",
+      "ideology": "Amhara-interest coalition formed in May 2025 to coordinate several regional Fano commands.",
+      "ideologySources": [
+        "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7595",
+      "shortName": "OLA",
+      "ideology": "Oromo self-determination, elected self-government, recognition of Oromo language and resistance to political and economic marginalization, as set out in the OLA's published manifesto.",
+      "ideologySources": [
+        "https://oromia.today/ola-publishes-a-brief-political-manifesto/",
+        "https://www.cgrs.be/sites/default/files/rapporten/coi_focus_ethiopie._veiligheidssituatie_in_oromia_20250514.pdf"
+      ],
+      "objectives": [
+        "Advance Oromo self-determination and elected self-government"
+      ],
+      "strength": {
+        "range": "About 8,000 in a government estimate",
+        "asOf": "2025-05-14",
+        "confidence": "low",
+        "note": "Belgian country research reports a government estimate of about 8,000 and an unverified OLA claim of 80,000. The two figures are separate claims. The game uses a smaller pool to reflect uncertainty.",
+        "sources": [
+          "https://www.cgrs.be/sites/default/files/rapporten/coi_focus_ethiopie._veiligheidssituatie_in_oromia_20250514.pdf",
+          "https://acleddata.com/report/ethiopia-actor-profiles"
+        ],
+        "gamePersonnel": 5000,
+        "readiness": 0.5
+      }
+    },
+    {
+      "id": "ucdp-actor-9067",
+      "ideology": "Alliance of criminal gangs that seeks territorial influence and political leverage. Leaders sought dialogue, political standing and amnesty. Claims to represent a formal political party came from the alliance itself.",
+      "ideologySources": [
+        "https://crisisgroup-staging-3.sbx.so/rpt/latin-america-caribbean/haiti/110-undoing-haitis-deadly-gang-alliance",
+        "https://docs.un.org/en/S/2025/597"
+      ],
+      "objectives": [
+        "Retain influence in areas under gang control",
+        "Seek leverage in Haiti's political transition"
+      ],
+      "strength": {
+        "range": "12,000–20,000 estimated members, including roughly 3,000 heavily armed",
+        "asOf": "2025-11-24",
+        "confidence": "low",
+        "note": "Crisis Group interviews gave this coalition-wide estimate. It includes members beyond the armed core. The game pool represents a smaller abstract armed component.",
+        "sources": [
+          "https://crisisgroup-staging-3.sbx.so/rpt/latin-america-caribbean/haiti/110-undoing-haitis-deadly-gang-alliance",
+          "https://www.ecoi.net/en/document/2134324.html"
+        ],
+        "gamePersonnel": 3000,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "ucdp-actor-8577",
+      "ideology": "Decentralized community self-defense tradition, revived against Islamic State Mozambique. Some groups using the Naparama name later challenged government authority. A shared central command or political program is unverified.",
+      "ideologySources": [
+        "https://acleddata.com/update/cabo-ligado-update-7-20-april-2025",
+        "https://ucdp.uu.se/country/541"
+      ]
+    },
+    {
+      "id": "ucdp-actor-1051",
+      "shortName": "Boko Haram (JAS)",
+      "ideology": "Salafi-jihadist insurgency founded to establish its interpretation of an Islamic state in Nigeria. JAS remains organizationally distinct from ISWAP.",
+      "ideologySources": [
+        "https://main.un.org/securitycouncil/en/sanctions/1267/aq_sanctions_list/summaries/entity/jama%27atu-ahlis-sunna-lidda%27awati-wal-jihad-%28boko)",
+        "https://www.euaa.europa.eu/nigeria-security-situation/113-non-state-armed-actors"
+      ],
+      "objectives": [
+        "Replace state authority with its interpretation of Islamic rule"
+      ],
+      "strength": {
+        "range": "1,500–2,000 estimated JAS fighters",
+        "asOf": "2025-07-28",
+        "confidence": "medium",
+        "note": "Africa Center estimate for JAS in the Lake Chad theater. ISWAP has a separate force estimate and game pool.",
+        "sources": [
+          "https://africacenter.org/wp-content/uploads/2025/09/Deaths-Linked-to-MIGs-In-Last-Decade.pdf"
+        ],
+        "gamePersonnel": 1500,
+        "readiness": 0.6
+      }
+    },
+    {
+      "id": "ucdp-actor-6287",
+      "shortName": "IPOB / ESN",
+      "ideology": "Biafran self-determination and independence in southeastern Nigeria. The Eastern Security Network is the movement's armed wing. Other Biafran separatist factions have separate leadership.",
+      "ideologySources": [
+        "https://www.amnesty.org/en/wp-content/uploads/2025/08/AFR4493632025ENGLISH.pdf",
+        "https://www.amnesty.org/en/documents/afr44/5211/2016/en/",
+        "https://apnews.com/article/b2ecad8687886f248ad1bb91eec757c6"
+      ],
+      "objectives": [
+        "Pursue an independent Biafra"
+      ],
+      "strength": {
+        "range": "No verified ESN force total",
+        "asOf": "2025-12",
+        "confidence": "low",
+        "note": "EUAA records the ESN's strength as unknown. IPOB political supporters and armed factions outside ESN do not provide a basis for estimating the ESN's force.",
+        "sources": [
+          "https://www.euaa.europa.eu/sites/default/files/publications/2026-03/2026_CG_Nigeria.pdf"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-7870",
+      "shortName": "CPC",
+      "ideology": "Anti-government coalition historically coordinated by former president François Bozizé. It contains movements with divergent political programs, and the CPC-F breakaway has its own leadership.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/nanna/record/4084190/files/S_2025_384-EN.pdf?registerDownload=1&version=1&withMetadata=0&withWatermark=0",
+        "https://ucdp.uu.se/conflict/416"
+      ],
+      "objectives": [
+        "Challenge the Bangui government's authority"
+      ]
+    },
+    {
+      "id": "warwatch-actor-2519",
+      "shortName": "3R",
+      "ideology": "Northwestern CAR armed group that portrayed itself as defending marginalized herders. It signed the April 2025 peace agreement and formally dissolved in July, with demobilization ongoing in 2025.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4084252/files/S_2025_385-EN.pdf",
+        "https://monusco.unmissions.org/sites/default/files/2026-01/n2526605_ev.pdf",
+        "https://apnews.com/article/c463bad4ff5e119ce5b355a128f3995b",
+        "https://ucdp.uu.se/country/482"
+      ],
+      "strength": {
+        "range": "169 verified demobilizations through October 1",
+        "asOf": "2025-10-01",
+        "confidence": "high",
+        "note": "United Nations Secretary-General report S/2025/638 gives completed 3R demobilizations under the N'Djamena agreement. The count measures people demobilized. Remaining active strength at campaign opening is unverified.",
+        "sources": [
+          "https://monusco.unmissions.org/sites/default/files/2026-01/n2526605_ev.pdf"
+        ]
+      }
+    },
+    {
+      "id": "sdn-sla-aw",
+      "strength": {
+        "range": "No verified formation-wide total",
+        "asOf": "2025-12",
+        "confidence": "low",
+        "note": "The group described its own forces and control of parts of Jebel Marra and Tawila during 2025. Its public statements and independent country research do not establish a force total.",
+        "sources": [
+          "https://slma.net/en/eu-dialogue-overshadowed-by-deepening-humanitarian-emergency-situation-in-sudan-abdul-wahid-al-nour-tells-alsudania-news-in-an-exclusive-interview/",
+          "https://www.government.nl/documents/2025/12/01/general-country-of-origin-information-report-on-sudan-december-2025"
+        ]
+      }
+    },
+    {
+      "id": "is-iraq-syria",
+      "ideology": "Salafi-jihadism, aligned with Islamic State's transnational caliphate project.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+      ]
+    },
+    {
+      "id": "is-khorasan",
+      "ideology": "Salafi-jihadism, aligned with Islamic State's transnational caliphate project.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+      ]
+    },
+    {
+      "id": "is-mozambique",
+      "ideology": "Salafi-jihadism, aligned with Islamic State's transnational caliphate project.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+      ]
+    },
+    {
+      "id": "is-sahel",
+      "ideology": "Salafi-jihadism, aligned with Islamic State's transnational caliphate project.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+      ]
+    },
+    {
+      "id": "is-somalia",
+      "ideology": "Salafi-jihadism, aligned with Islamic State's transnational caliphate project.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+      ]
+    },
+    {
+      "id": "is-west-africa",
+      "ideology": "Salafi-jihadism, aligned with Islamic State's transnational caliphate project.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-130",
+      "ideology": "Deobandi Islamist emirate under Taliban leadership.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/nanna/record/4095910/files/S_2025_796-EN.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-123",
+      "ideology": "Zaydi Shia-rooted Islamist movement.",
+      "ideologySources": [
+        "https://sanaacenter.org/publications/policy-research/40"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7344",
+      "ideology": "Southern Yemeni nationalism and independence.",
+      "ideologySources": [
+        "https://sanaacenter.org/files/Yemen_International_Forum_2025_Report.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-6288",
+      "ideology": "Decentralized democratic autonomy and multiethnic self-government in northeast Syria.",
+      "ideologySources": [
+        "https://rojavainformationcenter.org/storage/2023/12/Social-Contract-English-Final.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7092",
+      "name": "Dan Na Ambassagou",
+      "ideology": "Dogon communal self-defence. No distinct wider governing ideology is established here.",
+      "ideologySources": [
+        "https://www.sipri.org/sites/default/files/WORKING%20PAPER%20N%C2%B05%20-%20EN%20%28WEB%29.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-9529",
+      "name": "Convention pour la Révolution Populaire",
+      "shortName": "CRP"
+    },
+    {
+      "id": "ucdp-actor-1151",
+      "name": "Cártel Jalisco Nueva Generación",
+      "shortName": "CJNG"
+    },
+    {
+      "id": "ucdp-actor-1152",
+      "name": "Cártel Independiente de Acapulco",
+      "shortName": "CIDA"
+    },
+    {
+      "id": "ucdp-actor-3176",
+      "name": "Primeiro Comando da Capital",
+      "shortName": "PCC"
+    },
+    {
+      "id": "ucdp-actor-772",
+      "name": "Comando Vermelho",
+      "shortName": "CV"
+    },
+    {
+      "id": "ucdp-actor-744",
+      "name": "Ejército de Liberación Nacional",
+      "shortName": "ELN"
+    },
+    {
+      "id": "ucdp-actor-366",
+      "name": "Hezbollah"
+    },
+    {
+      "id": "warwatch-actor-3098",
+      "name": "Government of Senegal",
+      "countryKey": "686"
+    },
+    {
+      "id": "warwatch-actor-2602",
+      "name": "Government of Chad",
+      "countryKey": "148"
+    },
+    {
+      "id": "sdn-rsf",
+      "victoryName": "Republic of Sudan",
+      "victoryAdministration": "Government of Peace and Unity",
+      "victoryKind": "Implemented after a decisive Tasis victory",
+      "victorySources": [
+        "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+      ]
+    },
+    {
+      "id": "sdn-saf",
+      "victoryName": "Republic of the Sudan",
+      "victoryKind": "Existing state title retained after a decisive government victory"
+    },
+    {
+      "id": "mmr-nug",
+      "victoryName": "Federal Democratic Union of Myanmar",
+      "victoryKind": "Documented NUG project name. PPO uses it as the proposed permanent state title after a federal democratic transition.",
+      "victorySources": [
+        "https://moic.nugmyanmar.org/",
+        "https://www.nugmyanmar.org/joint-declaration/",
+        "https://mofua.nugmyanmar.org/uploads/publications/wiZLKwlLAEmceMSfOntzv53PbtDGIsiWiFIOzXAt.pdf#page=11"
+      ],
+      "victoryGovernment": "A civilian parliamentary federation, with a bicameral union legislature and constituent states able to adopt their own constitutions."
+    },
+    {
+      "id": "mmr-aa",
+      "victoryName": "State of Arakan",
+      "victoryKind": "PPO formal regional title based on the ULA’s stated confederal goal. The administration name is documented.",
+      "victorySources": [
+        "https://thediplomat.com/2024/09/arakan-army-commander-in-chief-twan-mrat-naing-on-the-future-of-rakhine-state/",
+        "https://mmpeacemonitor.org/en/en-news/aa-bolsters-civil-service-to-rebuild-arakan-state/"
+      ],
+      "victoryAdministration": "Arakkha People’s Revolutionary Government",
+      "victoryGovernment": "Confederal self-rule within a wider Myanmar union, with a unitary regional administration led by the United League of Arakan."
+    },
+    {
+      "id": "warwatch-actor-3242",
+      "victoryName": "Sahrawi Arab Democratic Republic",
+      "victoryKind": "Existing declared state name for Western Sahara",
+      "victorySources": [
+        "https://au.int/en/member_states/countryprofiles2"
+      ]
+    },
+    {
+      "id": "ucdp-actor-8822",
+      "name": "Front de libération de l’Azawad",
+      "shortName": "FLA",
+      "ideology": "Azawad self-determination and independence.",
+      "ideologySources": [
+        "https://www.peaceagreements.org/agreements/2696/"
+      ],
+      "victoryName": "Independent State of Azawad",
+      "victoryKind": "Restoration title from the 2012 MNLA declaration. The MNLA later helped form the FLA.",
+      "victorySources": [
+        "https://www.peaceagreements.org/agreements/2696/",
+        "https://www.polgeonow.com/2012/04/declaration-of-independence-of-azawad.html"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7344",
+      "victoryName": "State of South Arabia",
+      "victoryKind": "The STC used this name for its proposed future state in December 2025.",
+      "victorySources": [
+        "https://en.stcaden.com/posts/12597",
+        "https://en.stcaden.com/posts/12615",
+        "https://efile.fara.gov/docs/7596-Exhibit-AB-20250521-1.pdf"
+      ],
+      "victoryGovernment": "An independent federal southern state under the STC’s pre-cutoff program."
+    },
+    {
+      "id": "ucdp-actor-130",
+      "victoryName": "Islamic Emirate of Afghanistan",
+      "victoryKind": "Already used by the Taliban authorities at campaign start",
+      "victorySources": [
+        "https://mfa.gov.af/en/En/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-209",
+      "victoryName": "State of Palestine",
+      "victoryKind": "Existing Palestinian state name. Hamas proposes a sovereign Palestinian state and supplies no distinct successor title here.",
+      "victorySources": [
+        "https://translations.meforum.org/documents/hamas-2017/",
+        "https://www.un.org/en/about-us/non-member-states"
+      ]
+    },
+    {
+      "id": "ucdp-actor-266",
+      "name": "Free Papua Movement",
+      "shortName": "OPM",
+      "ideology": "Papuan self-determination and independence.",
+      "ideologySources": [
+        "https://www.ulmwp.org/ulmwp"
+      ],
+      "victoryName": "Republic of West Papua",
+      "victoryKind": "Name used by the Free Papua Movement in its account of the 1971 proclamation.",
+      "victorySources": [
+        "https://www.papua-merdeka.org/post/copy-of-opm-media-statement-in-the-port-moresby-press-conference"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7542",
+      "victoryName": "Independent State of Balochistan",
+      "victoryKind": "PPO title based on the wider movement’s independence goal. A common BRAS constitutional title remains unverified.",
+      "victorySources": [
+        "https://balochistanliberationcharter.com/index.php/english/",
+        "https://warwatch.ch/situations/non-international-armed-conflicts-in-pakistan/classification/"
+      ]
+    },
+    {
+      "id": "ucdp-actor-6287",
+      "victoryName": "Republic of Biafra",
+      "victoryKind": "Restoration title taken from the 1967 proclamation.",
+      "victorySources": [
+        "https://www.historians.org/resource/biafran-declaration-of-independence/",
+        "https://www.gov.uk/government/publications/nigeria-country-policy-and-information-notes/country-policy-and-information-note-separatist-groups-in-the-south-east-nigeria-march-2022-accessible"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7332",
+      "victoryName": "Federal Republic of Ambazonia",
+      "victoryKind": "Title used by the Ambazonian Interim Government in its interim constitution. The roster includes separate Anglophone commands.",
+      "victorySources": [
+        "https://ambazoniagov.org/images/docs/Interim-Constitution-of-the-Federal-Republic-ofAmbazonia.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-6287",
+      "victoryName": "Republic of Biafra",
+      "victoryKind": "Restoration title taken from the 1967 proclamation.",
+      "victorySources": [
+        "https://www.historians.org/resource/biafran-declaration-of-independence/",
+        "https://www.gov.uk/government/publications/nigeria-country-policy-and-information-notes/country-policy-and-information-note-separatist-groups-in-the-south-east-nigeria-march-2022-accessible"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7332",
+      "victoryName": "Federal Republic of Ambazonia",
+      "victoryKind": "Title used by the Ambazonian Interim Government in its interim constitution. The roster includes separate Anglophone commands.",
+      "victorySources": [
+        "https://ambazoniagov.org/images/docs/Interim-Constitution-of-the-Federal-Republic-ofAmbazonia.pdf"
+      ]
+    },
+    {
+      "id": "sen-mfdc-south",
+      "victoryName": "Independent State of Casamance",
+      "victoryKind": "PPO title for a separatist outcome. Southern signatories open under a peace agreement.",
+      "victorySources": [
+        "https://rivieresdusud.uasz.sn/bitstream/handle/123456789/2417/sadio_memoire_2024.pdf?isAllowed=y&sequence=1",
+        "https://www.un.org/sg/en/content/highlight/2025-02-25.html"
+      ]
+    },
+    {
+      "id": "warwatch-actor-3096",
+      "victoryName": "Independent State of Casamance",
+      "victoryKind": "PPO title based on the MFDC independence goal. A formal successor title remains unverified.",
+      "victorySources": [
+        "https://rivieresdusud.uasz.sn/bitstream/handle/123456789/2417/sadio_memoire_2024.pdf?isAllowed=y&sequence=1"
+      ]
+    },
+    {
+      "id": "ucdp-actor-123",
+      "victoryName": "Islamic Republic of Yemen",
+      "victoryAdministration": "Government of Change and Construction",
+      "victoryGovernment": "A Zaydi-rooted authoritarian Islamic republic, with executive power centered on the Supreme Political Council and legislation grounded in Islamic law.",
+      "victoryKind": "PPO proposal for an Ansar Allah constitutional refounding. The 2019 Sana’a program used Republic of Yemen.",
+      "victorySources": [
+        "https://faolex.fao.org/docs/pdf/yem201248E.pdf#page=20",
+        "https://www.wipo.int/wipolex/en/legislation/details/19992",
+        "https://sanaacenter.org/the-yemen-review/june-2022/18144"
+      ]
+    },
+    {
+      "id": "ucdp-actor-6287",
+      "shortName": "IPOB",
+      "ideology": "Biafran separatism.",
+      "ideologySources": [
+        "https://www.gov.uk/government/publications/nigeria-country-policy-and-information-notes/country-policy-and-information-note-separatist-groups-in-the-south-east-nigeria-march-2022-accessible"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7332",
+      "name": "Ambazonian separatist armed groups",
+      "ideology": "Anglophone Cameroonian separatism. Several commands claim the same political goal.",
+      "ideologySources": [
+        "https://www.eeas.europa.eu/eeas/cameroon-statement-spokesperson-attack-school-kumba_en"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7463",
+      "name": "Union des révolutionnaires pour la défense du peuple congolais",
+      "shortName": "CODECO-URDPC",
+      "ideology": "Lendu communal militia within the CODECO network.",
+      "ideologySources": [
+        "https://monusco.unmissions.org/sites/default/files/2025-08/rapport_du_unsg-s-2025-403-fr.pdf",
+        "https://digitallibrary.un.org/record/4097846/files/S_2025_858-EN.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-7734",
+      "name": "Zaïre",
+      "ideology": "Hema communal self-defence militia.",
+      "ideologySources": [
+        "https://monusco.unmissions.org/sites/default/files/2025-08/rapport_du_unsg-s-2025-403-fr.pdf",
+        "https://digitallibrary.un.org/record/4097846/files/S_2025_858-EN.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-8832",
+      "name": "Volontaires pour la défense de la patrie (Wazalendo)",
+      "ideology": "Pro-government Congolese armed networks with distinct local agendas.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4097846/files/S_2025_858-EN.pdf"
+      ]
+    },
+    {
+      "id": "is-adf",
+      "ideology": "Islamic State-aligned jihadist insurgency.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/record/4097846/files/S_2025_858-EN.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-9067",
+      "ideology": "Armed criminal coalition seeking territorial and political leverage. The UN report documents gang control and coercion.",
+      "ideologySources": [
+        "https://digitallibrary.un.org/nanna/record/4091504/files/S_2025_597-EN.pdf?registerDownload=1&version=1&withMetadata=0&withWatermark=0"
+      ]
+    },
+    {
+      "id": "sen-mfdc-south",
+      "ideology": "Casamance separatist movement. Southern signatories entered a peace process.",
+      "ideologySources": [
+        "https://warwatch.ch/situations/non-international-armed-conflict-in-senegal/?tab=tab-2",
+        "https://www.un.org/sg/en/content/highlight/2025-02-25.html"
+      ]
+    },
+    {
+      "id": "warwatch-actor-3096",
+      "name": "Mouvement des forces démocratiques de Casamance (Salif Sadio faction)",
+      "shortName": "MFDC",
+      "ideology": "Casamance separatism.",
+      "ideologySources": [
+        "https://warwatch.ch/situations/non-international-armed-conflict-in-senegal/?tab=tab-2"
+      ]
+    },
+    {
+      "id": "ucdp-actor-744",
+      "name": "Ejército de Liberación Nacional",
+      "shortName": "ELN",
+      "strength": {
+        "range": "2,300–2,800 reported combatants in 2024",
+        "asOf": "2024-12-31",
+        "confidence": "medium",
+        "gamePersonnel": 2700,
+        "note": "Colombia’s Ministry of Defense estimate. The July 2025 count of 6,450 includes support networks.",
+        "sources": [
+          "https://www.ecoi.net/en/file/local/2134406/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf",
+          "https://ideaspaz.org/publicaciones/investigaciones-analisis/2025-11/lo-que-dicen-las-nuevas-cifras-sobre-el-aumento-de-integrantes-de-grupos-armados-en-colombia"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-7214",
+      "strength": {
+        "range": "At least 8,945 total members and support affiliates",
+        "asOf": "2025-07-31",
+        "confidence": "low",
+        "note": "The Fuerza Pública count includes armed personnel and support networks. The game pool is a rounded scenario value based on the nationwide armed share in the same study. It does not measure this group's combatants.",
+        "sources": [
+          "https://ideaspaz.org/publicaciones/investigaciones-analisis/2025-11/lo-que-dicen-las-nuevas-cifras-sobre-el-aumento-de-integrantes-de-grupos-armados-en-colombia"
+        ],
+        "gamePersonnel": 4200
+      }
+    },
+    {
+      "id": "ucdp-actor-8468",
+      "name": "Estado Mayor Central (Iván Mordisco faction)",
+      "shortName": "EMC",
+      "ideology": "FARC dissident insurgency claiming the former guerrilla’s leftist legacy. Local agendas vary.",
+      "ideologySources": [
+        "https://www.ecoi.net/en/file/local/2134406/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf"
+      ],
+      "strength": {
+        "range": "Around 3,919 total members and support affiliates",
+        "asOf": "2025-07-31",
+        "confidence": "low",
+        "note": "The Fuerza Pública count includes armed personnel and support networks. The game pool is a rounded scenario value based on the nationwide armed share in the same study. It does not measure this group's combatants.",
+        "sources": [
+          "https://ideaspaz.org/publicaciones/investigaciones-analisis/2025-11/lo-que-dicen-las-nuevas-cifras-sobre-el-aumento-de-integrantes-de-grupos-armados-en-colombia"
+        ],
+        "gamePersonnel": 1900
+      }
+    },
+    {
+      "id": "ucdp-actor-9191",
+      "name": "Estado Mayor de Bloques y Frentes (Calarcá faction)",
+      "shortName": "EMBF",
+      "ideology": "FARC dissident insurgency with a separate command and negotiation track.",
+      "ideologySources": [
+        "https://www.ecoi.net/en/file/local/2134406/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf"
+      ],
+      "strength": {
+        "range": "Around 2,802 total members and support affiliates",
+        "asOf": "2025-07-31",
+        "confidence": "low",
+        "note": "The Fuerza Pública count includes armed personnel and support networks. The game pool is a rounded scenario value based on the nationwide armed share in the same study. It does not measure this group's combatants.",
+        "sources": [
+          "https://ideaspaz.org/publicaciones/investigaciones-analisis/2025-11/lo-que-dicen-las-nuevas-cifras-sobre-el-aumento-de-integrantes-de-grupos-armados-en-colombia"
+        ],
+        "gamePersonnel": 1300
+      }
+    },
+    {
+      "id": "warwatch-actor-703",
+      "ideology": "FARC dissident guerrilla claiming continuity with the former leftist movement.",
+      "ideologySources": [
+        "https://www.ecoi.net/en/file/local/2134406/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf"
+      ]
+    },
+    {
+      "id": "warwatch-actor-696",
+      "ideology": "FARC-dissident-linked border armed network with criminal revenue.",
+      "ideologySources": [
+        "https://www.ecoi.net/en/file/local/2134406/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf"
+      ],
+      "strength": {
+        "range": "Over 600 armed members reported in February; over 1,200 combatants estimated in August",
+        "asOf": "2025-08",
+        "confidence": "low",
+        "note": "These field reports give thresholds at different points in 2025. The estimate concerns Comandos de la Frontera. Broader CNEB membership is inclusive of this component and should not be counted again.",
+        "sources": [
+          "https://amazonunderworld.org/wp-content/uploads/2025/08/Policy-paper-trifrontera-ESP.pdf",
+          "https://elpais.com/america/amazonia-sin-fronteras/2025-02-20/los-comandos-de-la-frontera-controlan-el-narcotrafico-desde-peru-a-metros-de-la-armada-colombiana-los-tengo-aca-al-frente-pasando-el-rio.html",
+          "https://www.euaa.europa.eu/sites/default/files/publications/2025-12/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf"
+        ],
+        "gamePersonnel": 1000
+      }
+    },
+    {
+      "id": "ucdp-actor-7930",
+      "ideology": "Organized criminal gang. No national political program established.",
+      "ideologySources": [
+        "https://www.ecoi.net/en/file/local/2134406/2025_12_EUAA_COI_Report_Colombia_Country_Focus.pdf"
+      ]
+    },
+    {
+      "id": "ucdp-actor-209",
+      "name": "Hamas",
+      "shortName": "Hamas",
+      "armedWingName": "Izz al-Din al-Qassam Brigades",
+      "strength": {
+        "range": "Around 20,000 military-wing members",
+        "asOf": "2025-10-21",
+        "confidence": "low",
+        "gamePersonnel": 16000,
+        "note": "Contemporaneous Israeli military estimate reported in October. The source includes recruits with uneven training. The game uses a smaller abstract pool.",
+        "sources": [
+          "https://www.timesofisrael.com/liveblog_entry/israeli-assessment-hamas-still-has-20000-fighters-though-new-recruits-are-of-lower-quality-has-hundreds-of-rockets-some-long-range/"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-9360",
+      "name": "Military Coalition for the Salvation of the People and Recovery (CMSPR)",
+      "ideology": "Anti-government armed coalition",
+      "ideologySources": [
+        "https://ucdp.uu.se/country/482",
+        "https://digitallibrary.un.org/record/4084252/files/S_2025_385-EN.pdf"
+      ],
+      "objectives": [
+        "The UN panel documented opposition to a third presidential term and a demand for the release of Armel Sayo in early 2025."
+      ]
+    },
+    {
+      "id": "per-mpcp",
+      "name": "Militarized Communist Party of Peru",
+      "shortName": "MPCP",
+      "strength": {
+        "range": "250–300 members including 60–150 fighters (historical estimate)",
+        "asOf": "2023",
+        "confidence": "low",
+        "note": "The 2023 U.S. State Department report distinguishes fighters from the wider organization. Retained as a dated scale reference without treating it as a January 2026 order of battle or creating a force pool.",
+        "sources": [
+          "https://2021-2025.state.gov/reports/country-reports-on-terrorism-2023/peru/"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-8586",
+      "name": "Bonde dos 40",
+      "shortName": "B40"
+    },
+    {
+      "id": "ucdp-actor-3176",
+      "name": "Primeiro Comando da Capital",
+      "shortName": "PCC"
+    },
+    {
+      "id": "ucdp-actor-75",
+      "laws": [
+        {
+          "name": "Charter of Refoundation",
+          "status": "enacted",
+          "note": "The March 2025 charter organizes a five-year refoundation period with a military-led presidency and designated transitional institutions.",
+          "source": "https://presidence.ne/pages/refondation"
+        },
+        {
+          "name": "Ordinance No. 2025-06 on dissolution of political parties",
+          "status": "enacted",
+          "note": "The March 26 ordinance dissolved political parties and addressed their assets and liabilities.",
+          "source": "https://www.lesahel.org/ordonnance-n-2025-06-du-26-mars-2025-portant-dissolution-des-partis-politiques/"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-78",
+      "laws": [
+        {
+          "name": "Amended Transition Charter",
+          "status": "enacted",
+          "note": "The charter adopted in May 2024 extended the transition by 60 months from July 2, 2024 and made the transitional president eligible to contest eventual elections.",
+          "source": "https://gouvernement.gov.bf/?p=7511"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-72",
+      "laws": [
+        {
+          "name": "July 2025 revision of the Transition Charter",
+          "status": "enacted",
+          "note": "The revision provided for a five-year renewable term for the transitional president and defined eventual elections in relation to stabilization.",
+          "source": "https://sgg-mali.ml/JO/2025/mali-jo-2025-08-sp.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-94",
+      "strength": {
+        "range": "At least 6,000 RDF personnel operating in the DRC (UN estimate of deployment only)",
+        "asOf": "2025-06",
+        "confidence": "medium",
+        "note": "The UN Group of Experts gave this conservative deployment estimate for the period covered. It is not a January 1 headcount or an estimate of the entire Rwandan force. It creates no additional units and is excluded from the separate AFC/M23 strength pool.",
+        "sources": [
+          "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F446&t=pdf"
+        ]
+      }
+    },
+    {
+      "id": "syr-suwayda-local-groups",
+      "laws": [
+        {
+          "name": "Suwayda local administration and legal committee",
+          "status": "in_practice",
+          "note": "Local authorities organized municipal administration and legal work in the enclave after July 2025. This records localized civil institutions and does not confer nationwide authority or imply the National Guard directly enacted civilian law.",
+          "source": "https://www.ecoi.net/en/file/local/2139064/a-hrc-61-crp-7.pdf"
+        }
+      ]
+    },
+    {
+      "id": "libya-gnu",
+      "laws": [
+        {
+          "name": "Libyan Political Dialogue Forum transitional executive framework",
+          "status": "in_practice",
+          "note": "The 2020 roadmap and the subsequent political process underpin the interim executive and Presidency Council. National elections envisioned by the framework had not taken place by January 1, 2026.",
+          "source": "https://www.peaceagreements.org/agreements/2399/"
+        }
+      ]
+    },
+    {
+      "id": "libya-gns",
+      "laws": [
+        {
+          "name": "Benghazi Supreme Constitutional Court",
+          "status": "in_practice",
+          "note": "The House of Representatives created the court in 2023. The UN reports that it became functional in December 2025, parallel to Tripoli's Supreme Court Constitutional Chamber. This records the eastern institution, without granting it nationwide jurisdiction.",
+          "source": "https://unsmil.unmissions.org/en/speeches-and-statements/remarks-special-representative-secretary-general-libya-hanna-s-1"
+        }
+      ]
+    },
+    {
+      "id": "ucdp-actor-97",
+      "strength": {
+        "range": "150,000–300,000 estimated active-duty ENDF personnel nationwide",
+        "asOf": "2025",
+        "confidence": "low",
+        "note": "The archived World Factbook gives a wide national range. The stock forces remain in place. The estimate supplies no separate count for the Amhara or Oromia theater.",
+        "sources": [
+          "https://thefactbook.org/ethiopia#military-and-security"
+        ],
+        "components": [
+          {
+            "kind": "regulars",
+            "estimate": "150,000–300,000 active duty nationwide",
+            "asOf": "2025",
+            "source": "https://thefactbook.org/ethiopia#military-and-security"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-8118",
+      "strength": {
+        "range": "15,000–20,000 estimated fighters across Fano formations",
+        "asOf": "2025-11-11",
+        "confidence": "low",
+        "note": "Field reporting gives a broad estimate for a decentralized movement. The UK country report describes the lack of a verified coalition total. The game represents the combined formation once and does not add overlapping faction personnel.",
+        "sources": [
+          "https://www.lemonde.fr/en/le-monde-africa/article/2025/11/11/if-i-get-kidnapped-who-will-take-care-of-my-son-crime-is-thriving-in-ethiopia-s-war-torn-amhara-region_6747328_124.html",
+          "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible"
+        ],
+        "gamePersonnel": 15000,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "is-somalia",
+      "strength": {
+        "range": "200–300 estimated remaining fighters in late 2025",
+        "asOf": "2025-12",
+        "confidence": "medium",
+        "note": "EUAA's retrospective assessment records attrition during the year. The July UN range of 600–800 refers to an earlier phase and is not additive. The game uses 250 in one shared pool.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4102022/files/S_2026_44-EN.pdf",
+          "https://www.euaa.europa.eu/somalia-security-situation/123-updated-list-main-actors",
+          "https://digitallibrary.un.org/record/4086936/files/S_2025_496-EN.pdf"
+        ],
+        "gamePersonnel": 250,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "ucdp-actor-3176",
+      "strength": {
+        "range": "More than 40,000 members internationally (reported membership, not a fighter count)",
+        "asOf": "2024",
+        "confidence": "low",
+        "note": "A São Paulo prosecutor provided the broad membership figure in June 2025. It includes members beyond the B40 conflict region and does not establish combatant strength in Maranhão or Piauí. No pool is assigned from this figure.",
+        "sources": [
+          "https://www1.folha.uol.com.br/cotidiano/2025/06/pcc-expande-atuacao-no-exterior-tem-chefe-do-trafico-em-portugal-e-alcanca-28-paises.shtml",
+          "https://legis.senado.leg.br/sdleg-getter/documento/download/092a62d5-92ae-4854-87f2-0d805bad2ed9"
+        ]
+      }
+    },
+    {
+      "id": "is-adf",
+      "strength": {
+        "range": "600–700 estimated fighters",
+        "asOf": "2025-12-15",
+        "confidence": "medium",
+        "note": "UN reporting separates armed fighters from the wider estimated 2,000 people, which includes family members and dependants. The game uses one 650-person pool across the ADF's fronts.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4102022/files/S_2026_44-EN.pdf"
+        ],
+        "gamePersonnel": 650,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "is-mozambique",
+      "strength": {
+        "range": "250–350 estimated fighters",
+        "asOf": "2025-12-15",
+        "confidence": "medium",
+        "note": "Late-2025 UN assessment of Ahl al-Sunna wal-Jama'a, the Islamic State Mozambique affiliate. The earlier range refers to the same force at a different date.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4102022/files/S_2026_44-EN.pdf",
+          "https://digitallibrary.un.org/record/4086112/files/S_2025_482-EN.pdf"
+        ],
+        "gamePersonnel": 300,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "ucdp-actor-881",
+      "strength": {
+        "range": "2,000–3,000 estimated fighters",
+        "asOf": "2025-12-15",
+        "confidence": "medium",
+        "note": "UN member-state assessment for AQAP across Yemen. The game uses one pool and does not count allied tribal forces as AQAP personnel.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4102022/files/S_2026_44-EN.pdf",
+          "https://digitallibrary.un.org/record/4086112/files/S_2025_482-EN.pdf"
+        ],
+        "gamePersonnel": 2500,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "is-iraq-syria",
+      "strength": {
+        "range": "Approximately 3,000 estimated fighters across Iraq and Syria",
+        "asOf": "2025-12-15",
+        "confidence": "medium",
+        "note": "The December UN estimate covers both countries together, with the majority in Syria. The game uses one shared pool across fronts.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4102022/files/S_2026_44-EN.pdf",
+          "https://digitallibrary.un.org/record/4086112/files/S_2025_482-EN.pdf"
+        ],
+        "gamePersonnel": 2500,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "is-west-africa",
+      "strength": {
+        "range": "8,000–12,000 estimated members across the Lake Chad theater",
+        "asOf": "2025-07",
+        "confidence": "medium",
+        "note": "The UN source says members. It does not establish deployable fighter strength. The existing game value is an abstract pressure pool shared across fronts, not a confirmed combatant headcount.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4086112/files/S_2025_482-EN.pdf"
+        ],
+        "gamePersonnel": 10000,
+        "readiness": 0.55
+      }
+    },
+    {
+      "id": "ucdp-actor-94",
+      "strength": {
+        "range": "14,000–18,000 estimated RDF personnel deployed in eastern DRC",
+        "asOf": "2025-12",
+        "confidence": "medium",
+        "note": "The UN Group of Experts' later report explicitly dates this regional deployment estimate to December 2025. The lower estimate in the earlier report describes a different point in time. Neither is Rwanda's national strength. No additional units are spawned and the estimate is excluded from AFC/M23 numbers.",
+        "sources": [
+          "https://digitallibrary.un.org/record/4119763/files/S_2026_466-EN.pdf",
+          "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F858&t=pdf"
+        ],
+        "components": [
+          {
+            "kind": "allies",
+            "estimate": "14,000–18,000 RDF deployed in eastern DRC in December",
+            "asOf": "2025-12",
+            "source": "https://digitallibrary.un.org/record/4119763/files/S_2026_466-EN.pdf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-72",
+      "strength": {
+        "range": "35,000–40,000 estimated active personnel across the armed forces, Gendarmerie and National Guard",
+        "asOf": "2025",
+        "confidence": "low",
+        "note": "This is a combined national estimate across the named services. The stock army remains in place. No allied forces or separately deployable front count are inferred.",
+        "sources": [
+          "https://thefactbook.org/mali/military-and-security-service-personnel-strengths"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-75",
+      "strength": {
+        "range": "About 50,000 active armed forces personnel including the Gendarmerie, plus 15,000–20,000 National Guard",
+        "asOf": "2025",
+        "confidence": "low",
+        "note": "The archived Factbook lists the National Guard separately. These are national institutional counts. The stock army remains in place without a separate force pool on any front.",
+        "sources": [
+          "https://thefactbook.org/niger/military-and-security-service-personnel-strengths"
+        ]
+      }
+    },
+    {
+      "id": "ucdp-actor-84",
+      "strength": {
+        "range": "About 140,000 active armed forces personnel nationwide",
+        "asOf": "2025",
+        "confidence": "low",
+        "note": "This is a national active-duty estimate. No separate theater force, police total or new game units are inferred.",
+        "sources": [
+          "https://thefactbook.org/nigeria/military-and-security-service-personnel-strengths"
+        ]
+      }
+    }
+  ]
+}

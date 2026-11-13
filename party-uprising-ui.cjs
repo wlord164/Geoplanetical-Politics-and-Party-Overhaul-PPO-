@@ -133,7 +133,7 @@ function gpmUprisingRegionalStatus(region, threshold) {
 function gpmUprisingMap(state, ui, prep, selected, percent) {
   const { regions, threshold } = prep;
   const layer = state.mapLayer || "foothold";
-  const name = region => Gt(region.key, region.name);
+  const name = region => Ut(region.key, region.name);
   const control = region => gpmUprisingRegionalStatus(region, threshold);
   const byId = new Map(regions.map(region => [region.id, region]));
   const world = ui.globe?.world;
@@ -141,7 +141,7 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
     .filter(feature => feature?.geometry && byId.get(feature.__provId)?.key === feature.__provKey);
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (state.geometry?.world !== world || state.geometry?.signature !== signature) {
-    state.geometry = { world, signature, layout: features.length ? XS(features, 620, 510, { pad: 12 }) : null };
+    state.geometry = { world, signature, layout: features.length ? ok(features, 620, 510, { pad: 12 }) : null };
   }
   const layout = state.geometry?.layout;
   const svg = (paths, width, height) => '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="'
@@ -240,7 +240,7 @@ function gpmUprisingPreparations(state, ui, button) {
   const money = amount => gpmForeignFundingMoney(amount);
   const credits = count => count + (count === 1 ? " aid credit" : " aid credits");
   const reason = quote => quote?.reason ? " " + gpmUprisingPreparationReason(quote.reason) : "";
-  const name = region => Gt(region.key, region.name);
+  const name = region => Ut(region.key, region.name);
   const selected = gpmUprisingSelectedRegion(prep, state.selectedRegion);
   const hqProject = prep.headquarters?.project;
   const map = gpmUprisingMap(state, ui, prep, selected, percent);
@@ -335,7 +335,7 @@ function gpmUprisingReadiness(prep, percent) {
   const { headquarters, division, threshold } = prep;
   const items = [
     { ready: !!headquarters?.key && !!headquarters.eligible,
-      text: headquarters?.key ? Gt(headquarters.key, headquarters.name) + " headquarters in an eligible region"
+      text: headquarters?.key ? Ut(headquarters.key, headquarters.name) + " headquarters in an eligible region"
         : "Establish party headquarters in an eligible region" },
     { ready: !!headquarters?.ready,
       text: "Headquarters foothold " + (headquarters?.key ? percent.format(headquarters.foothold) : "—") + " / " + percent.format(threshold) },
@@ -356,7 +356,7 @@ function gpmUprisingPanel(state, ui) {
   const actions = (...buttons) => '<div class="gpm-uprising-actions">' + buttons.join("") + "</div>";
   if (!data) return state.loading ? "" : actions(button("refresh", "Load uprising"));
   const party = data.partyName || state.partyName || "Your party";
-  const region = data.provinceKey ? Gt(data.provinceKey, data.regionName) : data.regionName;
+  const region = data.provinceKey ? Ut(data.provinceKey, data.regionName) : data.regionName;
   const seatOutcome = data.singleParty ? " and holds every seat in the assembly" : " under the new constitution";
   const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 });
   const before = Number.isFinite(data.nationalSupport) ? percent.format(data.nationalSupport) : "—";
@@ -366,7 +366,7 @@ function gpmUprisingPanel(state, ui) {
     ? '<details data-gpm-uprising-charter><summary>' + lawChanges.length
       + (lawChanges.length === 1 ? " law change" : " law changes")
       + '</summary><ul class="gpm-uprising-charter">' + lawChanges.map(law =>
-        "<li>" + b(law.name || tr(law.lawId)) + " · " + b(law.option || (pl(law.lawId) ? go(pl(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
+        "<li>" + b(law.name || tr(law.lawId)) + " · " + b(law.option || (dl(law.lawId) ? yo(dl(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
     : "<small>The policy review found no law changes.</small>";
   if (data.phase === "active") {
     const note = data.warStatus === "suspended"
@@ -379,7 +379,7 @@ function gpmUprisingPanel(state, ui) {
       + b(data.victoryName) + "</strong>.</p>" : "";
     const startingRegions = (data.defectingRegions || []).map(key => {
       const province = ui.globe?.world?.provByKey?.get?.(key);
-      return b(Gt(key, province?.__name || key));
+      return b(Ut(key, province?.__name || key));
     });
     const preparations = startingRegions.length
       ? "<p>Regions at declaration: " + startingRegions.join(", ")
@@ -409,7 +409,7 @@ function gpmUprisingPanel(state, ui) {
   const deployment = data.preparations?.deploymentCount;
   const preparationSummary = data.preparations
     ? "<dt>Other regions joining</dt><dd>"
-      + (otherRegions.length ? otherRegions.map(entry => b(Gt(entry.key, entry.name))).join(", ") : "None")
+      + (otherRegions.length ? otherRegions.map(entry => b(Ut(entry.key, entry.name))).join(", ") : "None")
       + "</dd><dt>Prepared divisions ready to deploy</dt><dd>" + b(String(deployment ?? 0)) + gpmUprisingRoster(data.preparations.division.roster) + "</dd>"
     : "";
   const name = data.restoresOriginalName ? data.breakawayName : state.selectedName || data.breakawayName;
@@ -430,6 +430,7 @@ function gpmUprisingPanel(state, ui) {
     + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + b(party)
     + "</dd><dt>" + (data.restoresOriginalName ? "Wartime name" : "Breakaway") + "</dt><dd>" + nameField
     + "</dd><dt>Government</dt><dd>" + b(data.government)
+    + (data.ideologyProgram ? "</dd><dt>Founding program</dt><dd>" + b(data.ideologyProgram) : "")
     + "</dd><dt>Starting region</dt><dd>" + b(region)
     + "</dd>" + preparationSummary + "<dt>Current base national support</dt><dd>" + b(before) + "</dd></dl>"
     + "<p>Declaring transfers your control to the breakaway government based in " + b(region)
@@ -450,7 +451,7 @@ async function gpmSyncUprisingControl(session) {
   if (session._gpmUprisingPresentedKey === key) return;
   session._gpmUprisingPresentedKey = key;
   try {
-    await KRt({ current: { countryKey: key } });
+    await SCt({ current: { countryKey: key } });
   } catch (error) {
     console.warn("[PPO] Uprising player control presentation failed", error);
   }
@@ -513,7 +514,7 @@ function gpmBindUprising(profile, view, ui) {
     state.requestDay = view.day;
     state.paint();
     try {
-      const data = await et(session, "gpm.uprising", {});
+      const data = await at(session, "gpm.uprising", {});
       if (!isCurrent()) return;
       if (!data || data.countryKey !== countryKey || (partyId != null && data.partyId !== partyId)) {
         state.data = null;
@@ -701,8 +702,8 @@ function patchUprisingRenderer(source) {
   const initialize = "\nmountPartyButtons();\n";
   replaceOnce(initialize, "\nconst gpmUprisingStyle = " + JSON.stringify(style) + ";\n"
     + rendererFunctions.join("\n") + initialize);
-  const frame = "function bFe(){let e=ze.consumeViewDelta";
-  replaceOnce(frame, "function bFe(){gpmWatchUprisingControl(ze);let e=ze.consumeViewDelta");
+  const frame = "function DFe(){let e=ze.consumeViewDelta";
+  replaceOnce(frame, "function DFe(){gpmWatchUprisingControl(ze);let e=ze.consumeViewDelta");
   return asBuffer ? Buffer.from(js) : js;
 }
 

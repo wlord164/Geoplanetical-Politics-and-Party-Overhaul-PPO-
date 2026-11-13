@@ -25,6 +25,14 @@ function gpmUprisingSystemFromProfile(profile) {
     socialist_single_party: "one-party",
     nationalist_single_party: "one-party",
     theocracy: "clerical",
+    islamic_democracy: "democracy",
+    islamic_republic: "islamic-republic",
+    islamic_emirate: "islamic-emirate",
+    fascist_party_state: "fascist-party-state",
+    maoist_party_state: "maoist-party-state",
+    democratic_confederation: "democratic-confederation",
+    syndicalist_federation: "syndicalist-federation",
+    ecosocialist_republic: "democracy",
   };
   return Object.hasOwn(systems, profile?.regime) ? systems[profile.regime] : null;
 }

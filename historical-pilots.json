@@ -1,0 +1,791 @@
+{
+  "actors": [
+    {
+      "id": "sdn-saf",
+      "name": "Transitional Government of Sudan",
+      "shortName": "Sudanese Armed Forces (SAF)",
+      "countryKey": "729",
+      "kind": "government",
+      "strength": {
+        "range": "At least 200,000 personnel",
+        "gamePersonnel": 85000,
+        "readiness": 0.65,
+        "asOf": "2024-12-16",
+        "confidence": "low",
+        "note": "KAS estimate of total SAF strength during the war. Separate allied commands and personnel immediately deployable on 1 January are not measured.",
+        "sources": [
+          "https://www.kas.de/documents/259121/33336594/the_unnoticed_war_in_sudan.pdf/3cd7d9fc-595a-45f9-9a93-a5f30d411e81?t=1734362693379&version=1.2"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Military-led transitional executive",
+          "status": "in_force",
+          "note": "The February 2025 amendment extended the transition and strengthened the Transitional Sovereignty Council. Kamil Idris headed an appointed cabinet.",
+          "source": "https://moj.gov.sd/posts/post/952"
+        },
+        {
+          "name": "Wartime public finances",
+          "status": "in_force",
+          "note": "Government budget guidance cites emergency financial arrangements, the amended constitutional document and the Juba Peace Agreement.",
+          "source": "https://sudan.gov.sd/%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D9%88%D8%B2%D8%B1%D8%A7%D8%A1-%D9%8A%D8%AC%D9%8A%D8%B2-%D9%85%D9%88%D8%AC%D9%87%D8%A7%D8%AA-%D9%88%D8%B3%D9%85%D8%A7%D8%AA-%D9%88%D8%A3%D9%87%D8%AF%D8%A7%D9%81/"
+        }
+      ],
+      "objectives": [
+        "Reestablish central administration across Sudan",
+        "Restore public services in recaptured areas"
+      ]
+    },
+    {
+      "id": "sdn-rsf",
+      "name": "Sudan Founding Alliance (Tasis)",
+      "shortName": "Rapid Support Forces (RSF)",
+      "countryKey": "729",
+      "kind": "rival-government",
+      "administrationName": "Government of Peace and Unity",
+      "strength": {
+        "range": "Around 100,000 personnel before the war",
+        "gamePersonnel": 65000,
+        "readiness": 0.6,
+        "asOf": "2023-04-14",
+        "confidence": "low",
+        "note": "KAS cites the prewar RSF scale. Wartime mobilization and losses make this a historical reference. Independent Tasis partners keep separate pools.",
+        "sources": [
+          "https://www.kas.de/documents/259121/33336594/the_unnoticed_war_in_sudan.pdf/3cd7d9fc-595a-45f9-9a93-a5f30d411e81?t=1734362693379&version=1.2"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Secular, decentralized government",
+          "status": "charter",
+          "note": "Articles 4–5 establish a secular state and political, administrative, legal and financial decentralization. These are the rival government's constitutional commitments.",
+          "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+        },
+        {
+          "name": "Equal citizenship and freedom of belief",
+          "status": "charter",
+          "note": "Articles 4 and 29 set out equal citizenship and freedom of thought, belief and worship. The charter does not establish whether the guarantees were enforced.",
+          "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+        },
+        {
+          "name": "Wartime transitional administration",
+          "status": "charter",
+          "note": "Article 45 places the pre-transitional period before the official end of the wars. A foundational transition follows.",
+          "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+        }
+      ],
+      "charterLawValues": {
+        "religion_state": 0,
+        "freedom_of_worship": 4,
+        "religion_in_education": 1
+      },
+      "objectives": [
+        "Maintain the rival administration based in Nyala",
+        "Pursue the alliance's stated decentralized constitutional settlement"
+      ]
+    },
+    {
+      "id": "sdn-joint-force",
+      "name": "Darfur Joint Forces",
+      "countryKey": "729",
+      "kind": "armed-coalition",
+      "objectives": [
+        "Preserve a role for Darfuri signatories of the Juba Peace Agreement"
+      ]
+    },
+    {
+      "id": "sdn-splmn-hilu",
+      "name": "Sudan People's Liberation Movement–North (al-Hilu faction)",
+      "shortName": "SPLM-N (al-Hilu)",
+      "countryKey": "729",
+      "kind": "regional-armed-group",
+      "objectives": [
+        "Keep regional self-government in its Nuba Mountains areas",
+        "Advance the secular and decentralized terms of the Tasis charter"
+      ]
+    },
+    {
+      "id": "sdn-sla-aw",
+      "name": "Sudan Liberation Army (Abdel Wahid al-Nur faction)",
+      "shortName": "SLA/AW",
+      "countryKey": "729",
+      "kind": "regional-armed-group"
+    },
+    {
+      "id": "mmr-sspc",
+      "name": "State Security and Peace Commission",
+      "shortName": "SSPC / Tatmadaw",
+      "countryKey": "104",
+      "kind": "government",
+      "lawValues": {
+        "military_service": {
+          "mode": "conscription",
+          "months": 24
+        }
+      },
+      "strength": {
+        "range": "About 150,000 troops in 2024",
+        "gamePersonnel": 75000,
+        "readiness": 0.6,
+        "asOf": "2024-10-01",
+        "confidence": "low",
+        "note": "USCIRF estimates the armed forces in 2024. IISS reports 60,000–80,000 cumulative conscript intakes by August 2025. These figures measure different populations and are not added.",
+        "components": [
+          { "kind": "regulars", "estimate": "About 150,000 troops", "asOf": "2024-10", "source": "https://www.uscirf.gov/sites/default/files/2024-10/2024%20Burma%20Country%20Update.pdf" },
+          { "kind": "cumulative-recruits", "estimate": "60,000–80,000 conscript intakes across 16 batches", "asOf": "2025-08", "source": "https://myanmar.iiss.org/analysis/war-to-nowhere" }
+        ],
+        "sources": [
+          "https://www.uscirf.gov/sites/default/files/2024-10/2024%20Burma%20Country%20Update.pdf",
+          "https://myanmar.iiss.org/analysis/war-to-nowhere"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Military-led interim government",
+          "status": "in_force",
+          "note": "The SSPC was the ruling military commission at the cutoff. The 2008 constitution reserved 25 percent of the seats in each national chamber for the military when parliament sat.",
+          "source": "https://www.wipo.int/wipolex/en/text/496926"
+        },
+        {
+          "name": "Restricted political participation",
+          "status": "in_practice",
+          "note": "The first phase of military-run voting had taken place on 28 December. Major opponents were excluded and independent media faced restrictions.",
+          "source": "https://bangkok.ohchr.org/sites/default/files/documents/2025-12/OHCHRMyanmar-Background-paper-on-military-elections-Nov25.pdf"
+        },
+        {
+          "name": "People's Military Service Law",
+          "status": "in_force",
+          "note": "The military began enforcing compulsory service in 2024. The game uses the standard two-year term.",
+          "source": "https://ispmyanmar.com/op-20/"
+        },
+        {
+          "name": "Regional martial law",
+          "status": "in_force",
+          "note": "The military lifted the nationwide state of emergency in July and said it would maintain martial law in 63 townships.",
+          "source": "https://www.moi.gov.mm/nlm/file-download/download/public/4307"
+        }
+      ],
+      "objectives": [
+        "Maintain the military's role in the national executive",
+        "Extend control over contested regions"
+      ]
+    },
+    {
+      "id": "mmr-nug",
+      "name": "National Unity Government",
+      "shortName": "NUG / People's Defence Force",
+      "countryKey": "104",
+      "kind": "rival-government",
+      "strength": {
+        "range": "About 65,000 allied PDF members in 2023",
+        "gamePersonnel": 25000,
+        "readiness": 0.45,
+        "asOf": "2023-06-01",
+        "confidence": "low",
+        "note": "IISS distinguishes allied PDF from independent local defence forces. 2025 field research documents fragmented command. The game pool covers the NUG-linked core.",
+        "components": [
+          { "kind": "allies", "estimate": "About 65,000 NUG-aligned PDF members in 2023", "asOf": "2023-06", "source": "https://www.iiss.org/publications/strategic-dossiers/asia-pacific-regional-security-assessment-2023/aprsa-chapter-6/" }
+        ],
+        "sources": [
+          "https://www.iiss.org/publications/strategic-dossiers/asia-pacific-regional-security-assessment-2023/aprsa-chapter-6/",
+          "https://www.armedgroupscentre.org/reports-and-articles/typology-pdfs-myanmar",
+          "https://mmpeacemonitor.org/en/eng-cover-story/338718/"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Federal Democracy Charter",
+          "status": "charter",
+          "note": "The charter provides interim institutions and a road map for replacing the 2008 constitution with a federal democratic union. Its geographic implementation is uneven.",
+          "source": "https://www.nucc-federal.org/"
+        },
+        {
+          "name": "Civilian authority and federal self-government",
+          "status": "charter",
+          "note": "The interim NUG is tasked with building a federal democratic union in consultation with political parties, ethnic organizations and civil society.",
+          "source": "https://knuhq.org/admin/resources/statements/pdf/NUG-ERO-Postion_Statement__EN__Final_30012024.pdf"
+        },
+        {
+          "name": "People's Police Force Law",
+          "status": "in_force",
+          "note": "The CRPH enacted the law for the NUG's administration. Local enforcement varies.",
+          "source": "https://crphmyanmar.org/legislation/"
+        },
+        {
+          "name": "Union Taxation Law, 2023",
+          "status": "in_force",
+          "note": "The CRPH enacted the law for its administration. It applies in the game to areas where the NUG administers taxation.",
+          "source": "https://crphmyanmar.org/legislation/"
+        }
+      ],
+      "objectives": [
+        "End military rule",
+        "Build a federal democratic union with participating regions and ethnic organizations"
+      ]
+    },
+    {
+      "id": "mmr-aa",
+      "name": "United League of Arakan / Arakan Army",
+      "shortName": "ULA / AA",
+      "countryKey": "104",
+      "kind": "regional-administration",
+      "strength": {
+        "range": "More than 30,000 troops reported in 2025",
+        "gamePersonnel": 22000,
+        "readiness": 0.65,
+        "asOf": "2025-06-17",
+        "confidence": "low",
+        "note": "ISP's estimate gives the lower bound. The Center for Arakan Studies gave a higher estimate. These are broad faction totals and not independent confirmation of deployed personnel.",
+        "sources": [
+          "https://ispmyanmar.com/united-league-of-arakan-ula/",
+          "https://www.arakanstudies.org/ibr/25/02/ibr_02_25.html"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Arakan regional administration",
+          "status": "in_practice",
+          "note": "The ULA built separate regional governing institutions across much of Rakhine. Its authority and administration are represented where evidenced.",
+          "source": "https://acleddata.com/report/state-nation-arakan-armys-ascent-post-coup-myanmar"
+        }
+      ],
+      "objectives": [
+        "Maintain separate regional administration in Rakhine",
+        "Seek substantially greater self-government"
+      ]
+    },
+    {
+      "id": "mmr-kio",
+      "name": "Kachin Independence Organization / Kachin Independence Army",
+      "shortName": "KIO / KIA",
+      "countryKey": "104",
+      "kind": "regional-administration",
+      "strength": {
+        "range": "More than 15,000 troops reported in 2025",
+        "gamePersonnel": 15000,
+        "readiness": 0.6,
+        "asOf": "2025-08-20",
+        "confidence": "low",
+        "note": "ISP estimate for the KIO/KIA. Independent partners retain their own force identities.",
+        "sources": [
+          "https://ispmyanmar.com/kachin-independence-organization-kio/"
+        ]
+      },
+      "objectives": [
+        "Maintain Kachin self-government and its own political institutions"
+      ]
+    },
+    {
+      "id": "mmr-knu",
+      "name": "Karen National Union / Karen National Liberation Army",
+      "shortName": "KNU / KNLA",
+      "countryKey": "104",
+      "kind": "regional-administration",
+      "strength": {
+        "range": "More than 15,000 troops reported in 2025",
+        "gamePersonnel": 8000,
+        "readiness": 0.55,
+        "asOf": "2025-12-31",
+        "confidence": "low",
+        "note": "ISP estimate for KNU/KNLA. The separate game pool represents a fraction of that broad organization-wide figure.",
+        "sources": [
+          "https://ispmyanmar.com/karen-national-union-knu/"
+        ]
+      },
+      "laws": [
+        {
+          "name": "Karen National Union constitution",
+          "status": "in_force",
+          "note": "The KNU's own constitution, amended in 2023, sets out how it administers its areas. It seeks Karen self-determination within a democratic federal union.",
+          "source": "https://www.knuhq.org/policy-law"
+        }
+      ],
+      "objectives": [
+        "Secure Karen self-determination",
+        "Build a federal union based on democracy"
+      ]
+    },
+    {
+      "id": "mmr-cnf",
+      "name": "Chin National Front / Chin National Army",
+      "shortName": "CNF / CNA",
+      "countryKey": "104",
+      "kind": "regional-armed-group",
+      "objectives": [
+        "Pursue Chin autonomy and a federal democratic settlement"
+      ]
+    },
+    {
+      "id": "mmr-cndf",
+      "name": "Chin National Organization / Chin National Defence Force",
+      "shortName": "CNO / CNDF",
+      "countryKey": "104",
+      "kind": "regional-armed-group",
+      "objectives": [
+        "Maintain independent Chin resistance and regional representation"
+      ]
+    },
+    {
+      "id": "mmr-knpp",
+      "name": "Karenni National Progressive Party / Karenni Army",
+      "shortName": "KNPP / KA",
+      "countryKey": "104",
+      "kind": "regional-armed-group",
+      "objectives": [
+        "Pursue Karenni self-determination and a federal democratic settlement"
+      ]
+    },
+    {
+      "id": "mmr-mndaa",
+      "name": "Myanmar National Democratic Alliance Army",
+      "shortName": "MNDAA",
+      "countryKey": "104",
+      "kind": "regional-armed-group",
+      "objectives": [
+        "Preserve Kokang self-administration under the January 2025 ceasefire"
+      ]
+    },
+    {
+      "id": "mmr-tnla",
+      "name": "Palaung State Liberation Front / Ta'ang National Liberation Army",
+      "shortName": "PSLF / TNLA",
+      "countryKey": "104",
+      "kind": "regional-armed-group",
+      "objectives": [
+        "Preserve Ta'ang self-administration under the October 2025 ceasefire"
+      ]
+    },
+    {
+      "id": "mmr-uwsa",
+      "name": "United Wa State Party / United Wa State Army",
+      "shortName": "UWSP / UWSA",
+      "countryKey": "104",
+      "kind": "regional-administration",
+      "objectives": [
+        "Preserve de facto Wa autonomy"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "sudan-civil-war",
+      "name": "Sudanese Civil War",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "729"
+      ],
+      "sides": [
+        [
+          "sdn-saf",
+          "sdn-joint-force"
+        ],
+        [
+          "sdn-rsf",
+          "sdn-splmn-hilu"
+        ]
+      ],
+      "associatedActorIds": [
+        "sdn-sla-aw"
+      ],
+      "regions": [
+        {
+          "key": "SDN-874",
+          "name": "Khartoum",
+          "controller": "sdn-saf",
+          "administrator": "sdn-saf",
+          "note": "The SAF recaptured Khartoum in 2025. The province begins under government military control."
+        },
+        {
+          "key": "SDN-149",
+          "name": "Red Sea",
+          "controller": "sdn-saf",
+          "administrator": "sdn-saf",
+          "note": "Port Sudan remained the wartime government seat at the cutoff."
+        },
+        {
+          "key": "SDN-5856",
+          "name": "Southern Darfur",
+          "controller": "sdn-rsf",
+          "administrator": "sdn-rsf",
+          "note": "Nyala is the seat of the rival administration."
+        },
+        {
+          "key": "SDN-881",
+          "name": "North Darfur",
+          "controller": "sdn-rsf",
+          "contested": true,
+          "note": "The RSF took El Fasher in October. Control across the whole game region is mixed."
+        },
+        {
+          "key": "SDN-5857",
+          "name": "Eastern Darfur",
+          "controller": "sdn-rsf"
+        },
+        {
+          "key": "SDN-5858",
+          "name": "Western Darfur",
+          "controller": "sdn-rsf"
+        },
+        {
+          "key": "SDN-5859",
+          "name": "Central Darfur",
+          "controller": "sdn-rsf",
+          "contested": true,
+          "note": "The SLA/AW is a separate, non-aligned actor in Jebel Marra."
+        },
+        {
+          "key": "SDN-882",
+          "name": "South Kordufan",
+          "contested": true,
+          "note": "The SAF, RSF and SPLM-N (al-Hilu) hold different areas. The game map has no separate West Kordofan province."
+        },
+        {
+          "key": "SDN-883",
+          "name": "North Kordufan",
+          "contested": true,
+          "note": "The game region includes territory under competing control."
+        }
+      ],
+      "sources": [
+        "https://transcripts.un.org/en/sc/10077",
+        "https://acleddata.com/report/fighting-moves-kordofan-sudans-east-west-divide-solidifies",
+        "https://agenda2063.peaceau.org/en/article/communique-of-the-1319th-meeting-of-the-psc-held-on-16-december-2025-on-update-on-the-situation-in-sudan",
+        "https://www.government.nl/site/binaries/site-content/collections/documents/2025/12/01/general-country-of-origin-information-report-on-sudan-december-2025/General%2BCountry%2Bof%2BOrigin%2BInformation%2BReport%2Bon%2BSudan%2BDecember%2B2025.pdf",
+        "https://www.ipcinfo.org/ipcinfo-website/countries-in-focus-archive/issue-137/en/"
+      ],
+      "note": "War began on 15 April 2023. The RSF leads the rival Sudan Founding Alliance. The African Union rejected recognition of its parallel government. Displacement, famine and restricted humanitarian access affect civilians independently of territory control.",
+      "confidence": "high",
+      "native": {
+        "parentKey": "729",
+        "actorId": "sdn-rsf",
+        "provinceKeys": [
+          "SDN-5856",
+          "SDN-5857",
+          "SDN-5858"
+        ],
+        "startDate": "2023-04-15"
+      }
+    },
+    {
+      "id": "myanmar-post-coup-war",
+      "name": "Myanmar Civil War: National Unity Government",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-nug"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-3269",
+          "name": "Yangon",
+          "controller": "mmr-sspc",
+          "administrator": "mmr-sspc"
+        },
+        {
+          "key": "MMR-3302",
+          "name": "Sagaing",
+          "contested": true,
+          "note": "NUG-linked PDF and independent local defence groups hold or administer parts of this game region. Military authorities retain other areas."
+        },
+        {
+          "key": "MMR-3276",
+          "name": "Magway",
+          "contested": true,
+          "note": "Local resistance and military government control vary across the region."
+        },
+        {
+          "key": "MMR-3267",
+          "name": "Mandalay",
+          "contested": true,
+          "note": "Mandalay city remains under the military administration. Parts of the larger game region are contested."
+        }
+      ],
+      "sources": [
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf",
+        "https://ucdp.uu.se/country/775",
+        "https://myanmar.iiss.org/analysis/war-to-nowhere",
+        "https://www.moi.gov.mm/nlm/30-december-2025",
+        "https://myanmar.un.org/en/310313-unicef-myanmar-humanitarian-situation-report-no-4"
+      ],
+      "note": "The military seized power in February 2021. At the cutoff, the SSPC retained central state institutions. The NUG had its own armed networks and local partners. Ethnic forces and regional administrations have their own political authority and do not share one national command.",
+      "confidence": "high"
+    },
+    {
+      "id": "myanmar-arakan-conflict",
+      "name": "Myanmar Civil War: Arakan",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-aa"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-3273",
+          "name": "Rakhine",
+          "controller": "mmr-aa",
+          "administrator": "mmr-aa",
+          "contested": true,
+          "note": "The ULA administered much of Rakhine. The military continued to hold some areas, including Sittwe. This game region combines multiple local jurisdictions."
+        }
+      ],
+      "sources": [
+        "https://acleddata.com/report/state-nation-arakan-armys-ascent-post-coup-myanmar",
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf",
+        "https://ucdp.uu.se/country/775"
+      ],
+      "note": "The Arakan Army and its political wing operate independently of the National Unity Government.",
+      "confidence": "high"
+    },
+    {
+      "id": "myanmar-kachin-conflict",
+      "name": "Myanmar Civil War: Kachin",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-kio"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-3296",
+          "name": "Kachin",
+          "contested": true,
+          "note": "The KIO administered parts of Kachin. Military authorities retained other areas."
+        }
+      ],
+      "sources": [
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf",
+        "https://ucdp.uu.se/country/775"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "myanmar-karen-conflict",
+      "name": "Myanmar Civil War: Karen",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-knu"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-3266",
+          "name": "Kayin",
+          "contested": true,
+          "note": "The KNU administered areas alongside a wider patchwork of military and other Karen authorities."
+        }
+      ],
+      "sources": [
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf",
+        "https://ucdp.uu.se/country/775",
+        "https://www.knuhq.org/policy-law"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "myanmar-chin-conflict",
+      "name": "Myanmar Civil War: Chin",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-cnf"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-3274",
+          "name": "Chin",
+          "contested": true,
+          "note": "Chin resistance and governing groups include distinct organizations. The whole game region is not assigned to any one organization."
+        }
+      ],
+      "sources": [
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf",
+        "https://ucdp.uu.se/country/775",
+        "https://knuhq.org/admin/resources/statements/pdf/Joint_Statement_of_ABSDF_CNF_KNU_English.pdf"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "myanmar-karenni-conflict",
+      "name": "Myanmar Civil War: Karenni",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-knpp"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-2473",
+          "name": "Kayah",
+          "contested": true,
+          "note": "The Karenni Army, Karenni Nationalities Defence Force and other regional groups operate in a patchwork with military-controlled territory."
+        }
+      ],
+      "sources": [
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf",
+        "https://ucdp.uu.se/country/775",
+        "https://knuhq.org/admin/resources/statements/pdf/NUG-ERO-Postion_Statement__EN__Final_30012024.pdf"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "myanmar-chin-national-defence-force-conflict",
+      "name": "Myanmar Civil War: Chin National Defence Force",
+      "kind": "civil",
+      "status": "active",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-cndf"
+        ]
+      ],
+      "regions": [
+        {
+          "key": "MMR-3274",
+          "name": "Chin",
+          "contested": true,
+          "note": "The CNDF is the armed wing of the Chin National Organization. It operates independently of the Chin National Front."
+        }
+      ],
+      "sources": [
+        "https://warwatch.ch/situations/non-international-armed-conflicts-in-myanmar/classification/",
+        "https://www.geneva-academy.ch/wp-content/uploads/2026/01/WarWATCH-IHL-in-Focus-Report-2024-25.pdf",
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "myanmar-kokang-ceasefire",
+      "name": "Myanmar: Kokang Ceasefire",
+      "kind": "civil",
+      "status": "ceasefire",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-mndaa"
+        ]
+      ],
+      "associatedActorIds": [
+        "mmr-uwsa"
+      ],
+      "regions": [
+        {
+          "key": "MMR-3277",
+          "name": "Shan",
+          "contested": true,
+          "note": "Kokang is one part of a larger province. The ceasefire is bilateral and does not decide control across Shan."
+        }
+      ],
+      "sources": [
+        "https://www.mfa.gov.cn/eng/xw/fyrbt/202501/t20250120_11541005.html",
+        "https://ucdp.uu.se/country/775"
+      ],
+      "note": "The MNDAA and Myanmar military reached a China-mediated ceasefire effective 18 January 2025.",
+      "confidence": "high"
+    },
+    {
+      "id": "myanmar-taang-ceasefire",
+      "name": "Myanmar: Ta'ang Ceasefire",
+      "kind": "civil",
+      "status": "ceasefire",
+      "asOf": "2026-01-01",
+      "countryKeys": [
+        "104"
+      ],
+      "sides": [
+        [
+          "mmr-sspc"
+        ],
+        [
+          "mmr-tnla"
+        ]
+      ],
+      "associatedActorIds": [
+        "mmr-uwsa"
+      ],
+      "regions": [
+        {
+          "key": "MMR-3277",
+          "name": "Shan",
+          "contested": true,
+          "note": "Ta'ang-administered areas share the game region with several distinct authorities, including Wa, Kokang and the central military government."
+        }
+      ],
+      "sources": [
+        "https://shwepheemyay.org/english-edition/tnla-junta-agree-to-ceasefire/",
+        "https://www.moi.gov.mm/moi%3Aeng/news/21603",
+        "https://ispmyanmar.com/community/wp-content/uploads/2026/01/SOM01_English_20260131.pdf"
+      ],
+      "note": "The TNLA announced a China-mediated ceasefire effective 29 October 2025. Fighting elsewhere in Myanmar remained active.",
+      "confidence": "high"
+    }
+  ],
+  "decisions": []
+}

@@ -26,9 +26,9 @@ function gpmRenderPartyLaws() {
 function gpmPartyLawRows(laws, country) {
   const formatGain = new Intl.NumberFormat(cs(), { maximumFractionDigits: 1 });
   return laws.map((law, index) => {
-    const definition = pl(law.lawId);
+    const definition = dl(law.lawId);
     const name = tr(law.lawId);
-    const value = definition ? go(definition, law.value, country) : "";
+    const value = definition ? yo(definition, law.value, country) : "";
     const vote = law.total > 0
       ? `${law.yes} of ${law.total} yes${Number.isFinite(law.requiredVotes) ? ` · ${law.requiredVotes} needed` : ""}`
       : "Chamber vote unavailable";
@@ -36,7 +36,7 @@ function gpmPartyLawRows(laws, country) {
     return `<li><div>
       <strong>${b(name)}</strong>
       ${value ? `<small>${b(value)}</small>` : ""}
-      <small>${b(`+${formatGain.format(law.gain)} fit points · ${vote}`)}</small>
+      <small>${b(law.priority ? `Platform priority · ${vote}` : `+${formatGain.format(law.gain)} fit points · ${vote}`)}</small>
       <small>${b([law.passes ? "Favorable forecast" : "Needs work", ...risks].join(" · "))}</small>
       </div><button class="k" type="button" data-gpm-law-review="${index}" aria-label="${b("Review proposal for " + name)}">Review proposal</button></li>`;
   }).join("");
@@ -88,7 +88,7 @@ function gpmBindPartyLaws(profile, view, ui) {
     state.error = "";
     state.paint();
     try {
-      const data = await et(session, "gpm.partyLawShortlist", {});
+      const data = await at(session, "gpm.partyLawShortlist", {});
       if (!isCurrent()) return;
       if (data?.partyId !== partyId || !Array.isArray(data.laws)) {
         state.error = "Law forecasts are unavailable for this party.";

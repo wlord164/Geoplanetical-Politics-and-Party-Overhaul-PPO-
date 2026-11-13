@@ -56,8 +56,8 @@ function partyMovementDemandFit(party, movement, group) {
   return 1;
 }
 
-function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList = dIe(country)) {
-  const party = WN(country, partyId);
+function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList = Fwe(country)) {
+  const party = YL(country, partyId);
   const record = party?.gpmOrganizing;
   if (!party?.organization || party.legal === false) {
     return { ok: false, reason: "party" };
@@ -72,8 +72,8 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
   const groups = groupList.filter(group => meeting ? group.id === targetId : movement.groupIds?.includes(group.id));
   if (!groups.length) return { ok: false, reason: "group" };
   const totalShare = groups.reduce((sum, group) => sum + group.share, 0);
-  const cash = meeting ? GN(.02 + .12 * totalShare) : GN(.012 + .025 * totalShare);
-  const activistsK = GN(meeting ? .15 + 1.4 * totalShare : .2 + .9 * totalShare);
+  const cash = meeting ? zL(.02 + .12 * totalShare) : zL(.012 + .025 * totalShare);
+  const activistsK = zL(meeting ? .15 + 1.4 * totalShare : .2 + .9 * totalShare);
   const influence = meeting ? 2 : 4;
   const previous = record?.lastAction;
   const lastBlocMeeting = record?.lastMeetingByBloc?.[targetId] ??
@@ -110,14 +110,14 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
 function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
   const quote = partyOrganizingQuote(sim, country, partyId, kind, targetId);
   if (!quote.ok) return quote;
-  const party = WN(country, partyId);
+  const party = YL(country, partyId);
   const day = sim.day || 0;
   const record = party.gpmOrganizing ||= { version: 2, groups: {}, day, backed: [], projects: [], lastMeetingByBloc: {} };
   decayPartyOrganizing(party, day);
   party.organization.treasuryM = partyForeignFundingTreasury(party,
     Math.round((party.organization.treasuryM - quote.cash) * 1e6) / 1e6);
-  party.organization.influence = GN(party.organization.influence - quote.influence);
-  party.organization.activistsK = GN(party.organization.activistsK - quote.activistsK);
+  party.organization.influence = zL(party.organization.influence - quote.influence);
+  party.organization.activistsK = zL(party.organization.activistsK - quote.activistsK);
   record.projects.push({ kind, targetId, startDay: day, endDay: quote.endDay, workedThrough: day,
     activistsK: quote.activistsK, effects: quote.effects.map(({ id, increase }) => ({ id, increase, earned: 0 })) });
   if (kind === "meeting") {
@@ -139,10 +139,10 @@ function advancePartyOrganizing(sim, country, party) {
     decayPartyOrganizing(party, day);
     return;
   }
-  const existingGroups = new Set(dIe(country).map(group => group.id));
+  const existingGroups = new Set(Fwe(country).map(group => group.id));
   const finalize = project => {
     record.projects = record.projects.filter(item => item !== project);
-    party.organization.activistsK = GN(Math.min(1e5, party.organization.activistsK + project.activistsK));
+    party.organization.activistsK = zL(Math.min(1e5, party.organization.activistsK + project.activistsK));
   };
   const eligibleEffects = new Map();
   for (const project of [...record.projects]) {
@@ -182,14 +182,14 @@ function advancePartyOrganizing(sim, country, party) {
 
 function registerPartyOrganizing() {
   for (const [verb, kind] of [["gpm.party.meeting", "meeting"], ["gpm.party.backMovement", "movement"]]) {
-    Pyt(verb, {
+    n5t(verb, {
       validate(sim, country, input) {
-        if (country.key !== sim.playerKey || Go(country) !== input.partyId) return { ok: false, reason: "party" };
+        if (country.key !== sim.playerKey || Uo(country) !== input.partyId) return { ok: false, reason: "party" };
         const quote = partyOrganizingQuote(sim, country, input.partyId, kind, input.targetId);
         return quote.ok ? true : quote;
       },
       apply(sim, country, input) {
-        if (country.key !== sim.playerKey || Go(country) !== input.partyId) return { ok: false, reason: "party" };
+        if (country.key !== sim.playerKey || Uo(country) !== input.partyId) return { ok: false, reason: "party" };
         return applyPartyOrganizing(sim, country, input.partyId, kind, input.targetId);
       },
     });
@@ -197,9 +197,9 @@ function registerPartyOrganizing() {
 }
 
 function partyOrganizingView(sim, country, partyId) {
-  const party = WN(country, partyId);
+  const party = YL(country, partyId);
   if (!party) return null;
-  const groups = dIe(country);
+  const groups = Fwe(country);
   const meetings = groups.map(group => ({ id: group.id, quote: partyOrganizingQuote(sim, country, partyId, "meeting", group.id, groups) }));
   const movements = (country.domestic?.movements || []).filter(peacefulPartyMovement).map(movement => ({
     id: movement.id,
@@ -212,11 +212,11 @@ function partyOrganizingView(sim, country, partyId) {
 
 function partyOrganizingDetail(quote, ui) {
   if (!quote?.effects) return "This action is unavailable.";
-  const cash = nr(quote.cash * 1e6 * sx(), cx());
+  const cash = rr(quote.cash * 1e6 * hA(), gA());
   const activists = Math.round(quote.activistsK * 1e3).toLocaleString(cs());
   const costs = `${cash} and ${quote.influence} influence · ${activists} activists assigned`;
   const completion = `${quote.durationDays} days · Scheduled to finish ${ui.gameDate(quote.endDay)} if started today`;
-  const gains = quote.effects.map(effect => `${Kr(effect.id)} +${(effect.increase * 100).toFixed(1)} points of local voting weight`).join(" · ");
+  const gains = quote.effects.map(effect => `${Vr(effect.id)} +${(effect.increase * 100).toFixed(1)} points of local voting weight`).join(" · ");
   const reasons = {
     already_backed: "Your party already backed this movement.",
     active: "Your party already has a project of this type underway.",
@@ -238,9 +238,9 @@ function renderPartyOrganizing(view, ui) {
     <small>${b(partyOrganizingDetail(item.quote, ui))}</small>
     <button class="k" type="button" data-gpm-back-movement="${b(item.id)}" ${item.quote.ok ? "" : "disabled"}>Back mobilization</button>
   </div>`).join("");
-  const options = data.meetings.map(item => `<option value="${b(item.id)}" ${item.id === selected?.id ? "selected" : ""}>${b(Kr(item.id))}</option>`).join("");
+  const options = data.meetings.map(item => `<option value="${b(item.id)}" ${item.id === selected?.id ? "selected" : ""}>${b(Vr(item.id))}</option>`).join("");
   const projects = (data.projects || []).map(project => `<div class="gpm-organizing-action">
-    <strong>${project.kind === "meeting" ? "Public meeting" : "Mobilization backing"} · ${b(project.effects.map(effect => Kr(effect.id)).join(", "))}</strong>
+    <strong>${project.kind === "meeting" ? "Public meeting" : "Mobilization backing"} · ${b(project.effects.map(effect => Vr(effect.id)).join(", "))}</strong>
     <small>${b(Math.round(project.activistsK * 1e3).toLocaleString(cs()))} activists assigned until ${b(ui.gameDate(project.endDay))} · ${b(project.workedThrough - project.startDay)} of ${b(project.endDay - project.startDay)} days worked</small>
   </div>`).join("");
   return `<section class="mcard wide gpm-organizing" aria-label="Party organizing">

@@ -98,7 +98,7 @@ function partyCongressVoteRows(vote) {
 
 function partyCongressGrantOptions(vote) {
   return '<option value="">No grant</option>' + (vote?.bargains || []).map(grant => {
-    const cash = nr(grant.cash * 1e6 * sx(), cx());
+    const cash = rr(grant.cash * 1e6 * hA(), gA());
     return '<option value="' + b(grant.label) + '"' + (grant.affordable ? "" : " disabled") + '>' +
       b(grant.label + " · +" + grant.extraYes + " yes · " + cash + (grant.affordable ? "" : " · Unaffordable")) + '</option>';
   }).join("");
@@ -108,7 +108,7 @@ function partyCongressGrantDetail(vote) {
   if (!vote?.bargain) return "An organizing grant can win votes from one faction. The treasury pays only if the motion passes.";
   const { label, extraYes, cash } = vote.bargain;
   return label + " adds " + extraYes + " yes " + (extraYes === 1 ? "vote" : "votes") + ". If adopted, the party treasury pays " +
-    nr(cash * 1e6 * sx(), cx()) + ".";
+    rr(cash * 1e6 * hA(), gA()) + ".";
 }
 
 function partyCongressPriorityDetail(data, priority, ui) {

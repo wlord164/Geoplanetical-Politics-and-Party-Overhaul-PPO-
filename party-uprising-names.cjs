@@ -54,8 +54,21 @@ function gpmUprisingIdentity(countryKey, countryName, profile, seed) {
   const root = gpmUprisingCountryRoot(countryKey, countryName);
   const { preset, regime, econ = 0, gov = 0, nat = 0, social = 0 } = profile || {};
   const key = String(countryKey).padStart(3, "0");
+  const newForms = {
+    islamic_democracy: ["Islamic Democratic Republic", "Democratic Republic"],
+    islamic_republic: ["Islamic Republic", "Islamic Constitutional Republic"],
+    islamic_emirate: ["Islamic Emirate", "Islamic State"],
+    fascist_party_state: ["National State", "National Republic"],
+    maoist_party_state: ["People’s Democratic Republic", "People’s Republic"],
+    democratic_confederation: ["Democratic Confederation", "Confederation"],
+    syndicalist_federation: ["Federation of Workers’ Councils", "Workers’ Federation"],
+    ecosocialist_republic: ["Democratic Socialist Republic", "Social Republic"],
+  };
+  const newForm = Object.hasOwn(newForms, regime) ? newForms[regime] : null;
   let name;
-  if (regime === "socialist_single_party") {
+  if (newForm) {
+    name = newForm[0] + " of " + root;
+  } else if (regime === "socialist_single_party") {
     name = preset === "hardlineStateSocialist"
       ? "Socialist Republic of " + root
       : "Democratic People's Republic of " + root;
@@ -153,6 +166,7 @@ function gpmUprisingIdentity(countryKey, countryName, profile, seed) {
           countryForm("Democratic Republic"), subject + " Federal Republic"];
       }
   }
+  if (newForm) variants = newForm.flatMap(form => [countryForm(form), subject + " " + form]);
   const stateForm = name.slice(0, name.lastIndexOf(" of " + root));
   if (adjective) name = adjective + " " + stateForm;
   else if (name.length > 40 && stateForm && place !== root) name = countryForm(stateForm);

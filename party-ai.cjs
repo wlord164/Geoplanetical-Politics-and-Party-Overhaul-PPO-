@@ -50,7 +50,7 @@ function partyModAIOrganizing(sim, country, party, groups, movements, electionIn
 function advancePartyModAI(sim, country) {
   const day = sim.day || 0;
   let electionIn = Infinity;
-  for (const contest of Object.values(ot(country)?.contests || {})) {
+  for (const contest of Object.values(Xe(country)?.contests || {})) {
     if (Number.isFinite(contest.nextDay) && contest.nextDay >= day) {
       electionIn = Math.min(electionIn, contest.nextDay - day);
     }
@@ -58,11 +58,11 @@ function advancePartyModAI(sim, country) {
   advancePartyRegionalAI(sim, country, electionIn);
   // Give parties a buffer for resources before the native campaign opens.
   if (electionIn <= 90) return;
-  const groups = dIe(country);
+  const groups = Fwe(country);
   if (!groups.length) return;
   const movements = (country.domestic?.movements || []).filter(peacefulPartyMovement);
   for (const party of country.pol?.parties || []) {
-    if (!party.organization || party.legal === false || JNr(sim, country, party.id)) continue;
+    if (!party.organization || party.legal === false || iGr(sim, country, party.id)) continue;
     const action = partyModAIOrganizing(sim, country, party, groups, movements, electionIn);
     if (action) applyPartyOrganizing(sim, country, party.id, action.kind, action.targetId);
   }

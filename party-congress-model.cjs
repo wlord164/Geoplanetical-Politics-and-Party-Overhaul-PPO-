@@ -6,7 +6,7 @@ function partyCongressIdeology(ideal) {
 }
 
 function partyCongressView(sim, country, partyId, electorate) {
-  const party = WN(country, partyId);
+  const party = YL(country, partyId);
   if (!party) return null;
 
   const saved = party.gpmCongressSizeState;
@@ -35,7 +35,7 @@ function partyCongressView(sim, country, partyId, electorate) {
   const supportPool = .45;
   const figurePool = .10;
   const blocInfluence = .70;
-  const blocIdeals = new Map(dIe(country).map(group => [group.id, group.ideal]));
+  const blocIdeals = new Map(Fwe(country).map(group => [group.id, group.ideal]));
   const support = partySupportBaseView(sim, country, partyId, electorate);
   const evidence = [];
   for (const bloc of support?.blocs || []) {
@@ -64,10 +64,10 @@ function retirePartyCongress(party) {
   const organization = party.organization;
   if (active && organization) {
     if (Number.isFinite(active.activistsK) && active.activistsK > 0) {
-      organization.activistsK = GN(Math.min(1e5, (organization.activistsK || 0) + active.activistsK));
+      organization.activistsK = zL(Math.min(1e5, (organization.activistsK || 0) + active.activistsK));
     }
     if (Number.isFinite(active.cash) && active.cash > 0) {
-      const treasury = Math.min(Tde, (organization.treasuryM || 0) + active.cash);
+      const treasury = Math.min(r2e, (organization.treasuryM || 0) + active.cash);
       organization.treasuryM = Math.round(treasury * 1e6) / 1e6;
     }
   }
