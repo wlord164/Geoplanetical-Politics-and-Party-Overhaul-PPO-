@@ -18,7 +18,11 @@ Meetings and backing share a +50% local voting-weight cap per party and bloc. Ea
 
 In My Party, open Party Congress to see estimated ideological factions in an Assembly-style semicircle. Each dot represents one modeled delegate. Congress starts at 100 delegates.
 
-Use the slider to propose a new count between 50 and 200 and check the projected vote. Hold size vote to ask the existing delegates to approve the change. Factions weigh their expected representation and the size of the change. More than half of the current delegates must vote yes. An approved count and the last vote result are stored in the campaign save.
+Use the slider to propose a Congress of 50 to 200 delegates. Check each faction's current and proposed representation, reasons, and expected yes and no votes. A faction can gain delegates but still oppose the motion if its share of Congress shrinks. More than half of the current delegates must vote yes. On a motion forecast to fail, you can offer one opposing faction an organizing grant to persuade some of its delegates. The preview shows the cost and extra votes. The party treasury pays the grant only if the motion passes.
+
+Congress also votes on a campaign priority. For 90 days, the chosen project (regional rallies or local investment) costs 20% less cash and the other costs 15% more. These prices apply when you start a new project. The current delegates vote, with factions weighing whether to favor shorter campaigns or lasting party networks.
+
+Each ballot has a 14-day wait before it can be held again. An adopted campaign priority runs its full 90 days before Congress can replace it. The approved delegate count, last results, waiting periods, and active priority are stored in the campaign save. Existing campaigns keep their approved delegate count.
 
 The estimate combines your party's platform with its supporters' electorate-bloc leanings and the political figures the game tracks. Factions use the same four-axis ideology labels as Assembly. Hover over a faction to highlight its seats and see any associated figures.
 

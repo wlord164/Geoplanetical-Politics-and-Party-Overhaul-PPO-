@@ -70,6 +70,11 @@ const previousPatches = [{
   worker: "ce8a74e7ab374bc404a51fe98d1751310d7e581cc71c20dc1ab4360ed89add18",
   renderer: "d4cbd8fc70a788c1cd8e15ab87005dba6afcdc5054c96f2b41da3fda83f4b5f4",
   executable: "18abe385fa320fd9495595921926695ce8ffe315af549d6e2f6307a125c79930",
+}, {
+  archive: "d6c516e4a64eb056c2bae6410a570828377006e6734815d96257cd5ea18d5009",
+  worker: "27569d1c7633977db168f71c21f9803022306832d321bc2b8cd0b8b7a7bff71d",
+  renderer: "d4cbd8fc70a788c1cd8e15ab87005dba6afcdc5054c96f2b41da3fda83f4b5f4",
+  executable: "3b81e217663a73edd90a37e6160d577468acca570d680431eabe0055f6b04a73",
 }];
 
 function steamGamePath() {

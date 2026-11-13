@@ -106,7 +106,9 @@ function partyRegionalQuote(sim, country, party, kind, region) {
   const presence = local?.presence || 0;
   const hasHeadquarters = record?.headquarters?.key === region.key;
   const scale = Math.min(2.5, Math.sqrt(region.pop));
-  const cash = Math.round(rule.cash * (1 + scale) * (kind === "rally" ? 1 - .25 * presence : 1) * 1e6) / 1e6;
+  const priority = partyCongressActivePriority(party, day);
+  const cash = Math.round(rule.cash * (1 + scale) * (kind === "rally" ? 1 - .25 * presence : 1)
+    * partyCongressPriorityCost(kind, priority?.kind) * 1e6) / 1e6;
   const activistsK = GN(rule.activists * (1 + scale));
   const rally = partyRegionalRallyWeight(local?.rally, day + rule.days);
   const fit = Math.exp(-.4 * Hp(party.ideology, region.lean) ** 2);

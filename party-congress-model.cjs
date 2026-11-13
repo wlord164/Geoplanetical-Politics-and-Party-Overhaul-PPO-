@@ -11,7 +11,13 @@ function partyCongressView(sim, country, partyId, electorate) {
 
   const saved = party.gpmCongressSizeState;
   const size = partyCongressSizeIsValid(saved?.size) ? saved.size : 100;
-  const lastVote = saved?.lastVote ?? null;
+  const day = sim.day || 0;
+  const overview = {
+    size, day, treasuryM: party.organization?.treasuryM ?? 0,
+    lastVote: saved?.lastVote ?? null, lastPriorityVote: saved?.lastPriorityVote ?? null,
+    nextSizeVoteDay: saved?.nextSizeVoteDay ?? 0, nextPriorityVoteDay: saved?.nextPriorityVoteDay ?? 0,
+    priority: partyCongressActivePriority(party, day),
+  };
   const figures = [];
   for (const person of sim.people?.values?.() || []) {
     if (person?.party !== partyId || person.alive === false || String(person.countryKey) !== String(country.key)) continue;
@@ -22,7 +28,7 @@ function partyCongressView(sim, country, partyId, electorate) {
   }
 
   const platform = partyCongressIdeology(party.ideology);
-  if (!platform) return { size, lastVote, profiles: [], figures };
+  if (!platform) return { ...overview, profiles: [], figures };
 
   // The platform anchors the estimate. Blocs shape tendencies within the party,
   // and known figures contribute a smaller share. Missing evidence stays with the platform.
@@ -49,7 +55,7 @@ function partyCongressView(sim, country, partyId, electorate) {
   }
 
   const platformWeight = 1 - evidence.reduce((sum, profile) => sum + profile.weight, 0);
-  return { size, lastVote, profiles: [{ ideology: platform, weight: platformWeight }, ...evidence], figures };
+  return { ...overview, profiles: [{ ideology: platform, weight: platformWeight }, ...evidence], figures };
 }
 
 function retirePartyCongress(party) {

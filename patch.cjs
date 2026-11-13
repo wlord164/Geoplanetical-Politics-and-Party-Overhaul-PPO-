@@ -240,8 +240,20 @@ function mountPartyButtons() {
     .gpm-organizing-action label { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }
     .gpm-party-congress { display: grid; gap: var(--gap-2); }
     .gpm-congress-control { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }
-    .gpm-congress-size { max-width: 100%; accent-color: var(--text-2); }
+    .gpm-congress-size-label { display: block; }
+    .gpm-congress-size-range { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--gap-2); }
+    .gpm-congress-size { width: 100%; min-width: 0; margin: 0; accent-color: var(--text-2); }
     .gpm-party-congress button { justify-self: start; }
+    .gpm-congress-ballot { min-width: 0; display: grid; gap: var(--gap-2); padding-block-start: var(--gap-2); border-top: 1px solid var(--line, #474950); }
+    .gpm-congress-ballot h4 { margin: 0; }
+    .gpm-congress-control select { min-width: 0; max-width: 100%; }
+    .gpm-congress-grant { min-width: 0; display: grid; gap: var(--gap-1); }
+    .gpm-congress-vote-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--gap-1); margin: 0; padding: 0; list-style: none; }
+    .gpm-congress-vote-rows:empty { display: none; }
+    .gpm-congress-faction { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--gap-1); padding: var(--gap-2); border: 1px solid var(--line, #474950); }
+    .gpm-congress-faction strong { overflow-wrap: anywhere; }
+    .gpm-congress-faction > span:first-of-type { display: grid; justify-items: end; text-align: right; }
+    .gpm-congress-faction > span:last-of-type, .gpm-congress-faction > small { grid-column: 1 / -1; }
     .gpm-party-profile { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-2); }
     .gpm-party-profile-tabs { display: grid; grid-template-columns: repeat(var(--gpm-profile-tabs), minmax(0, 1fr)); gap: var(--gap-1); }
     @container party-room (max-width: 480px) { .gpm-party-profile-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -491,7 +503,7 @@ function patchRenderer(bytes) {
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
   js = replaceOnce(js, 'this._mpWire(e,t),YF(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,this),bindPartyCongress(e,t,p,this),bindPartyOrganizing(e,t,this),YF(this,e,t)');
-  js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
+  js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size","data-gpm-congress-bargain","data-gpm-congress-priority","data-gpm-congress-vote","data-gpm-congress-priority-vote","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
   js = replaceOnce(js, refresh, `${refresh},bindPartyCongress(t,e,c,this),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,this),bindPartyOrganizing(t,e,this)`);
   js = replaceOnce(js, 'sFe($k,null,"new",!1,e,void 0,a)', 'sFe($k,null,"new",!1,gpmNewParty?{...e,partyModCreate:gpmNewParty}:e,void 0,a)');
