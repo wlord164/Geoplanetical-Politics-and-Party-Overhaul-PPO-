@@ -24,6 +24,7 @@ function patchUprisingWorker(source, replaceOnce) {
       't.parties.map(({gpmUprisingPreparations,gpmForeignFunding,...a})=>({...a,view:{color:Q_(a)'],
     ['(a==="gpm.foreignFunding"?',
       '(a==="gpm.uprising"?gpmUprising.view(r):a==="gpm.foreignFunding"?'],
+    ['independence:tbt(e)})', 'independence:tbt(e),gpmUprisingFlags:gpmUprising.flags(e)})'],
     ['e._onWarEnd&&e._onWarEnd(u)}function Zyt(',
       'e._onWarEnd&&e._onWarEnd(u),gpmUprising.record(e,s,a)}function Zyt('],
     ['t.support.e<=0&&!e.playerControlsGovernment(a)&&Zyt',

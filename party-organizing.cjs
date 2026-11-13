@@ -25,10 +25,10 @@ function migratePartyOrganizing(party, day) {
   return record;
 }
 
-function decayPartyOrganizing(party, day) {
+function decayPartyOrganizing(party, day, rules = gpmCampaignRulesFor()) {
   const record = migratePartyOrganizing(party, day);
   if (!record || day <= record.day) return;
-  const remaining = Math.pow(.5, (day - record.day) / 180);
+  const remaining = rules.organizingHalfLife > 0 ? Math.pow(.5, (day - record.day) / rules.organizingHalfLife) : 1;
   for (const [id, weight] of Object.entries(record.groups)) {
     const next = Math.min(.5, Math.max(0, weight)) * remaining;
     if (next < .000001) delete record.groups[id];
@@ -83,7 +83,10 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
     : (record?.lastBacking ?? -60) + 60;
   const strength = Math.max(0, Math.min(1, movement?.mobilization01 || 0));
   const credibility = Math.max(0, Math.min(1, party.organization.credibility ?? .5));
-  const remaining = Math.pow(.5, Math.max(0, day - (record?.day ?? day)) / 180);
+  const rules = gpmCampaignRulesFor(sim);
+  const remaining = rules.organizingHalfLife > 0
+    ? Math.pow(.5, Math.max(0, day - (record?.day ?? day)) / rules.organizingHalfLife) : 1;
+  const sizeFactor = partyCampaignSmallPartyFactor(party, rules);
   const effects = groups.map(group => {
     const distance = gpmAxes.reduce((sum, { id }) => sum + Math.abs((party.ideology?.[id] || 0) - (group.ideal?.[id] || 0)), 0);
     const fit = Math.max(0, 1 - distance / 8);
@@ -93,7 +96,7 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
       ? .12 * (.45 + .55 * fit) * (.45 + .55 * presence) * (.55 + .45 * credibility)
       : .115 * (.35 + .65 * fit) * (.45 + .55 * credibility) * (.65 + .35 * strength) *
         partyMovementDemandFit(party, movement, group) / Math.sqrt(groups.length);
-    return { id: group.id, present, increase: base * (1 - present / .5) };
+    return { id: group.id, present, increase: base * sizeFactor * (1 - present / .5) };
   });
   const organization = party.organization;
   let reason = null;
@@ -113,7 +116,7 @@ function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
   const party = YL(country, partyId);
   const day = sim.day || 0;
   const record = party.gpmOrganizing ||= { version: 2, groups: {}, day, backed: [], projects: [], lastMeetingByBloc: {} };
-  decayPartyOrganizing(party, day);
+  decayPartyOrganizing(party, day, gpmCampaignRulesFor(sim));
   party.organization.treasuryM = partyForeignFundingTreasury(party,
     Math.round((party.organization.treasuryM - quote.cash) * 1e6) / 1e6);
   party.organization.influence = zL(party.organization.influence - quote.influence);
@@ -133,10 +136,11 @@ function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
 
 function advancePartyOrganizing(sim, country, party) {
   const day = sim.day || 0;
+  const rules = gpmCampaignRulesFor(sim);
   const record = migratePartyOrganizing(party, day);
   if (!record) return;
   if (!record.projects.length) {
-    decayPartyOrganizing(party, day);
+    decayPartyOrganizing(party, day, rules);
     return;
   }
   const existingGroups = new Set(Fwe(country).map(group => group.id));
@@ -155,7 +159,7 @@ function advancePartyOrganizing(sim, country, party) {
   }
   const first = record.projects.reduce((soonest, project) => Math.min(soonest, project.workedThrough + 1), day + 1);
   for (let tick = first; tick <= day && record.projects.length; tick++) {
-    decayPartyOrganizing(party, tick);
+    decayPartyOrganizing(party, tick, rules);
     const credits = new Map();
     for (const project of record.projects) {
       if (tick <= project.workedThrough || tick > project.endDay) continue;
@@ -177,7 +181,7 @@ function advancePartyOrganizing(sim, country, party) {
       if (tick >= project.endDay) finalize(project);
     }
   }
-  decayPartyOrganizing(party, day);
+  decayPartyOrganizing(party, day, rules);
 }
 
 function registerPartyOrganizing() {

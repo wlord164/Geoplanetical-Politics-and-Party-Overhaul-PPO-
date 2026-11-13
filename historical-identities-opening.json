@@ -1,0 +1,46 @@
+{
+  "ucdp-actor-123": {
+    "headOfState": {
+      "name": "Mahdi al-Mashat",
+      "role": "Chairman of the Supreme Political Council",
+      "source": "https://saba.ye/ar/news3544560.htm",
+      "portrait": {
+        "file": "historical-identity-assets/mahdi-al-mashat.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Hasan_Irlu_and_Mahdi_al-Mashat,_2020_(cropped).jpg",
+        "credit": "Morteza Ahmadi Alehashem / Mehr News Agency, 5 November 2020. Cropped by Hsnkn on Wikimedia Commons.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "headOfGovernment": {
+      "name": "Muhammad Ahmad Miftah",
+      "role": "Acting Prime Minister of the Government of Change and Construction",
+      "source": "https://saba.ye/ar/news3615393.htm?cid=1",
+      "portrait": {
+        "file": "historical-identity-assets/muhammad-miftah.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Muhammad_Miftah_in_2025.png",
+        "credit": "Tasnim News Agency, 1 September 2025. Interview still resized for PPO.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "administrationFlag": {
+      "name": "Yemeni national flag used by the Sana’a administration",
+      "file": "historical-identity-assets/yemen-national-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Yemen.svg",
+      "credit": "Wikimedia Commons public-domain SVG. Rasterized for PPO.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "evidence": "https://commons.wikimedia.org/wiki/File:Hasan_Irlu_and_Mahdi_al-Mashat,_2020.jpg",
+      "ratio": 1.5
+    }
+  },
+  "libya-gns": {
+    "administrationFlag": {
+      "name": "Libyan national flag used by the Government of National Stability",
+      "file": "historical-identity-assets/libya-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Libya.svg",
+      "evidence": "https://alumma.ly/storage/pdf/uR9VFjfknATQVSJzzp71RJARlAyXsDbpZ0uvHZjZ.pdf",
+      "credit": "Libyan national flag. PNG rendering of the Commons SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 2
+    }
+  }
+}

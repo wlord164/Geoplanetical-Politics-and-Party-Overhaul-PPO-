@@ -56,13 +56,15 @@ function advancePartyModAI(sim, country) {
     }
   }
   advancePartyRegionalAI(sim, country, electionIn);
+  advancePartyForeignFundingAI(sim, country, electionIn);
   // Give parties a buffer for resources before the native campaign opens.
   if (electionIn <= 90) return;
   const groups = Fwe(country);
   if (!groups.length) return;
   const movements = (country.domestic?.movements || []).filter(peacefulPartyMovement);
   for (const party of country.pol?.parties || []) {
-    if (!party.organization || party.legal === false || iGr(sim, country, party.id)) continue;
+    if (!party.organization || party.legal === false || party.gpmUprisingShell || party.gpmUprisingExcluded ||
+        iGr(sim, country, party.id)) continue;
     const action = partyModAIOrganizing(sim, country, party, groups, movements, electionIn);
     if (action) applyPartyOrganizing(sim, country, party.id, action.kind, action.targetId);
   }

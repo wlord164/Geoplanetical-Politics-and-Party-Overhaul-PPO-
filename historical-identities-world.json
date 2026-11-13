@@ -1,0 +1,364 @@
+{
+  "mmr-nug": {
+    "leader": {
+      "name": "Duwa Lashi La",
+      "role": "Acting President",
+      "source": "https://www.nugmyanmar.org/acting-president/",
+      "portrait": {
+        "file": "historical-identity-assets/duwa-lashi-la.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Duwa_Lashi_La_(December_2023)_(cropped).png",
+        "credit": "Ingyin Naing, Voice of America, December 2023. Commons crop, resized for PPO.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+      }
+    },
+    "flag": {
+      "name": "People’s Defence Force flag (NUG armed wing)",
+      "file": "historical-identity-assets/pdf-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_PDF_Myanmar.svg",
+      "credit": "Ninjastrikers. PNG rendering of the SVG. The NUG shows the banner with its forces in Weekly Update 31/2024.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "mmr-aa": {
+    "leader": {
+      "name": "Twan Mrat Naing",
+      "role": "United League of Arakan chairman and Arakan Army commander-in-chief",
+      "source": "https://www.ohchr.org/sites/default/files/Documents/HRBodies/HRCouncil/FFM-Myanmar/20190916/A_HRC_42_CRP.5.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/twan-mrat-naing.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:General_Twan_Mrat_Naing.jpg",
+        "credit": "Tun Lin Lin, May 2016.",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    "flag": {
+      "name": "United League of Arakan flag",
+      "file": "historical-identity-assets/ula-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:United_League_of_Arakan_flag.svg",
+      "credit": "Albert Poliakoff. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "mmr-kio": {
+    "leader": {
+      "name": "N’Ban La",
+      "role": "Kachin Independence Organization chairman",
+      "source": "https://www.bnionline.net/sites/bnionline.net/files/publication_docs/bni-peace-reference-book-2023-2024_english-version.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/nban-la.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:N%27ban_La_2013.jpg",
+        "credit": "Prime Minister’s Office of Japan, April 2013. Commons crop.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "flag": {
+      "name": "Kachin Independence Army flag",
+      "file": "historical-identity-assets/kia-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Kachin_Independence_Army_flag.svg",
+      "credit": "Odder, based on artwork by Hintha. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "mmr-knu": {
+    "leader": {
+      "name": "P’doh Saw Kwe Htoo Win",
+      "role": "Karen National Union chairman",
+      "source": "https://www.karennationalunion.org/about-us/chairman-timeline"
+    },
+    "flag": {
+      "name": "Karen National Union flag",
+      "file": "historical-identity-assets/knu-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Karen_National_Union_Flag.png",
+      "credit": "Jolle, Catalan Wikipedia. Resized for PPO.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "mmr-cnf": {
+    "leader": {
+      "name": "Pu Zing Cung",
+      "role": "Chin National Front chairperson",
+      "source": "https://ispmyanmar.com/chin-national-front-cnf/"
+    },
+    "flag": {
+      "name": "Chin National Front flag",
+      "file": "historical-identity-assets/cnf-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Chin_National_Front.svg",
+      "credit": "Albert Poliakoff. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "mmr-knpp": {
+    "leader": {
+      "name": "Khu Oo Reh",
+      "role": "Karenni National Progressive Party chairman",
+      "source": "https://ieckarenni.org/chairperson/"
+    },
+    "flag": {
+      "name": "Karenni National Progressive Party flag",
+      "file": "historical-identity-assets/knpp-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Karenni_National_Progressive_Party.svg",
+      "credit": "Germenfer. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "mmr-mndaa": {
+    "leader": {
+      "name": "Peng Daxun",
+      "role": "Myanmar National Democratic Alliance Army commander-in-chief",
+      "source": "https://mmpeacemonitor.org/en/eng-ero-profiles/myanmar-national-truth-and-justice-party-myanmar-national-democratic-alliance-army-kokang-army-mntjp-mndaa/"
+    },
+    "flag": {
+      "name": "Myanmar National Democratic Alliance Army flag",
+      "file": "historical-identity-assets/mndaa-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Myanmar_National_Democratic_Alliance_Army.svg",
+      "credit": "GiruŠatuku. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  "mmr-tnla": {
+    "leader": {
+      "name": "Tar Aik Bong",
+      "role": "Palaung State Liberation Front chairman",
+      "source": "https://mmpeacemonitor.org/en/eng-cover-story/formation-of-taang-land-council-taang-revolutions-dynamics-and-pslf-tnlas-role/"
+    },
+    "flag": {
+      "name": "Ta’ang National Liberation Army flag",
+      "file": "historical-identity-assets/tnla-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Ta%27ang_National_Liberation_Army_(TNLA).svg",
+      "credit": "Khiêm1. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "libya-gnu": {
+    "leader": {
+      "name": "Abdul Hamid Dbeibah",
+      "role": "Prime Minister of the Government of National Unity",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F792&t=pdf",
+      "portrait": {
+        "file": "historical-identity-assets/dbeibah.jpg",
+        "source": "https://audiovisual.ec.europa.eu/en/photo/P-063862",
+        "credit": "© European Union, 2024 / Frédéric Sierakowski. Resized for PPO.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "flag": {
+      "name": "Libyan national flag in use by the Government of National Unity",
+      "file": "historical-identity-assets/libya-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Libya.svg",
+      "credit": "Libyan national flag. PNG rendering of the Commons SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "libya-gns": {
+    "leader": {
+      "name": "Osama Hammad",
+      "role": "House of Representatives-appointed Prime Minister",
+      "source": "https://digitallibrary.un.org/record/4086980/files/S_2025_509-EN.pdf"
+    }
+  },
+  "ucdp-actor-123": {
+    "leader": {
+      "name": "Abdulmalik al-Houthi",
+      "role": "Ansar Allah leader",
+      "source": "https://main.un.org/securitycouncil/en/sanctions/2140/materials/summaries/individual/abdulmalik-al-houthi"
+    },
+    "flag": {
+      "name": "Ansar Allah movement flag",
+      "file": "historical-identity-assets/ansar-allah-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Ansar_Allah_Flag.svg",
+      "credit": "hstoops. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "ucdp-actor-7344": {
+    "leader": {
+      "name": "Aidarous Qassem al-Zubaidi",
+      "role": "Southern Transitional Council president",
+      "source": "https://en.stcaden.com/posts/12643",
+      "portrait": {
+        "file": "historical-identity-assets/al-zubaidi.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Al_Zubaidi_(cropped).png",
+        "credit": "Aden TV, 2022. Crop by Panam2014.",
+        "license": "https://creativecommons.org/licenses/by/3.0/"
+      }
+    },
+    "flag": {
+      "name": "South Yemen flag used by the Southern Transitional Council",
+      "file": "historical-identity-assets/south-yemen-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_South_Yemen.svg",
+      "credit": "South Yemen national flag. PNG rendering of the Commons SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    },
+    "victoryFlag": {
+      "name": "South Yemen national flag",
+      "file": "historical-identity-assets/south-yemen-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_South_Yemen.svg",
+      "evidence": "https://en.stcaden.com/posts/12535",
+      "credit": "South Yemen national flag. PNG rendering of the Commons SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "mmr-sspc": {
+    "leader": {
+      "name": "Min Aung Hlaing",
+      "role": "State Security and Peace Commission chairman and acting president",
+      "source": "https://www.moi.gov.mm/nlm/1-january-2026",
+      "portrait": {
+        "file": "historical-identity-assets/min-aung-hlaing.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Myanmar_Min_Aung_Hlaing_on_March_4,_2025_(cropped)_(2).jpg",
+        "credit": "State Duma of the Russian Federation / Duma.gov.ru. Commons crop, resized for PPO.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    }
+  },
+  "warwatch-actor-3242": {
+    "leader": {
+      "name": "Brahim Ghali",
+      "role": "Polisario Front secretary-general and Sahrawi Arab Democratic Republic president",
+      "source": "https://digitallibrary.un.org/record/4091601",
+      "portrait": {
+        "file": "historical-identity-assets/brahim-ghali.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Brahim_Ghali_2.jpeg",
+        "credit": "Presidencia El Salvador, May 2019. Crop by Roman Kubanskiy, levels adjusted by WikiPedant.",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+      }
+    },
+    "flag": {
+      "name": "Sahrawi Arab Democratic Republic flag used by the Polisario Front",
+      "file": "historical-identity-assets/sahrawi-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Sahrawi_Arab_Democratic_Republic.svg",
+      "credit": "Fry1989, Alkari and Odder. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "ucdp-actor-6288": {
+    "leader": {
+      "name": "Mazloum Abdi",
+      "role": "Syrian Democratic Forces commander",
+      "source": "https://childrenandarmedconflict.un.org/en/syrian-democratic-forces-sign-action-plan-to-end-and-prevent-the-recruitment-and-use-of-children",
+      "portrait": {
+        "file": "historical-identity-assets/mazloum-abdi.jpg",
+        "source": "https://www.dvidshub.net/image/4685760/us-general-visits-with-sdf-general",
+        "credit": "Staff Sgt. Brigitte Morgan, U.S. Army, August 2018. Cropped for PPO.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+      }
+    },
+    "flag": {
+      "name": "Syrian Democratic Forces flag",
+      "file": "historical-identity-assets/sdf-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Syrian_Democratic_Forces.svg",
+      "credit": "FugeeCamp. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "ucdp-actor-6287": {
+    "leader": {
+      "name": "Nnamdi Kanu",
+      "role": "Indigenous People of Biafra founder and leader",
+      "source": "https://media.premiumtimesng.com/wp-content/files/2025/11/FRN-vs-Nnamdi-kanu-Judgment-2_11zon.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/nnamdi-kanu.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Nnamdi_Kanu.png",
+        "credit": "Ipob Rapture Media, January 2021. Video still, resized for PPO.",
+        "license": "https://creativecommons.org/licenses/by/3.0/"
+      }
+    },
+    "flag": {
+      "name": "IPOB flag adopted in 2020",
+      "file": "historical-identity-assets/ipob-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Biafra_(2020).svg",
+      "evidence": "https://doi.org/10.1080/14725843.2026.2681806",
+      "credit": "War Term. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "ratio": 1.5
+    },
+    "victoryFlag": {
+      "name": "Republic of Biafra national flag",
+      "file": "historical-identity-assets/biafra-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Biafra.svg",
+      "evidence": "https://www.crwflags.com/fotw/flags/ng-biaf.html",
+      "credit": "Mysid and Wikimedia Commons contributors. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "ratio": 1.5
+    }
+  },
+  "ucdp-actor-169": {
+    "flag": {
+      "name": "Communist Party of the Philippines flag",
+      "file": "historical-identity-assets/cpp-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Communist_Party_of_the_Philippines.svg",
+      "credit": "Molecule Extraction and Thespoondragon. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "ucdp-actor-195": {
+    "flag": {
+      "name": "Communist Party of India (Maoist) banner specified by its constitution",
+      "file": "historical-identity-assets/cpi-maoist-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:South_Asian_Communist_Banner.svg",
+      "evidence": "https://satp.org/document/paper-acts-and-oridinances/party-constitution-central-committee-p-cpi-maoist",
+      "credit": "Trengarasu and Partisan1917. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/licenses/by-sa/3.0/"
+    }
+  },
+  "ucdp-actor-8114": {
+    "leader": {
+      "name": "Ahmad Massoud",
+      "role": "National Resistance Front of Afghanistan leader",
+      "source": "https://nrf-afghanistan.com/about",
+      "portrait": {
+        "file": "historical-identity-assets/ahmad-massoud.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Ahmad_Massoud_(cropped).jpg",
+        "credit": "Hamid Mohammadi. Commons crop, resized for PPO.",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    "flag": {
+      "name": "National Resistance Front of Afghanistan flag",
+      "file": "historical-identity-assets/nrf-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_National_Resistance_Front_of_Afghanistan.png",
+      "evidence": "https://www.wearenrf.org/the-nrf",
+      "credit": "EBUBAKIR. Resized for PPO.",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "ratio": 2
+    },
+    "victoryFlag": {
+      "name": "Afghan republic tricolor used by the National Resistance Front",
+      "file": "historical-identity-assets/afghan-republic-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Afghanistan_(2013%E2%80%932021).svg",
+      "evidence": "https://www.wearenrf.org/the-nrf",
+      "credit": "Wikimedia Commons contributors. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "ucdp-actor-717": {
+    "leader": {
+      "name": "Ahmed Diriye",
+      "role": "Al-Shabaab emir",
+      "source": "https://docs.un.org/en/S/2025/777"
+    },
+    "flag": {
+      "name": "Banner documented in use by Al-Shabaab",
+      "file": "historical-identity-assets/al-shabaab-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:ShabaabFlag.svg",
+      "evidence": "https://ctc.westpoint.edu/wp-content/uploads/2020/06/CTC-SENTINEL-062020.pdf",
+      "credit": "Guardafuuii. PNG rendering of the SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "ucdp-actor-8885": {
+    "leader": {
+      "name": "Corneille Nangaa Yobeluo",
+      "role": "Alliance Fleuve Congo political coordinator",
+      "source": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=celex%3A32024R2065",
+      "portrait": {
+        "file": "historical-identity-assets/corneille-nangaa.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Coordo_Nangaa.jpg",
+        "credit": "Christbirego, September 2025.",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+      }
+    }
+  }
+}

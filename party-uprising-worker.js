@@ -405,6 +405,8 @@ function gpmUprisingOpen(sim, country, input) {
   const { province, territoryPlan, divisions, incumbent, founderSupport, victorySupport, charter, profile, parentName, names, restoration } = proposal;
   const breakawayName = input.name ?? names[0];
   if (!names.includes(breakawayName)) return { ok: false, reason: "name" };
+  const flag = input.flag ?? null;
+  if (flag !== null && !D7t(flag)) return { ok: false, reason: "flag" };
   const parentKey = parent.key;
   const founderId = founder.id;
   const provinceKey = province.__provKey;
@@ -461,7 +463,8 @@ function gpmUprisingOpen(sim, country, input) {
     deployedCount: divisions.length, deployedRoster: divisions.map(gpmUprisingDivisionLabel),
     defectingRegions: [...territoryPlan.joining].map(id => sim.world.provinces[id].__provKey),
     parentName, breakawayName, victoryName: restoration?.name || breakawayName,
-    restoresOriginalName: !!restoration, restoreCustomName: !!restoration?.custom, profile };
+    restoresOriginalName: !!restoration, restoreCustomName: !!restoration?.custom, profile,
+    ...(flag ? { flag: { src: flag.src, ratio: flag.ratio } } : {}) };
   return { ok: true, ...gpmUprisingView(sim) };
 }
 
@@ -478,7 +481,7 @@ function gpmUprisingRecordResult(sim, war, outcome) {
     Object.assign(state, { phase: "settled", result: "separated", settledDay: sim.day });
     return;
   }
-  Object.assign(state, { phase: "resolving", nativeOutcome: outcome });
+  Object.assign(state, { phase: "resolving", nativeOutcome: outcome, outcomeEvidence: war.gpmDecisiveEvidence });
 }
 
 function gpmUprisingSettleCase(sim, parent, state) {
@@ -520,6 +523,7 @@ function gpmUprisingSettleCase(sim, parent, state) {
       throw new Error("Uprising country name is invalid");
     }
     state.appliedLaws = gpmApplyUprisingCharter(sim, parent, state.charter);
+    if (state.flag && parent.a2 && !zXa(sim, parent.a2, state.flag)) state.flagRetained = true;
   } else {
     fS(parent, founderId).bannedYear = sim._simYear || 2026;
   }
@@ -539,13 +543,29 @@ function gpmUprisingSettle(sim) {
   }
 }
 
+function gpmUprisingFlags(sim) {
+  const flags = {};
+  for (const country of sim.countries.values()) {
+    const state = country[statusField];
+    if (!state) continue;
+    const key = sim.countries.get(state.childKey)?.a2?.toLowerCase();
+    const parentFlag = country.a2?.toLowerCase();
+    if (key && parentFlag) {
+      flags[key] = { parentFlag, ...(state.flag || {}) };
+    } else if (state.result === "breakaway" && state.flagRetained && parentFlag) {
+      flags[parentFlag] = state.flag;
+    }
+  }
+  return flags;
+}
+
 n5t("gpm.party.uprising.declare", { apply: gpmUprisingOpen });
 for (const action of ["form", "headquarters", "invest", "recruit", "aidRequest", "aidAccept", "aidDecline"]) {
   n5t("gpm.party.uprising." + action, {
     apply: (sim, country, input) => gpmUprisingPrepare(sim, country, input, action),
   });
 }
-return { view: gpmUprisingView, matches: gpmUprisingMatches, record: gpmUprisingRecordResult,
+return { view: gpmUprisingView, flags: gpmUprisingFlags, matches: gpmUprisingMatches, record: gpmUprisingRecordResult,
   captureStartingIdentities: gpmUprisingCaptureStartingIdentities,
   settle: gpmUprisingSettle, inspect: gpmUprisingStatus, advancePreparations: gpmUprisingAdvancePreparations,
   applyCharter: gpmApplyUprisingCharter, installGovernment: gpmUprisingGovernment };

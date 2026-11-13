@@ -1,0 +1,55 @@
+{
+  "myanmar-arakan-conflict": [
+    {
+      "key": "MMR-3273",
+      "name": "Rakhine",
+      "dominantActorId": "mmr-aa",
+      "secondaryActorId": "mmr-sspc",
+      "color": "#9B7451",
+      "source": "https://arakanstudies.org/ib/26/08/ib-08-26.html",
+      "note": "The Arakan administration governed fourteen of the seventeen townships. The State Security and Peace Commission retained authority in Sittwe, Kyaukphyu, and Munaung. The game combines those jurisdictions into one province."
+    }
+  ],
+  "myanmar-karen-conflict": [
+    {
+      "key": "MMR-3266",
+      "name": "Kayin",
+      "dominantActorId": "mmr-knu",
+      "secondaryActorId": "mmr-sspc",
+      "color": "#6F7EAE",
+      "source": "https://ispmyanmar.com/mp-105/",
+      "note": "The Karen National Union had majority territorial control in the 2025 survey and operates a regional administration. The stock province also includes areas administered by the central military government and other Karen authorities."
+    }
+  ],
+  "ucdp-state-14784": [
+    {
+      "key": "SYR-141",
+      "name": "Hasakah",
+      "dominantActorId": "ucdp-actor-6288",
+      "secondaryActorId": "ucdp-actor-118",
+      "color": "#AA8E48",
+      "source": "https://www.euaa.europa.eu/syria-security-situation/121-syrian-transitional-government-security-forces",
+      "note": "The Democratic Autonomous Administration of North and East Syria governed most of Hasakah. The stock province also includes the northern strip outside the Kurdish-led administration."
+    },
+    {
+      "key": "SYR-136",
+      "name": "Raqqa",
+      "dominantActorId": "ucdp-actor-6288",
+      "secondaryActorId": "ucdp-actor-118",
+      "color": "#AA8E48",
+      "source": "https://www.euaa.europa.eu/syria-security-situation/282-territorial-control-and-main-armed-actors",
+      "note": "The Kurdish-led administration governed much of Raqqa including its provincial capital. Parts of the north and west fell outside its administration."
+    }
+  ],
+  "syr-suwayda-government": [
+    {
+      "key": "SYR-143",
+      "name": "Suwayda",
+      "dominantActorId": "syr-suwayda-local-groups",
+      "secondaryActorId": "ucdp-actor-118",
+      "color": "#8F6299",
+      "source": "https://www.ecoi.net/en/file/local/2133498/Country_Guidance_Syria-Comprehensive_update_2025.pdf",
+      "note": "Local Druze authorities held Suwayda city and most of the governorate. Several communities and jurisdictions remain inside the same stock province."
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "ucdp-actor-266": {
+    "leader": {
+      "name": "Goliath Namaan Tabuni",
+      "role": "Supreme Commander of the West Papua National Liberation Army",
+      "source": "https://lawpolicyjournal.id/index.php/dejure/article/download/5501/pdf/18537",
+      "portrait": {
+        "file": "historical-identity-assets/goliath-tabuni.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Jenderal._Goliath_Tabuni.JPG",
+        "credit": "Tpnpb on Wikimedia Commons, December 11, 2012. Cropped for PPO.",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    "flag": {
+      "name": "West Papuan Morning Star flag",
+      "file": "historical-identity-assets/west-papua-morning-star.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Morning_Star_flag.svg",
+      "evidence": "https://fode.education.gov.pg/courses/Social%20Science/Grade%2012/history/GR%2012.HISTORY.UNIT1.pdf",
+      "credit": "Pumbaa80, after the West Papuan flag specification. Rasterized without redesign.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    },
+    "victoryFlag": {
+      "name": "Morning Star flag of West Papua",
+      "file": "historical-identity-assets/west-papua-morning-star.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Morning_Star_flag.svg",
+      "evidence": "https://www.ulmwp.org/stand-with-west-papua-on-december-1st",
+      "credit": "Pumbaa80, after the West Papuan flag specification. Rasterized without redesign.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "ucdp-actor-7332": {
+    "flag": {
+      "name": "Ambazonian independence flag",
+      "file": "historical-identity-assets/ambazonia.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Federal_Republic_of_Southern_Cameroons.svg",
+      "evidence": "https://ambazoniagov.org/images/2019/President_Sako_Address_to_the_Nation_31-12-2019.pdf",
+      "credit": "Washiucho. Rasterized without redesign.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    },
+    "victoryFlag": {
+      "name": "Federal Republic of Ambazonia flag",
+      "file": "historical-identity-assets/ambazonia.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Federal_Republic_of_Southern_Cameroons.svg",
+      "evidence": "https://ambazoniagov.org/images/docs/Interim-Constitution-of-the-Federal-Republic-ofAmbazonia.pdf#page=26",
+      "credit": "Washiucho. Rasterized without redesign.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "ucdp-actor-7412": {
+    "flag": {
+      "name": "FLEC–FAC banner photographed with Nzita Tiago",
+      "file": "historical-identity-assets/cabinda-flec.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Cabinda_(FLEC_propose).svg",
+      "evidence": "https://commons.wikimedia.org/wiki/File:Tiago277.jpg",
+      "credit": "Odder, after the photograph of Nzita Tiago. Rasterized without redesign. The photographed flag reads blue above gold and red, with an upright white star on a green triangle.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "ucdp-actor-7542": {
+    "flag": {
+      "name": "Baloch liberation movement flag",
+      "file": "historical-identity-assets/baloch-liberation.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Balochistan_nationalism.svg",
+      "evidence": "https://balochistanliberationcharter.com/index.php/english/",
+      "credit": "Khatati Pro. The rendering follows Article 68 of the Balochistan Liberation Charter. The charter leaves selection of the future state flag to its first national assembly.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "ratio": 1.6666666667
+    }
+  },
+  "ucdp-actor-8822": {
+    "leader": {
+      "name": "Bilal Ag Acherif",
+      "role": "Azawad Liberation Front president",
+      "source": "https://africanperceptions.org/fr/2024/12/11191/",
+      "portrait": {
+        "file": "historical-identity-assets/bilal-ag-acherif.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Bilal_Ag_Ach%C3%A9rif_%C3%A0_Ouagadougou.png",
+        "credit": "Voice of America, Ouagadougou, November 16, 2012. Wikimedia crop by Khaerr, cropped further for PPO.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+      }
+    },
+    "flag": {
+      "name": "Azawad Liberation Front flag adopted in November 2024",
+      "file": "historical-identity-assets/azawad-fla.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Azawad_Liberation_Front.svg",
+      "evidence": "https://www.crwflags.com/Fotw/flags/ml%7Dfla.html",
+      "credit": "Wikimedia Commons rendering of the founding congress flag documented by Fahad Ag Almahmoud. Rasterized without redesign.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.6666666667
+    }
+  },
+  "warwatch-actor-3096": {
+    "leader": {
+      "name": "Salif Sadio",
+      "role": "Commander of the MFDC faction outside the peace agreements",
+      "source": "https://www.santegidio.org/downloads/jahresbericht%202024.pdf"
+    },
+    "flag": {
+      "name": "Movement of Democratic Forces of Casamance banner",
+      "file": "historical-identity-assets/casamance-mfdc.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Casamance_(2012).svg",
+      "evidence": "https://www.crwflags.com/FotW/FLAGS/sn%7Dmfdc.html",
+      "credit": "Mikelelgediento, based on photographs of the banner carried by MFDC fighters. Rasterized without redesign.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  }
+}

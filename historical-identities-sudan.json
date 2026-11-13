@@ -1,0 +1,93 @@
+{
+  "sdn-saf": {
+    "leader": {
+      "name": "Abdel Fattah al-Burhan",
+      "role": "Chairman of the Transitional Sovereignty Council",
+      "source": "https://president.az/en/articles/view/68553",
+      "born": 1960,
+      "bornMonth": 6,
+      "birthSource": "https://ofac.treasury.gov/recent-actions/20250116",
+      "portrait": {
+        "file": "historical-identity-assets/sudan-al-burhan.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Abdel_Fattah_al-Burhan_in_April_2025_(cropped).jpg",
+        "credit": "President.az, 11 April 2025. Cropped by Ericliu1912 on Wikimedia Commons.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "headOfGovernment": {
+      "name": "Kamil Idris",
+      "role": "Prime Minister",
+      "source": "https://www.suna.sd/posts/dr-kamil-idris-takes-oath-as-prime-minister-before",
+      "portrait": {
+        "file": "historical-identity-assets/sudan-kamil-idris.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Kamil_Idris_(2026).jpg",
+        "credit": "Press Information Department, Government of Bangladesh, 16 May 2026. Cropped by Sahaib on Wikimedia Commons.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+      }
+    },
+    "flag": {
+      "name": "Sudanese Army ground forces flag",
+      "file": "historical-identity-assets/sudan-saf.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Sudanese_Army_(1956–present).png",
+      "evidence": "https://local.fotw.info/flags/sd%5Esaf.html",
+      "credit": "SalimIRQ, Wikimedia Commons. Illustration of the Sudanese Army ground forces flag.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "sdn-rsf": {
+    "leader": {
+      "name": "Mohamed Hamdan Dagalo",
+      "role": "Chairman of the Presidential Council",
+      "alias": "Hemedti",
+      "source": "https://digitallibrary.un.org/record/4101837/files/A_HRC_61_24-EN.pdf",
+      "born": 1974,
+      "birthSource": "https://sanctionssearch.ofac.treas.gov/Details.aspx?id=52510",
+      "portrait": {
+        "file": "historical-identity-assets/sudan-hemedti.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Mohamed_Hamdan_Dagalo_2022_(cropped).jpg",
+        "credit": "Government.ru, 25 February 2022. Cropped by Wikimedia Commons contributors.",
+        "license": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "headOfGovernment": {
+      "name": "Mohamed Hassan Othman Al-Ta’ayshi",
+      "role": "Transitional Prime Minister",
+      "source": "https://tasissudan.com/tasis-announces-formation-of-government-of-peace-and-unity/"
+    },
+    "flag": {
+      "name": "Rapid Support Forces flag",
+      "file": "historical-identity-assets/sudan-rapid-support-forces.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Rapid_Support_Forces_(Sudan).png",
+      "evidence": "https://images.squarespace-cdn.com/content/v1/5caf305af8135a45f8099821/1572375023001-JKSB2TJ4APJPNS2B97WL/Nooreldin+Abdelwahhab.jpg",
+      "credit": "MartinKassemJ120, Wikimedia Commons. Redrawn from photographed RSF flags and downscaled for PPO.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "ratio": 1.5
+    },
+    "administrationFlag": {
+      "name": "Sudanese national flag used by the Government of Peace and Unity",
+      "file": "historical-identity-assets/sudan-national-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Sudan.svg",
+      "evidence": "https://assayha.net/en/162027/",
+      "credit": "Flag of Sudan, Wikimedia Commons. PNG rendering of the public-domain national flag. Its use is visible in the 30 August 2025 Nyala swearing-in photograph credited to TaseesSFA.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 2
+    }
+  },
+  "sdn-splmn-hilu": {
+    "leader": {
+      "name": "Abdelaziz al-Hilu",
+      "role": "SPLM-N leader and deputy chairman of the Presidential Council",
+      "source": "https://digitallibrary.un.org/record/4101837/files/A_HRC_61_24-EN.pdf"
+    },
+    "flag": {
+      "name": "Sudan People’s Liberation Movement–North flag",
+      "file": "historical-identity-assets/sudan-splm-n.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_SPLM-N.svg",
+      "evidence": "https://www.crwflags.com/Fotw/FLAGS/sd%7Dsplmn.html",
+      "credit": "MrPenguin20, Wikimedia Commons. PNG rendering of the vector based on the movement’s website.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 2
+    }
+  }
+}

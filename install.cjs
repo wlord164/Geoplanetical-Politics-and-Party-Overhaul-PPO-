@@ -170,6 +170,36 @@ const previousPatches = [{
   worker: "6f0473149235a906c7925a965c8ea84c63060942529e6f0601177cd2524a8f25",
   renderer: "26dc8c3f9609e1bec666ff639659bac09980416bd3d2fb5c738d878dba89c394",
   executable: "533502e76e61f2f021063ff105e6f6c258923701362f04ffbcef8eabe8929965",
+}, {
+  // Worldwide Historical Conflicts and Ideology Update (68514dd).
+  archive: "55bc26641fe06c41a2cd923e3cdb10c6f3d4030d3973ec9e422c087b2f1b0b70",
+  worker: "74867e182f7c65f493359f57e1a372114c66cf268b591aa9c11c1e0957b0a8ed",
+  renderer: "6386fd28e39c05ba82f64f6ec0af82f6f5a32174e25b28aea1b3a5bccdfd8b47",
+  executable: "5fe64c02183d88f904b9a4eb41900257bbe88438e87fe624ea7180959745a0ee",
+}, {
+  // Historical map update installed before territorial governments.
+  archive: "40258391467472e5144c49f8fd69cc7af59da97a0fec8e481eaaa9b713f6e855",
+  worker: "93900c6cf8b5795522c5cf4ceb24597afc2fb5ca8c59374c825f5e72bd5d5ed7",
+  renderer: "1d9395a019387e945ae30326bba1824dc1609da9a7dca1a136113bf5fa7a6876",
+  executable: "8afa2bb9923aab89be93556c6c631aff049b7fdbbb2007d40427403315080667",
+}, {
+  // Territorial Governments update.
+  archive: "af522ffe63e409b384e48c4b77d8785222087eafefd0bd5e503837eea0a3dd1d",
+  worker: "83034c8b732bbced620f7e28151063221ebf6004349e90018121041b9636a74b",
+  renderer: "f3e873fecca56166cde1e66f48aca11690cf5609c43201547a0e367a2d4c01de",
+  executable: "ffb01f1f13367111ce1f9f641d314a10a7b6296b651f0e17e85cac9fc443bcd7",
+}, {
+  // Campaign Rules update.
+  archive: "651d6596fa77909a0932c5dba0f75a64a2e79804d7ee8dbc6a65154e99bc0ca0",
+  worker: "804e1b063436751c2024070fe142371f28b9bc6314c598430828835463bc9047",
+  renderer: "428293592321e1d3f39c7adfe9580878bba83567e48db677377bf26863ce630d",
+  executable: "20ce6ee99abee9297703fac7e906f030ca9985904731f3803da95a9b3e2b3fcd",
+}, {
+  // Regional Map Layout update.
+  archive: "9d160ffc694ea90b89a77b0716de1cb1b5e5c3918b3367a4120db69addd6071a",
+  worker: "804e1b063436751c2024070fe142371f28b9bc6314c598430828835463bc9047",
+  renderer: "2242ae52a3bdc2ed80c22aed5771d77855bd5e54e8a4f99f193565cc661d3853",
+  executable: "44e4cfa836b4a9f0691efd68ff0c9a4891e5ebe307fac444500d408fd4ab043a",
 }];
 
 function steamGamePath() {

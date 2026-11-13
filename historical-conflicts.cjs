@@ -5,7 +5,10 @@ const { join } = require("node:path");
 const { applyHistoricalCutoff } = require("./historical-cutoff.cjs");
 const victoryDefinitions = require("./historical-victories.cjs");
 const { readHistoricalFactionReview } = require("./historical-faction-review.cjs");
+const { readIdentities } = require("./historical-identities.cjs");
 const regionalReview = require("./historical-faction-review.json");
+const opening = require("./historical-opening-governments.cjs");
+const asiaContested = require("./historical-contested-opening.json");
 
 const asOf = "2026-01-01";
 const dataFiles = ["historical-pilots.json", "historical-world.json"];
@@ -116,6 +119,51 @@ function readCatalog() {
     }
   }
   result.factionReview = readHistoricalFactionReview(result, regionalReview);
+  for (const [id, identity] of Object.entries(readIdentities())) {
+    const actor = result.actors[id] || result.legacyActors[id];
+    if (!actor) throw new Error("Unknown historical identity: " + id);
+    actor.identity = identity;
+  }
+  const claimedOpeningRegions = new Set();
+  for (const [id, government] of Object.entries(opening.governments)) {
+    const front = result.conflicts.find(row => row.id === id);
+    const sides = front?.sides;
+    const party = sides?.findIndex(side => side.includes(government.actorId));
+    const actor = result.actors[government.actorId];
+    if (!(party >= 0) || !sides[1 - party].includes(government.parentActorId) || !actor ||
+        !front.countryKeys.includes(government.parentKey) || actor.countryKey && actor.countryKey !== government.parentKey ||
+        !government.provinceKeys.length || !government.sources.length) throw new Error("Invalid opening government " + id);
+    for (const key of government.provinceKeys) {
+      if (claimedOpeningRegions.has(key)) throw new Error("Conflicting opening province " + key);
+      claimedOpeningRegions.add(key);
+    }
+    front.openingGovernment = government;
+    actor.countryKey ??= government.parentKey;
+    actor.mapColor = government.color;
+    actor.wartimeMapName = government.mapName || actor.shortName || actor.name;
+    const regions = new Map((front.regions || []).map(region => [region.key, region]));
+    for (const key of government.provinceKeys) {
+      regions.set(key, { ...regions.get(key), key, controller: government.actorId, administrator: government.actorId,
+        contested: false, note: "Documented wartime administration at the January 2026 opening." });
+    }
+    front.regions = [...regions.values()];
+    front.sources = [...new Set([...front.sources, ...government.sources])];
+  }
+  for (const [id, contested] of Object.entries({ ...opening.contested, ...asiaContested })) {
+    const front = result.conflicts.find(row => row.id === id);
+    if (!front) throw new Error("Unknown contested front " + id);
+    const regions = new Map((front.regions || []).map(region => [region.key, region]));
+    for (const { key, name, dominantActorId, secondaryActorId, dominance, color, source, note } of contested) {
+      if (claimedOpeningRegions.has(key) || ![dominantActorId, secondaryActorId].every(actor => !actor || result.actors[actor])) {
+        throw new Error("Invalid contested authority " + id + " / " + key);
+      }
+      regions.set(key, { ...regions.get(key), key, ...(name ? { name } : {}), contested: true,
+        ...(dominantActorId ? { controller: dominantActorId, administrator: dominantActorId } : {}),
+        dominantActorId, secondaryActorId, dominance, color, note });
+      if (source && !front.sources.includes(source)) front.sources = [...front.sources, source];
+    }
+    front.regions = [...regions.values()];
+  }
   return result;
 }
 
@@ -128,9 +176,14 @@ function patchHistoricalConflictsWorker(source, replaceOnce) {
       "registerPartyCongressSize();\nconst gpmHistoricalCatalog = " + JSON.stringify(catalog) + ";\n" +
       worker + "\nconst gpmUprisingOfficialNames"],
     ["this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)",
-      "!o&&await gpmHistoricalInitialize(b,this.commitTransportBoundary),this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)"],
+      "(o?(gpmSudanRestoreIdentity(b),gpmHistoricalRestoreOpeningCapitals(b)):await gpmHistoricalInitialize(b,this.commitTransportBoundary)),this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)"],
+    ['function ol(e){return hae.byCountry&&hae.byCountry[e]||"generic"}',
+      'function ol(e){return hae.byCountry&&hae.byCountry[gpmHistoricalCultureCountry(e)]||"generic"}'],
+    ['role:e.role||null,_station:e._station||null}:null}function M7o',
+      'role:e.role||null,_station:e._station||null,...e.gpmHistoricalPerson?{gpmHistoricalPerson:e.gpmHistoricalPerson}:{}}:null}function M7o'],
     ['(a==="gpm.uprising"?',
-      '(a==="gpm.historicalConflicts"?gpmHistoricalView(r,t.params||{}):a==="gpm.uprising"?'],
+      '(a==="gpm.historicalMap"?gpmHistoricalMapView(r):a==="gpm.historicalConflicts"?gpmHistoricalView(r,t.params||{}):a==="gpm.uprising"?'],
+    ['gpmUprisingFlags:gpmUprising.flags(e)', 'gpmUprisingFlags:gpmUprising.flags(e),gpmHistoricalFlags:gpmHistoricalFlags(e)'],
     ["function*oxo(e,t){gpmUprising.settle(e);",
       "function*oxo(e,t){gpmHistoricalAdvance(e);gpmUprising.settle(e);"],
     ['e.domesticSectorAvailability[Wn[t]]:1,0,1),R=n?',

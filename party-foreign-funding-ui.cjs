@@ -39,6 +39,7 @@ function gpmForeignFundingReason(reason) {
     cooldown: "Your party is still on cooldown.",
     donor: "The donor party is no longer available.",
     donor_funds: "The donor can no longer afford the grant.",
+    disabled: "Foreign party funding is off in this campaign.",
     expired: "That offer or response has expired.",
     nothing_to_return: "There are no grant funds available to return.",
     party: "Your current party cannot use foreign funding.",
@@ -109,7 +110,7 @@ function gpmForeignFundingRequestFields(state, ui) {
     ${b(Sa({ id: donor.partyId, countryKey: donor.countryKey, nameDesc: donor.nameDesc }))}</option>`).join("");
   const donor = state.donors?.find(entry => entry.partyId === state.donorId);
   const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 0 });
-  const amounts = [.04, .10, .20].map(amount =>
+  const amounts = (state.data.amountOptions || [.04, .10, .20]).map(amount =>
     `<option value="${amount}"${state.amountM === amount ? " selected" : ""}>${b(gpmForeignFundingMoney(amount))}</option>`).join("");
   const visibility = state.visibility === "private" ? " selected" : "";
   const detail = donor ? gpmForeignFundingQuoteDetail(donor, state, ui, percent) : "";
@@ -160,6 +161,7 @@ function gpmForeignFundingPanel(state, ui) {
         <small>${b(money(grant.unspentM))} unspent · Exposure period ends ${b(ui.gameDate(grant.closeDay))}.</small>`;
   }
   const receipt = gpmForeignFundingReceipt(data.last, ui);
+  if (data.enabled === false) return `${receipt}<p>Foreign party funding is off in this campaign.</p>`;
   if (data.day < data.nextRequestDay) {
     return `${receipt}<p>Next approach available ${b(ui.gameDate(data.nextRequestDay))}.</p>`;
   }
@@ -251,13 +253,15 @@ function gpmBindForeignFunding(profile, view, ui) {
   if (!panel || !data) return;
   const session = ui._mpSession;
   const country = view.player.key;
+  const amounts = data.amountOptions || [.04, .10, .20];
   let state = panel._gpmForeignFundingUi;
   if (!state || state.session !== session || state.data.partyId !== data.partyId || state.country !== country) {
-    state = { session, country, data, countries: null, countryKey: "", donorId: "", amountM: .10,
+    state = { session, country, data, countries: null, countryKey: "", donorId: "", amountM: amounts[Math.floor(amounts.length / 2)],
       visibility: "declared", donors: null, query: 0, loading: false, busy: false, status: "" };
     panel._gpmForeignFundingUi = state;
   } else if (!state.busy) {
     state.data = data;
+    if (!amounts.includes(state.amountM)) state.amountM = amounts[Math.floor(amounts.length / 2)];
   }
   panel.onclick = event => {
     const action = event.target.closest("[data-gpm-funding-action]")?.dataset.gpmFundingAction;
@@ -281,7 +285,7 @@ function gpmBindForeignFunding(profile, view, ui) {
     }
     gpmPaintForeignFunding(panel, state, ui);
   };
-  if (!state.countries && !state.loading && !state.status && !data.pending && !data.offer && !data.grant && data.day >= data.nextRequestDay) {
+  if (data.enabled !== false && !state.countries && !state.loading && !state.status && !data.pending && !data.offer && !data.grant && data.day >= data.nextRequestDay) {
     void gpmLoadForeignFunding(panel, state, ui);
   } else {
     gpmPaintForeignFunding(panel, state, ui);

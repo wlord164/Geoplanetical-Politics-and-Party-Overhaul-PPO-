@@ -42,6 +42,8 @@ const style = [
   ".gpm-uprising-readiness li .gpm-uprising-ready { color: #9bd6ad; }",
   ".gpm-uprising-actions { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }",
   ".gpm-uprising [data-gpm-uprising-action='declare'] { border-color: var(--mark-late, #edc583); }",
+  ".gpm-uprising-flag { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }",
+  ".gpm-uprising-flag img { max-width: 3.6rem; max-height: 2.4rem; object-fit: contain; }",
 ].join("\n");
 
 function gpmRenderUprising() {
@@ -56,6 +58,7 @@ function gpmUprisingReason(reason) {
     scope: "Uprisings require a sovereign country with its own government and legislature.",
     constitution: "This country cannot adopt the proposed constitution.",
     name: "Select one of the available breakaway names.",
+    flag: "Choose a supported flag image.",
     case_exists: "An uprising has already taken place in this campaign.",
     founder_control: "Switch to the legal founding party to review an uprising.",
     unsupported_party_roles: "Your party must hold no government offices or assembly seats.",
@@ -418,6 +421,11 @@ function gpmUprisingPanel(state, ui) {
   const nameField = !data.restoresOriginalName && !state.confirm && data.names?.length > 1
     ? '<select aria-label="Breakaway name" data-gpm-uprising-name data-gpm-uprising-field="name">' + options + "</select>"
     : b(name);
+  const flagField = '<div class="gpm-uprising-flag">' + (state.flag
+    ? '<img src="' + b(state.flag.src) + '" alt="Selected breakaway flag">'
+      + (state.confirm ? "Selected flag" : button("removeFlag", "Use parent flag"))
+    : "Parent country’s flag") +
+    (state.confirm ? "" : '<label>Choose flag image <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-gpm-uprising-flag></label>') + "</div>";
   const victorySeats = data.singleParty ? " and holds every seat in its single-party assembly."
     : " under the new constitution. The reunited assembly keeps its sitting members until an election.";
   const nameOutcome = data.restoresOriginalName ? "Victory restores <strong>" + b(data.victoryName) + "</strong>."
@@ -429,6 +437,7 @@ function gpmUprisingPanel(state, ui) {
   return readiness + preparations + "<p><strong>" + heading + "</strong></p>"
     + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + b(party)
     + "</dd><dt>" + (data.restoresOriginalName ? "Wartime name" : "Breakaway") + "</dt><dd>" + nameField
+    + "</dd><dt>Breakaway flag</dt><dd>" + flagField
     + "</dd><dt>Government</dt><dd>" + b(data.government)
     + (data.ideologyProgram ? "</dd><dt>Founding program</dt><dd>" + b(data.ideologyProgram) : "")
     + "</dd><dt>Starting region</dt><dd>" + b(region)
@@ -545,7 +554,7 @@ function gpmBindUprising(profile, view, ui) {
     state.paint();
     let result;
     try {
-      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name }]);
+      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag }]);
       if (result?.ok) {
         if (ze === session) {
           await gpmSyncUprisingControl(session);
@@ -621,7 +630,7 @@ function gpmBindUprising(profile, view, ui) {
       if (isCurrent()) await load();
     }
   };
-  content.onchange = event => {
+  content.onchange = async event => {
     if (event.target.matches("[data-gpm-uprising-name]")) state.selectedName = event.target.value;
     if (event.target.matches("[data-gpm-uprising-map-layer]")) {
       state.mapLayer = event.target.value;
@@ -640,6 +649,19 @@ function gpmBindUprising(profile, view, ui) {
       state.selectedDonor = event.target.value;
       state.paint();
     }
+    if (!event.target.matches("[data-gpm-uprising-flag]") || state.busy || state.confirm || !isCurrent()) return;
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const request = state.flagRequest = {};
+    state.status = "Reading flag image…";
+    state.paint();
+    let image;
+    try { image = await Z$(file); } catch {}
+    if (!isCurrent() || request !== state.flagRequest) return;
+    state.flagRequest = null;
+    if (image) state.flag = { src: image.src, ratio: image.ratio };
+    state.status = image ? "" : "That image could not be read as a flag.";
+    state.paint();
   };
   content.onclick = event => {
     const region = event.target.closest("[data-gpm-uprising-region], [data-gpm-uprising-region-row]");
@@ -658,7 +680,13 @@ function gpmBindUprising(profile, view, ui) {
     } else if (action === "refresh") {
       state.status = "";
       void load();
+    } else if (action === "removeFlag") {
+      state.flagRequest = null;
+      state.flag = null;
+      state.status = "";
+      state.paint();
     } else if (action === "review" || action === "cancel") {
+      if (state.flagRequest) return;
       state.confirm = action === "review";
       state.status = "";
       state.paint();
@@ -699,6 +727,14 @@ function patchUprisingRenderer(source) {
   replaceOnce(bind, bind + '\n    if (tab.id === "gpm-tab-uprising") gpmBindUprising(profile, view, ui);');
   const styleMount = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;";
   replaceOnce(styleMount, styleMount.replace(";", " + gpmUprisingStyle;"));
+  const flagLookup = "function m4(e){return n8(),e=Vc(e),e?NA.get(e)||nB.get(e)||B9(e):null}";
+  replaceOnce(flagLookup, `function m4(e){
+    const data=n8(),key=Vc(e);
+    if(!key)return null;
+    const choice=data?.gpmUprisingFlags?.[key],parent=choice?.parentFlag;
+    return NA.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||nB.get(key)||B9(key)||
+      (parent&&(NA.get(parent)||nB.get(parent)||B9(parent)))||null;
+  }`);
   const initialize = "\nmountPartyButtons();\n";
   replaceOnce(initialize, "\nconst gpmUprisingStyle = " + JSON.stringify(style) + ";\n"
     + rendererFunctions.join("\n") + initialize);

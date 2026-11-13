@@ -48,13 +48,25 @@ function gpmHistoricalFactionOutcome(definition, actorId) {
   return gpmHistoricalCatalog.factionReview.fronts[definition.id]?.[actorId] || null;
 }
 
-function gpmHistoricalFinishVictory(sim, definition, row, side) {
+function gpmHistoricalWinningActor(definition, side) {
+  const actors = definition.sides[side] || [];
+  return actors.find(id => gpmHistoricalVictoryPlan(definition, id)) ||
+    actors.find(id => gpmHistoricalFactionOutcome(definition, id)?.scope === "agreement") || actors[0];
+}
+
+function gpmHistoricalNeedsDecisiveOutcome(plan) {
+  return !!plan && (plan.scope === "independence" ||
+    (plan.scope === "national" && !plan.incumbent) ||
+    (plan.scope === "autonomy" && !plan.regionalOnly));
+}
+
+function gpmHistoricalFinishVictory(sim, definition, row, side, concessionBy = null) {
   if (!row || row.nativeId || !["active", "ceasefire"].includes(row.status) || !definition.sides[side]) return false;
   const winners = definition.sides[side];
-  const actorId = winners.find(id => gpmHistoricalVictoryPlan(definition, id)) ||
-    winners.find(id => gpmHistoricalFactionOutcome(definition, id)?.scope === "agreement") || winners[0];
+  const actorId = gpmHistoricalWinningActor(definition, side);
   const actor = gpmHistoricalActorById(actorId);
   const plan = gpmHistoricalVictoryPlan(definition, actorId);
+  if (gpmHistoricalNeedsDecisiveOutcome(plan) && !concessionBy) return false;
   const assessment = gpmHistoricalFactionOutcome(definition, actorId);
   let effect = null;
   if (plan?.scope === "national") {
@@ -75,18 +87,20 @@ function gpmHistoricalFinishVictory(sim, definition, row, side) {
   row.status = "settled";
   row.winnerActor = actorId;
   row.settledDay = sim.day;
-  row.settlement = "decisive-victory";
+  row.settlement = concessionBy ? "negotiated-concession" : "decisive-victory";
   row.victoryOutcome = {
     ...assessment,
     ...(effect || { scope: assessment?.scope || "military", native: false, regionKeys: [] }),
     actorId,
     coWinners: winners.filter(id => id !== actorId),
+    ...(concessionBy ? { negotiated: true, concessionBy } : {}),
   };
   if (!effect && assessment?.policies?.length) row.victoryOutcome.regionalLaws = assessment.policies;
   row.pending = null;
   row.ceasefireUntil = null;
   row.victoryBlocked = null;
-  row.history.push({ day: sim.day, term: "decisive-victory", outcome: actor.name });
+  row.history.push({ day: sim.day, term: row.settlement, outcome: actor.name,
+    ...(concessionBy ? { offeredBy: concessionBy } : {}) });
   return true;
 }
 
@@ -99,7 +113,10 @@ function gpmHistoricalUpdateFront(sim, definition, row, strength) {
   const movement = Math.round(relative * 7) + noise;
   row.advantage = Math.max(-100, Math.min(100, (row.advantage || 0) + movement));
   if (row.weeksActive < 12 || Math.abs(row.advantage) < gpmHistoricalVictoryThreshold) return;
-  return row.advantage > 0 ? 1 : 0;
+  const side = row.advantage > 0 ? 1 : 0;
+  const winner = gpmHistoricalWinningActor(definition, side);
+  if (!gpmHistoricalNeedsDecisiveOutcome(gpmHistoricalVictoryPlan(definition, winner))) return side;
+  row.victoryBlocked = "Changing sovereignty or the national government requires a decisive native war or an explicit concession.";
 }
 
 function gpmHistoricalVictoryTerms(sim, definition, row) {
@@ -107,7 +124,9 @@ function gpmHistoricalVictoryTerms(sim, definition, row) {
   if (playerSide < 0 || row.nativeId || !["active", "ceasefire"].includes(row.status)) return [];
   const advantage = (row.advantage || 0) * (playerSide === 1 ? 1 : -1);
   const options = [];
-  if (row.weeksActive >= 8 && advantage >= gpmHistoricalConcessionThreshold) {
+  const ownActor = gpmHistoricalWinningActor(definition, playerSide);
+  if (row.weeksActive >= 8 && advantage >= gpmHistoricalConcessionThreshold &&
+      !gpmHistoricalNeedsDecisiveOutcome(gpmHistoricalVictoryPlan(definition, ownActor))) {
     options.push({ id: "claim-victory", label: "Demand capitulation" });
   }
   const otherSide = definition.sides[1 - playerSide];
@@ -147,7 +166,8 @@ function gpmHistoricalImplementTerms(sim, definition, row, actorId) {
 function gpmHistoricalNegotiateVictory(sim, definition, row, term) {
   const side = gpmHistoricalFrontSide(sim, definition);
   const winner = term === "concede-victory" ? 1 - side : side;
-  const applied = gpmHistoricalFinishVictory(sim, definition, row, winner);
+  const applied = gpmHistoricalFinishVictory(sim, definition, row, winner,
+    term === "concede-victory" ? sim.playerKey : null);
   return applied ? { ok: true, message: "Settlement implemented.", settlement: row.victoryOutcome } :
     { ok: false, reason: row.victoryBlocked || "historical_term_unavailable" };
 }

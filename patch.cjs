@@ -1,6 +1,7 @@
 const { patchUprisingWorker } = require("./party-uprising.cjs");
 const { patchUprisingRenderer } = require("./party-uprising-ui.cjs");
 const { patchHistoricalConflictsRenderer } = require("./historical-conflicts-ui.cjs");
+const { patchHistoricalConflictMapRenderer } = require("./historical-conflict-map.cjs");
 const { patchSudanReunificationWorker, patchSudanReunificationRenderer } = require("./historical-sudan-reunification.cjs");
 "use strict";
 
@@ -19,12 +20,14 @@ const { style: regionalMapStyle, rendererFunctions: regionalRenderer } = require
 const { workerFunctions: fundingWorker } = require("./party-foreign-funding.cjs");
 const { style: fundingStyle, rendererFunctions: fundingRenderer } = require("./party-foreign-funding-ui.cjs");
 const { style: lawShortlistStyle, rendererFunctions: lawShortlistRenderer } = require("./party-law-shortlist-ui.cjs");
+const campaignRules = require("./party-campaign-rules.cjs");
+const { setupStyle, setupFunctions } = require("./party-campaign-rules-ui.cjs");
+const { workerFunctions: campaignFounding } = require("./party-campaign-founding.cjs");
 
 const version = "1.1.3";
 const rendererHash = "2679c9f8f13e9628b5908f0e11ea4d5627d0612f261f2312690eae21006095ee";
 const workerHash = "c38f7da0de30b5df6818e6884ff1b2763154351016b10163b3369533564a6fda";
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
-const startingSupport = .02;
 const axes = [
   { id: "econ", title: "Economy", low: "Statist", high: "Market" },
   { id: "social", title: "Social policy", low: "Progressive", high: "Conservative" },
@@ -176,7 +179,7 @@ function partyDialog({ create, parties = [], selectedPartyId, submit }) {
           <input id="gpm-axis-${axis.id}" name="${axis.id}" type="range" min="-100" max="100" step="5" value="0">
           <div><span>${axis.low}</span><span>${axis.high}</span></div>
         </div>`).join("")}
-      </details><small>Up to ${gpmStartingSupport * 100}% starting support. Zero seats or government offices.</small>` : ""}
+      </details><small>${gpmCampaignFoundingSummary()}</small>` : ""}
     <p role="alert" hidden></p>
     <div><button type="button" class="k" data-cancel>Cancel</button>
     <button type="submit" class="k primary">${create ? "Create & Start" : "Save"}</button></div>
@@ -277,6 +280,7 @@ function mountPartyButtons() {
   `;
   style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;
   document.head.append(style);
+  gpmMountCampaignRules();
   const choice = document.getElementById("setup-role-note");
   const create = document.createElement("button");
   create.type = "button";
@@ -354,7 +358,9 @@ function createStartingParty(sim, draft) {
   const incumbentSupport = politics.parties.map(party => Math.max(0, party.support || 0));
   const totalSupport = incumbentSupport.reduce((total, support) => total + support, 0);
   if (!Number.isFinite(totalSupport) || totalSupport <= 0) throw new Error("This country has no valid starting party support");
-  const seedSupport = Math.min(totalSupport * gpmStartingSupport, Math.max(...incumbentSupport) / 4);
+  const rules = gpmCampaignRulesFor(sim);
+  const supportCap = gpmFoundingSupportCap(rules);
+  const seedSupport = Math.min(totalSupport * supportCap, Math.max(...incumbentSupport) / 4);
   const previous = Lio(politics.parties);
   const change = R1a(politics, ideology, seedSupport, (party, parties) => {
     Vda(party, ol(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
@@ -367,11 +373,13 @@ function createStartingParty(sim, draft) {
   const party = fS(country, change.id);
   if (!party) throw new Error("The new party was not registered");
   const hasSeats = (politics.chambers || []).some(chamber => (chamber.composition?.[party.id] || 0) > 0);
-  if (!(party.support > 0 && party.support <= gpmStartingSupport + 1e-9) || hasSeats ||
+  if (!(party.support > 0 && party.support <= supportCap + 1e-9) || hasSeats ||
       !politics.parties.some(incumbent => incumbent.id !== party.id && incumbent.support > party.support)) {
     throw new Error("The new party did not qualify for a fair starting position");
   }
   if (sim.people) w7a(sim, country, sim._simYear || 2026);
+  const founding = gpmApplyCampaignFounding(sim, country, party, rules, rules);
+  sim.gpmCampaignFounding = { countryKey: country.key, partyId: party.id, ...founding };
   const result = sim.switchPlayerControl({ countryKey: country.key, partyId: change.id });
   if (!result?.ok) throw new Error(`Could not lead the new party (${result?.reason || "unknown"})`);
   const control = Ho(sim);
@@ -517,15 +525,15 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '<span>${o("pol.family."+ex(i))}</span>', '${partyIdeologyBadge(i)}');
   js = replaceOnce(js, '<div class="pa-axis" data-tip="${b(k)}"><div><span>${o(`political.ideology.${v}.neg`)}</span>', '<div class="pa-axis" data-tip="${b(k)}"><div><span>${o(`political.ideology.${v}.neg`)}</span><b class="gpm-axis-score">${partyAxisScore(i.ideology?.[v])}</b>');
   js = replaceOnce(js, 'f=p?"pol.family."+ex(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?"myparty.hero.titleParty":f,g].filter(_=>st(_)).map(_=>o(_))', 'f=p?partyIdeologyLabel(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?o("myparty.hero.titleParty"):f,st(g)?o(g):""].filter(Boolean)');
-  js = replaceOnce(js, 'Xe("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressVoting.join("\n")}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\nXe("btn-start").addEventListener("click",()=>`);
+  js = replaceOnce(js, 'Xe("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmCampaignRulesUI = ${JSON.stringify({ presets: campaignRules.presets, sections: campaignRules.sections })};\nconst gpmCampaignRulesStyle = ${JSON.stringify(setupStyle)};\n${setupFunctions.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressVoting.join("\n")}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\nXe("btn-start").addEventListener("click",()=>`);
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
   js = replaceOnce(js, 'this._mpWire(e,t),sj(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,this),bindPartyCongress(e,t,p,this),bindPartyOrganizing(e,t,this),sj(this,e,t)');
   js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size","data-gpm-congress-bargain","data-gpm-congress-priority","data-gpm-congress-vote","data-gpm-congress-priority-vote","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
   js = replaceOnce(js, refresh, `${refresh},bindPartyCongress(t,e,c,this),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,this),bindPartyOrganizing(t,e,this)`);
-  js = replaceOnce(js, 'MFe(Kk,null,"new",!1,e,void 0,a)', 'MFe(Kk,null,"new",!1,gpmNewParty?{...e,partyModCreate:gpmNewParty}:e,void 0,a)');
-  js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
+  js = replaceOnce(js, 'MFe(Kk,null,"new",!1,e,void 0,a)', 'MFe(Kk,null,"new",!1,{...e,partyModRules:gpmCampaignRulesForStart(),...gpmNewParty?{partyModCreate:gpmNewParty}:{}},void 0,a)');
+  js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,partyModRules:a.partyModRules,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
   js = replaceOnce(js, '_bPolElectorat(e,t){', '_bPolElectorat(e,t){bindElectorateWidth(e);');
   js = replaceOnce(js, 'let w=S.top||[],k=Math.max(0,1-w.reduce((E,L)=>E+L.v,0))', 'let w=S.votes||S.top||[],k=S.votes?0:Math.max(0,1-w.reduce((E,L)=>E+L.v,0))');
   js = replaceOnce(js, 'w.map(E=>{let L=Math.round(E.v*100);', 'w.map(E=>{let L=E.v*100;');
@@ -539,16 +547,20 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '_refreshTabUnsafe(e=null){', '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);');
   js = replaceOnce(js, 'showScreen(e){for(let t of document.querySelectorAll(".screen"))',
     'showScreen(e){if(e!=="game")gpmCloseRegionalMap(this);for(let t of document.querySelectorAll(".screen"))');
-  return Buffer.from(patchSudanReunificationRenderer(patchHistoricalConflictsRenderer(patchUprisingRenderer(js), replaceOnce), replaceOnce));
+  js = patchHistoricalConflictsRenderer(patchUprisingRenderer(js), replaceOnce);
+  js = patchHistoricalConflictMapRenderer(js, replaceOnce);
+  const { patchHistoricalIdentityRenderer } = require("./historical-identities.cjs");
+  js = patchSudanReunificationRenderer(js, replaceOnce);
+  return Buffer.from(patchHistoricalIdentityRenderer(js, replaceOnce));
 }
 
 function patchWorker(bytes) {
   if (sha256(bytes) !== workerHash) throw new Error(`Unsupported Geoplanetical simulation. This mod targets ${version}.`);
   let js = bytes.toString("utf8");
-  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `const gpmStartingSupport = ${startingSupport};\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
+  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(qa.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Ie("advancePartyModDay",()=>advancePartyModDay(e)),t.has(qa.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:', 'organization:partyOrganizationForMerger(t),campaigns:');
-  js = replaceOnce(js, 'function SKa(e,t){return n1a(e,t),QAa(e,t),e._reviewPartyParliamentAi(t)}', 'function SKa(e,t){return n1a(e,t),QAa(e,t),advancePartyModAI(e,t),e._reviewPartyParliamentAi(t)}');
+  js = replaceOnce(js, 'function SKa(e,t){return n1a(e,t),QAa(e,t),e._reviewPartyParliamentAi(t)}', 'function SKa(e,t){return gpmBindCampaignPolity(e,t.pol),n1a(e,t),QAa(e,t),advancePartyModAI(e,t),e._reviewPartyParliamentAi(t)}');
   // Preserve existing balances and exact refunds in base currency units.
   js = replaceOnce(js, 'a.treasuryM=pL(aK(a.treasuryM||0,0,1e4))', 'a.treasuryM=pL(aK(a.treasuryM||0,0,1e4),6)');
   js = replaceOnce(js, '_u=1e3,r2e=1e4,PMa=10', '_u=1e6,r2e=1e4,PMa=10');
@@ -584,6 +596,7 @@ function patchWorker(bytes) {
     'return{id:p.id,key:p.key,name:p.name||"",pop:p.pop||0,shares:b1a');
   js = replaceOnce(js, 'if(m>0)for(let g in p.shares)p.shares[g]/=m;let f=null,y=-1;',
     'if(m>0)for(let g in p.shares)p.shares[g]/=m;if(gpmApplyRegions)p.shares=partyRegionalShares(e,p.shares,p.key,t.day);let f=null,y=-1;');
+  js = replaceOnce(js, 'function lSa(e,t){let a=t.pol;if(!a)return;', 'function lSa(e,t){let a=t.pol;if(!a)return;gpmBindCampaignPolity(e,a);');
   // Regional seat rules use the adjusted local shares. National rules use their population-weighted change.
   js = replaceOnce(js, 'if(s.transfer)return gGr(s,t,a,{rulingId:r,rig:Wwe(e,o),polity:n,electoralMap:i});let l={},c=0;',
     'if(s.transfer)return gGr(s,t,a,{rulingId:r,rig:Wwe(e,o),polity:n,electoralMap:i});if(n&&["direct","equal-per-state","delegated"].includes(e.selectMode||"direct"))t=partyRegionalNationalShares(n,i,t);let l={},c=0;');
@@ -599,7 +612,13 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'n.pol.parties=Adr(t.pol);',
     'n.pol.parties=Adr(t.pol).map(({gpmForeignFunding,...party})=>party);');
   const { patchHistoricalConflictsWorker } = require("./historical-conflicts.cjs");
-  return Buffer.from(patchSudanReunificationWorker(patchHistoricalConflictsWorker(patchUprisingWorker(js, replaceOnce), replaceOnce), replaceOnce));
+  const { patchHistoricalNameWorker } = require("./historical-identities.cjs");
+  let historical = replaceOnce(patchHistoricalConflictsWorker(patchUprisingWorker(js, replaceOnce), replaceOnce),
+    'this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)',
+    'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
+  historical = replaceOnce(historical, '(a==="gpm.historicalMap"?',
+    '(a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:a==="gpm.historicalMap"?');
+  return Buffer.from(patchHistoricalNameWorker(patchSudanReunificationWorker(historical, replaceOnce), replaceOnce));
 }
 
 function advancePartyModDay(sim) {

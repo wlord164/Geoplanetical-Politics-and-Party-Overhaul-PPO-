@@ -20,7 +20,8 @@ function partyForeignFundingTransfer(source, target, amountM) {
 }
 
 function partyForeignFundingParticipant(party) {
-  return Boolean(party?.organization && party.legal !== false && partyCongressIdeology(party.ideology));
+  return Boolean(party?.organization && party.legal !== false && !party.gpmUprisingShell && !party.gpmUprisingExcluded &&
+    partyCongressIdeology(party.ideology));
 }
 
 function partyForeignFundingDonor(sim, country, countryKey, partyId) {
@@ -46,7 +47,11 @@ function partyForeignFundingLeftAffinity(party) {
   return party.family === "authleft" ? Math.max(0, Math.min(1, (gov - .30) / .20)) : 0;
 }
 
-function partyForeignFundingQuote(country, party, donor) {
+function partyForeignFundingAmounts(rules) {
+  return [.04, .10, .20].map(amount => Math.round(amount * rules.grantSize * 1e4) / 1e6);
+}
+
+function partyForeignFundingQuote(country, party, donor, rules = null) {
   const alignment = Object.fromEntries(gpmAxes.map(({ id }) => [id, donor.ideology[id] - party.ideology[id]]));
   const match = Math.exp(-.28 * om(party.ideology, donor.ideology) ** 2);
   const closeMatch = .12 * Math.max(0, Math.min(1, (match - .80) / .15));
@@ -54,7 +59,8 @@ function partyForeignFundingQuote(country, party, donor) {
   const leftSolidarity = .23 * coreMatch * partyForeignFundingLeftAffinity(party) * partyForeignFundingLeftAffinity(donor);
   const support = Math.max(0, party.support || 0);
   const seats = partyForeignFundingSeatShare(country, party);
-  const limitM = Math.min(dP(.20), Math.floor(dP(donor.organization.treasuryM) * .12)) / _u;
+  const maximum = rules ? partyForeignFundingAmounts(rules).at(-1) : .20;
+  const limitM = Math.min(dP(maximum), Math.floor(dP(donor.organization.treasuryM) * .12)) / _u;
   const factors = {
     baseline: -.08,
     ideology: .68 * match,
@@ -79,6 +85,8 @@ function partyForeignFundingDirectory(sim, params) {
   const country = sim.player;
   const party = country && YL(country, Uo(country));
   if (!partyForeignFundingParticipant(party)) return null;
+  const rules = gpmCampaignRulesFor(sim);
+  if (!rules.foreignFunding) return { countries: [], donors: [] };
   if (params.countryKey == null) {
     const countries = [];
     for (const foreign of sim.countries.values()) {
@@ -95,7 +103,7 @@ function partyForeignFundingDirectory(sim, params) {
   if (!foreign || foreign.key === country.key) return { day: sim.day || 0, donors: [] };
   const donors = (foreign.pol?.parties || []).filter(partyForeignFundingParticipant).map(donor => ({
     ...partyForeignFundingDonorLabel(sim, foreign, donor),
-    ...partyForeignFundingQuote(country, party, donor),
+    ...partyForeignFundingQuote(country, party, donor, rules),
   }));
   donors.sort((a, b) => b.chance - a.chance || a.partyId.localeCompare(b.partyId));
   return { day: sim.day || 0, donors };
@@ -112,7 +120,9 @@ function partyForeignFundingState(party) {
 
 function partyForeignFundingRequest(sim, country, party, input) {
   const { donorCountryKey, donorPartyId, amountM, visibility } = input;
-  if (![.04, .10, .20].includes(amountM) || !["private", "declared"].includes(visibility)) {
+  const rules = gpmCampaignRulesFor(sim);
+  if (!rules.foreignFunding) return { ok: false, reason: "disabled" };
+  if (!partyForeignFundingAmounts(rules).includes(amountM) || !["private", "declared"].includes(visibility)) {
     return { ok: false, reason: "terms" };
   }
   const donor = partyForeignFundingDonor(sim, country, donorCountryKey, donorPartyId);
@@ -121,11 +131,11 @@ function partyForeignFundingRequest(sim, country, party, input) {
   if (state.pending || state.offer || state.grant) return { ok: false, reason: "active" };
   const day = sim.day || 0;
   if (day < state.nextRequestDay) return { ok: false, reason: "cooldown" };
-  const quote = partyForeignFundingQuote(country, party, donor);
+  const quote = partyForeignFundingQuote(country, party, donor, rules);
   if (!quote.chance) return { ok: false, reason: "donor_funds" };
   const requestId = JSON.stringify([day, country.key, party.id, donorCountryKey, donorPartyId]);
   const responseDay = day + 5 + Math.floor(5 * partyForeignFundingRoll(sim, requestId, "delay"));
-  state.nextRequestDay = day + 120;
+  state.nextRequestDay = day + rules.fundingCooldown;
   state.pending = {
     requestId, responseDay, amountM, visibility,
     roll: partyForeignFundingRoll(sim, requestId, "offer"),
@@ -174,12 +184,13 @@ function advancePartyForeignFunding(sim, country, party) {
   const state = party.gpmForeignFunding;
   if (!state || !party.organization) return;
   const day = sim.day || 0;
+  const rules = gpmCampaignRulesFor(sim);
   const eligible = partyForeignFundingParticipant(party);
   if (state.pending && (day >= state.pending.responseDay || !eligible)) {
     const pending = state.pending;
     state.pending = null;
     const donor = eligible && partyForeignFundingDonor(sim, country, pending.donor.countryKey, pending.donor.partyId);
-    const quote = donor ? partyForeignFundingQuote(country, party, donor) : null;
+    const quote = donor ? partyForeignFundingQuote(country, party, donor, rules) : null;
     if (!quote || !quote.chance || pending.roll >= quote.chance) {
       partyForeignFundingReceipt(state, pending, "refused", day,
         { reason: !donor ? "donor" : !quote.chance ? "donor_funds" : "support" });
@@ -187,7 +198,7 @@ function advancePartyForeignFunding(sim, country, party) {
       const amountM = Math.floor(dP(Math.min(quote.limitM, pending.amountM *
         (pending.roll < quote.chance * .5 ? 1 : .55))) / 1000) * 1000 / _u;
       const risk = pending.visibility === "private"
-        ? Math.min(.48, .14 + .23 * amountM / .20 + .11 * (1 - quote.match)) : 0;
+        ? Math.min(.95, Math.min(.48, .14 + .23 * amountM / .20 + .11 * (1 - quote.match)) * rules.fundingExposure / 100) : 0;
       state.offer = {
         requestId: pending.requestId, donor: pending.donor, amountM, requestedM: pending.amountM,
         visibility: pending.visibility, risk, expiresDay: pending.responseDay + 30,
@@ -230,7 +241,7 @@ function partyForeignFundingAnswer(sim, country, party, input, action) {
     return { ok: true };
   }
   const donor = partyForeignFundingDonor(sim, country, offer.donor.countryKey, offer.donor.partyId);
-  if (!donor || partyForeignFundingQuote(country, party, donor).limitM < offer.amountM) {
+  if (!donor || partyForeignFundingQuote(country, party, donor, gpmCampaignRulesFor(sim)).limitM < offer.amountM) {
     partyForeignFundingReceipt(state, offer, "refused", day, { reason: donor ? "donor_funds" : "donor" });
     state.offer = null;
     return { ok: false, reason: state.last.reason };
@@ -251,6 +262,58 @@ function partyForeignFundingAnswer(sim, country, party, input, action) {
   return { ok: true, amountM: offer.amountM };
 }
 
+function advancePartyForeignFundingAI(sim, country, electionIn) {
+  const rules = gpmCampaignRulesFor(sim);
+  if (!rules.foreignFunding) return;
+  const day = sim.day || 0;
+  const amounts = partyForeignFundingAmounts(rules);
+  const partners = () => {
+    const adjacent = sim.world?.adjacency?.[country.key] || [];
+    const candidates = [...sim.countries.values()];
+    const initial = Math.floor(day / 30) + (country.hash >>> 0);
+    const keys = new Set(adjacent.slice().sort().slice(0, 8));
+    for (let index = 0; index < Math.min(6, candidates.length); index++) {
+      keys.add(candidates[(initial + index) % candidates.length].key);
+    }
+    keys.delete(country.key);
+    return [...keys].map(key => sim.countries.get(key)).filter(Boolean);
+  };
+  let availablePartners;
+  for (const party of country.pol?.parties || []) {
+    if (!partyForeignFundingParticipant(party) || iGr(sim, country, party.id)) continue;
+    const state = party.gpmForeignFunding;
+    if (state?.offer) {
+      partyForeignFundingAnswer(sim, country, party, { requestId: state.offer.requestId },
+        state.offer.amountM >= .015 ? "accept" : "decline");
+      continue;
+    }
+    if (state?.grant?.exposed) {
+      if (state.grant.unspentM >= state.grant.amountM * .25 &&
+          partyForeignFundingAnswer(sim, country, party, { requestId: state.grant.requestId }, "return").ok) continue;
+      partyForeignFundingAnswer(sim, country, party, { requestId: state.grant.requestId }, "keep");
+      continue;
+    }
+    if (state?.pending || state?.grant || day < (state?.nextRequestDay || 0) ||
+        (party.support || 0) > .20 || party.organization.treasuryM > .09 || electionIn <= 30) continue;
+    let best = null;
+    availablePartners ??= partners();
+    for (const foreign of availablePartners) {
+      for (const donor of foreign.pol?.parties || []) {
+        if (!partyForeignFundingParticipant(donor) || iGr(sim, foreign, donor.id)) continue;
+        const quote = partyForeignFundingQuote(country, party, donor, rules);
+        const score = quote.chance * quote.limitM;
+        if (quote.match >= .75 && score > (best?.score || 0)) best = { foreign, donor, quote, score };
+      }
+    }
+    if (!best || best.quote.limitM < .015) continue;
+    const amountM = amounts.find(amount => amount >= best.quote.limitM) ?? amounts.at(-1);
+    partyForeignFundingRequest(sim, country, party, {
+      amountM, donorCountryKey: best.foreign.key, donorPartyId: best.donor.id,
+      visibility: party.organization.credibility < .45 ? "private" : "declared",
+    });
+  }
+}
+
 function registerPartyForeignFunding() {
   for (const action of ["request", "accept", "decline", "return", "keep"]) {
     n5t("gpm.party.funding." + action, {
@@ -269,6 +332,7 @@ function registerPartyForeignFunding() {
 function partyForeignFundingView(sim, country, partyId) {
   const party = YL(country, partyId);
   if (!partyForeignFundingParticipant(party)) return null;
+  const rules = gpmCampaignRulesFor(sim);
   const state = party.gpmForeignFunding;
   const pending = state?.pending;
   const grant = state?.grant;
@@ -285,6 +349,9 @@ function partyForeignFundingView(sim, country, partyId) {
   }
   return {
     partyId,
+    enabled: rules.foreignFunding,
+    amountOptions: partyForeignFundingAmounts(rules),
+    cooldownDays: rules.fundingCooldown,
     day: sim.day || 0,
     nextRequestDay: state?.nextRequestDay || 0,
     pending: pending ? { donor: pending.donor, amountM: pending.amountM, responseDay: pending.responseDay } : null,
@@ -296,9 +363,9 @@ function partyForeignFundingView(sim, country, partyId) {
 
 module.exports = {
   workerFunctions: [partyForeignFundingTreasury, partyForeignFundingTransfer, partyForeignFundingParticipant,
-    partyForeignFundingDonor, partyForeignFundingDonorLabel, partyForeignFundingLeftAffinity, partyForeignFundingQuote,
+    partyForeignFundingDonor, partyForeignFundingDonorLabel, partyForeignFundingLeftAffinity, partyForeignFundingAmounts, partyForeignFundingQuote,
     partyForeignFundingSeatShare,
     partyForeignFundingDirectory, partyForeignFundingRoll, partyForeignFundingState, partyForeignFundingRequest,
     partyForeignFundingReceipt, partyForeignFundingPenalty, partyForeignFundingSettle, advancePartyForeignFunding,
-    partyForeignFundingAnswer, registerPartyForeignFunding, partyForeignFundingView],
+    partyForeignFundingAnswer, advancePartyForeignFundingAI, registerPartyForeignFunding, partyForeignFundingView],
 };

@@ -16,6 +16,9 @@ const style = `
   .gpm-history-sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--gap-2); }
   .gpm-history-side, .gpm-history-region { padding: var(--gap-2); }
   .gpm-history-actor + .gpm-history-actor { border-top: 1px solid var(--line, #545861); padding-top: var(--gap-2); }
+  .gpm-history-actor-heading, .gpm-history-leader { display: flex; align-items: center; gap: var(--gap-2); }
+  .gpm-history-flag { width: 2.6rem; max-height: 1.75rem; object-fit: contain; }
+  .gpm-history-leader img { width: 3.25rem; height: 3.25rem; object-fit: cover; object-position: center 25%; border-radius: var(--radius, 4px); }
   .gpm-history-actor li, .gpm-history-sources li { margin-top: var(--gap-1); }
   .gpm-history-sources { overflow-wrap: anywhere; user-select: text; }
   .gpm-history-sources button { margin-inline-start: var(--gap-1); }
@@ -39,7 +42,8 @@ function gpmHistoricalLabel(value) {
     strategic: "Strategic", operational: "War Theatre", regional: "Regional simulation", native: "Native war", stock: "Base-game war",
     "aid-access": "Humanitarian access agreement", autonomy: "Regional autonomy agreement",
     transition: "Transitional government agreement", "native-settlement": "War settlement",
-    "political-agreement": "Political agreement", "decisive-victory": "Decisive victory", "government-transition": "Government transition", postwar: "Postwar policy",
+    "political-agreement": "Political agreement", "decisive-victory": "Decisive victory", "negotiated-concession": "Negotiated concession",
+    "government-transition": "Government transition", postwar: "Postwar policy",
     historical_term_unavailable: "That proposal is no longer available",
   };
   return Object.hasOwn(labels, value) ? labels[value] : String(value || "Unknown")
@@ -63,6 +67,33 @@ function gpmHistoricalSourceList(sources) {
 }
 
 function gpmHistoricalActor(actor, outcome) {
+  const identity = actor.identity;
+  const flag = identity?.flag;
+  const roles = ["leader", "headOfGovernment"];
+  const documentedRoles = ["leader", "headOfState", "headOfGovernment"];
+  const openingOfficials = documentedRoles.map(role => identity?.[role]).filter(Boolean);
+  const officials = roles.flatMap(role => {
+    const currentIdentity = role === "leader" && identity?.headOfState ? "headOfState" : role;
+    const opening = identity?.[currentIdentity];
+    if (!actor.leadership) return [];
+    const person = actor.leadership[role];
+    if (!person) return [];
+    if (person.gpmHistoricalPerson === `${actor.id}:${currentIdentity}`) {
+      return [{ ...opening, name: zt(person), image: Ts(person, actor.leadership.year) }];
+    }
+    return [{ name: zt(person), role: Bp(person.role, person.g), image: Ts(person, actor.leadership.year) }];
+  });
+  const administrationFlag = identity?.administrationFlag;
+  const historicalOfficials = documentedRoles.flatMap(role => {
+    const person = identity?.[role];
+    const currentRole = role === "headOfState" ? "leader" : role;
+    return person && actor.leadership?.[currentRole]?.gpmHistoricalPerson !== `${actor.id}:${role}`
+      ? [{ ...person, image: person.portrait?.image }] : [];
+  });
+  const renderOfficial = person => `<div class="gpm-history-leader">
+      ${person.image ? `<img src="${b(person.image)}" alt="${b(person.name)}">` : ""}
+      <div><b>${b(person.name)}${person.alias ? ` (${b(person.alias)})` : ""}</b>${person.role ? `<br><small>${b(person.role)}</small>` : ""}</div></div>`;
+  const media = [flag, administrationFlag, identity?.victoryFlag, ...openingOfficials.map(person => person.portrait)].filter(Boolean);
   const ideology = actor.ppoIdeology;
   const related = ideology?.relatedAdministration;
   const fit = { close: "Close fit", partial: "Partial fit", none: "No party preset", unknown: "Insufficient evidence" };
@@ -88,8 +119,18 @@ function gpmHistoricalActor(actor, outcome) {
     return `<li><b>${b(law.name)}</b>${law.status ? ` · ${b(gpmHistoricalLabel(law.status))}` : ""}${law.note ? `<br>${b(law.note)}` : ""}${sources ? `<ul class="gpm-history-sources">${sources}</ul>` : ""}</li>`;
   }).join("");
   return `<article class="gpm-history-actor">
-    <div><b>${b(actor.name || actor.id)}</b>${actor.shortName && actor.shortName !== actor.name ? ` <small>(${b(actor.shortName)})</small>` : ""}
-      ${actor.kind || actor.role ? `<br><small>${b([actor.kind, actor.role].filter(Boolean).map(gpmHistoricalLabel).join(" · "))}</small>` : ""}</div>
+    <div class="gpm-history-actor-heading">${flag ? `<img class="gpm-history-flag" src="${b(flag.image)}" alt="${b(flag.name)}" title="${b(flag.name)}">` : ""}
+      <div><b>${b(actor.name || actor.id)}</b>${actor.shortName && actor.shortName !== actor.name ? ` <small>(${b(actor.shortName)})</small>` : ""}
+        ${actor.kind || actor.role ? `<br><small>${b([actor.kind, actor.role].filter(Boolean).map(gpmHistoricalLabel).join(" · "))}</small>` : ""}</div></div>
+    ${administrationFlag ? `<div class="gpm-history-actor-heading"><img class="gpm-history-flag" src="${b(administrationFlag.image)}" alt="${b(administrationFlag.name)}" title="${b(administrationFlag.name)}"><small>${b(actor.administrationName)}</small></div>` : ""}
+    ${officials.length ? `<small>${actor.leadership ? "Current leadership" : "Opening leadership"}</small>` : ""}
+    ${officials.map(renderOfficial).join("")}
+    ${historicalOfficials.length ? `<small>Opening leadership</small>${historicalOfficials.map(renderOfficial).join("")}` : ""}
+    ${openingOfficials.length || media.length ? `<details><summary>Identity sources and image credits</summary><ul class="gpm-history-sources">
+      ${openingOfficials.map(person => gpmHistoricalSource({ title: person.name, url: person.source })).join("")}
+      ${media.map(item => gpmHistoricalSource({ title: item.credit, url: item.source }) +
+        gpmHistoricalSource({ title: "Image license", url: item.license }) +
+        (item.evidence ? gpmHistoricalSource({ title: "Documented flag use", url: item.evidence }) : "")).join("")}</ul></details>` : ""}
     ${actor.armedWingName ? `<p><b>Armed wing</b> · ${b(actor.armedWingName)}</p>` : ""}
     ${ideology?.historicalLabel ? `<p><b>Historical ideology</b> · ${b(ideology.historicalLabel)}</p>` : ""}
     ${actor.ideology ? `<div><b>Ideology or political program</b><p>${b(actor.ideology)}</p><ul class="gpm-history-sources">${gpmHistoricalSourceList(actor.ideologySources)}</ul></div>` : ""}
@@ -176,16 +217,27 @@ function gpmHistoricalDetail(conflict, state, ui) {
   const sources = gpmHistoricalSourceList(conflict.sources);
   const pendingTerm = (conflict.options || []).find(option => option.id === state.term);
   const action = (id, label, extra = "") => `<button type="button" class="k" data-history-action="${id}" data-focus-key="history-${id}" ${extra}>${label}</button>`;
-  const history = (conflict.history || []).toReversed().map(entry => `<li>${b(ui.gameDate(entry.day))} · ${b(gpmHistoricalLabel(entry.term))} · ${b(gpmHistoricalLabel(entry.outcome))}</li>`).join("");
+  const history = (conflict.history || []).toReversed().map(entry => {
+    const provinces = entry.gainedProvinceKeys?.map(key => conflict.regions.find(region => region.key === key)?.name || key);
+    const basis = entry.basis === "negotiated-concession" ? "Negotiated concession" : "";
+    const gains = provinces?.length ? `Territorial gains · ${provinces.join(", ")}` : "";
+    return `<li>${[ui.gameDate(entry.day), gpmHistoricalLabel(entry.term), gpmHistoricalLabel(entry.outcome), basis, gains].filter(Boolean).map(b).join(" · ")}</li>`;
+  }).join("");
   const proposals = conflict.canNegotiate && conflict.options?.length ? (pendingTerm ? `<p>Submit ${b(pendingTerm.label)}?</p><div class="gpm-history-actions">
     ${action("confirm", "Submit proposal", `data-authority-command ${state.busy ? "disabled" : ""}`)}
     ${action("cancel", "Cancel", `data-authority-safe data-history-cancel-term="${b(pendingTerm.id)}"`)}</div>`
     : `<div class="gpm-history-actions">${conflict.options.map(option => `<button type="button" class="k" data-authority-command data-history-term="${b(option.id)}" data-focus-key="history-term-${b(option.id)}">${b(option.label)}</button>`).join("")}</div>`) : "";
   const outcome = conflict.victoryOutcome;
   const winner = outcome && actors.get(outcome.actorId);
+  const victoryFlag = winner && ["national", "independence", "autonomy"].includes(outcome.scope)
+    ? winner.identity?.victoryFlag || winner.identity?.administrationFlag || winner.identity?.flag : null;
+  const provisionalFlag = victoryFlag && winner.identity.flag === victoryFlag;
   const postwar = outcome ? `<section class="gpm-history-detail" aria-label="Postwar outcome"><h4>Postwar outcome</h4>
     ${winner ? `<p>${outcome.negotiated ? "Agreement" : "Winner"} · ${b(winner.name)}</p>` : ""}
+    ${outcome.concessionBy ? `<p>Conceded by ${b(U(outcome.concessionBy))}</p>` : ""}
     ${outcome.title ? `<p><b>${b(outcome.title)}</b>${outcome.administration ? ` · ${b(outcome.administration)}` : ""}</p>` : ""}
+    ${victoryFlag ? `<div class="gpm-history-actor-heading"><img class="gpm-history-flag" src="${b(victoryFlag.image)}" alt="${b(victoryFlag.name)}">
+      <small>${provisionalFlag ? "Provisional flag · " : ""}${b(victoryFlag.name)}</small></div>` : ""}
     ${!outcome.negotiated && outcome.coWinners?.length ? `<p>Other winners · ${b(outcome.coWinners.map(id => actors.get(id)?.name || id).join(", "))}</p>` : ""}
     ${outcome.note ? `<p>${b(outcome.note)}</p>` : ""}
     ${outcome.government ? `<p>${b(outcome.government)}</p>` : ""}

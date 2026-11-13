@@ -154,7 +154,8 @@ function gpmHistoricalVictoryRegimeDraft(draft, profile) {
 }
 
 function gpmHistoricalInstallVictoryGovernment(sim, country, actor, outcome) {
-  const profile = gpmHistoricalVictoryRegimes[outcome?.regime];
+  const base = gpmHistoricalVictoryRegimes[outcome?.regime];
+  const profile = base && (outcome.reform ? { ...base, reform: { ...base.reform, ...outcome.reform } } : base);
   const chamber = country?.pol?.chambers[0];
   if (!profile || !chamber || !actor?.id || !outcome.title || zPt(outcome.title) !== outcome.title) {
     throw new Error("Invalid historical victory government: " + (actor?.id || country?.key));
