@@ -8,10 +8,12 @@ const { sharedFunctions: congressVoting, workerFunctions: congressVoteWorker } =
 const { workerFunctions: supportWorker, rendererFunctions: supportRenderer } = require("./party-support-base.cjs");
 const { workerFunctions: aiWorker } = require("./party-ai.cjs");
 const { patchLawLabels, patchLawVoteSnapshots } = require("./party-law-labels.cjs");
+const { workerFunctions: lawShortlistWorker } = require("./party-law-shortlist.cjs");
 const { rules: regionalRules, workerFunctions: regionalWorker } = require("./party-regional-campaign.cjs");
 const { style: regionalMapStyle, rendererFunctions: regionalRenderer } = require("./party-regional-map.cjs");
 const { workerFunctions: fundingWorker } = require("./party-foreign-funding.cjs");
 const { style: fundingStyle, rendererFunctions: fundingRenderer } = require("./party-foreign-funding-ui.cjs");
+const { style: lawShortlistStyle, rendererFunctions: lawShortlistRenderer } = require("./party-law-shortlist-ui.cjs");
 
 const version = "1.1.2";
 const rendererHash = "ad4c79040ba28d87006fd72e8e335e1d2129a6866e9f9bb3d85fc948f52591e7";
@@ -273,7 +275,7 @@ function mountPartyButtons() {
     .gpm-support-track { height: 6px; border-radius: 3px; overflow: hidden; background: var(--line, #474950); }
     .gpm-support-track > span { display: block; height: 100%; border-radius: inherit; background: var(--accent, #c9ae79); }
   `;
-  style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle;
+  style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;
   document.head.append(style);
   const choice = document.getElementById("setup-role-note");
   const create = document.createElement("button");
@@ -441,6 +443,7 @@ function renderPartyProfile(view, party, ui) {
   ];
   if (view.party.regionalCampaign) tabs.push(["regional", "Regional Campaigning", gpmRenderRegionalOverview()]);
   if (view.party.foreignFunding) tabs.push(["foreign", "Foreign Funding", gpmRenderForeignFunding()]);
+  tabs.push(["laws", "Law Shortlist", gpmRenderPartyLaws()]);
   return `<div class="gpm-party-profile">
     <div class="gpm-party-profile-tabs" role="tablist" aria-label="Party profile" style="--gpm-profile-tabs:${tabs.length}">
       ${tabs.map(([id, label], index) => `<button class="k" type="button" role="tab" id="gpm-tab-${id}"
@@ -473,6 +476,7 @@ function bindPartyProfile(host, view, ui) {
     }
     if (tab.id === "gpm-tab-regional") gpmBindRegionalOverview(profile, view, ui);
     if (tab.id === "gpm-tab-foreign") gpmBindForeignFunding(profile, view, ui);
+    if (tab.id === "gpm-tab-laws") gpmBindPartyLaws(profile, view, ui);
     if (focus) tab.focus();
   };
   select(tabs.find(tab => tab.id === ui._gpmPartyProfileTab) || tabs[0]);
@@ -514,7 +518,7 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '${b(i(E.id))} \\xB7 ${$(L)}', '${b(i(E.id))} \\xB7 ${$(L,!1,2)}');
   js = replaceOnce(js, 'this._chipById(n,E.id,{win:L===0})}<b class="num">${$(Math.round(E.v*100))}', 'this._chipById(n,E.id,{win:L===0})}<b class="num">${$(E.v*100,!1,2)}');
   js = patchLawLabels(js, replaceOnce);
-  js = replaceOnce(js, "\nmountPartyButtons();\n", `\nconst gpmRegionalMapStyle = ${JSON.stringify(regionalMapStyle)};\nconst gpmForeignFundingStyle = ${JSON.stringify(fundingStyle)};\n${regionalRenderer.join("\n")}\n${fundingRenderer.join("\n")}\nmountPartyButtons();\n`);
+  js = replaceOnce(js, "\nmountPartyButtons();\n", `\nconst gpmRegionalMapStyle = ${JSON.stringify(regionalMapStyle)};\nconst gpmForeignFundingStyle = ${JSON.stringify(fundingStyle)};\n${regionalRenderer.join("\n")}\n${fundingRenderer.join("\n")}\nconst gpmLawShortlistStyle = ${JSON.stringify(lawShortlistStyle)};\n${lawShortlistRenderer.join("\n")}\nmountPartyButtons();\n`);
   js = replaceOnce(js, 'Nf("publicFacilityPlannerActive","closePublicFacilityPlanner")',
     'Nf("publicFacilityPlannerActive","closePublicFacilityPlanner"),Nf("gpmRegionalActive","closeGpmRegionalMap")');
   js = replaceOnce(js, 'if(cn!=="game")return;if(he.warRoomActive)', 'if(cn!=="game")return;if(gpmRegionalGlobeClick(he,t))return;if(he.warRoomActive)');
@@ -558,7 +562,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
   js = replaceOnce(js, "registerPartyCongressSize();\nasync function lvt",
-    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\n${fundingWorker.join("\n")}\nregisterPartyRegionalCampaign();\nregisterPartyForeignFunding();\nasync function lvt`);
+    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\n${fundingWorker.join("\n")}\n${lawShortlistWorker.join("\n")}\nregisterPartyRegionalCampaign();\nregisterPartyForeignFunding();\nasync function lvt`);
   js = replaceOnce(js, 'id:r.__provId,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,partyPerf:',
     'id:r.__provId,key:r.__provKey,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,day:e.day||0,partyPerf:');
   js = replaceOnce(js, 'function vIe(e,t,a=null){', 'function vIe(e,t,a=null,gpmApplyRegions=true){');
@@ -576,7 +580,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'congress:partyCongressView(e,t,a,gpmElectorate),supportBase:',
     'congress:partyCongressView(e,t,a,gpmElectorate),regionalCampaign:partyRegionalCampaignView(e,t,a),foreignFunding:gpmFunding,supportBase:');
   js = replaceOnce(js, 'lLe(r,a,t.params||{})',
-    '(a==="gpm.foreignFunding"?partyForeignFundingDirectory(r,t.params||{}):lLe(r,a,t.params||{}))');
+    '(a==="gpm.foreignFunding"?partyForeignFundingDirectory(r,t.params||{}):a==="gpm.partyLawShortlist"?partyLawShortlist(r):lLe(r,a,t.params||{}))');
   // Publish only the funding summary, never the stored outcome rolls or exposure day.
   js = replaceOnce(js, 'n.pol.parties=Fcr(t.pol);',
     'n.pol.parties=Fcr(t.pol).map(({gpmForeignFunding,...party})=>party);');

@@ -85,6 +85,16 @@ const previousPatches = [{
   worker: "8dd41855cfcc13b739a7a2a293796c27fde4983035848762359d9c6b33be68dd",
   renderer: "18d74a7bec03d59c30467f36c1bdfe7012c1ea86b1c06dccc3f47a88a3a77944",
   executable: "a92299e62e14caa362b680aafc0ebaedcc49f51f73a0d3b70d9ad199886b7ce6",
+}, {
+  archive: "c6b0b5747b39c18a0edb7296f8a6287b486449e8593caaf425b5dc6fc566b42d",
+  worker: "8dd41855cfcc13b739a7a2a293796c27fde4983035848762359d9c6b33be68dd",
+  renderer: "a5174ec4e6c36796fac56234e792531c3ef4b4c540d429c0ec9adce02aae1ac8",
+  executable: "c02eaada8a70bd9252dea7f0f0cbff52c2bb9ef7482c0ca7c669d01bea4f86df",
+}, {
+  archive: "f252b2d88dcdea4642c755a9ea2966f83603512b81629874d3b8023bbff064d1",
+  worker: "6932ee0555206dafe1fb33d78e43d85210a1bb6f9ebe8ac0025f677849a8aec5",
+  renderer: "03c4add77abec6c9bb673cd2dc5a1122af48c4f592b19f81313cf58046f842d7",
+  executable: "701188ad744326924febb0d02c562efc8fd5842e96f755c7230f2a45a104a170",
 }];
 
 function steamGamePath() {

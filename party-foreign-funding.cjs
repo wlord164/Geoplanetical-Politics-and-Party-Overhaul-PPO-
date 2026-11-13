@@ -39,19 +39,32 @@ function partyForeignFundingDonorLabel(sim, country, donor) {
   };
 }
 
+function partyForeignFundingLeftAffinity(party) {
+  const { econ, gov } = party.ideology;
+  if (econ <= -.30 && gov >= .50) return 1;
+  // Native party families preserve ideological identity when the axes drift.
+  return party.family === "authleft" ? Math.max(0, Math.min(1, (gov - .30) / .20)) : 0;
+}
+
 function partyForeignFundingQuote(country, party, donor) {
+  const alignment = Object.fromEntries(gpmAxes.map(({ id }) => [id, donor.ideology[id] - party.ideology[id]]));
   const match = Math.exp(-.28 * Hp(party.ideology, donor.ideology) ** 2);
+  const closeMatch = .12 * Math.max(0, Math.min(1, (match - .80) / .15));
+  const coreMatch = Math.exp(-.28 * (alignment.econ ** 2 + alignment.gov ** 2));
+  const leftSolidarity = .23 * coreMatch * partyForeignFundingLeftAffinity(party) * partyForeignFundingLeftAffinity(donor);
   const support = Math.max(0, party.support || 0);
   const seats = partyForeignFundingSeatShare(country, party);
-  const traction = Math.min(1, 8 * support + 3 * seats);
   const limitM = Math.min(MS(.20), Math.floor(MS(donor.organization.treasuryM) * .12)) / cu;
-  const chance = Math.max(.04, Math.min(.86, .68 * match + .27 * traction - .08));
-  return {
-    match,
-    chance: limitM >= .015 ? chance : 0,
-    limitM,
-    alignment: Object.fromEntries(gpmAxes.map(({ id }) => [id, donor.ideology[id] - party.ideology[id]])),
+  const factors = {
+    baseline: -.08,
+    ideology: .68 * match,
+    solidarity: Math.max(closeMatch, leftSolidarity),
+    traction: .27 * Math.min(1, 8 * support + 3 * seats),
+    fundsAvailable: limitM >= .015,
   };
+  factors.uncappedChance = factors.baseline + factors.ideology + factors.solidarity + factors.traction;
+  const chance = factors.fundsAvailable ? Math.max(.04, Math.min(.86, factors.uncappedChance)) : 0;
+  return { match, chance, limitM, alignment, factors };
 }
 
 function partyForeignFundingSeatShare(country, party) {
@@ -79,13 +92,13 @@ function partyForeignFundingDirectory(sim, params) {
     return { countries };
   }
   const foreign = typeof params.countryKey === "string" ? sim.countries.get(params.countryKey) : null;
-  if (!foreign || foreign.key === country.key) return { donors: [] };
+  if (!foreign || foreign.key === country.key) return { day: sim.day || 0, donors: [] };
   const donors = (foreign.pol?.parties || []).filter(partyForeignFundingParticipant).map(donor => ({
     ...partyForeignFundingDonorLabel(sim, foreign, donor),
     ...partyForeignFundingQuote(country, party, donor),
   }));
   donors.sort((a, b) => b.chance - a.chance || a.partyId.localeCompare(b.partyId));
-  return { donors };
+  return { day: sim.day || 0, donors };
 }
 
 function partyForeignFundingRoll(sim, requestId, purpose) {
@@ -283,7 +296,8 @@ function partyForeignFundingView(sim, country, partyId) {
 
 module.exports = {
   workerFunctions: [partyForeignFundingTreasury, partyForeignFundingTransfer, partyForeignFundingParticipant,
-    partyForeignFundingDonor, partyForeignFundingDonorLabel, partyForeignFundingQuote, partyForeignFundingSeatShare,
+    partyForeignFundingDonor, partyForeignFundingDonorLabel, partyForeignFundingLeftAffinity, partyForeignFundingQuote,
+    partyForeignFundingSeatShare,
     partyForeignFundingDirectory, partyForeignFundingRoll, partyForeignFundingState, partyForeignFundingRequest,
     partyForeignFundingReceipt, partyForeignFundingPenalty, partyForeignFundingSettle, advancePartyForeignFunding,
     partyForeignFundingAnswer, registerPartyForeignFunding, partyForeignFundingView],
