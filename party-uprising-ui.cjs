@@ -23,12 +23,14 @@ function gpmRenderUprising() {
 
 function gpmUprisingReason(reason) {
   return ({
-    scope: "This version supports the ASBP scenario in Lebanon.",
+    scope: "Uprisings require a sovereign country with its own government and legislature.",
+    constitution: "This country cannot adopt the proposed constitution.",
+    name: "Select one of the available breakaway names.",
     case_exists: "An uprising has already taken place in this campaign.",
     founder_control: "Switch to the legal founding party to review an uprising.",
-    unsupported_party_roles: "The founding party must be outside government and have no seats.",
+    unsupported_party_roles: "Your party must hold no government offices or assembly seats.",
     existing_war: "The current conflict must end before an uprising can begin.",
-    territory: "North Lebanon must be under the original government’s control.",
+    territory: "The country needs an unoccupied region outside its capital with a land border to the rest of the country.",
     stale: "The declaration terms changed. Review the updated proposal before confirming.",
     result: "A decisive war result is required for reunification.",
     conflict_mismatch: "The uprising no longer matches the active conflict.",
@@ -42,6 +44,9 @@ function gpmUprisingPanel(state) {
     + (disabled || state.busy ? " disabled" : "") + ">" + label + "</button>";
   const actions = (...buttons) => '<div class="gpm-uprising-actions">' + buttons.join("") + "</div>";
   if (!data) return state.loading ? "" : actions(button("refresh", "Load uprising"));
+  const party = data.partyName || state.partyName || "Your party";
+  const region = data.provinceKey ? Gt(data.provinceKey, data.regionName) : data.regionName;
+  const seatOutcome = data.singleParty ? " and holds every seat in the assembly" : " under the new constitution";
   const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 });
   const before = Number.isFinite(data.nationalSupport) ? percent.format(data.nationalSupport) : "—";
   const after = Number.isFinite(data.victorySupport) ? percent.format(data.victorySupport) : "—";
@@ -66,30 +71,39 @@ function gpmUprisingPanel(state) {
     const victory = data.result === "breakaway";
     if (data.result === "breakaway" || data.result === "government") {
       return victory
-        ? "<p><strong>Breakaway victory.</strong> " + b(data.partyName) + " governs reunited " + b(data.parentName)
-          + " and holds every seat in the assembly.</p><p>The founding law package is in effect.</p>" + charter
+        ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.breakawayName)
+          + seatOutcome + ".</p><p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
           + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")
-        : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(data.partyName) + " is banned.</p>";
+        : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(party) + " is banned.</p>";
     }
     return "<p><strong>Conflict ended without a decisive result.</strong> The two governments remain separate.</p>";
   }
   if (!data.available || data.phase !== "ready" || typeof data.quoteId !== "string") {
     return "<p>" + b(gpmUprisingReason(data.reason)) + "</p>" + actions(button("refresh", "Refresh", state.loading));
   }
+  const name = state.selectedName || data.breakawayName;
+  const options = (data.names || []).map(option => '<option' + (option === name ? " selected" : "")
+    + ">" + b(option) + "</option>").join("");
+  const nameField = !state.confirm && data.names?.length > 1
+    ? '<select aria-label="Breakaway name" data-gpm-uprising-name>' + options + "</select>"
+    : b(name);
+  const victorySeats = data.singleParty ? " and holds every seat in its single-party assembly."
+    : " under the new constitution. The reunited assembly keeps its sitting members until an election.";
   const heading = state.confirm ? "Confirm declaration" : "Declaration preview";
   const controls = state.confirm
     ? actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading))
     : actions(button("review", "Review Declaration", state.loading), button("refresh", "Refresh", state.loading));
   return "<p><strong>" + heading + "</strong></p>"
-    + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + b(data.partyName)
-    + "</dd><dt>Breakaway</dt><dd>" + b(data.breakawayName)
-    + "</dd><dt>Starting region</dt><dd>" + b(data.regionName)
+    + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + b(party)
+    + "</dd><dt>Breakaway</dt><dd>" + nameField
+    + "</dd><dt>Government</dt><dd>" + b(data.government)
+    + "</dd><dt>Starting region</dt><dd>" + b(region)
     + "</dd><dt>Current base national support</dt><dd>" + b(before) + "</dd></dl>"
-    + "<p>Declaring transfers your control to the breakaway government in " + b(data.regionName)
+    + "<p>Declaring transfers your control to the breakaway government in " + b(region)
     + " and starts a civil war with " + b(data.parentName) + ".</p>"
     + '<div class="gpm-uprising-outcomes">'
-    + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country '
-    + "and holds every seat in its single-party assembly.</p><p>The new government enacts its founding law package.</p>"
+    + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country'
+    + victorySeats + "</p><p>The reunited country keeps the breakaway name. The founding charter takes effect nationwide.</p>"
     + charter + "<p>Base national support rises from " + b(before) + " to " + b(after) + " at reunification.</p></div>"
     + '<div class="sh-inset"><strong>Government victory</strong><p>The incumbent reunites the country and bans your party. '
     + "The campaign continues with the incumbent.</p></div></div>"
@@ -148,6 +162,8 @@ function gpmBindUprising(profile, view, ui) {
     }
     status.textContent = state.loading ? "Checking the current declaration terms…" : state.status;
   };
+  const currentParty = view.player?.pol?.parties?.find(party => party.id === partyId);
+  state.partyName = currentParty ? Sa(currentParty, countryKey) : null;
   state.paint = paint;
 
   const load = async () => {
@@ -167,6 +183,7 @@ function gpmBindUprising(profile, view, ui) {
         state.confirm = false;
         state.status = gpmUprisingReason("stale");
       }
+      if (!data.names?.includes(state.selectedName)) state.selectedName = data.breakawayName;
       state.data = data;
     } catch (error) {
       console.warn("[PPO] Uprising details failed", error);
@@ -185,7 +202,7 @@ function gpmBindUprising(profile, view, ui) {
     state.paint();
     let result;
     try {
-      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId }]);
+      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name: state.selectedName }]);
       if (result?.ok) {
         if (ze === session) {
           await gpmSyncUprisingControl(session);
@@ -213,6 +230,9 @@ function gpmBindUprising(profile, view, ui) {
     }
   };
 
+  content.onchange = event => {
+    if (event.target.matches("[data-gpm-uprising-name]")) state.selectedName = event.target.value;
+  };
   content.onclick = event => {
     const button = event.target.closest("[data-gpm-uprising-action]");
     if (!button || button.disabled || state.busy || !isCurrent()) return;
@@ -250,7 +270,7 @@ function patchUprisingRenderer(source) {
   }
 
   const tab = 'tabs.push(["laws", "Law Shortlist", gpmRenderPartyLaws()]);';
-  replaceOnce(tab, tab + '\n  if (view.player?.key === "422" || view.player?.key?.startsWith("ppo-uprising-")) tabs.push(["uprising", "Uprising", gpmRenderUprising()]);');
+  replaceOnce(tab, tab + '\n  tabs.push(["uprising", "Uprising", gpmRenderUprising()]);');
   const bind = 'if (tab.id === "gpm-tab-laws") gpmBindPartyLaws(profile, view, ui);';
   replaceOnce(bind, bind + '\n    if (tab.id === "gpm-tab-uprising") gpmBindUprising(profile, view, ui);');
   const styleMount = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;";

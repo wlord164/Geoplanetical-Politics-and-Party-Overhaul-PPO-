@@ -2,7 +2,11 @@
 
 const { readFileSync } = require("node:fs");
 const { join } = require("node:path");
-const workerCode = readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
+const officialNames = require("./party-official-country-names.cjs");
+const { workerFunctions: naming } = require("./party-uprising-names.cjs");
+const { workerFunctions: regimes } = require("./party-uprising-regimes.cjs");
+const workerCode = "const gpmUprisingOfficialNames = " + JSON.stringify(officialNames) + ";\n" +
+  [...naming, ...regimes].join("\n") + "\n" + readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
 
 function patchUprisingWorker(source, replaceOnce) {
   const anchors = [
