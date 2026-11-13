@@ -26,9 +26,15 @@ Open Support Base beside Party Congress to see which electorate blocs contribute
 
 Open My Party > Regional Campaigning to compare your party's estimated vote share by state or province. Brighter colors show stronger support relative to other regions in the same country. Click a region or use the Region menu, then select Open Campaign Map to open the globe with that region selected. The globe panel shows the local vote estimate, leading party, margin, and your party's presence. Each project shows its cost, activists, and duration before you commit. Advance time after leaving the map to complete the projects.
 
-A rally takes seven days. It increases the party's voting weight in that region, with a 45-day half-life. A local investment takes 42 days and builds lasting party presence. The quoted odds determine whether growth is strong or modest. Presence adds local voting weight and lowers future rally costs in that region.
+A rally takes seven days. New rallies hold their full boost for 21 days, then halve every 60 days. A local investment takes 42 days and builds lasting party presence. The quoted odds determine whether growth is strong or modest. Established regions gain less presence from each new investment. Presence adds local voting weight and lowers future rally costs in that region.
 
 Your party can establish one headquarters. It takes 28 days to open and adds 12% to your party's local voting weight while the headquarters is there. Voting weight is normalized against other parties' support, so this is a smaller change in actual vote share. The panel shows the resulting change in percentage points. Regional gains feed elections using regional results and contribute by population to nationwide voting. Projects, investment outcomes and headquarters locations are saved with the campaign.
+
+The regional map shows projected national support, seats, and the applicable vote threshold. The globe panel breaks out lasting presence and headquarters gains from temporary rally gains. Project previews estimate how much support the action would add on completion if other conditions hold. The game still applies its normal election rules.
+
+Open My Party > Foreign Funding to request a one-time grant from a party in another country. Ideological alignment, the donor's treasury, and your party's support and seats affect the offer. You can have one request or deal active, with 120 days between approaches. Review the amount, terms, and exposure risk before accepting. Accepted funds go directly into your party treasury.
+
+Declared backing is public and costs a small amount of party credibility. Private backing can be exposed within 90 days. If that happens, your party loses credibility and has 30 days to return the unspent portion or keep the grant. Returning funds reduces the additional credibility loss. Party spending reduces the returnable balance, and later fundraising does not restore it. Requests, offers, and grants are saved with the campaign.
 
 Rival parties consider the same organizing projects during the game's monthly party decision cycle. Their decisions account for available cash, activists, influence, and the next election.
 

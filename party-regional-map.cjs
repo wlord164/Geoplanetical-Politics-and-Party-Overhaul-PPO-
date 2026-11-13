@@ -3,6 +3,8 @@
 const style = `
   .gpm-regional-overview { display: grid; gap: var(--gap-2); min-width: 0; }
   .gpm-regional-overview button { justify-self: start; }
+  .gpm-regional-national { display: grid; gap: var(--gap-1, 4px); }
+  .gpm-regional-national p { margin: 0; }
   .gpm-support-map { min-width: 0; display: grid; gap: var(--gap-1); padding: var(--gap-2); border: 1px solid var(--line); background: var(--well); border-radius: var(--r-cell); }
   .gpm-support-map svg { display: block; width: 100%; height: auto; }
   .gpm-support-map path { stroke: #202b38; stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
@@ -61,12 +63,51 @@ function gpmRegionalRegionName(region) {
 function gpmRenderRegionalOverview() {
   return `<section class="mcard gpm-regional-overview" aria-label="Regional Campaigning">
     <h3 class="mc-title">Regional party support</h3>
+    <div class="gpm-regional-national" data-gpm-regional-national></div>
     <div class="gpm-support-map" data-gpm-support-map></div>
     <div class="gpm-support-scale" data-gpm-support-scale></div>
     <label class="gpm-support-readout">Region <select class="k" data-gpm-support-select data-gpm-profile-focus="region"></select></label>
     <small data-gpm-support-readout role="status"></small>
     <button class="k" type="button" data-gpm-open-regional data-gpm-profile-focus="map">Open Campaign Map</button>
   </section>`;
+}
+
+function gpmRegionalPercent(value) {
+  return new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 }).format(value);
+}
+
+function gpmRegionalPoints(value) {
+  const points = value * 100;
+  return (points >= .005 ? "+" : "") + (Math.abs(points) < .005 ? "0.00" : points.toFixed(2)) + " pp";
+}
+
+function gpmRegionalNational(national) {
+  if (!Number.isFinite(national?.support)) return "";
+  const details = [`<strong>${b(gpmRegionalPercent(national.support))}</strong> projected national support`];
+  if (Number.isFinite(national.threshold) && national.threshold > 0) {
+    const gap = national.threshold - national.support;
+    details.push(`${b(gpmRegionalPercent(national.threshold))} seat threshold` +
+      (gap > 0 ? ` · ${b(gpmRegionalPoints(gap).replace(/^\+/, ""))} short` : " · cleared"));
+  }
+  if (Number.isInteger(national.seats)) {
+    details.push(`${national.seats} projected ${national.seats === 1 ? "seat" : "seats"}` +
+      (national.mode === "regional" ? " from regional results" : ""));
+  }
+  return `<p>${details.join(" · ")}</p><small>Legislative estimate based on current support and campaign activity.</small>`;
+}
+
+function gpmRegionalProjection(quote, ui) {
+  const forecast = quote.projection;
+  if (!forecast?.outcomes?.length) return "";
+  const outcomes = forecast.outcomes.map(outcome => {
+    const label = outcome.id === "strong" ? "Strong growth" : outcome.id === "partial" ? "Modest growth" : "On completion";
+    const chance = outcome.chance < 1 ? ` (${gpmRegionalPercent(outcome.chance)})` : "";
+    const local = gpmRegionalPoints(outcome.localAfter - forecast.localBefore);
+    const national = Number.isFinite(outcome.nationalAfter) && Number.isFinite(forecast.nationalBefore)
+      ? ` · ${gpmRegionalPoints(outcome.nationalAfter - forecast.nationalBefore)} nationally` : "";
+    return `<small>${b(label + chance + " · " + local + " locally" + national)}</small>`;
+  }).join("");
+  return outcomes + `<small>Estimate for ${b(ui.gameDate(forecast.day))} if other conditions hold.</small>`;
 }
 
 function gpmRegionalSupportScale(regions) {
@@ -91,6 +132,7 @@ function gpmBindRegionalOverview(profile, view, ui) {
   const legend = panel.querySelector("[data-gpm-support-scale]");
   const readout = panel.querySelector("[data-gpm-support-readout]");
   const open = panel.querySelector("[data-gpm-open-regional]");
+  panel.querySelector("[data-gpm-regional-national]").innerHTML = gpmRegionalNational(data.national);
   if (!regions.length) {
     map.textContent = "Regional support estimates are unavailable.";
     legend.textContent = select.textContent = readout.textContent = "";
@@ -164,7 +206,8 @@ function gpmRenderRegionalMap(ui, state) {
   const jobs = data.projects.map(project => `<small>${b(gpmRegionalActionName(project.kind))} · ${b(regionName(project.key))}
     · Finishes ${b(ui.gameDate(project.endDay))}</small>`).join("");
   const headquarters = data.regions.find(entry => entry.headquarters);
-  const header = `<small>${b(money(data.treasuryM))} in party funds · ${b(Math.round(data.activistsK * 1000).toLocaleString(cs()))} available activists</small>
+  const header = `<div class="gpm-regional-national">${gpmRegionalNational(data.national)}</div>
+    <small>${b(money(data.treasuryM))} in party funds · ${b(Math.round(data.activistsK * 1000).toLocaleString(cs()))} available activists</small>
     ${headquarters ? `<small>Party headquarters · ${b(gpmRegionalRegionName(headquarters))}</small>` : ""}
     ${jobs}<label>Region <select class="k" data-gpm-region-select ${data.regions.length ? "" : "disabled"}>
       <option value="" ${region ? "" : "selected"}>Choose a region</option>${options}</select></label>`;
@@ -172,13 +215,14 @@ function gpmRenderRegionalMap(ui, state) {
   if (region) {
     const leader = view.player.pol.parties.find(party => party.id === region.leadId);
     const actions = Object.entries(region.quotes).map(([kind, quote]) => {
-      const effect = kind === "investment"
-        ? pct(quote.chance) + " chance of strong growth. Otherwise you gain a modest local presence."
-        : "+" + pct(quote.gain) + " local voting weight" + (kind === "rally" ? " at completion, halving every 45 days." : " while the headquarters is here.");
+      const effect = kind === "investment" ? "Builds lasting local presence. Gains taper as the region fills."
+        : kind === "rally" ? "Temporary support boost. It holds at full strength before fading."
+          : "Adds a lasting support boost in this region.";
       const cost = quote.cash == null ? "" : `${money(quote.cash)} · ${Math.round(quote.activistsK * 1000).toLocaleString(cs())} activists · ${quote.days} days`;
       return `<div class="gpm-region-action"><button type="button" class="k" data-gpm-region-action="${kind}"
         ${quote.ok && !state.busy && !state.pending.has(kind) ? "" : "disabled"}>${gpmRegionalActionName(kind)}</button>
         ${cost ? `<small>${b(cost)}</small><small>${b(effect)}</small>` : ""}
+        ${gpmRegionalProjection(quote, ui)}
         ${quote.ok ? "" : `<small>${b(gpmRegionalReason(quote, ui))}</small>`}</div>`;
     }).join("");
     const last = region.lastAction;
@@ -187,8 +231,12 @@ function gpmRenderRegionalMap(ui, state) {
       <dl><dt>Estimated party support</dt><dd>${b(pct(region.support))}</dd>
       <dt>Leading party</dt><dd>${b(leader ? Sa(leader) : "—")}</dd>
       <dt>Margin vs. strongest rival</dt><dd>${b(points(region.margin))}</dd>
-      <dt>Regional campaign effect</dt><dd>${b(points(region.boost))}</dd>
+      <dt>Lasting boost · presence and HQ</dt><dd>${b(gpmRegionalPoints(region.permanentBoost ?? 0))}</dd>
+      ${region.headquartersBoost > .00005 ? `<dt>From headquarters</dt><dd>${b(gpmRegionalPoints(region.headquartersBoost))}</dd>` : ""}
+      <dt>Temporary rally boost</dt><dd>${b(gpmRegionalPoints(region.rallyBoost ?? 0))}</dd>
+      ${region.rivalBoost < -.00005 ? `<dt>Rival activity</dt><dd>${b(gpmRegionalPoints(region.rivalBoost))}</dd>` : ""}
       <dt>Local party presence</dt><dd>${b(pct(region.presence))}</dd></dl>
+      ${region.rallyFullUntil > view.day ? `<small>Rally at full strength until ${b(ui.gameDate(region.rallyFullUntil))}.</small>` : ""}
       ${receipt ? `<small>${b(gpmRegionalActionName(last.kind))} · ${b(receipt)} · ${b(ui.gameDate(last.day))}</small>` : ""}
       ${actions}</div>`;
   }
@@ -360,6 +408,7 @@ function gpmCloseRegionalMap(ui, returnToParty = false) {
 module.exports = {
   style,
   rendererFunctions: [gpmRegionalActionName, gpmRegionalReason, gpmRegionalRegionName, gpmRenderRegionalOverview,
+    gpmRegionalPercent, gpmRegionalPoints, gpmRegionalNational, gpmRegionalProjection,
     gpmRegionalSupportScale, gpmBindRegionalOverview, gpmRenderRegionalMap,
     gpmRefreshRegionalMap, gpmSelectRegionalProvince, gpmRegionalGlobeClick, gpmSubmitRegionalAction,
     gpmOpenRegionalMap, gpmCloseRegionalMap],

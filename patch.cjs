@@ -10,6 +10,8 @@ const { workerFunctions: aiWorker } = require("./party-ai.cjs");
 const { patchLawLabels, patchLawVoteSnapshots } = require("./party-law-labels.cjs");
 const { rules: regionalRules, workerFunctions: regionalWorker } = require("./party-regional-campaign.cjs");
 const { style: regionalMapStyle, rendererFunctions: regionalRenderer } = require("./party-regional-map.cjs");
+const { workerFunctions: fundingWorker } = require("./party-foreign-funding.cjs");
+const { style: fundingStyle, rendererFunctions: fundingRenderer } = require("./party-foreign-funding-ui.cjs");
 
 const version = "1.1.2";
 const rendererHash = "ad4c79040ba28d87006fd72e8e335e1d2129a6866e9f9bb3d85fc948f52591e7";
@@ -241,9 +243,11 @@ function mountPartyButtons() {
     .gpm-congress-size { max-width: 100%; accent-color: var(--text-2); }
     .gpm-party-congress button { justify-self: start; }
     .gpm-party-profile { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-2); }
-    .gpm-party-profile-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--gap-1); }
+    .gpm-party-profile-tabs { display: grid; grid-template-columns: repeat(var(--gpm-profile-tabs), minmax(0, 1fr)); gap: var(--gap-1); }
+    @container party-room (max-width: 480px) { .gpm-party-profile-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .gpm-party-profile-tabs .k { min-width: 0; height: auto; min-height: var(--h-ctl); padding: var(--gap-1) var(--gap-2); white-space: normal; overflow-wrap: anywhere; text-align: center; }
     .gpm-party-profile-tabs [aria-selected="true"] { border-color: var(--text-2); color: var(--text); background: var(--body-2); }
+    .gpm-funding-attention { color: var(--mark-late, #edc583); margin-inline-start: var(--gap-1); }
     .gpm-party-profile [hidden] { display: none; }
     .gpm-party-profile small { color: var(--text-2); }
     .gpm-party-profile .hc-legend { flex-wrap: wrap; }
@@ -257,7 +261,7 @@ function mountPartyButtons() {
     .gpm-support-track { height: 6px; border-radius: 3px; overflow: hidden; background: var(--line, #474950); }
     .gpm-support-track > span { display: block; height: 100%; border-radius: inherit; background: var(--accent, #c9ae79); }
   `;
-  style.textContent += gpmRegionalMapStyle;
+  style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle;
   document.head.append(style);
   const choice = document.getElementById("setup-role-note");
   const create = document.createElement("button");
@@ -419,15 +423,20 @@ function bindElectorateWidth(view) {
 
 function renderPartyProfile(view, party, ui) {
   if (!party || !view.party?.congress) return "";
+  const tabs = [
+    ["congress", "Party Congress", renderPartyCongress(view, party, ui)],
+    ["support", "Support Base", renderPartySupportBase(view, ui)],
+  ];
+  if (view.party.regionalCampaign) tabs.push(["regional", "Regional Campaigning", gpmRenderRegionalOverview()]);
+  if (view.party.foreignFunding) tabs.push(["foreign", "Foreign Funding", gpmRenderForeignFunding()]);
   return `<div class="gpm-party-profile">
-    <div class="gpm-party-profile-tabs" role="tablist" aria-label="Party profile">
-      <button class="k" type="button" role="tab" id="gpm-tab-congress" data-gpm-profile-focus="congress" aria-controls="gpm-panel-congress" aria-selected="true">Party Congress</button>
-      <button class="k" type="button" role="tab" id="gpm-tab-support" data-gpm-profile-focus="support" aria-controls="gpm-panel-support" aria-selected="false" tabindex="-1">Support Base</button>
-      ${view.party.regionalCampaign ? '<button class="k" type="button" role="tab" id="gpm-tab-regional" data-gpm-profile-focus="regional" aria-controls="gpm-panel-regional" aria-selected="false" tabindex="-1">Regional Campaigning</button>' : ""}
-    </div>
-    <div class="mp-reading" id="gpm-panel-congress" role="tabpanel" aria-labelledby="gpm-tab-congress" data-mp-reading="gpm-congress">${renderPartyCongress(view, party, ui)}</div>
-    <div class="mp-reading" id="gpm-panel-support" role="tabpanel" aria-labelledby="gpm-tab-support" data-mp-reading="gpm-support" tabindex="0" hidden>${renderPartySupportBase(view, ui)}</div>
-    ${view.party.regionalCampaign ? '<div class="mp-reading" id="gpm-panel-regional" role="tabpanel" aria-labelledby="gpm-tab-regional" hidden>' + gpmRenderRegionalOverview() + '</div>' : ""}
+    <div class="gpm-party-profile-tabs" role="tablist" aria-label="Party profile" style="--gpm-profile-tabs:${tabs.length}">
+      ${tabs.map(([id, label], index) => `<button class="k" type="button" role="tab" id="gpm-tab-${id}"
+        data-gpm-profile-focus="${id}" aria-controls="gpm-panel-${id}" aria-selected="${index === 0}"
+        tabindex="${index === 0 ? 0 : -1}">${label}${id === "foreign" ? '<span class="gpm-funding-attention" hidden></span>' : ""}</button>`).join("")}</div>
+    ${tabs.map(([id, , content], index) => `<div class="mp-reading" id="gpm-panel-${id}" role="tabpanel"
+      aria-labelledby="gpm-tab-${id}" data-mp-reading="gpm-${id}" ${id === "support" ? 'tabindex="0"' : ""}
+      ${index === 0 ? "" : "hidden"}>${content}</div>`).join("")}
   </div>`;
 }
 
@@ -435,6 +444,13 @@ function bindPartyProfile(host, view, ui) {
   const profile = host.querySelector(".gpm-party-profile");
   if (!profile) return;
   const tabs = Array.from(profile.querySelectorAll('[role="tab"]'));
+  const fundingAttention = profile.querySelector(".gpm-funding-attention");
+  if (fundingAttention) {
+    const funding = view.party.foreignFunding;
+    const attention = funding?.grant?.exposed ? "Exposed" : funding?.offer ? "Offer" : "";
+    fundingAttention.hidden = !attention;
+    fundingAttention.textContent = attention;
+  }
   const select = (tab, focus = false) => {
     ui._gpmPartyProfileTab = tab.id;
     for (const button of tabs) {
@@ -444,6 +460,7 @@ function bindPartyProfile(host, view, ui) {
       profile.querySelector("#" + button.getAttribute("aria-controls")).hidden = !selected;
     }
     if (tab.id === "gpm-tab-regional") gpmBindRegionalOverview(profile, view, ui);
+    if (tab.id === "gpm-tab-foreign") gpmBindForeignFunding(profile, view, ui);
     if (focus) tab.focus();
   };
   select(tabs.find(tab => tab.id === ui._gpmPartyProfileTab) || tabs[0]);
@@ -485,7 +502,7 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '${b(i(E.id))} \\xB7 ${$(L)}', '${b(i(E.id))} \\xB7 ${$(L,!1,2)}');
   js = replaceOnce(js, 'this._chipById(n,E.id,{win:L===0})}<b class="num">${$(Math.round(E.v*100))}', 'this._chipById(n,E.id,{win:L===0})}<b class="num">${$(E.v*100,!1,2)}');
   js = patchLawLabels(js, replaceOnce);
-  js = replaceOnce(js, "\nmountPartyButtons();\n", `\nconst gpmRegionalMapStyle = ${JSON.stringify(regionalMapStyle)};\n${regionalRenderer.join("\n")}\nmountPartyButtons();\n`);
+  js = replaceOnce(js, "\nmountPartyButtons();\n", `\nconst gpmRegionalMapStyle = ${JSON.stringify(regionalMapStyle)};\nconst gpmForeignFundingStyle = ${JSON.stringify(fundingStyle)};\n${regionalRenderer.join("\n")}\n${fundingRenderer.join("\n")}\nmountPartyButtons();\n`);
   js = replaceOnce(js, 'Nf("publicFacilityPlannerActive","closePublicFacilityPlanner")',
     'Nf("publicFacilityPlannerActive","closePublicFacilityPlanner"),Nf("gpmRegionalActive","closeGpmRegionalMap")');
   js = replaceOnce(js, 'if(cn!=="game")return;if(he.warRoomActive)', 'if(cn!=="game")return;if(gpmRegionalGlobeClick(he,t))return;if(he.warRoomActive)');
@@ -506,13 +523,19 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'a.treasuryM=sN(nR(a.treasuryM||0,0,1e4))', 'a.treasuryM=sN(nR(a.treasuryM||0,0,1e4),6)');
   js = replaceOnce(js, 'cu=1e3,Tde=1e4,Fwa=10', 'cu=1e6,Tde=1e4,Fwa=10');
   js = replaceOnce(js, 'var jwa=1e8/1e3,Zeo=jwa/cu', 'var jwa=cu,Zeo=jwa/cu');
-  js = replaceOnce(js, 'n.organization.treasuryM=GN(n.organization.treasuryM-o.cost.budgetM)', 'n.organization.treasuryM=sN(n.organization.treasuryM-o.cost.budgetM,6)');
+  js = replaceOnce(js, 'n.organization.treasuryM=GN(n.organization.treasuryM-o.cost.budgetM)', 'n.organization.treasuryM=partyForeignFundingTreasury(n,sN(n.organization.treasuryM-o.cost.budgetM,6))');
+  js = replaceOnce(js, 'n.treasuryM=Dq(ae(xy(n.treasuryM),xy(i)))', 'n.treasuryM=partyForeignFundingTreasury(o,Dq(ae(xy(n.treasuryM),xy(i))))');
+  js = replaceOnce(js, 'i.treasuryM=Dq(ae(xy(i.treasuryM),xy(s)))', 'i.treasuryM=partyForeignFundingTreasury(uu(t,a),Dq(ae(xy(i.treasuryM),xy(s))))');
+  js = replaceOnce(js, 'c.organization.treasuryM=f/cu,u.organization.treasuryM=y/cu',
+    'c.organization.treasuryM=partyForeignFundingTreasury(c,f/cu),u.organization.treasuryM=y/cu');
+  js = replaceOnce(js, 'n.treasuryM=u/cu,n.activistsK=fn(n.activistsK*.75)',
+    'n.treasuryM=partyForeignFundingTreasury(uu(e,t.parent),u/cu),n.activistsK=fn(n.activistsK*.75)');
   js = replaceOnce(js, 'w*=Vrt(b,p.id)', 'w*=Vrt(b,p.id)*partyOrganizingWeight(b,p.id)');
   js = replaceOnce(js, 'function _ka(e,t,a){return hIe(e.parties,[{share:1,', 'function _ka(e,t,a){return hIe(e.parties,[{id:t.id,share:1,');
-  js = replaceOnce(js, 'function tDo({querySim:e,country:t,partyId:a}){', 'function tDo({querySim:e,country:t,partyId:a},gpmElectorate){');
+  js = replaceOnce(js, 'function tDo({querySim:e,country:t,partyId:a}){', 'function tDo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding){');
   js = replaceOnce(js, 'function Gcr(e){let t=e?.player;', 'function Gcr(e){let gpmElectorate,t=e?.player;');
   js = replaceOnce(js, 'electorate:kr(o._electorateBreakdown(n)),electoral:', 'electorate:(gpmElectorate=kr(o._electorateBreakdown(n))),electoral:');
-  js = replaceOnce(js, 'party:tDo(r)}}var aDo', 'party:tDo(r,gpmElectorate)}}var aDo');
+  js = replaceOnce(js, 'party:tDo(r)}}var aDo', 'party:tDo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId))}}var aDo');
   js = replaceOnce(js, 'outreach:F0a(e,t,a),negotiations:hMa(e,t,a)', 'outreach:F0a(e,t,a),organizing:partyOrganizingView(e,t,a),congress:partyCongressView(e,t,a,gpmElectorate),supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:hMa(e,t,a)');
   js = replaceOnce(js, 'function Ero(e,t){', `${isCustomParty}\nfunction Ero(e,t){`);
   js = replaceOnce(js, 'if((y.support||0)<.06&&(g.support||0)<.06&&Hp(y.ideology,g.ideology)<.35)', 'if(!isCustomParty(y)&&!isCustomParty(g)&&(y.support||0)<.06&&(g.support||0)<.06&&Hp(y.ideology,g.ideology)<.35)');
@@ -523,7 +546,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
   js = replaceOnce(js, "registerPartyCongressSize();\nasync function lvt",
-    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\nregisterPartyRegionalCampaign();\nasync function lvt`);
+    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\n${fundingWorker.join("\n")}\nregisterPartyRegionalCampaign();\nregisterPartyForeignFunding();\nasync function lvt`);
   js = replaceOnce(js, 'id:r.__provId,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,partyPerf:',
     'id:r.__provId,key:r.__provKey,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,day:e.day||0,partyPerf:');
   js = replaceOnce(js, 'function vIe(e,t,a=null){', 'function vIe(e,t,a=null,gpmApplyRegions=true){');
@@ -539,7 +562,12 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'u=d2t(e,t,c,i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}',
     'u=d2t(e,t,partyRegionalNationalShares(t.pol,Ix(e,t),c),i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}');
   js = replaceOnce(js, 'congress:partyCongressView(e,t,a,gpmElectorate),supportBase:',
-    'congress:partyCongressView(e,t,a,gpmElectorate),regionalCampaign:partyRegionalCampaignView(e,t,a),supportBase:');
+    'congress:partyCongressView(e,t,a,gpmElectorate),regionalCampaign:partyRegionalCampaignView(e,t,a),foreignFunding:gpmFunding,supportBase:');
+  js = replaceOnce(js, 'lLe(r,a,t.params||{})',
+    '(a==="gpm.foreignFunding"?partyForeignFundingDirectory(r,t.params||{}):lLe(r,a,t.params||{}))');
+  // Publish only the funding summary, never the stored outcome rolls or exposure day.
+  js = replaceOnce(js, 'n.pol.parties=Fcr(t.pol);',
+    'n.pol.parties=Fcr(t.pol).map(({gpmForeignFunding,...party})=>party);');
   return Buffer.from(js);
 }
 
@@ -548,6 +576,7 @@ function advancePartyModDay(sim) {
     for (const party of country.pol?.parties || []) {
       if (party.gpmOrganizing) advancePartyOrganizing(sim, country, party);
       if (party.gpmRegional) advancePartyRegionalCampaign(sim, country, party);
+      if (party.gpmForeignFunding) advancePartyForeignFunding(sim, country, party);
     }
   }
 }

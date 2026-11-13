@@ -114,7 +114,8 @@ function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
   const day = sim.day || 0;
   const record = party.gpmOrganizing ||= { version: 2, groups: {}, day, backed: [], projects: [], lastMeetingByBloc: {} };
   decayPartyOrganizing(party, day);
-  party.organization.treasuryM = Math.round((party.organization.treasuryM - quote.cash) * 1e6) / 1e6;
+  party.organization.treasuryM = partyForeignFundingTreasury(party,
+    Math.round((party.organization.treasuryM - quote.cash) * 1e6) / 1e6);
   party.organization.influence = GN(party.organization.influence - quote.influence);
   party.organization.activistsK = GN(party.organization.activistsK - quote.activistsK);
   record.projects.push({ kind, targetId, startDay: day, endDay: quote.endDay, workedThrough: day,
