@@ -12,9 +12,13 @@ const style = `
   .gpm-support-insets { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 80px), 1fr)); gap: var(--gap-2); }
   .gpm-support-insets > div { min-width: 0; text-align: center; overflow-wrap: anywhere; }
   .gpm-support-insets svg { max-height: 86px; }
-  .gpm-support-scale { display: grid; grid-template-columns: auto minmax(0, 12rem) auto; align-items: center; gap: var(--gap-2); }
-  .gpm-support-scale > span { display: flex; height: .5rem; }
-  .gpm-support-scale i { flex: 1; }
+  .gpm-support-scale { display: grid; gap: .25rem; }
+  .gpm-support-scale:empty { display: none; }
+  .gpm-support-ramp { height: .5rem; border-radius: .25rem; }
+  .gpm-support-ticks { position: relative; min-height: 1.5em; font-variant-numeric: tabular-nums; }
+  .gpm-support-ticks small { position: absolute; left: var(--gpm-tick-position); transform: translateX(-50%); white-space: nowrap; }
+  .gpm-support-ticks small:first-child { transform: none; }
+  .gpm-support-ticks small:last-child { transform: translateX(-100%); }
   .gpm-support-readout { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-1) var(--gap-2); }
   .gpm-support-readout select { min-width: 0; max-width: 100%; }
   .gpm-regional-map {
@@ -65,7 +69,7 @@ function gpmRenderRegionalOverview() {
     <h3 class="mc-title">Regional party support</h3>
     <div class="gpm-regional-national" data-gpm-regional-national></div>
     <div class="gpm-support-map" data-gpm-support-map></div>
-    <div class="gpm-support-scale" data-gpm-support-scale></div>
+    <div class="gpm-support-scale" data-gpm-support-scale role="group" aria-label="Estimated vote share color scale"></div>
     <label class="gpm-support-readout">Region <select class="k" data-gpm-support-select data-gpm-profile-focus="region"></select></label>
     <small data-gpm-support-readout role="status"></small>
     <button class="k" type="button" data-gpm-open-regional data-gpm-profile-focus="map">Open Campaign Map</button>
@@ -110,13 +114,22 @@ function gpmRegionalProjection(quote, ui) {
   return outcomes + `<small>Estimate for ${b(ui.gameDate(forecast.day))} if other conditions hold.</small>`;
 }
 
-function gpmRegionalSupportScale(regions) {
-  const colors = [[49, 60, 78], [52, 88, 112], [43, 123, 145], [54, 166, 176], [126, 219, 207]];
-  const min = Math.min(...regions.map(region => region.support));
-  const max = Math.max(...regions.map(region => region.support));
-  const color = support => colors[max > min
-    ? Math.min(colors.length - 1, Math.floor((support - min) / (max - min) * colors.length)) : 2];
-  return { min, max, colors, color };
+function gpmRegionalSupportPosition(support) {
+  // Give small parties more visible detail while keeping the same scale across countries and turns.
+  return Math.log1p(Math.max(0, Math.min(1, support)) * 200) / Math.log1p(200);
+}
+
+function gpmRegionalSupportColor(support) {
+  const lightness = 25 + 61 * gpmRegionalSupportPosition(support);
+  return `hsl(211 60% ${lightness.toFixed(3)}%)`;
+}
+
+function gpmRegionalSupportLegend() {
+  const ticks = [0, .01, .02, .05, .2, 1].map(support =>
+    `<small style="--gpm-tick-position:${gpmRegionalSupportPosition(support) * 100}%">${b(gpmRegionalPercent(support))}</small>`);
+  const gradient = `linear-gradient(90deg in hsl, ${gpmRegionalSupportColor(0)}, ${gpmRegionalSupportColor(1)})`;
+  return `<div class="gpm-support-ramp" style="background:${gradient}" aria-hidden="true"></div>
+    <div class="gpm-support-ticks">${ticks.join("")}</div>`;
 }
 
 function gpmBindRegionalOverview(profile, view, ui) {
@@ -142,7 +155,6 @@ function gpmBindRegionalOverview(profile, view, ui) {
   select.disabled = open.disabled = false;
   const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 });
   const format = value => percent.format(value);
-  const { min, max, colors, color } = gpmRegionalSupportScale(regions);
   const byId = new Map(regions.map(region => [region.id, region]));
   const names = new Map(regions.map(region => [region.id, gpmRegionalRegionName(region)]));
   const features = regions.map(region => world?.provinces?.[region.id])
@@ -155,15 +167,14 @@ function gpmBindRegionalOverview(profile, view, ui) {
   const svg = (paths, width, height) => `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Estimated regional party support">
     ${paths.map(({ provId, d }) => {
       const region = byId.get(provId);
-      return `<path d="${b(d)}" data-gpm-support-region="${provId}" fill="rgb(${color(region.support).join(",")})">
+      return `<path d="${b(d)}" data-gpm-support-region="${provId}" fill="${gpmRegionalSupportColor(region.support)}">
         <title>${b(names.get(provId))} · ${b(format(region.support))}</title></path>`;
     }).join("")}</svg>`;
   map.innerHTML = layout ? svg(layout.paths, layout.W, layout.H) +
     (layout.insets.length ? `<div class="gpm-support-insets">${layout.insets.map(inset =>
       `<div>${svg(inset.paths, layout.box, layout.box)}<small>${b(inset.label)}</small></div>`).join("")}</div>` : "")
     : "Map geometry is unavailable. Choose a region below to view its support.";
-  legend.innerHTML = layout && max > min ? `<small>${b(format(min))} · Weaker</small><span aria-hidden="true">
-    ${colors.map(rgb => `<i style="background:rgb(${rgb.join(",")})"></i>`).join("")}</span><small>${b(format(max))} · Stronger</small>` : "";
+  legend.innerHTML = layout ? gpmRegionalSupportLegend() : "";
   select.innerHTML = [...regions].sort((a, b) => names.get(a.id).localeCompare(names.get(b.id), cs()))
     .map(region => `<option value="${region.id}">${b(names.get(region.id))} · ${b(format(region.support))}</option>`).join("");
   const strongest = regions.reduce((best, region) => region.support > best.support ? region : best);
@@ -409,7 +420,8 @@ module.exports = {
   style,
   rendererFunctions: [gpmRegionalActionName, gpmRegionalReason, gpmRegionalRegionName, gpmRenderRegionalOverview,
     gpmRegionalPercent, gpmRegionalPoints, gpmRegionalNational, gpmRegionalProjection,
-    gpmRegionalSupportScale, gpmBindRegionalOverview, gpmRenderRegionalMap,
+    gpmRegionalSupportPosition, gpmRegionalSupportColor, gpmRegionalSupportLegend,
+    gpmBindRegionalOverview, gpmRenderRegionalMap,
     gpmRefreshRegionalMap, gpmSelectRegionalProvince, gpmRegionalGlobeClick, gpmSubmitRegionalAction,
     gpmOpenRegionalMap, gpmCloseRegionalMap],
 };
