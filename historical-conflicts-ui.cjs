@@ -10,11 +10,15 @@ const style = `
   .gpm-history-tools label { display: grid; gap: var(--gap-1); }
   .gpm-history-tools label:first-child { flex: 1 1 14rem; }
   .gpm-history-tools :is(input, select) { width: 100%; min-width: 0; }
-  .gpm-history-layout { display: grid; grid-template-columns: minmax(10rem, .8fr) minmax(0, 1.6fr); gap: var(--gap-3); }
+  .gpm-history-layout { display: grid; grid-template-columns: minmax(9rem, .7fr) minmax(0, 1.6fr); gap: var(--gap-3); }
   .gpm-history-list { display: grid; align-content: start; gap: var(--gap-1); max-height: 34rem; overflow: auto; }
-  .gpm-history-list button, .gpm-history-region-list button { display: grid; gap: var(--gap-1); text-align: left; white-space: normal; }
-  .gpm-history-list button[aria-pressed=true], .gpm-history-region-list button[aria-pressed=true] { border-color: var(--mark-late, #edc583); }
-  .gpm-history-detail, .gpm-history-side, .gpm-history-actor, .gpm-history-region-list { display: grid; align-content: start; gap: var(--gap-2); min-width: 0; }
+  .gpm-history-list button {
+    display: grid; justify-items: start; align-content: center; gap: 3px;
+    height: auto; min-height: 36px; padding: 6px 9px;
+    text-align: left; white-space: normal; overflow-wrap: anywhere; line-height: 1.2;
+  }
+  .gpm-history-list button[aria-pressed=true] { border-color: var(--mark-late, #edc583); }
+  .gpm-history-detail, .gpm-history-side, .gpm-history-actor { display: grid; align-content: start; gap: var(--gap-2); min-width: 0; }
   .gpm-history-sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--gap-2); }
   .gpm-history-side, .gpm-history-region { padding: var(--gap-2); }
   .gpm-history-actor + .gpm-history-actor { border-top: 1px solid var(--line, #545861); padding-top: var(--gap-2); }
@@ -30,10 +34,39 @@ const style = `
   .gpm-history-map path[data-selected] { stroke: #fff2bd; stroke-width: 2px; }
   .gpm-history-map-key { display: flex; flex-wrap: wrap; gap: var(--gap-2); }
   .gpm-history-map-key i { display: inline-block; width: .8em; height: .8em; margin-inline-end: .3em; border: 1px solid currentColor; }
-  .gpm-history-region-list { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); max-height: 12rem; overflow: auto; }
+  .gpm-history-section { padding-block-start: var(--gap-2); border-top: 1px solid var(--line, #545861); }
+  .gpm-history-section > summary { cursor: pointer; }
+  .gpm-history-section > :not(summary) { margin-block-start: var(--gap-2); }
+  .gpm-history-region-select { display: grid; gap: var(--gap-1); }
+  .gpm-history-region-select select { min-width: 0; width: 100%; }
   .gpm-history-region dl { display: grid; grid-template-columns: max-content 1fr; gap: var(--gap-1) var(--gap-2); }
   .gpm-history-region dd { margin: 0; }
   .gpm-history-control { display: grid; gap: var(--gap-1); }
+  .gpm-history-control-bar { display: flex; gap: 1px; overflow: hidden; height: .55rem; background: var(--bg, #12191f); border-radius: var(--radius, 4px); }
+  .gpm-history-control-bar > span { height: 100%; }
+  .gpm-history-control-list { display: grid; gap: 3px; padding: 0; list-style: none; }
+  .gpm-history-control-list > li { display: grid; grid-template-columns: 8px 1fr auto; align-items: center; gap: 6px; }
+  .gpm-history-control-list i { width: 8px; height: 8px; }
+  .gpm-history-control-list b { font-variant-numeric: tabular-nums; }
+  [data-gpm-region-control-box] {
+    position: fixed; z-index: 28; display: grid; gap: 5px; box-sizing: border-box;
+    width: max-content; min-width: min(9rem, calc(100vw - 16px)); max-width: min(17rem, calc(100vw - 16px));
+    max-height: min(17rem, calc(100vh - 16px)); padding: 8px 10px; overflow: auto; overflow-wrap: anywhere;
+    color: var(--text, #eff3f7); background: #172029; border: 1px solid #56606b;
+    border-radius: var(--radius, 4px); box-shadow: 0 4px 14px #0006; font-size: .82rem;
+  }
+  [data-gpm-region-control-box] :is(ul, p) { margin: 0; }
+  [data-gpm-region-control-box] ul { padding: 0; list-style: none; }
+  [data-gpm-region-control-box] [data-gpm-control-row] { display: flex; justify-content: space-between; gap: 12px; padding-block: 2px; }
+  [data-gpm-region-control-box] [data-gpm-control-row] > b { flex: none; font-variant-numeric: tabular-nums; }
+  body:has([data-gpm-region-control-box]) #tooltip.gpm-history-map-tip { visibility: hidden; }
+  [data-gpm-faction-inspector] .insp-head img.flag { object-fit: contain; }
+  [data-gpm-faction-inspector] .insp-leader { cursor: default; }
+  [data-gpm-faction-inspector] .insp-econ { grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr)); }
+  [data-gpm-faction-inspector] .insp-rel { display: grid; gap: var(--gap-2); }
+  [data-gpm-faction-inspector] .ir-cell { text-align: left; }
+  [data-gpm-faction-inspector] .gpm-faction-laws { padding-inline-start: var(--gap-4); margin-block: var(--gap-1) 0; }
+  [data-gpm-faction-inspector] .gpm-faction-laws li + li { margin-top: var(--gap-1); }
   @media (max-width: 1200px) { .gpm-history-layout { grid-template-columns: minmax(0, 1fr); } .gpm-history-list { max-height: 16rem; } }
 `;
 
@@ -170,15 +203,213 @@ function gpmHistoricalActor(actor, outcome) {
   </article>`;
 }
 
+function gpmMountHistoricalInspector(ui, session, shell) {
+  const host = K("insp-body");
+  if (!host || ui.sim !== session) return false;
+  if (ui.inspectedKey) ui.closeInspector();
+  ui._resetInspectorTransient();
+  ui.globe?.setSelected(null);
+  ui.tooltip(null);
+  host.replaceChildren(shell);
+  host.scrollTop = 0;
+  ui._showInspectorPanel();
+  return true;
+}
+
+function gpmHistoricalFactionHeading(actor) {
+  const flag = actor.identity?.flag;
+  const ratio = Number.isFinite(flag?.ratio) && flag.ratio > 0 ? flag.ratio : 1.5;
+  return `<div class="insp-head">
+    ${flag?.image ? `<img class="flag fl-xl" data-gpm-faction-flag style="--flag-ratio:${ratio}"
+      src="${b(flag.image)}" alt="${b(flag.name || actor.name)}">` : ""}
+    <div class="insp-id">
+      <div class="insp-name">${b(actor.mapName || actor.wartimeMapName || actor.shortName || actor.name)}</div>
+      <div class="insp-regime">${b(gpmHistoricalLabel(actor.kind))}</div>
+    </div>
+  </div>`;
+}
+
+function gpmHistoricalFactionProfile(actor, front) {
+  const identity = actor.identity;
+  const opening = identity?.headOfState || identity?.leader || identity?.headOfGovernment;
+  const leader = actor.leadership?.leader;
+  const representative = identity?.representative;
+  const illustration = gpmHistoricalDossierIllustrations[actor.id];
+  const currentName = leader ? zt(leader) : opening?.name;
+  const documented = !leader || !!leader.gpmHistoricalPerson;
+  const portrait = leader ? Ts(leader, actor.leadership.year) : opening?.portrait?.image;
+  const representativeImage = documented && !portrait && representative?.portrait?.image;
+  const illustrativeImage = documented && !portrait && !representativeImage && illustration?.image;
+  const photo = portrait || representativeImage || illustrativeImage;
+  const leaderName = currentName || (representativeImage && representative.name) ||
+    (illustrativeImage && illustration.fictionalName) || "Leadership not documented";
+  const leaderRole = (leader && !documented ? Bp(leader.role, leader.g) : opening?.role) ||
+    (representativeImage ? "Faction representative" : illustrativeImage && illustration.fictionalName ? "Fictional scenario character" : null);
+  const photoCredit = representativeImage ? "Photo: " + representative.name + " (faction representative)" :
+    illustrativeImage ? "Illustrative portrait" : null;
+  const ideology = actor.ppoIdeology;
+  const politics = ideology?.historicalLabel || ideology?.label ||
+    (actor.ideology?.length <= 80 ? actor.ideology.replace(/\.$/, "") : null) ||
+    (ideology?.territorial ? gpmHistoricalLabel(ideology.territorial) : null);
+  const badges = front.status === "active" ? `<span class="badge alert">${o("inspector.badge.atWar")}</span>` :
+    front.status ? `<span class="badge">${b(gpmHistoricalLabel(front.status))}</span>` : "";
+  const stats = [
+    ["Active forces", actor.nativeForces?.active],
+    ["Reserve forces", actor.nativeForces?.reserve],
+    ["Scenario forces", actor.nativeForces?.active == null ? actor.strength?.gamePersonnel : null],
+  ].filter(([, value]) => Number.isFinite(value));
+  const government = actor.administrationName || ideology?.relatedAdministration?.name;
+  const details = [["Administration", government], ["Ideology", politics]].filter(([, value]) => value);
+  const laws = (actor.laws || []).filter(law => law.name);
+  const policy = law => {
+    const statuses = { in_force: "In force", in_practice: "In practice", charter: "Charter" };
+    const status = law.status && (statuses[law.status] || gpmHistoricalLabel(law.status));
+    return `<li>${b(law.name)}${status ? ` <small class="regime-class">${b(status)}</small>` : ""}</li>`;
+  };
+  return `${gpmHistoricalFactionHeading(actor)}
+    ${badges ? `<div class="badges insp-badges">${badges}</div>` : ""}
+    <div class="k insp-leader" data-gpm-faction-leader>
+      <span class="insp-ic il-ic">${photo ? `<img class="il-av" src="${b(photo)}" alt="${b(photoCredit || leaderName)}">` : Q.user}</span>
+      <span class="il-txt"><span class="il-role">${b(leaderName)}</span>
+        ${leaderRole || photoCredit ? `<span class="il-sub">${b([leaderRole, photoCredit].filter(Boolean).join(" · "))}</span>` : ""}
+      </span>
+    </div>
+    ${stats.length ? `<div class="insp-econ">${stats.map(([label, value]) =>
+      `<div class="stat" data-gpm-faction-stat><label>${b(label)}</label><span class="v">${b(value.toLocaleString(cs()))}</span></div>`).join("")}</div>` : ""}
+    ${details.length ? `<div class="insp-rel">${details.map(([label, value]) =>
+      `<div class="ir-cell"><label>${b(label)}</label><span>${b(value)}</span></div>`).join("")}</div>` : ""}
+    ${laws.length ? `<div data-gpm-faction-policies><div class="insp-tier">Policies</div>
+      <ul class="gpm-faction-laws">${laws.slice(0, 3).map(policy).join("")}</ul>
+      ${laws.length > 3 ? `<details><summary>More policies</summary><ul class="gpm-faction-laws">${laws.slice(3).map(policy).join("")}</ul></details>` : ""}</div>` : ""}`;
+}
+
+async function gpmOpenHistoricalFactionInspector(ui, session, item, front, faction) {
+  const shell = document.createElement("section");
+  shell.setAttribute("data-gpm-faction-inspector", "");
+  shell.dataset.factionId = faction.id;
+  const heading = gpmHistoricalFactionHeading(faction);
+  shell.innerHTML = heading + '<p class="empty-note" role="status">Loading faction profile…</p>';
+  if (!gpmMountHistoricalInspector(ui, session, shell)) return;
+  const selection = { session, factionId: faction.id, provinceKey: item.provinceKey };
+  ui._gpmFactionInspector = selection;
+  try {
+    const result = await at(session, "gpm.historicalConflicts", { id: front.id });
+    if (ui._gpmFactionInspector !== selection || ui.sim !== session || !shell.isConnected) return;
+    const conflict = result?.selected;
+    const actor = conflict?.actors?.find(candidate => candidate.id === faction.id);
+    if (!actor) throw new Error("Faction absent from conflict view");
+    shell.innerHTML = gpmHistoricalFactionProfile({ ...actor, mapName: faction.mapName }, front);
+  } catch (error) {
+    if (ui._gpmFactionInspector !== selection || ui.sim !== session || !shell.isConnected) return;
+    console.warn("[PPO] Faction inspector could not load", error);
+    shell.innerHTML = heading + '<p class="empty-note">Could not load the faction profile.</p>';
+  }
+}
+
+function gpmHistoricalControlSummary(region, conflict, authority, compact = false, chart = false) {
+  let rows = region.control;
+  const military = region.militaryControl;
+  if (!rows?.length && military?.totalCells > 0 && military.sides?.length === 2) {
+    const first = Math.round(1000 * military.sides[0].cells / military.totalCells) / 10;
+    rows = military.sides.map((side, index) => ({
+      name: side.actorId ? authority(side.actorId) : U(side.countryKey),
+      percent: index ? 100 - first : first,
+    }));
+  }
+  if (rows?.length) {
+    const percentage = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 });
+    if (chart) {
+      const palette = ["#648aa4", "#b48a60", "#a18ab5", "#77a18d"];
+      const visual = rows.map((side, index) => ({
+        name: side.name, share: Math.min(100, Math.max(0, side.percent)),
+        color: /^#[0-9a-f]{6}$/i.test(side.color) ? side.color : palette[index % palette.length],
+      }));
+      return `<div class="gpm-history-control-bar" aria-hidden="true" data-gpm-control-chart>
+        ${visual.filter(side => side.share > 0).map(side => `<span style="flex:${side.share};background:${side.color}"></span>`).join("")}</div>
+        <ul class="gpm-history-control-list">${visual.map(side => `<li data-gpm-control-row><i aria-hidden="true" style="background:${side.color}"></i>
+          <span>${b(side.name)}</span><b>${b(percentage.format(side.share / 100))}</b></li>`).join("")}</ul>`;
+    }
+    return `${compact ? "" : "<small>Modeled share of regional control.</small>"}
+      <ul>${rows.map(side => `<li data-gpm-control-row><span>${b(side.name)}</span>
+        <b>${b(percentage.format(side.percent / 100))}</b></li>`).join("")}</ul>`;
+  }
+  if (compact) return "<p>Control percentages unavailable.</p>";
+  if (chart) return "<p>Military control percentages unavailable.</p>";
+  const names = [...new Set([region.dominantActorId, region.secondaryActorId, region.currentController,
+    ...(conflict.sides || []).flat()].filter(Boolean).map(authority))];
+  return `<p>Military control percentages unavailable.</p>${names.length ? `<p>Known parties · ${b(names.join(" / "))}</p>` : ""}`;
+}
+
+function gpmCloseRegionalControlBox(ui) {
+  const selection = ui._gpmRegionControlBox;
+  if (!selection) return;
+  ui._gpmRegionControlBox = null;
+  selection.controller.abort();
+  selection.shell.remove();
+}
+
+async function gpmOpenRegionalControlBox(ui, session, { name, conflictId, provinceKey, x = g1[0], y = g1[1] }) {
+  if (ui.sim !== session) return;
+  gpmCloseRegionalControlBox(ui);
+  ui.tooltip(null);
+  const shell = document.createElement("aside");
+  shell.setAttribute("data-gpm-region-control-box", "");
+  shell.setAttribute("aria-label", "Military control in " + (name || Ut(provinceKey, provinceKey)));
+  shell.dataset.provinceKey = provinceKey;
+  shell.innerHTML = '<strong>Military control</strong><div role="status" data-history-military-control>Loading…</div>';
+  document.body.append(shell);
+  const content = shell.querySelector("[data-history-military-control]");
+  const place = () => {
+    const left = x + 12 + shell.offsetWidth <= window.innerWidth - 8 ? x + 12 : x - shell.offsetWidth - 12;
+    const top = y + 12 + shell.offsetHeight <= window.innerHeight - 8 ? y + 12 : y - shell.offsetHeight - 12;
+    shell.style.left = Math.max(8, Math.min(left, window.innerWidth - shell.offsetWidth - 8)) + "px";
+    shell.style.top = Math.max(8, Math.min(top, window.innerHeight - shell.offsetHeight - 8)) + "px";
+  };
+  place();
+  const controller = new AbortController();
+  const { signal } = controller;
+  const selection = { session, conflictId, provinceKey, shell, controller };
+  ui._gpmRegionControlBox = selection;
+  const current = () => ui._gpmRegionControlBox === selection && ui.sim === session && shell.isConnected;
+  document.addEventListener("pointerdown", event => {
+    if (!shell.contains(event.target)) gpmCloseRegionalControlBox(ui);
+  }, { capture: true, signal });
+  document.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    gpmCloseRegionalControlBox(ui);
+  }, { capture: true, signal });
+  window.addEventListener("resize", place, { signal });
+  try {
+    const result = await at(session, "gpm.historicalConflicts", { id: conflictId });
+    if (!current()) return;
+    const conflict = result?.selected;
+    const region = conflict?.regions?.find(entry => entry.key === provinceKey);
+    if (!region) throw new Error("Region absent from conflict view");
+    const actors = new Map((conflict.actors || []).map(actor => [actor.id, actor]));
+    const authority = id => actors.get(id)?.shortName || actors.get(id)?.name || U(id);
+    content.innerHTML = gpmHistoricalControlSummary(region, conflict, authority, true);
+    place();
+  } catch (error) {
+    if (!current()) return;
+    console.warn("[PPO] Regional control could not load", error);
+    content.textContent = "Could not load regional control.";
+    place();
+  }
+}
+
 function gpmHistoricalRegions(conflict, actors, state, ui) {
-  if (!conflict.regions?.length) return "";
-  const selected = conflict.regions.find(region => region.key === state.regionKey) || conflict.regions[0];
+  if (!conflict.regions?.length) return '<p class="empty-note">No regional control data available.</p>';
+  const selected = conflict.regions.find(region => region.key === state.regionKey) ||
+    conflict.regions.find(region => (region.currentContested ?? region.contested) && (region.control?.length || region.militaryControl)) ||
+    conflict.regions.find(region => region.currentContested ?? region.contested) || conflict.regions[0];
   const name = region => Ut(region.key, region.name);
   const authority = id => actors.get(id)?.shortName || actors.get(id)?.name || U(id);
   const category = region => {
     if (region.currentContested ?? region.contested) return "contested";
     const controller = region.currentController ?? region.controller;
-    if (!controller) return "unmapped";
+    if (!controller || region.modeledContact && !region.occupationKey) return "unmapped";
     const side = conflict.sides?.findIndex(members => members.includes(controller));
     return side === 0 ? "first" : side === 1 ? "second" : "other";
   };
@@ -195,52 +426,41 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
   const paths = (items, width, height) => `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Regional control and contestation">
     ${items.map(item => {
       const region = byKey.get(keys.get(item.provId));
-      return region ? `<path d="${b(item.d)}" fill="${colors[category(region)]}" data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
-        <title>${b(name(region))} · ${b((region.currentContested ?? region.contested) ? "Contested" : region.controller ? authority(region.controller) : "Control unspecified")}</title></path>` : "";
+      if (!region) return "";
+      return `<path d="${b(item.d)}" fill="${colors[category(region)]}" data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
+        <title>${b(name(region))} · ${b(regionStatus(region))}</title></path>`;
     }).join("")}</svg>`;
   const labels = {
     contested: "Contested", first: authority(conflict.sides?.[0]?.[0]), second: authority(conflict.sides?.[1]?.[0]),
     other: "Other actor", unmapped: "Control unspecified",
   };
   const categories = new Set(conflict.regions.map(category));
-  const contested = selected.currentContested ?? selected.contested;
-  const military = selected.militaryControl;
-  let militaryControl = "";
-  if (contested) {
-    let text;
-    if (military?.totalCells > 0 && military.sides?.length === 2) {
-      const firstShare = Math.round(1000 * military.sides[0].cells / military.totalCells) / 1000;
-      const percentage = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 });
-      text = `<small>Share of land cells with modeled military control.</small>
-        <ul>${military.sides.map((side, index) => `<li>${b(side.actorId ? authority(side.actorId) : U(side.countryKey))}
-          <b>${b(percentage.format(index ? 1 - firstShare : firstShare))}</b></li>`).join("")}</ul>`;
-    } else {
-      const names = [...new Set([selected.dominantActorId, selected.secondaryActorId, selected.currentController,
-        ...(conflict.sides || []).flat()].filter(Boolean).map(authority))];
-      text = `<p>Military control percentages unavailable.</p>${names.length ? `<p>Known parties · ${b(names.join(" / "))}</p>` : ""}`;
-    }
-    militaryControl = `<section class="gpm-history-control" aria-label="Military control breakdown" data-history-military-control>
-      <b>Military control breakdown</b>${text}</section>`;
-  }
+  const regionStatus = region => (region.currentContested ?? region.contested) ? "Contested"
+    : region.occupationKey ? "Occupied"
+    : region.modeledContact ? "War front"
+    : (region.currentController ?? region.controller) ? "Controlled" : "Control unspecified";
+  const militaryControl = (selected.currentContested ?? selected.contested) || selected.control?.length
+    ? `<section class="gpm-history-control" aria-label="Military control breakdown" data-history-military-control>
+      <b>Military control</b>${gpmHistoricalControlSummary(selected, conflict, authority, false, true)}</section>` : "";
   return `<section class="gpm-history-detail" aria-label="Regional control">
     <h4>Regional control</h4>
     ${layout ? `<div class="gpm-history-map">${paths(layout.paths, layout.W, layout.H)}${layout.insets.map(inset => paths(inset.paths, layout.box, layout.box)).join("")}
       <div class="gpm-history-map-key">${[...categories].map(key =>
         `<small><i aria-hidden="true" style="background:${colors[key]}"></i>${b(labels[key])}</small>`).join("")}</div></div>` : ""}
-    <div class="gpm-history-region-list" data-keep-scroll="historical-regions">
-      ${conflict.regions.map(region => `<button type="button" class="k" data-authority-safe data-history-region="${b(region.key)}" data-focus-key="history-region-${b(region.key)}" aria-pressed="${region === selected}">
-        <b>${b(name(region))}</b><small>${b((region.currentContested ?? region.contested) ? "Contested" : region.controller ? authority(region.controller) : "Control unspecified")}</small></button>`).join("")}</div>
-    <div class="sh-inset gpm-history-region"><b>${b(name(selected))}</b>
-      <dl><dt>Opening controller</dt><dd>${b(selected.controller ? authority(selected.controller) : "Unspecified")}</dd>
-      ${Object.hasOwn(selected, "currentController") && selected.currentController !== selected.controller ? `<dt>Current controller</dt><dd>${b(selected.currentController ? authority(selected.currentController) : "Unspecified")}</dd>` : ""}
+    <label class="gpm-history-region-select">Region
+      <select class="k" data-authority-safe data-history-region-picker data-focus-key="history-region-picker">${conflict.regions.map(region =>
+        `<option value="${b(region.key)}"${region === selected ? " selected" : ""}>${b(name(region))} · ${b(regionStatus(region))}</option>`).join("")}</select></label>
+    <div class="sh-inset gpm-history-region">${militaryControl || `<p><b>${b(regionStatus(selected))}</b>
+      ${(!selected.modeledContact || selected.occupationKey) && (selected.currentController ?? selected.controller) ? ` · ${b(authority(selected.currentController ?? selected.controller))}` : ""}</p>`}
+    <details class="gpm-history-section" data-history-panel="region"><summary>Region details</summary>
+      <dl>${selected.controller && selected.controller !== selected.currentController ? `<dt>Opening controller</dt><dd>${b(authority(selected.controller))}</dd>` : ""}
+      ${selected.currentController && (!selected.modeledContact || selected.occupationKey) ? `<dt>Current controller</dt><dd>${b(authority(selected.currentController))}</dd>` : ""}
       ${selected.administrator ? `<dt>Administrator</dt><dd>${b(authority(selected.administrator))}</dd>` : ""}
       ${selected.legalOwner ? `<dt>Legal owner</dt><dd>${b(U(selected.legalOwner))}</dd>` : ""}
       ${selected.occupationKey ? `<dt>Current occupation</dt><dd>${b(U(selected.occupationKey))}</dd>` : ""}
-      ${Number.isFinite(selected.disruption) ? `<dt>Disruption</dt><dd>${b(selected.disruption)} / 100</dd>` : ""}
-      ${contested ? "<dt>Control</dt><dd>Contested</dd>" : ""}</dl>
-      ${militaryControl}
+      ${Number.isFinite(selected.disruption) ? `<dt>Disruption</dt><dd>${b(selected.disruption)} / 100</dd>` : ""}</dl>
       ${selected.localOutcomes?.length ? `<div><b>Local administrations</b><ul>${selected.localOutcomes.map(local => `<li>${b(local.administration || local.title)}</li>`).join("")}</ul></div>` : ""}
-      ${selected.note ? `<p>${b(selected.note)}</p>` : ""}</div>
+      ${selected.note ? `<p>${b(selected.note)}</p>` : ""}</details></div>
   </section>`;
 }
 
@@ -254,6 +474,7 @@ function gpmHistoricalDetail(conflict, state, ui) {
   });
   const combatants = new Set((conflict.sides || []).flat());
   const others = [...actors.values()].filter(actor => actor.id !== state.actorId && !combatants.has(actor.id));
+  const parties = (conflict.sides || []).map(side => side.map(id => actors.get(id)?.shortName || actors.get(id)?.name || U(id)).join(", "));
   const sources = gpmHistoricalSourceList(conflict.sources);
   const pendingTerm = (conflict.options || []).find(option => option.id === state.term);
   const action = (id, label, extra = "") => `<button type="button" class="k" data-history-action="${id}" data-focus-key="history-${id}" ${extra}>${label}</button>`;
@@ -285,15 +506,26 @@ function gpmHistoricalDetail(conflict, state, ui) {
     ${outcome.polityKey ? `<p>${b(outcome.scope === "autonomy" ? "Self-governing territory" : "New sovereign polity")}</p>` : ""}
     ${outcome.scope === "local" || outcome.scope === "autonomy" && outcome.native === false ? "<p>Local authority recorded within the stock region.</p>" : ""}
     ${outcome.regionalLaws?.length ? `<ul>${outcome.regionalLaws.map(law => `<li><b>${b(law.name)}</b><br>${b(law.note)}<ul class="gpm-history-sources">${gpmHistoricalSourceList(law.source)}</ul></li>`).join("")}</ul>` : ""}</section>` : "";
-  const negotiations = proposals || conflict.pending || history || conflict.settlement ? `<section class="gpm-history-detail" aria-label="Negotiations">
-    <h4>Negotiations</h4>
+  const negotiations = proposals || conflict.pending || history || conflict.settlement ? `<details class="gpm-history-section" data-history-panel="negotiations"${state.term || conflict.pending ? " open" : ""}>
+    <summary>Negotiations</summary><div class="gpm-history-detail">
     ${conflict.pending ? `<p>${b(conflict.pending.label)} proposed by ${b(U(conflict.pending.offeredBy))}. Review due ${b(ui.gameDate(conflict.pending.reviewDay))}.</p>` : ""}
     ${conflict.settlement ? `<p>Settlement · ${b(gpmHistoricalLabel(conflict.settlement))}</p>` : ""}
     ${proposals}${history ? `<ul>${history}</ul>` : ""}
-  </section>` : "";
+  </div></details>` : "";
   return `<article class="gpm-history-detail" aria-label="${b(conflict.name)}">
-    <header><h3>${b(conflict.name)}</h3><small>${b([conflict.status, conflict.kind, conflict.mode].filter(Boolean).map(gpmHistoricalLabel).join(" · "))}</small></header>
-    ${selectedActor ? gpmHistoricalActor(selectedActor, conflict.factionOutcomes?.[selectedActor.id]) : ""}
+    <header><h3>${b(conflict.name)}</h3><small>${b(gpmHistoricalLabel(conflict.status))}</small></header>
+    ${parties.some(Boolean) ? `<p>${b(parties.filter(Boolean).join(" vs. "))}</p>` : ""}
+    ${gpmHistoricalRegions(conflict, actors, state, ui)}
+    ${conflict.theatreKey ? `<div class="gpm-history-actions">${action("theatre", "Open War Theatre", "data-authority-safe")}</div>` : ""}
+    ${negotiations}
+    ${postwar ? `<details class="gpm-history-section" data-history-panel="outcome"><summary>Postwar outcome</summary>${postwar}</details>` : ""}
+    ${actors.size ? `<details class="gpm-history-section" data-history-panel="participants"${selectedActor ? " open" : ""}>
+      <summary>Participants</summary>
+      ${selectedActor ? gpmHistoricalActor(selectedActor, conflict.factionOutcomes?.[selectedActor.id]) : ""}
+      ${sides.length ? `<div class="gpm-history-sides">${sides.join("")}</div>` : ""}
+      ${others.length ? `<section class="gpm-history-side sh-inset" aria-label="Other actors"><h4>Other actors</h4>${others.map(actor => gpmHistoricalActor(actor)).join("")}</section>` : ""}
+    </details>` : ""}
+    <details class="gpm-history-section" data-history-panel="background"><summary>Background and sources</summary><div class="gpm-history-detail">
     ${conflict.note ? `<p>${b(conflict.note)}</p>` : ""}
     ${conflict.geographicContext?.length ? `<div><h4>Areas affected</h4><ul>${conflict.geographicContext.map(area => `<li>${b(area)}</li>`).join("")}</ul></div>` : ""}
     ${conflict.asOf || conflict.confidence ? `<small>${b([conflict.asOf && `Snapshot ${conflict.asOf}`, conflict.confidence && `${gpmHistoricalLabel(conflict.confidence)} confidence`].filter(Boolean).join(" · "))}</small>` : ""}
@@ -304,16 +536,11 @@ function gpmHistoricalDetail(conflict, state, ui) {
     ].filter(Boolean).join(" · "))}</small>` : ""}
     ${Number.isInteger(conflict.ceasefireUntil) && conflict.ceasefireUntil > state.data.day ? `<small>Ceasefire until ${b(ui.gameDate(conflict.ceasefireUntil))}</small>` : ""}
     ${Number.isInteger(conflict.aidUntil) && conflict.aidUntil > state.data.day ? `<small>Humanitarian access until ${b(ui.gameDate(conflict.aidUntil))}</small>` : ""}
-    ${conflict.theatreKey ? `<div class="gpm-history-actions">${action("theatre", "Open War Theatre", "data-authority-safe")}</div>` : ""}
-    ${sides.length ? `<div class="gpm-history-sides">${sides.join("")}</div>` : ""}
-    ${others.length ? `<section class="gpm-history-side sh-inset" aria-label="Other actors"><h4>Other actors</h4>${others.map(actor => gpmHistoricalActor(actor)).join("")}</section>` : ""}
     ${conflict.advantage && conflict.status === "active" ? `<p>Advantage · ${b(actors.get(conflict.sides[conflict.advantage > 0 ? 1 : 0][0])?.name || "")} · ${b(Math.abs(conflict.advantage))} / 100</p>` : ""}
     ${conflict.transitionReview ? "<p>The former national government has been replaced. The new administration is reviewing this truce.</p>" : ""}
     ${conflict.victoryBlocked ? `<p>${b(conflict.victoryBlocked)}</p>` : ""}
-    ${gpmHistoricalRegions(conflict, actors, state, ui)}
-    ${postwar}
-    ${negotiations}
-    ${sources ? `<details data-history-sources><summary>Sources</summary><ul class="gpm-history-sources">${sources}</ul></details>` : ""}
+    ${sources ? `<ul class="gpm-history-sources">${sources}</ul>` : ""}
+    </div></details>
   </article>`;
 }
 
@@ -322,7 +549,8 @@ function gpmHistoricalConflictsView(host, ui, session) {
   let state = ui._gpmHistory;
   if (!state || state.session !== session) state = ui._gpmHistory = { session, query: "", status: "", request: 0 };
   if (state.host === host && state.playerKey === session.playerKey) {
-    if (!state.pending && !state.busy && state.data?.day !== session.day && performance.now() - state.lastRequest > 1500) void state.load();
+    const changed = state.data?.day !== session.day || state.lastCommitRevision !== session.status?.commitRevision;
+    if (!state.pending && !state.busy && changed && performance.now() - state.lastRequest > 1500) void state.load();
     return;
   }
   if (state.playerKey !== session.playerKey) {
@@ -334,6 +562,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
   state.playerKey = session.playerKey;
   const feedback = host.querySelector("[data-history-feedback]");
   const filter = host.querySelector("[data-history-filter]");
+  const incidents = host.querySelector("[data-history-incidents]");
   const search = host.querySelector("[data-history-search]");
   const list = host.querySelector("[data-history-list]");
   const detail = host.querySelector("[data-history-detail]");
@@ -344,42 +573,54 @@ function gpmHistoricalConflictsView(host, ui, session) {
     if (element._historyHtml === html) return;
     const key = active();
     const scroll = element.scrollTop;
-    const sourceOpen = element.querySelector("[data-history-sources]")?.open;
+    const panelOwner = element._historyPanelOwner;
+    const opened = panelOwner === state.selectedId
+      ? [...element.querySelectorAll("[data-history-panel][open]")].map(panel => panel.dataset.historyPanel) : [];
     element.innerHTML = html;
     element._historyHtml = html;
     element.scrollTop = scroll;
-    const sources = element.querySelector("[data-history-sources]");
-    if (sources && sourceOpen) sources.open = true;
+    element._historyPanelOwner = state.selectedId;
+    for (const panel of element.querySelectorAll("[data-history-panel]")) {
+      if (opened.includes(panel.dataset.historyPanel)) panel.open = true;
+    }
     restoreFocus(key);
   };
   const paint = () => {
     if (state.host !== host || ui._gpmHistory !== state) return;
     const data = state.data;
     const all = data?.conflicts || [];
-    const statuses = [...new Set(all.map(conflict => conflict.status).filter(Boolean))].sort();
+    const wars = all.filter(conflict => !conflict.crimeReport && !conflict.strategicOnly);
+    const incidentReports = all.filter(conflict => conflict.crimeReport || conflict.strategicOnly);
+    const statuses = [...new Set(wars.map(conflict => conflict.status).filter(Boolean))].sort();
     if (state.filter && !statuses.includes(state.filter)) state.filter = "";
     setHtml(filter, `<option value="">All statuses</option>${statuses.map(status => `<option value="${b(status)}"${state.filter === status ? " selected" : ""}>${b(gpmHistoricalLabel(status))}</option>`).join("")}`);
     const query = kt(state.query.trim());
-    const rows = all.filter(conflict => (!state.filter || conflict.status === state.filter) && (!query || kt([
+    const matches = conflict => !query || kt([
       conflict.name, gpmHistoricalLabel(conflict.kind), ...(conflict.countryKeys || []).map(key => U(key)),
-    ].join(" ")).includes(query)));
-    const text = data?.asOf ? `${rows.length} of ${all.length} conflicts · ${data.asOf} scenario` : "";
-    host.querySelector("[data-history-count]").textContent = text;
-    setHtml(list, rows.length ? rows.map(conflict => `<button type="button" class="k" data-authority-safe data-history-select="${b(conflict.id)}" data-focus-key="history-select-${b(conflict.id)}" aria-pressed="${state.selectedId === conflict.id}">
-      <b>${b(conflict.name)}</b><small>${b([conflict.status, conflict.kind].filter(Boolean).map(gpmHistoricalLabel).join(" · "))}</small></button>`).join("")
-      : `<p>${data ? all.length ? "No conflicts match the filters." : "This campaign has no historical conflict snapshot." : state.pending ? "Loading conflicts…" : "Conflict data is unavailable."}</p>`);
+    ].join(" ")).includes(query);
+    const statusOrder = ["active", "occupation", "ceasefire", "suspended", "settled"];
+    const order = status => statusOrder.includes(status) ? statusOrder.indexOf(status) : statusOrder.length;
+    const byStatus = (a, b) => order(a.status) - order(b.status) || a.name.localeCompare(b.name, cs());
+    const rows = wars.filter(conflict => (!state.filter || conflict.status === state.filter) && matches(conflict)).sort(byStatus);
+    const incidentRows = incidentReports.filter(matches).sort(byStatus);
+    const buttons = conflicts => conflicts.map(conflict => `<button type="button" class="k" data-authority-safe data-history-select="${b(conflict.id)}" data-focus-key="history-select-${b(conflict.id)}" aria-pressed="${state.selectedId === conflict.id}">
+      <b>${b(conflict.name)}</b><small>${b(gpmHistoricalLabel(conflict.status))}</small></button>`).join("");
+    host.querySelector("[data-history-count]").textContent = wars.length ? `${wars.filter(conflict => conflict.status === "active").length} active` : "";
+    setHtml(list, rows.length ? buttons(rows)
+      : `<p>${data ? wars.length ? "No wars match these filters." : "No wars available." : state.pending ? "Loading wars…" : "Conflict data is unavailable."}</p>`);
+    incidents.hidden = !incidentRows.length;
+    if (incidents._historySelection !== state.selectedId && incidentRows.some(conflict => conflict.id === state.selectedId)) incidents.open = true;
+    incidents._historySelection = state.selectedId;
+    setHtml(incidents.querySelector("[data-history-incident-list]"), buttons(incidentRows));
     const selected = data?.selected;
     setHtml(detail, gpmHistoricalDetail(selected?.id && selected.id === state.selectedId ? selected : null, state, ui));
-    if (state.focusRegionDetails && !state.pending && selected?.id === state.selectedId) {
-      state.focusRegionDetails = false;
-      detail.querySelector("[data-history-military-control]")?.scrollIntoView({ block: "center", inline: "nearest" });
-    }
     feedback.textContent = state.status;
     host.setAttribute("aria-busy", String(!!state.pending || !!state.busy));
   };
   state.load = async (id = state.selectedId, force = false) => {
     if (!current() || state.busy || (state.pending && !force)) return;
     const request = ++state.request;
+    const commitRevision = session.status?.commitRevision;
     state.pending = true;
     state.lastRequest = performance.now();
     paint();
@@ -388,6 +629,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
       if (!current() || state.request !== request) return;
       if (!Array.isArray(result?.conflicts)) throw new Error("Unexpected conflict data");
       state.data = result;
+      state.lastCommitRevision = commitRevision;
       if (!state.selectedId && result.selected?.id) state.selectedId = result.selected.id;
       if (state.status === "Could not load the historical conflicts. Try Refresh.") state.status = "";
     } catch (error) {
@@ -403,6 +645,11 @@ function gpmHistoricalConflictsView(host, ui, session) {
   search.value = state.query;
   search.oninput = () => { state.query = search.value; paint(); };
   filter.onchange = () => { state.filter = filter.value; paint(); };
+  host.onchange = event => {
+    if (!event.target.matches("[data-history-region-picker]")) return;
+    state.regionKey = event.target.value;
+    paint();
+  };
   host.onclick = async event => {
     if (!current()) return;
     const control = event.target.closest("[data-history-select], [data-history-region], [data-history-action], [data-history-source], [data-history-term]");
@@ -466,13 +713,21 @@ function gpmBuildHistoricalConflicts(container, ui, session) {
       <button type="button" class="k" data-authority-safe data-history-action="refresh" data-focus-key="history-refresh">Refresh</button>
     </div>
     <small role="status" data-history-feedback></small>
-    <div class="gpm-history-layout"><div class="gpm-history-list" role="group" aria-label="Conflicts" data-history-list data-keep-scroll="historical-conflicts"></div><div data-history-detail></div></div>
+    <div class="gpm-history-layout">
+      <div class="gpm-history-detail">
+        <div class="gpm-history-list" role="group" aria-label="Wars" data-history-list data-keep-scroll="historical-conflicts"></div>
+        <details class="gpm-history-section" data-history-incidents hidden><summary>Incident reports</summary>
+          <div class="gpm-history-list" data-history-incident-list></div></details>
+      </div><div data-history-detail></div>
+    </div>
   </section>`;
   gpmHistoricalConflictsView(container.querySelector("[data-gpm-history]"), ui, session);
 }
 
 function patchHistoricalConflictsRenderer(source, replaceOnce) {
   const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalSource, gpmHistoricalSourceList, gpmHistoricalActor,
+    gpmMountHistoricalInspector, gpmHistoricalFactionHeading, gpmHistoricalFactionProfile, gpmOpenHistoricalFactionInspector,
+    gpmHistoricalControlSummary, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,
     gpmHistoricalRegions, gpmHistoricalDetail, gpmHistoricalConflictsView, gpmBuildHistoricalConflicts];
   const initialize = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, initialize, "\nconst gpmHistoricalConflictsStyle = " + JSON.stringify(style) + ";\n"
@@ -488,6 +743,12 @@ function patchHistoricalConflictsRenderer(source, replaceOnce) {
   js = replaceOnce(js, foot, 'foot:n=>this._subSel.military==="historical-conflicts"?null:this._subSel.military==="oob"?this._budgetReformFoot(n,!0):this._budgetReformFoot(n)');
   const militaryTab = '{id:"command",k:"sub.military.war",rerender:!0,renderMode:"live",sig:n=>this._milNuclearSig(n),build:(n,r)=>this._bMilCommand(n,r),refresh:n=>this._rMilCommand(n),deactivate:()=>{this.deterrenceLayer?.active&&this.deterrenceLayer.set(!1)}},';
   js = replaceOnce(js, militaryTab, militaryTab + '{id:"historical-conflicts",k:"gpm.historicalConflicts.title",build:(n,r)=>gpmBuildHistoricalConflicts(n,this,r)},');
+  js = replaceOnce(js, 'async openInspector(e,t,a,n=null){let r=this.inspectedKey;',
+    'async openInspector(e,t,a,n=null){this._gpmFactionInspector=null;let r=this.inspectedKey;');
+  js = replaceOnce(js, 'closeInspector(){this.inspectedKey=null,',
+    'closeInspector(){this._gpmFactionInspector=null;this.inspectedKey=null,');
+  js = replaceOnce(js, '_resetInspectorTransient(){this._inspSig=null,',
+    '_resetInspectorTransient(){this._gpmFactionInspector=null;this._inspSig=null,');
   const refresh = '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);';
   return replaceOnce(js, refresh, refresh + 'if(this.activeModule==="military"&&this._subSel.military==="historical-conflicts")gpmHistoricalConflictsView(K("content-body")?.querySelector("[data-gpm-history]"),this,this.sim);');
 }

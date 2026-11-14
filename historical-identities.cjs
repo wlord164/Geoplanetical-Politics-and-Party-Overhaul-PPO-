@@ -126,6 +126,22 @@ function readIdentityIllustrations() {
   }));
 }
 
+function gpmNativeHistoricalPortrait(person, year, fallbackIcon) {
+  const tag = person?.gpmHistoricalPerson;
+  const historical = gpmHistoricalPeople[tag];
+  const actorId = historical && tag.endsWith(":leader") ? tag.slice(0, -":leader".length) : null;
+  const illustration = actorId && !historical.image && gpmHistoricalDossierIllustrations[actorId];
+  const representative = historical?.representative;
+  const photo = representative?.image || illustration?.image || (historical && !historical.image ? Pte(person, year) : Ts(person, year));
+  const note = representative ? `Photo: ${representative.name} (faction representative)` :
+    illustration?.image ? "Illustrative portrait" : historical && !historical.image && photo ? "Game-generated portrait" : null;
+  const title = representative ? [representative.name, representative.role, "Faction representative"].filter(Boolean).join(" · ") : note;
+  return {
+    html: photo ? `<img class="il-av" src="${b(photo)}" alt="${b(note || "")}"${title ? ` title="${b(title)}"` : ""}>` : fallbackIcon,
+    note,
+  };
+}
+
 function patchHistoricalIdentityRenderer(source, replaceOnce) {
   const identities = readIdentities();
   const people = Object.fromEntries(Object.entries(identities).flatMap(([actorId, identity]) =>
@@ -135,12 +151,22 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
           { name: identity.representative.name, role: identity.representative.role, image: identity.representative.portrait.image } : null }])));
   const portraitSelector = 'function Ts(e,t,a){';
   let patched = replaceOnce(source, portraitSelector,
-    `const gpmHistoricalPeople = ${JSON.stringify(people)};\n` +
+    `const gpmHistoricalPeople = ${JSON.stringify(people)};\n${gpmNativeHistoricalPortrait}\n` +
     `${portraitSelector}const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person)return person.image;`);
   patched = replaceOnce(patched, 'let k=e.nationalExecutiveRoleId?o(', 'let k=gpmHistoricalPeople[n.gpmHistoricalPerson]?.role||(e.nationalExecutiveRoleId?o(');
   patched = replaceOnce(patched, ':o("inspector.leader.title"),_=t.year', ':o("inspector.leader.title")),_=t.year');
+  patched = replaceOnce(patched, 'o("inspector.leader.age",{age:R}):""))}else a?',
+    'o("inspector.leader.age",{age:R}):"")+(s.note?" · "+s.note:""))}else a?');
+  patched = replaceOnce(patched, '_refreshInspector(e,t){this._iset("regimeName",jf(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(k=>k.id===r)||null;if(n)',
+    '_refreshInspector(e,t){this._iset("regimeName",jf(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(k=>k.id===r)||null,s=gpmNativeHistoricalPortrait(n,t.year,Q.user);if(n)');
   patched = replaceOnce(patched, 'let s=n?Ts(n,t.year):null;this._isetHtml("leaderAvatar",s?`<img class="il-av" src="${s}" alt="">`:Q.user)',
-    'const historical=gpmHistoricalPeople[n?.gpmHistoricalPerson],representative=historical?.representative;let s=n?(historical&&!historical.image?Pte(n,t.year):Ts(n,t.year)):null;this._isetHtml("leaderAvatar",representative?`<img class="il-av" src="${b(representative.image)}" alt="${b(representative.name)}" title="${b(representative.name+" · "+representative.role+" · Faction representative")}">`:s?`<img class="il-av" src="${s}" alt=""${historical&&!historical.image?\' title="Game-generated portrait"\':""}>`:Q.user),representative&&this._iset("leaderSub",`${historical.role} · Photo: ${representative.name}, faction representative`)');
+    'this._isetHtml("leaderAvatar",s.html)');
+  patched = replaceOnce(patched, 'let _=t.year,R=Ts(k,_);this._isetHtml("crownAvatar",R?`<img class="il-av" src="${R}" alt="">`:e.headOfStateRoleId==="monarch"?Q.crown:Q.user),this._iset("crownName",zt(k));let P=e.headOfStateRoleId==="monarch"?',
+    'let _=t.year,R=gpmNativeHistoricalPortrait(k,_,e.headOfStateRoleId==="monarch"?Q.crown:Q.user);this._isetHtml("crownAvatar",R.html),this._iset("crownName",zt(k));let P=gpmHistoricalPeople[k.gpmHistoricalPerson]?.role||(e.headOfStateRoleId==="monarch"?');
+  patched = replaceOnce(patched, 'Bp(e.headOfStateRoleId||"head_of_state",k.g);this._iset("crownRole",P+',
+    'Bp(e.headOfStateRoleId||"head_of_state",k.g));this._iset("crownRole",P+');
+  patched = replaceOnce(patched, 'o("inspector.leader.age",{age:_-k.born}):""))}else l.style.display="none"}',
+    'o("inspector.leader.age",{age:_-k.born}):"")+(R.note?" · "+R.note:e.key?.startsWith("gpm-historical-")&&gpmHistoricalPeople[n?.gpmHistoricalPerson]&&!k.gpmHistoricalPerson?" · Simulated officeholder":""))}else l.style.display="none"}');
   const flagSelector = 'function B9(e){return yH(e)||PX(e)}';
   const flagEntry = (flag, provisional) => ({
     url: flag.image, ratio: flag.ratio || 1.5, label: `${provisional ? "Provisional · " : ""}${flag.name}`,

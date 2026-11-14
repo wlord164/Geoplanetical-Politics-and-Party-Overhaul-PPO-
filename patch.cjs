@@ -2,10 +2,13 @@ const { patchUprisingWorker } = require("./party-uprising.cjs");
 const { patchUprisingRenderer } = require("./party-uprising-ui.cjs");
 const { patchHistoricalConflictsRenderer } = require("./historical-conflicts-ui.cjs");
 const { patchHistoricalConflictMapRenderer } = require("./historical-conflict-map.cjs");
+const { patchHistoricalOpeningTopology } = require("./historical-opening-topology.cjs");
 const { patchSudanReunificationWorker, patchSudanReunificationRenderer } = require("./historical-sudan-reunification.cjs");
 "use strict";
 
 const { createHash } = require("node:crypto");
+const { readFileSync } = require("node:fs");
+const { join } = require("node:path");
 const officialCountryNames = require("./party-official-country-names.cjs");
 const { workerFunctions: organizingWorker, rendererFunctions: organizingRenderer } = require("./party-organizing.cjs");
 const { workerFunctions: congressWorker } = require("./party-congress-model.cjs");
@@ -503,6 +506,7 @@ function bindPartyProfile(host, view, ui) {
 function patchRenderer(bytes) {
   if (sha256(bytes) !== rendererHash) throw new Error(`Unsupported Geoplanetical renderer. This mod targets ${version}.`);
   let js = bytes.toString("utf8");
+  js = patchHistoricalOpeningTopology(js, replaceOnce, "renderer");
   // Patch display lookups, leaving country IDs, native search aliases, and save data intact.
   js = replaceOnce(js, 'const __geoWorker = typeof document ===',
     `const gpmOfficialCountryNames = ${JSON.stringify(officialCountryNames)};\nconst __geoWorker = typeof document ===`);
@@ -557,6 +561,18 @@ function patchRenderer(bytes) {
 function patchWorker(bytes) {
   if (sha256(bytes) !== workerHash) throw new Error(`Unsupported Geoplanetical simulation. This mod targets ${version}.`);
   let js = bytes.toString("utf8");
+  js = patchHistoricalOpeningTopology(js, replaceOnce, "worker");
+  js = replaceOnce(js, "function vPt(){",
+    readFileSync(join(__dirname, "historical-province-climate.js"), "utf8") + "\nfunction vPt(){");
+  js = replaceOnce(js, "VXt(b,P.climate,P.provinces,A)",
+    "VXt(b,P.climate,gpmHistoricalClimateProvinceMap(b.world,P.provinces),A)");
+  js = replaceOnce(js, 'throw new Error("natural-hazards:world-missing");let t=new Set',
+    'throw new Error("natural-hazards:world-missing");gpmHistoricalProvinceHazards(e.world,bat);let t=new Set');
+  js = replaceOnce(js, "function Zia(e){let t={};",
+    readFileSync(join(__dirname, "historical-province-transport.js"), "utf8") +
+    "\nfunction Zia(e){gpmHistoricalProvinceTransport(e.world,Nle);let t={};");
+  js = replaceOnce(js, "function Jia(e,t,a=null){let r=$ia(t);WPe(r);",
+    "function Jia(e,t,a=null){let r=$ia(t);WPe(r);gpmHistoricalProvinceTransport(e.world,Nle,r.byProvince);");
   js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(qa.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Ie("advancePartyModDay",()=>advancePartyModDay(e)),t.has(qa.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:', 'organization:partyOrganizationForMerger(t),campaigns:');

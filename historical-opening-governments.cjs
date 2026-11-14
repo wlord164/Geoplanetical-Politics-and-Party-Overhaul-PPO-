@@ -5,6 +5,47 @@ const houthis = "ucdp-actor-123";
 const plc = "ucdp-actor-6254";
 const stc = "ucdp-actor-7344";
 
+const subdivided = {
+  "myanmar-arakan-conflict": {
+    title: "Arakkha Revolutionary Government", partyTag: "ULA", mapName: "Arakan Army",
+    administration: "Arakkha People’s Revolutionary Government",
+    color: "#9d7245", reform: { stateStructure: "decentralized", judicialReview: true },
+  },
+  "myanmar-kachin-conflict": {
+    title: "Kachin Independence Organization", partyTag: "KIO", mapName: "Kachin Independence Army",
+    color: "#519475", reform: { stateStructure: "decentralized" },
+  },
+  "myanmar-chin-conflict": {
+    title: "Chinland Council and Government", partyTag: "CNF", mapName: "Chinland Council",
+    color: "#9074a7", regime: "federal_parliamentary",
+  },
+  "myanmar-karen-conflict": {
+    title: "Karen National Union", partyTag: "KNU", mapName: "Karen National Union",
+    color: "#5d80ad", regime: "federal_parliamentary",
+  },
+  "ucdp-state-17740": {
+    title: "AFC/M23 Parallel Administration", partyTag: "AFC/M23", mapName: "AFC/M23",
+    color: "#8e764f", regime: "provisional_council", reform: { headGovExists: 0 },
+  },
+  "syr-suwayda-government": {
+    title: "Suwayda Local Administration", partyTag: "SNG", mapName: "Suwayda National Guard",
+    color: "#9d5f73", reform: { headGovExists: 0, judicialReview: true },
+  },
+  "ucdp-state-14784": {
+    title: "North and East Syria Administration", partyTag: "DAANES", mapName: "AANES",
+    administration: "Democratic Autonomous Administration of North and East Syria",
+    color: "#638c7d", regime: "federal_parliamentary", reform: { stateStructure: "decentralized" },
+  },
+};
+
+const openingAreas = [
+  { ...require("./historical-arakan-opening-area.json"), id: "arakan-rakhine",
+    frontId: "myanmar-arakan-conflict", name: "Arakan Townships" },
+  ...require("./historical-kivu-opening-areas.json"),
+  ...require("./historical-myanmar-town-opening-areas.json"),
+  ...require("./historical-syria-town-opening-areas.json"),
+];
+
 const governments = {
   "ucdp-state-14595": {
     parentKey: "887", parentActorId: plc, actorId: houthis, title: "Government of Change and Construction",
@@ -74,4 +115,25 @@ const contested = {
   ],
 };
 
-module.exports = { governments, contested };
+function addSubdividedGovernments(catalog) {
+  return Object.fromEntries(Object.entries(subdivided).map(([frontId, government]) => {
+    const front = catalog.conflicts.find(conflict => conflict.id === frontId);
+    const areas = openingAreas.filter(area => area.frontId === frontId);
+    const actorId = areas[0]?.actorId;
+    if (!front || !areas.every(area => area.actorId === actorId)) {
+      throw new Error("Invalid subdivided historical government " + frontId);
+    }
+    const actor = catalog.actors[actorId];
+    const opposing = front.sides.find(side => !side.includes(actorId));
+    const victory = catalog.victories[frontId]?.[actorId];
+    return [frontId, {
+      parentKey: actor.countryKey, actorId, parentActorId: opposing[0],
+      provinceKeys: areas.map(area => "PPO-" + area.id.toUpperCase()),
+      provinceNames: Object.fromEntries(areas.map(area => ["PPO-" + area.id.toUpperCase(), area.name])),
+      regime: "regional_council", laws: victory?.laws, ...government,
+      subdivided: true, sources: front.sources,
+    }];
+  }));
+}
+
+module.exports = { governments, contested, addSubdividedGovernments };

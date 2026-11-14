@@ -126,8 +126,13 @@
   "mmr-cnf": {
     "leader": {
       "name": "Pu Zing Cung",
-      "role": "Chin National Front chairperson",
-      "source": "https://ispmyanmar.com/chin-national-front-cnf/"
+      "role": "Chinland Council and Chin National Front chairman",
+      "source": "https://federaljournalmm.org/wp-content/uploads/2024/08/Quarterly-Report-May_June_July-English.pdf"
+    },
+    "headOfGovernment": {
+      "name": "Pu Pa Thang",
+      "role": "Chinland Government prime minister",
+      "source": "https://www.myanmarmissionnewyork.org/post/bi-weekly-update-on-the-current-situation-in-myanmar-16-09-2025-to-30-09-2025"
     },
     "flag": {
       "name": "Chin National Front flag",
@@ -305,6 +310,17 @@
         "credit": "Staff Sgt. Brigitte Morgan, U.S. Army, August 2018. Cropped for PPO.",
         "license": "https://creativecommons.org/publicdomain/mark/1.0/"
       }
+    },
+    "headOfState": {
+      "name": "Avin Suweid",
+      "role": "AANES Executive Council co-chair",
+      "g": "f",
+      "source": "https://m-syria-d.com/en/?p=8080"
+    },
+    "headOfGovernment": {
+      "name": "Hussein Othman",
+      "role": "AANES Executive Council co-chair",
+      "source": "https://m-syria-d.com/en/?p=8080"
     },
     "flag": {
       "name": "Syrian Democratic Forces flag",

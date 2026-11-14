@@ -174,7 +174,7 @@ function readCatalog() {
     actor.identity = identity;
   }
   const claimedOpeningRegions = new Set();
-  for (const [id, government] of Object.entries(opening.governments)) {
+  for (const [id, government] of Object.entries({ ...opening.governments, ...opening.addSubdividedGovernments(result) })) {
     const front = result.conflicts.find(row => row.id === id);
     const sides = front?.sides;
     const party = sides?.findIndex(side => side.includes(government.actorId));
@@ -192,7 +192,8 @@ function readCatalog() {
     actor.wartimeMapName = government.mapName || actor.shortName || actor.name;
     const regions = new Map((front.regions || []).map(region => [region.key, region]));
     for (const key of government.provinceKeys) {
-      regions.set(key, { ...regions.get(key), key, controller: government.actorId, administrator: government.actorId,
+      regions.set(key, { ...regions.get(key), key, ...(government.provinceNames?.[key] ? { name: government.provinceNames[key] } : {}),
+        controller: government.actorId, administrator: government.actorId,
         contested: false, note: "Documented wartime administration at the January 2026 opening." });
     }
     front.regions = [...regions.values()];
