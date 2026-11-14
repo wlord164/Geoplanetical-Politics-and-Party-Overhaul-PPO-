@@ -15,7 +15,7 @@ const style = `
 function gpmRenderPartyLaws() {
   return `<section class="mcard wide gpm-law-shortlist" aria-label="Law Shortlist">
     <h3 class="mc-title">Law Shortlist</h3>
-    <small>Proposals closer to your party’s position, ranked by the legislative forecast. Fit points measure the improvement in alignment with your party.</small>
+    <small>Proposals that fit your party, with the most likely to pass listed first.</small>
     <button class="k" type="button" data-gpm-law-refresh>Refresh forecast</button>
     <small data-gpm-law-status role="status"></small>
     <small data-gpm-law-rights></small>
@@ -36,8 +36,8 @@ function gpmPartyLawRows(laws, country) {
     return `<li><div>
       <strong>${b(name)}</strong>
       ${value ? `<small>${b(value)}</small>` : ""}
-      <small>${b(law.priority ? `Platform priority · ${vote}` : `+${formatGain.format(law.gain)} fit points · ${vote}`)}</small>
-      <small>${b([law.passes ? "Favorable forecast" : "Needs work", ...risks].join(" · "))}</small>
+      <small>${b(law.priority ? `Party priority · ${vote}` : `+${formatGain.format(law.gain)} points toward your platform · ${vote}`)}</small>
+      <small>${b([law.passes ? "Likely to pass" : "Unlikely to pass", ...risks].join(" · "))}</small>
       </div><button class="k" type="button" data-gpm-law-review="${index}" aria-label="${b("Review proposal for " + name)}">Review proposal</button></li>`;
   }).join("");
 }

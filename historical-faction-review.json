@@ -2140,6 +2140,7 @@
       "ucdp-actor-8885": {
         "scope": "military",
         "title": "AFC/M23 advantage on the Wazalendo front",
+        "goal": "Gain ground against Wazalendo in the Kivus",
         "note": "M23 gains in the local rivalry. A civil administration is addressed in its separate state front.",
         "sources": [
           "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
@@ -2148,6 +2149,7 @@
       "ucdp-actor-8832": {
         "scope": "military",
         "title": "Wazalendo hold in the Kivus",
+        "goal": "Hold positions in the Kivus and check AFC/M23 advances",
         "note": "Pro-government networks gain locally without inheriting provincial or national institutions.",
         "sources": [
           "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F858&t=pdf"
@@ -3029,8 +3031,9 @@
     "warwatch-2522": {
       "ucdp-actor-89": {
         "scope": "agreement",
-        "title": "Washington Accords territorial and security settlement",
-        "note": "Honor DRC territorial integrity and address cross-border forces. The AFC/M23 process remains separate.",
+        "title": "Kivu withdrawal under the Washington Accords",
+        "note": "Use the Washington Accords to secure a monitored withdrawal of Rwandan forces from the reported areas. The separate AFC/M23 war continues under its own rules.",
+        "withdrawal": { "willingness": 0.62 },
         "sources": [
           "https://www.refworld.org/sites/default/files/2025-07/peace_agreement_between_the_democratic_republic_of_the_congo_and_the_republic_of_rwanda_-_united_states_department_of_state.pdf"
         ],
@@ -3914,6 +3917,7 @@
     "ucdp-state-16617": {
       "ucdp-actor-123": {
         "scope": "military",
+        "goal": "Gain ground against southern forces",
         "note": "Ansar Allah prevails locally against southern forces. Its national victory route belongs to the separate PLC front.",
         "sources": [
           "https://sanaacenter.org/publications/policy-research/40"
@@ -3921,6 +3925,7 @@
       },
       "ucdp-actor-7344": {
         "scope": "military",
+        "goal": "Hold the southern front against Houthi forces",
         "note": "The STC gains local leverage. The separate PLC front determines the future of the southern state project.",
         "sources": [
           "https://sanaacenter.org/files/Yemen_International_Forum_2025_Report.pdf"
@@ -4347,6 +4352,7 @@
       "ucdp-actor-121": {
         "scope": "agreement",
         "title": "Lebanon withdrawal and Resolution 1701 implementation",
+        "goal": "Negotiate withdrawal and security terms under Resolution 1701",
         "note": "Implement local withdrawal and Lebanese security provisions under the 1701 framework. National governments and outstanding claims are unaffected.",
         "sources": [
           "https://digitallibrary.un.org/record/4068549?ln=en"
@@ -4359,9 +4365,12 @@
       "warwatch-actor-1454": {
         "scope": "agreement",
         "title": "Lebanon withdrawal and Resolution 1701 implementation",
-        "note": "Implement local withdrawal and Lebanese security provisions under the 1701 framework. National governments and outstanding claims are unaffected.",
+        "goal": "Secure Israeli withdrawal and restore Lebanese security presence",
+        "note": "Seek an Israeli withdrawal from the reported areas in southern Lebanon under Resolution 1701, with Lebanese forces deploying in parallel.",
+        "withdrawal": { "willingness": 0.72 },
         "sources": [
-          "https://digitallibrary.un.org/record/4068549?ln=en"
+          "https://digitallibrary.un.org/record/4068549?ln=en",
+          "https://peacekeeping.un.org/en/node/128637"
         ],
         "regionKeys": [
           "LBN-3060",
@@ -5239,6 +5248,7 @@
           "https://warwatch.ch/wp-json/warwatch/v1/all-map-data?date=2025-12"
         ],
         "title": "Georgia territorial access and withdrawal agreement",
+        "withdrawal": { "willingness": 0.25 },
         "policies": [
           {
             "name": "Civilian return and monitoring",

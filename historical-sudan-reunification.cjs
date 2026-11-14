@@ -36,8 +36,6 @@ function patchSudanReunificationRenderer(source, replaceOnce) {
       '(previous.startsWith("ppo-uprising-") || key.startsWith("ppo-uprising-") || previous === "gpm-historical-sdn-rsf" || key === "gpm-historical-sdn-rsf")'],
     ['"native-settlement": "War settlement",',
       '"native-settlement": "War settlement", "tasis-reunification": "Reunification under Tasis", "saf-reunification": "Reunification under the Sudanese government",'],
-    ['${conflict.settlement ? `<p>Settlement · ${b(gpmHistoricalLabel(conflict.settlement))}</p>` : ""}',
-      '${conflict.settlement ? `<p>Settlement · ${b(gpmHistoricalLabel(conflict.settlement))}</p>` : ""}\n    ${conflict.administrationName ? `<p>Postwar administration · ${b(conflict.administrationName)}</p>` : ""}'],
   ];
   return changes.reduce((code, [before, after]) => replaceOnce(code, before, after), source);
 }

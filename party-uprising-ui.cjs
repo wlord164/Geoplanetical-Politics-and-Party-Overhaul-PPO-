@@ -63,7 +63,8 @@ function gpmUprisingReason(reason) {
     founder_control: "Switch to the legal founding party to review an uprising.",
     incumbent_required: "An incumbent party must be in government before an uprising can begin.",
     unsupported_party_roles: "Your party must be outside the government and its formal support agreements.",
-    existing_war: "The current conflict must end before an uprising can begin.",
+    war_authority: "The government that won the uprising makes this decision.",
+    war_stale: "This choice is no longer available. Check the current war status.",
     territory: "The country needs an unoccupied region outside its capital with a land border to the rest of the country.",
     headquarters_required: "Establish party headquarters to set your starting region.",
     headquarters_region: "Relocate party headquarters to an eligible region.",
@@ -429,7 +430,8 @@ function gpmUprisingPanel(state, ui) {
     if (data.result === "breakaway" || data.result === "government") {
       return victory
         ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.victoryName || data.breakawayName)
-          + seatOutcome + ".</p><p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
+          + seatOutcome + ".</p>"
+          + "<p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
           + (data.integratedDivisions ? "<p>Breakaway divisions transferred to the national military: "
             + b(String(data.integratedDivisions)) + ".</p>" : "")
           + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")

@@ -36,7 +36,7 @@ function gpmForeignFundingReason(reason) {
   return {
     active: "Resolve the current request, offer, or grant first.",
     capacity: "The transfer would exceed a party treasury limit.",
-    cooldown: "Your party is still on cooldown.",
+    cooldown: "Your party has to wait before requesting another grant.",
     donor: "The donor party is no longer available.",
     donor_funds: "The donor can no longer afford the grant.",
     disabled: "Foreign party funding is off in this campaign.",
@@ -73,27 +73,28 @@ function gpmForeignFundingQuoteDetail(donor, state, ui, percent) {
     const items = [
       ["Base chance", factors.baseline],
       ["Ideological alignment", factors.ideology],
-      ["Ideological solidarity", factors.solidarity],
-      ["Electoral traction", factors.traction],
+      ["Support for similar parties", factors.solidarity],
+      ["Voter support and seats", factors.traction],
     ];
     breakdown = `<dl class="gpm-funding-factors">${items.map(([label, value]) =>
       `<dt>${label}</dt><dd>${b(points.format(value * 100))} pp</dd>`).join("")}
-      <dt>Before offer limits</dt><dd>${b(percent.format(factors.uncappedChance))}</dd></dl>`;
+      <dt>Chance before limits</dt><dd>${b(percent.format(factors.uncappedChance))}</dd></dl>`;
   }
   const treasury = (factors?.fundsAvailable ?? donor.chance > 0)
-    ? `Treasury allows a grant up to ${gpmForeignFundingMoney(donor.limitM)}. The donor can offer less than requested.`
-    : "The donor treasury cannot cover the minimum grant.";
+    ? `The donor can offer up to ${gpmForeignFundingMoney(donor.limitM)} and may offer less than you ask for.`
+    : "The donor cannot afford the minimum grant.";
   const date = Number.isFinite(state.quotesDay) ? ui.gameDate(state.quotesDay) : "";
   const stale = date && state.quotesDay !== state.data.day;
   return `<div class="sh-inset gpm-funding-detail"><b>${b(gpmForeignFundingDonorName(donor))}</b>
-    <small>Ideological alignment ${b(percent.format(donor.match))} · Estimated chance of an offer ${b(percent.format(donor.chance))}</small>
+    <small>${b(percent.format(donor.chance))} chance of an offer · ${b(percent.format(donor.match))} platform match</small>
+    <small>${b(treasury)}</small>
+    <details><summary>How this is estimated</summary>
     <small>${b(Object.entries(donor.alignment).map(([axis, delta]) => {
       const names = { econ: "Economy", social: "Social", gov: "Governance", nat: "National" };
       const score = Math.round(delta * 100);
       return names[axis] + " " + (score > 0 ? "+" : "") + score;
     }).join(" · "))} relative to your platform</small>
-    ${breakdown}
-    <small>${b(treasury)}</small>
+    ${breakdown}</details>
     ${date ? `<small>Quote as of ${b(date)}.${stale ? " Refresh quotes to update." : ""}</small>` : ""}
   </div>`;
 }
@@ -144,9 +145,9 @@ function gpmForeignFundingPanel(state, ui) {
     return `<b>${donor(offer)}</b><p>${b(money(offer.amountM))} one-time grant${offer.amountM < offer.requestedM
       ? ` · ${b(money(offer.requestedM))} requested` : ""}</p>
       <div class="sh-inset gpm-funding-detail"><b>${privateGrant ? "Private backing" : "Declared backing"}</b>
-        <small>${privateGrant ? `${b(risk)} exposure risk within 90 days. A leak costs 4 credibility points and up to 8 more if you keep the funds. Returning unspent funds reduces the additional loss.`
+        <small>${privateGrant ? `${b(risk)} chance of exposure within 90 days. Exposure costs 4 credibility points. Keeping the money can cost 8 more.`
           : "Public backing costs 2 credibility points on acceptance."}</small>
-        <small>Funds go into the party treasury. Offer expires ${b(ui.gameDate(offer.expiresDay))}.</small></div>
+        <small>Offer expires ${b(ui.gameDate(offer.expiresDay))}.</small></div>
       <div class="gpm-funding-actions">${button("accept", "Accept Grant")}${button("decline", "Decline")}</div>`;
   }
   if (data.grant) {

@@ -8,8 +8,14 @@ const gpmHistoricalTerms = {
 };
 
 function gpmHistoricalDefinitions(state) {
-  if (state?.version === 1) return [...gpmHistoricalCatalog.conflicts, ...gpmHistoricalCatalog.legacyOnly];
-  return gpmHistoricalCatalog.conflicts;
+  const catalog = state?.version === 1 ? [...gpmHistoricalCatalog.conflicts, ...gpmHistoricalCatalog.legacyOnly] : gpmHistoricalCatalog.conflicts;
+  if (!state?.departures) return catalog;
+  return catalog.map(definition => {
+    const row = state.conflicts[definition.id];
+    if (!row?.departedActors?.length || row.status === "settled") return definition;
+    const sides = definition.sides.map(side => side.filter(id => !row.departedActors.includes(id)));
+    return { ...definition, sides };
+  });
 }
 
 function gpmHistoricalActorById(id) {
@@ -418,6 +424,10 @@ function gpmHistoricalReviewProposal(sim, definition, row) {
   }
   if (!row.pending || row.pending.reviewDay > sim.day) return;
   const { term } = row.pending;
+  if (term === "propose-withdrawal") {
+    gpmHistoricalReviewWithdrawalOffer(sim, definition, row);
+    return;
+  }
   if (term.startsWith("terms:")) {
     const actorId = term.slice("terms:".length);
     const ready = row.status === "ceasefire" || row.status === "occupation" || row.weeksActive >= 4 && row.pressure >= 45;
@@ -475,6 +485,7 @@ function gpmHistoricalAdvance(sim) {
       const recovery = row.settlement === "political-agreement" ? 4 : 2;
       row.disruption = Math.max(floor, row.disruption - recovery);
     }
+    gpmHistoricalReviewWithdrawalPetition(sim, definition, row);
     gpmHistoricalReviewProposal(sim, definition, row);
     if (!row.nativeId) {
       const hasActiveRegion = row.status !== "uncertain" && row.status !== "settled";
@@ -490,46 +501,56 @@ function gpmHistoricalAdvance(sim) {
   gpmHistoricalUpdateDisruption(sim, state);
 }
 
-function gpmHistoricalOptions(sim, definition, row) {
-  const status = gpmHistoricalConflictStatus(row, row.nativeId && sim.conflicts?.get(row.nativeId));
+function gpmHistoricalNegotiation(sim, definition, row) {
+  const war = row.nativeId && sim.conflicts?.get(row.nativeId);
+  const status = gpmHistoricalConflictStatus(row, war);
+  if (!gpmHistoricalVisibleStatuses.has(status)) {
+    return { options: [], reason: status === "settled" ? "This conflict has ended." : "No negotiations are available for this report." };
+  }
   const transitionGovernment = row.transitionReview && definition.sides.flat().some(id => {
     const actor = gpmHistoricalActorById(id);
     return actor?.kind === "government" && gpmHistoricalCountryMatches(actor.countryKey, sim.playerKey);
   });
   const party = transitionGovernment || gpmHistoricalFrontSide(sim, definition) >= 0;
-  const nativeParty = row.nativeActors && Object.hasOwn(row.nativeActors, sim.playerKey);
-  if (!sim.playerControlsGovernment() || !(party || nativeParty) || row.pending ||
-      !gpmHistoricalVisibleStatuses.has(status)) return [];
+  const nativeParty = war && Eo(war, sim.playerKey);
   if (!row.nativeId && status === "occupation") {
-    if (row.occupationAgreement) return [];
-    return definition.sides.flat().map(id => [id, gpmHistoricalFactionOutcome(definition, id)])
-      .filter(([, terms]) => terms?.policies?.length)
-      .map(([id, terms]) => ({ id: "terms:" + id, label: terms.title }));
+    const withdrawal = gpmHistoricalWithdrawalAction(sim, definition, row);
+    if (withdrawal.option) return { options: [withdrawal.option], reason: null };
+    // Occupation reports may already offer a separate political agreement, such as special status.
+    if (!gpmHistoricalWithdrawalPlan(sim, definition, row) &&
+        sim.playerControlsGovernment() && party && !row.pending && !row.occupationAgreement) {
+      const options = definition.sides.flat().map(id => [id, gpmHistoricalFactionOutcome(definition, id)])
+        .filter(([, terms]) => terms?.policies?.length)
+        .map(([id, terms]) => ({ id: "terms:" + id, label: terms.title }));
+      if (options.length) return { options, reason: null };
+    }
+    return { options: [], reason: withdrawal.reason };
   }
+  if (war ? !nativeParty : !party) {
+    return { options: [], reason: "Your government is not a direct party to this conflict." };
+  }
+  if (!sim.playerControlsGovernment()) {
+    return { options: [], reason: "Your government handles negotiations for this conflict." };
+  }
+  if (row.pending) return { options: [], reason: "A proposal is already waiting for a response." };
+  if (definition.simulated) return { options: [], reason: war.mode === "operational"
+    ? "Open the War Theatre to use this war's military and peace controls."
+    : "Open Military to see the controls for this war." };
   const allowed = [];
   if (row.aidUntil <= sim.day) allowed.push("aid-access");
-  if (row.nativeId) return allowed.map(id => ({ id, label: gpmHistoricalTerms[id] }));
-  if (row.transitionReview) return [...allowed.map(id => ({ id, label: gpmHistoricalTerms[id] })), { id: "confirm-transition-truce", label: "Confirm post-transition truce" }];
-  if (status === "active") allowed.push("ceasefire");
-  if (status === "ceasefire" && ["civil", "insurgency"].includes(definition.kind)) {
+  if (!row.nativeId && !row.transitionReview && status === "active") allowed.push("ceasefire");
+  if (!row.nativeId && !row.transitionReview && status === "ceasefire" && ["civil", "insurgency"].includes(definition.kind)) {
     if (definition.regions?.some(region => definition.sides[1].includes(region.administrator || region.controller))) {
       allowed.push("autonomy");
     }
     if (definition.kind === "civil") allowed.push("transition");
   }
-  return [...allowed.map(id => ({ id, label: gpmHistoricalTerms[id] })), ...gpmHistoricalVictoryTerms(sim, definition, row)];
-}
-
-function gpmHistoricalBlocksUprising(sim, countryKey) {
-  if (!sim.gpmHistoricalState) return false;
-  return gpmHistoricalDefinitions(sim.gpmHistoricalState).some(definition =>
-    definition.countryKeys.some(key => gpmHistoricalCountryMatches(key, countryKey)) &&
-    ["civil", "interstate"].includes(definition.kind) &&
-    sim.gpmHistoricalState.conflicts[definition.id]?.status === "active" &&
-    definition.sides.flat().some(id => {
-      const actor = gpmHistoricalActorById(id);
-      return gpmHistoricalCountryMatches(actor.countryKey, countryKey) && actor.kind === "government";
-    }));
+  const options = allowed.map(id => ({ id, label: gpmHistoricalTerms[id] }));
+  if (row.transitionReview) options.push({ id: "confirm-transition-truce", label: "Confirm post-transition truce" });
+  else options.push(...gpmHistoricalVictoryTerms(sim, definition, row));
+  const reason = war?.mode === "operational" ? "The War Theatre handles peace proposals for this war." :
+    war ? "See Military for this war's available actions." : "There are no proposals available at this stage.";
+  return { options, reason: options.length ? null : reason };
 }
 
 function gpmHistoricalActorView(sim, actor) {
@@ -912,11 +933,33 @@ function gpmHistoricalView(sim, { id } = {}) {
   const conflicts = [];
   let selected;
   const entries = gpmHistoricalConflictEntries(sim);
-  const definitionsById = id ? new Map(entries.map(({ definition }) => [definition.id, definition])) : null;
+  const conflictsById = id ? new Map(entries.map(({ definition, summaryStatus }) =>
+    [definition.id, { id: definition.id, name: definition.name, status: summaryStatus }])) : null;
   for (const { definition, row, war, summaryStatus: status } of entries) {
     const { native, regions, charterLawValues, ...summary } = definition;
     const result = { ...summary, ...gpmHistoricalTitles(sim, definition), status, pressure: row.pressure, disruption: row.disruption,
       ceasefireUntil: row.ceasefireUntil ?? null, mode: summary.mode || (war || row.nativeId ? "native" : "regional") };
+    if (!definition.crimeReport && !definition.strategicOnly) {
+      result.warCard = gpmWarCard(sim, definition, row, war, status, result.shortTitle);
+    }
+    const petition = row.withdrawalPetition?.countryKey === sim.playerKey ? row.withdrawalPetition : null;
+    if (status === "occupation" && !row.nativeId) {
+      const plan = gpmHistoricalWithdrawalPlan(sim, definition, row);
+      if ([plan?.affected?.key, plan?.occupier?.key].includes(sim.playerKey)) {
+        const { option } = gpmHistoricalWithdrawalAction(sim, definition, row);
+        const offer = row.pending?.term === "propose-withdrawal" ? row.pending : null;
+        const pending = petition?.status === "pending" || !!offer;
+        if (option || pending) result.decision = { actionable: !!option, pending,
+          label: option?.label || "View response status", description: option?.description,
+          ...(option?.assessment ? { assessment: option.assessment } : {}),
+          message: petition?.status === "pending" || petition?.status === "forwarded" ? petition.message :
+            offer ? "The withdrawal proposal is waiting for the other government's response." : petition?.message,
+          reviewDay: offer?.reviewDay ?? (petition?.status === "pending" ? petition.reviewDay : null) };
+      }
+    }
+    if (!result.decision && petition?.message) {
+      result.decision = { label: "View petition result", message: petition.message };
+    }
     conflicts.push(result);
     if (id !== definition.id) continue;
     const outcomeRegions = new Set(row.victoryOutcome?.regionKeys || []);
@@ -935,44 +978,66 @@ function gpmHistoricalView(sim, { id } = {}) {
       const militaryControl = control.contested && militarySides?.length === 2 &&
         militarySides[0].countryKey !== militarySides[1].countryKey
         ? { sides: militarySides, totalCells: militarySides[0].cells + militarySides[1].cells } : null;
-      const overlapping = (shared?.fronts || []).filter(frontId => frontId !== definition.id);
+      const overlappingConflicts = (shared?.fronts || []).filter(frontId => frontId !== definition.id)
+        .map(frontId => conflictsById.get(frontId)).filter(front => front && gpmHistoricalVisibleStatuses.has(front.status));
       const localOutcomes = outcomeRegions.has(key)
         ? shared?.localOutcomes?.filter(outcome => outcome.actorId === row.victoryOutcome.actorId &&
           outcome.title === row.victoryOutcome.title) : undefined;
-      return { ...opening, ...region, administrator: control.administratorId, occupationKey: control.occupationKey,
+      return { ...opening, ...region, legalControllerId: actorIdForCountry(opening.legalOwner),
+        administrator: control.administratorId, occupationKey: control.occupationKey,
         currentController: control.controllerId, currentContested: control.contested, militaryControl,
         modeledContact: control.modeledContact, reportedRegion: openingRegions.has(key),
         controlled: control.controlled, control: control.control, runtimeOwner: province.__countryKey,
         disruption: row.disruption, localOutcomes,
-        overlappingFronts: overlapping.map(frontId => definitionsById.get(frontId)).filter(Boolean).map(front => front.name) };
+        overlappingFronts: overlappingConflicts.map(front => front.name), overlappingConflicts };
     });
-    const options = definition.simulated ? [] : gpmHistoricalOptions(sim, definition, row);
+    const { options, reason: actionReason } = gpmHistoricalNegotiation(sim, definition, row);
     const warActors = Object.keys(war?.participants || {}).map(actorIdForCountry);
     const actorIds = new Set([...definition.sides.flat(), ...(definition.associatedActorIds || []), ...warActors, ...details.flatMap(region =>
       [region.controller, region.administrator, region.currentController, region.dominantActorId, region.secondaryActorId,
        ...(region.militaryControl?.sides.map(side => side.actorId) || [])]).filter(id => gpmHistoricalViewActor(sim, id))]);
-    selected = { ...result, regions: details, actors: [...actorIds].map(actorId => {
+    selected = { ...result,
+      ...(result.warCard ? { warCard: gpmWarCard(sim, definition, row, war, status, result.shortTitle, true) } : {}),
+      regions: details, actors: [...actorIds].map(actorId => {
       const actor = gpmHistoricalViewActor(sim, actorId);
       return { ...gpmHistoricalActorView(sim, actor), shortName: gpmHistoricalShortName(actor) };
     }),
       theatreKey: war?.mode === "operational" ? war.enemyKey : null,
       durationDays: war ? N6(sim, war) : null,
-      canNegotiate: options.length > 0, options, pending: row.pending || null, history: (row.history || []).slice(-10),
+      canNegotiate: options.length > 0, options, actionReason, pending: row.pending || null,
+      petition,
+      history: [...(row.history || []), ...gpmWarRecentChanges(sim, war)].sort((a, b) => a.day - b.day).slice(-10),
       aidUntil: row.aidUntil, settlement: row.settlement || null,
       factionOutcomes: gpmHistoricalCatalog.factionReview.fronts[definition.id] || {},
       victoryOutcome: row.victoryOutcome || null, victoryBlocked: row.victoryBlocked || null,
       transitionReview: !!row.transitionReview, advantage: row.advantage || 0 };
   }
-  return { ...header, conflicts, ...(selected ? { selected } : {}) };
+  return { ...header, conflicts, inheritedWars: gpmUprising.inheritedWars(sim), ...(selected ? { selected } : {}) };
 }
 
 function gpmHistoricalNegotiate(sim, country, { id, term }) {
   const state = sim.gpmHistoricalState;
   const definition = state && gpmHistoricalDefinitions(state).find(row => row.id === id);
-  const row = state?.conflicts[id];
-  if (!definition || !row || country?.key !== sim.playerKey ||
-      !gpmHistoricalOptions(sim, definition, row).some(option => option.id === term)) {
+  const row = state?.conflicts?.[id];
+  if (!definition || !row || country?.key !== sim.playerKey) {
     return { ok: false, reason: "historical_term_unavailable" };
+  }
+  const negotiation = gpmHistoricalNegotiation(sim, definition, row);
+  if (!negotiation.options.some(option => option.id === term)) {
+    return { ok: false, reason: "historical_term_unavailable", ...(negotiation.reason ? { message: negotiation.reason } : {}) };
+  }
+  if (term === "petition-withdrawal") {
+    const petition = { status: "pending", countryKey: country.key, partyId: Uo(country),
+      submittedDay: sim.day, reviewDay: gpmHistoricalWithdrawalReviewDay(sim.day),
+      message: "Your government is considering your petition to negotiate a withdrawal." };
+    row.withdrawalPetition = petition;
+    row.history.push({ day: sim.day, term: "occupation-petition", outcome: "Petition sent to the government" });
+    return { ok: true, message: "Petition submitted.", petition };
+  }
+  if (term === "propose-withdrawal") {
+    const { terms } = gpmHistoricalWithdrawalPlan(sim, definition, row);
+    gpmHistoricalOfferWithdrawal(sim, row, country.key, terms.title);
+    return { ok: true, message: "Withdrawal proposal submitted.", pending: row.pending };
   }
   if (term === "confirm-transition-truce") {
     row.transitionReview = false;

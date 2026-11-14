@@ -70,11 +70,27 @@ function readHistoricalFactionReview(catalog, regional) {
     const plans = catalog.victories[front.id] || {};
     const sides = front.sides.flat();
     if (Object.keys(authored).some(id => !sides.includes(id))) throw new Error("Nonparticipant outcome " + front.id);
+    const withdrawalActors = sides.filter(id => authored[id]?.withdrawal != null);
+    if (withdrawalActors.length) {
+      const id = withdrawalActors[0];
+      const terms = authored[id];
+      const governments = sides.map(actorId => catalog.actors[actorId]);
+      if (withdrawalActors.length !== 1 || front.status !== "occupation" ||
+          front.sides.length !== 2 || front.sides.some(side => side.length !== 1) ||
+          governments.some(actor => !stateKinds.has(actor?.kind) || !actor.countryKey) ||
+          governments[0].countryKey === governments[1].countryKey ||
+          !terms.title?.trim() || !Number.isFinite(terms.withdrawal.willingness) ||
+          terms.withdrawal.willingness < 0 || terms.withdrawal.willingness > 1 ||
+          !front.regions?.length || front.regions.some(region => region.controller || region.administrator || region.contested)) {
+        throw new Error("Invalid reported-occupation withdrawal " + front.id);
+      }
+    }
     fronts[front.id] = {};
     for (const id of sides) {
       const entry = authored[id];
       const plan = plans[id];
       if (!entry || !scopes.has(entry.scope) || !entry.note?.trim() || !hasSources(entry.sources) ||
+          (entry.goal !== undefined && (typeof entry.goal !== "string" || !entry.goal.trim())) ||
           entry.policies?.some(policy => !policy.name || !policy.note || !policy.source)) {
         throw new Error("Invalid or missing historical faction outcome " + front.id + "/" + id);
       }

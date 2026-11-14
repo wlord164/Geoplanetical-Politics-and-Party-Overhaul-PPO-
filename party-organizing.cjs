@@ -343,30 +343,35 @@ function partyOrganizingView(sim, country, partyId) {
 }
 
 function partyOrganizingDetail(quote, ui) {
-  if (!quote?.effects) return "This action is unavailable.";
-  const cash = rr(quote.cash * 1e6 * hA(), gA());
-  const activists = Math.round(quote.activistsK * 1e3).toLocaleString(cs());
-  const costs = `${cash} and ${quote.influence} influence · ${activists} activists assigned`;
-  const completion = `${quote.durationDays} days · Scheduled to finish ${ui.gameDate(quote.endDay)} if started today`;
-  const gains = quote.effects.map(effect => {
-    const headroom = Math.max(0, .5 - effect.present);
-    return `${Vr(effect.id)} +${(Math.min(effect.increase, headroom) * 100).toFixed(1)} points of voting weight`;
-  }).join(" · ");
+  if (!quote?.effects) return "<small>This action is unavailable.</small>";
   const reasons = {
     already_backed: "Your party already backed this movement.",
-    active: "Your party already has a project of this type underway.",
+    active: "Your party already has a project like this underway.",
     cooldown: "Available again " + (quote.reason === "cooldown" ? ui.gameDate(quote.availableDay) : "") + ".",
-    saturated: "Your organizing bonus is already at its limit here.",
-    budget: "The party treasury is too low.",
+    saturated: "Your party has reached its organizing limit here.",
+    budget: "Your party needs more money.",
     resources: "You need more available activists.",
     influence: "You need more influence.",
   };
   const contacts = quote.effects.some(effect => effect.contacts > 0)
-    ? "Builds contacts in the existing Outreach network as work is completed" : "";
+    ? "<li>Builds Outreach contacts.</li>" : "";
+  const cash = rr(quote.cash * 1e6 * hA(), gA());
+  const activists = Math.round(quote.activistsK * 1e3).toLocaleString(cs());
+  const costs = `${cash} · ${quote.influence} influence · ${activists} activists`;
+  const discount = quote.discount ? ` · ${Math.round(quote.discount * 100)}% discount for parties without seats` : "";
   const projection = quote.forecast
-    ? `Estimated national gain of ${(quote.forecast.gain * 100).toFixed(3)} percentage points by ${ui.gameDate(quote.forecast.day)} at current conditions` : "";
-  const discount = quote.discount ? `Seatless-party discount ${Math.round(quote.discount * 100)}%` : "";
-  return [costs, discount, completion, `At today's bloc limits · ${gains}`, projection, contacts, reasons[quote.reason]].filter(Boolean).join(". ");
+    ? `Estimated national support gain of ${(quote.forecast.gain * 100).toFixed(3)} percentage points by ${ui.gameDate(quote.forecast.day)}.` : "";
+  const gains = quote.effects.map(effect => {
+    const headroom = Math.max(0, .5 - effect.present);
+    const points = (Math.min(effect.increase, headroom) * 100).toFixed(1);
+    return `<li>${b(Vr(effect.id))} · +${b(points)} points of voting weight</li>`;
+  }).join("");
+  return `
+    ${reasons[quote.reason] ? `<small><strong>${b(reasons[quote.reason])}</strong></small>` : ""}
+    <small>${b(costs + discount)}</small>
+    <small>${b(`Finishes ${ui.gameDate(quote.endDay)} if started today (${quote.durationDays} days)`)}</small>
+    ${projection ? `<small>${b(projection)}</small>` : ""}
+    ${gains || contacts ? `<details><summary>Expected local gains</summary><ul>${gains}${contacts}</ul></details>` : ""}`;
 }
 
 function renderPartyOrganizing(view, ui) {
@@ -376,7 +381,7 @@ function renderPartyOrganizing(view, ui) {
   const rows = data.movements.map(item => `<div class="gpm-organizing-action">
     <div><strong>${b(o("domestic.demand." + item.demandId))}</strong> · ${b(Math.round(item.participantsM * 1e6).toLocaleString(cs()))} participants
       ${item.strikeWorkersM > 0 ? ` · ${b(Math.round(item.strikeWorkersM * 1e6).toLocaleString(cs()))} striking workers` : ""}</div>
-    <small>${b(partyOrganizingDetail(item.quote, ui))}</small>
+    ${partyOrganizingDetail(item.quote, ui)}
     <button class="k" type="button" data-gpm-back-movement="${b(item.id)}" ${item.quote.ok ? "" : "disabled"}>Back mobilization</button>
   </div>`).join("");
   const options = data.meetings.map(item => `<option value="${b(item.id)}" ${item.id === selected?.id ? "selected" : ""}>${b(Vr(item.id))}</option>`).join("");
@@ -405,7 +410,7 @@ function renderPartyOrganizing(view, ui) {
     ${recent[0] || ""}
     ${recent.length > 1 ? `<details><summary>Earlier organizing results</summary>${recent.slice(1).join("")}</details>` : ""}
     ${selected ? `<div class="gpm-organizing-action"><label>Public meeting <select class="k" data-gpm-meeting-bloc>${options}</select></label>
-      <small data-gpm-meeting-detail>${b(partyOrganizingDetail(selected.quote, ui))}</small>
+      <div class="gpm-organizing-action" data-gpm-meeting-detail>${partyOrganizingDetail(selected.quote, ui)}</div>
       <button class="k" type="button" data-gpm-meeting ${selected.quote.ok ? "" : "disabled"}>Hold meeting</button></div>` : ""}
     <h4>Peaceful mobilizations</h4>
     ${rows || "<small>No active peaceful mobilizations.</small>"}
@@ -425,7 +430,7 @@ function bindPartyOrganizing(host, view, ui) {
     select.onchange = () => {
       ui._gpmMeetingBloc = select.value;
       const quote = data.meetings.find(item => item.id === select.value)?.quote;
-      panel.querySelector("[data-gpm-meeting-detail]").textContent = partyOrganizingDetail(quote, ui);
+      panel.querySelector("[data-gpm-meeting-detail]").innerHTML = partyOrganizingDetail(quote, ui);
       meeting.disabled = !quote?.ok;
     };
     meeting.onclick = () => submit(meeting, "gpm.party.meeting", select.value);

@@ -105,7 +105,7 @@ function partyCongressGrantOptions(vote) {
 }
 
 function partyCongressGrantDetail(vote) {
-  if (!vote?.bargain) return "An organizing grant can win votes from one faction. The treasury pays only if the motion passes.";
+  if (!vote?.bargain) return "Offer one faction a grant to gain votes. You pay only if the motion passes.";
   const { label, extraYes, cash } = vote.bargain;
   return label + " adds " + extraYes + " yes " + (extraYes === 1 ? "vote" : "votes") + ". If adopted, the party treasury pays " +
     rr(cash * 1e6 * hA(), gA()) + ".";

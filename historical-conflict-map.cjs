@@ -631,7 +631,7 @@ function gpmHistoricalMapPopup(state, item, button, pointer) {
     const choice = document.createElement("button");
     choice.type = "button";
     choice.className = "k k-sm";
-    choice.textContent = front.shortTitle || front.name;
+    choice.textContent = (front.shortTitle || front.name) + " · " + gpmHistoricalFrontSummary(front, state.actors).status;
     choice.addEventListener("click", event => {
       popup.hidden = true;
       gpmHistoricalSelectMapFront(front, { ...item, fronts: gpmHistoricalOrderedFronts(item.fronts, front) }, event, button);
@@ -668,8 +668,8 @@ function gpmMountHistoricalMap(globe, session) {
           <i style="--ink:${gpmHistoricalMapInk(status)}" aria-hidden="true"></i>${label}</label>`).join("")}
       <span><i style="--ink:#202930" aria-hidden="true"></i>Dark borders and muted fills mark contested territory</span>
       <span><i style="--ink:${gpmHistoricalMapInk("captured")}" aria-hidden="true"></i>Yellow dashes mark confirmed wartime captures</span>
-      <small>Zoom in to read faction names. Select a colored area to inspect its faction.</small>
-      <small>Strategic diamonds and outlines also mark reported areas and modeled fronts. Select a diamond or province for details.</small>
+      <small>In Strategic view, a ceasefire diamond marks paused fighting. An occupation diamond can mark a report with exact control unknown.</small>
+      <small>Select a diamond or province to see control, overlapping conflicts, and available actions.</small>
     </div>`;
   const toggle = state.controls.querySelector("button");
   const legend = state.controls.querySelector("[data-gpm-history-map-legend]");

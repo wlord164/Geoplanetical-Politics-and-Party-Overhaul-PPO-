@@ -78,6 +78,7 @@ function readCatalog() {
         !["active", "ceasefire", "occupation", "dormant", "uncertain"].includes(status) ||
         !["civil", "interstate", "nonstate", "insurgency"].includes(kind) ||
         sides?.length !== 2 || sides.some(side => !side.length) ||
+        (conflict.defenderActor != null && !sides.flat().includes(conflict.defenderActor)) ||
         new Set(sides.flat()).size !== sides.flat().length) {
       throw new Error("Invalid or duplicate historical conflict: " + id);
     }
@@ -109,6 +110,9 @@ function readCatalog() {
     if (identity) [actor.wartimeMapName, actor.mapColor] = identity;
     if (organizedCrimeActors.has(actor.id)) actor.strategicOnly = true;
     if (/^\d+$/.test(actor.countryKey)) actor.countryKey = String(Number(actor.countryKey));
+    const flagAssociation = actor.countryFlagAssociation;
+    if (flagAssociation && (!actor.countryKey || typeof flagAssociation.label !== "string" || !flagAssociation.label.trim() ||
+        !/^https:\/\//.test(flagAssociation.source))) throw new Error("Invalid country flag association: " + actor.id);
     const poolId = actor.strength?.sharedPoolId;
     const owner = poolId && actorById.get(poolId);
     if (poolId && (!owner || poolId === actor.id || owner.strength?.sharedPoolId ||
@@ -222,13 +226,25 @@ function readCatalog() {
 function patchHistoricalConflictsWorker(source, replaceOnce) {
   const catalog = readCatalog();
   const worker = ["historical-victory-government.js", "historical-victory-regions.js", "historical-victory-worker.js",
-    "historical-conflicts-worker.js"].map(file => readFileSync(join(__dirname, file), "utf8")).join("\n");
+    "historical-conflicts-worker.js", "historical-war-view.js"].map(file => readFileSync(join(__dirname, file), "utf8")).join("\n");
   const anchors = [
     ["registerPartyCongressSize();\nconst gpmUprisingOfficialNames",
       "registerPartyCongressSize();\nconst gpmHistoricalCatalog = " + JSON.stringify(catalog) + ";\n" +
       worker + "\nconst gpmUprisingOfficialNames"],
     ["this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)",
       "(o?(gpmSudanRestoreIdentity(b),gpmHistoricalRestoreOpeningCapitals(b),gpmHistoricalRestoreNativeWars(b)):await gpmHistoricalInitialize(b,this.commitTransportBoundary)),this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)"],
+    ["this.bindDomainEvents(),this.commit();let C=this.status(!0)",
+      'this.bindDomainEvents(),gpmCheckWarEntry(b,o?"load":"new"),this.commit();let C=this.status(!0)'],
+    ["flushDomainEvents(){if(this.fault||this.sim?._dayJob)return 0;let t=",
+      "flushDomainEvents(){if(this.fault||this.sim?._dayJob)return 0;gpmCheckWarEntry(this.sim);let t="],
+    ['qPt=Object.freeze({"war.ai_started"',
+      'qPt=Object.freeze({"military.support_activated":Rg("war",["supportId","conflictId","donorKey","recipientKey","shippedUnits","promisedUnits","shippedAmmunitionLots","promisedAmmunitionLots"],["donorKey","recipientKey"]),"military.support_refused":Rg("war",["supportId","conflictId","donorKey","recipientKey","modeId"],["donorKey","recipientKey"]),"war.ai_started"'],
+    ['promisedAmmunitionLots:Math.trunc(st(c.ammunitionLots))},{category:"guerre",severity:"info",interrupt:"none"})',
+      'promisedAmmunitionLots:Math.trunc(st(c.ammunitionLots))},{category:"guerre",severity:"info",interrupt:"none",audience:{countryKeys:[t.donorKey,t.recipientKey]}})'],
+    ['responderKey:r.modeId==="request"?r.donorKey:r.recipientKey},{category:"diplomatie",severity:"info",interrupt:"none"})',
+      'responderKey:r.modeId==="request"?r.donorKey:r.recipientKey},{category:"diplomatie",severity:"info",interrupt:"none",audience:{countryKeys:[r.donorKey,r.recipientKey]}})'],
+    ['H(e,"war.player_attacked_news",{aggressorKey:i.key,playerKey:s.key}',
+      'H(e,"war.player_attacked_news",{warId:"player:"+t,aggressorKey:i.key,playerKey:s.key}'],
     ['function ol(e){return hae.byCountry&&hae.byCountry[e]||"generic"}',
       'function ol(e){return hae.byCountry&&hae.byCountry[gpmHistoricalCultureCountry(e)]||"generic"}'],
     ['role:e.role||null,_station:e._station||null}:null}function M7o',

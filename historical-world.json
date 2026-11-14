@@ -1007,6 +1007,10 @@
       "name": "Volontaires pour la défense de la patrie (Wazalendo)",
       "shortName": "VDP",
       "countryKey": "180",
+      "countryFlagAssociation": {
+        "label": "DR Congo national flag · Wazalendo is government-aligned",
+        "source": "https://digitallibrary.un.org/record/4053693/files/S_2024_432-EN.pdf"
+      },
       "kind": "armed-group"
     },
     {
@@ -1855,6 +1859,7 @@
     },
     {
       "id": "ucdp-nonstate-14596",
+      "defenderActor": "ucdp-actor-6254",
       "name": "al-Qaida in the Arabian Peninsula vs Presidential Leadership Council (Yemeni government)",
       "kind": "nonstate",
       "status": "active",
@@ -1906,6 +1911,7 @@
     },
     {
       "id": "ucdp-nonstate-14637",
+      "defenderActor": "ucdp-actor-6288",
       "name": "Islamic State (Iraq and Syria) vs Syrian Democratic Forces",
       "kind": "nonstate",
       "status": "active",
@@ -2370,6 +2376,7 @@
     },
     {
       "id": "ucdp-nonstate-15915",
+      "defenderActor": "ucdp-actor-6254",
       "name": "Presidential Leadership Council (Yemeni government) vs Southern Transitional Council",
       "kind": "nonstate",
       "status": "active",
@@ -2420,6 +2427,7 @@
     },
     {
       "id": "ucdp-nonstate-16059",
+      "defenderActor": "ucdp-actor-7344",
       "name": "al-Qaida in the Arabian Peninsula vs Southern Transitional Council",
       "kind": "nonstate",
       "status": "active",
@@ -3028,6 +3036,7 @@
     },
     {
       "id": "ucdp-nonstate-17833",
+      "defenderActor": "ucdp-actor-8832",
       "name": "Alliance Fleuve Congo / March 23 Movement (AFC/M23) vs Volontaires pour la défense de la patrie (Wazalendo)",
       "kind": "nonstate",
       "status": "active",
@@ -3579,6 +3588,7 @@
     },
     {
       "id": "ucdp-nonstate-18685",
+      "defenderActor": "ucdp-actor-8622",
       "name": "Hadhramaut Tribal Alliance vs Southern Transitional Council",
       "kind": "nonstate",
       "status": "active",
@@ -4372,6 +4382,7 @@
     },
     {
       "id": "ucdp-state-14117",
+      "defenderActor": "ucdp-actor-61",
       "name": "Russia–Ukraine war",
       "kind": "interstate",
       "status": "active",
@@ -4516,6 +4527,7 @@
     },
     {
       "id": "ucdp-state-14595",
+      "defenderActor": "ucdp-actor-6254",
       "name": "Yemeni civil war",
       "kind": "civil",
       "status": "active",
@@ -5407,6 +5419,7 @@
     },
     {
       "id": "ucdp-state-16617",
+      "defenderActor": "ucdp-actor-7344",
       "name": "Ansar Allah (Houthis) vs Southern Transitional Council",
       "kind": "insurgency",
       "status": "uncertain",
@@ -5685,6 +5698,7 @@
     },
     {
       "id": "ucdp-state-17738",
+      "defenderActor": "ucdp-actor-123",
       "name": "Government of the United Kingdom and Government of United States of America vs Ansar Allah (Houthis)",
       "kind": "insurgency",
       "status": "ceasefire",
@@ -6521,6 +6535,7 @@
     },
     {
       "id": "ucdp-state-649",
+      "defenderActor": "ucdp-actor-118",
       "name": "Government of Israel vs Syrian Transitional Government",
       "kind": "interstate",
       "status": "occupation",
@@ -6762,6 +6777,7 @@
     },
     {
       "id": "ucdp-state-891",
+      "defenderActor": "ucdp-actor-366",
       "name": "Government of Israel vs Party of God",
       "kind": "insurgency",
       "status": "ceasefire",
@@ -6793,6 +6809,7 @@
     },
     {
       "id": "warwatch-1456",
+      "defenderActor": "warwatch-actor-1454",
       "name": "Israel vs Lebanon",
       "kind": "interstate",
       "status": "occupation",
@@ -6834,6 +6851,7 @@
     },
     {
       "id": "warwatch-2027",
+      "defenderActor": "ucdp-actor-118",
       "name": "Syria vs Türkiye",
       "kind": "interstate",
       "status": "occupation",
@@ -6930,6 +6948,7 @@
     },
     {
       "id": "warwatch-2420",
+      "defenderActor": "warwatch-actor-404",
       "name": "Israel vs Palestine",
       "kind": "interstate",
       "status": "occupation",
@@ -7006,6 +7025,7 @@
     },
     {
       "id": "warwatch-2522",
+      "defenderActor": "ucdp-actor-89",
       "name": "DRC vs Rwanda",
       "kind": "interstate",
       "status": "occupation",
@@ -7075,6 +7095,7 @@
     },
     {
       "id": "warwatch-2535",
+      "defenderActor": "ucdp-actor-528",
       "name": "FDLR vs M23",
       "kind": "nonstate",
       "status": "active",
@@ -7265,6 +7286,7 @@
     },
     {
       "id": "warwatch-3266",
+      "defenderActor": "warwatch-actor-3267",
       "name": "Moldova vs Russia",
       "kind": "interstate",
       "status": "occupation",
@@ -7327,6 +7349,7 @@
     },
     {
       "id": "warwatch-3344",
+      "defenderActor": "warwatch-actor-3352",
       "name": "Military occupation of Georgia by Russia",
       "kind": "interstate",
       "status": "occupation",
@@ -7362,6 +7385,7 @@
     },
     {
       "id": "warwatch-3362",
+      "defenderActor": "warwatch-actor-3365",
       "name": "Military occupation of Cyprus by Türkiye",
       "kind": "interstate",
       "status": "occupation",
@@ -7529,6 +7553,7 @@
     },
     {
       "id": "warwatch-554",
+      "defenderActor": "ucdp-actor-116",
       "name": "Iraq vs Türkiye",
       "kind": "interstate",
       "status": "uncertain",

@@ -17,6 +17,18 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Private War Interface test build.
+  archive: "b1142453e12ec895b2632838f452c83229e645ca1218394d1b032ff5f9cc7a12",
+  worker: "15db8a598e7fabb5898462c8c8f5354c6690ff8ac3664eb874cc375e71618c25",
+  renderer: "506e1ea8625fe13742147a3bd621e0b9bd7a07c8ff94568f5f8a02128ee48d54",
+  executable: "22568e9943fc6a5de3d9a978d60a1612a9f63cc16ec520ee13fe9a077567dd99",
+}, {
+  // Campaign Rules Correction.
+  archive: "0257335ea1e7f6054e03e3d947ab2e61cf0050f0badc8abc6853edd62fb2627e",
+  worker: "170bae214e26ac80dd47be3291472ac30565643f01572fc7a529c57d479e67a5",
+  renderer: "555fac76f011886992925a4118f8010cb24cdb568d4a54000b64279ce63e2186",
+  executable: "237ccfebd93d0d3cb8bf0a60ef10631f3033b7d897c75bc4fe3c98cdb92a0405",
+}, {
   // Follow-up Hotfix.
   archive: "e2d9ca3cc86588bda07fa183c0b0aa45ff43582e7c181a68a3c222dc50f81218",
   worker: "d36afb31029be6748b17dc28d4c062f10ff78cbac959ab0b2016972beea44352",
