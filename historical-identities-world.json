@@ -1,4 +1,54 @@
 {
+  "ucdp-actor-4364": {
+    "leader": {
+      "name": "Salahuddin Farooqi",
+      "role": "Founder and reported leader of Jaish al-Adl",
+      "source": "https://midstonecentre.com/2022/11/exclusive-trouble-in-iran-an-interview-with-jaish-al-%CA%BFadl-of-baluchestan/"
+    }
+  },
+  "ucdp-actor-8622": {
+    "leader": {
+      "name": "Amr bin Habrish",
+      "role": "Leader of the Amr bin Habrish wing of the Hadhramaut Tribal Alliance",
+      "source": "https://sanaacenter.org/the-yemen-review/oct-dec-2025/26129"
+    }
+  },
+  "ucdp-actor-209": {
+    "leader": {
+      "name": "Khalil al-Hayya",
+      "role": "Member of Hamas’s temporary leadership committee",
+      "source": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ%3AL_202601173"
+    }
+  },
+  "ucdp-actor-6716": {
+    "leader": {
+      "name": "Iyad Ag Ghali",
+      "role": "JNIM leader",
+      "source": "https://digitallibrary.un.org/record/3981468/files/S_2022_547-EN.pdf"
+    }
+  },
+  "ucdp-actor-7595": {
+    "leader": {
+      "name": "Kumsa Diriba",
+      "role": "Oromo Liberation Army commander-in-chief",
+      "alias": "Jaal Marroo",
+      "source": "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-oromos-the-oromo-liberation-front-and-the-oromo-liberation-army-ethiopia-march-2022-accessible"
+    }
+  },
+  "syr-suwayda-local-groups": {
+    "leader": {
+      "name": "Hikmat al-Hijri",
+      "role": "Druze spiritual authority to whom the Suwayda National Guard pledged allegiance",
+      "source": "https://www.euaa.europa.eu/syria-security-situation/2132-territorial-control-and-main-armed-actors"
+    }
+  },
+  "ucdp-actor-356": {
+    "leader": {
+      "name": "Noor Wali Mehsud",
+      "role": "Tehrik-e Taliban Pakistan leader",
+      "source": "https://main.un.org/securitycouncil/en/content/noor-wali-mehsud"
+    }
+  },
   "mmr-nug": {
     "leader": {
       "name": "Duwa Lashi La",
@@ -153,7 +203,19 @@
     "leader": {
       "name": "Osama Hammad",
       "role": "House of Representatives-appointed Prime Minister",
-      "source": "https://digitallibrary.un.org/record/4086980/files/S_2025_509-EN.pdf"
+      "source": "https://digitallibrary.un.org/record/4086980/files/S_2025_509-EN.pdf",
+      "portraitReference": "https://almanac.nia.go.th/media/almanac/2024/01/Libya-2567.pdf"
+    },
+    "representative": {
+      "name": "Khalifa Haftar",
+      "role": "Supreme Commander of the Libyan National Army",
+      "source": "https://unsmil.unmissions.org/en/speeches-and-statements/remarks-by-srsg-abdoulaye-bathily-to-the-security-council-16-april",
+      "portrait": {
+        "file": "historical-identity-assets/khalifa-haftar.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Khalifa_Haftar_in_2024.jpg",
+        "credit": "U.S. Embassy in Libya, September 2024. Cropped by ThatRandomGuy1 on Wikimedia Commons.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+      }
     }
   },
   "ucdp-actor-123": {
@@ -284,6 +346,18 @@
     }
   },
   "ucdp-actor-169": {
+    "representative": {
+      "name": "Coni K. Ledesma",
+      "role": "National Democratic Front of the Philippines negotiating panel member",
+      "source": "https://pco.gov.ph/news_releases/oslo-joint-communique/",
+      "portrait": {
+        "file": "historical-identity-assets/coni-ledesma.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:122816_KING2-1.jpg",
+        "credit": "King Rodriguez / Presidential Photo, December 2016. Cropped to Ledesma from the official group photograph.",
+        "license": "Philippine government work under Republic Act 8293, section 176. Government approval is required for exploitation for profit.",
+        "evidence": "https://elibrary.judiciary.gov.ph/thebookshelf/showdocs/2/4371"
+      }
+    },
     "flag": {
       "name": "Communist Party of the Philippines flag",
       "file": "historical-identity-assets/cpp-flag.png",
@@ -337,7 +411,14 @@
     "leader": {
       "name": "Ahmed Diriye",
       "role": "Al-Shabaab emir",
-      "source": "https://docs.un.org/en/S/2025/777"
+      "source": "https://docs.un.org/en/S/2025/777",
+      "portrait": {
+        "file": "historical-identity-assets/ahmed-diriye.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Ahmad_Umar_(3x4_cropped).jpg",
+        "credit": "U.S. Department of State Rewards for Justice portrait, independently matched against the department's current poster. Wikimedia Commons crop by Wabbuh.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "evidence": "https://rewardsforjustice.net/wp-content/uploads/2023/09/21Apr-Abu-Ubaidah-eng.jpg"
+      }
     },
     "flag": {
       "name": "Banner documented in use by Al-Shabaab",
@@ -346,6 +427,19 @@
       "evidence": "https://ctc.westpoint.edu/wp-content/uploads/2020/06/CTC-SENTINEL-062020.pdf",
       "credit": "Guardafuuii. PNG rendering of the SVG.",
       "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+    }
+  },
+  "ucdp-actor-7412": {
+    "representative": {
+      "name": "Jean-Claude Nzita",
+      "role": "FLEC-FAC spokesperson",
+      "source": "https://www.pressclub.be/event/autodetermination-de-lenclave-de-cabinda-conference-de-presse-du-flec-fac/",
+      "portrait": {
+        "file": "historical-identity-assets/jean-claude-nzita.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Jean-Claude_Nzita.jpg",
+        "credit": "Jean Claude Nzita, own work. Wikimedia Commons original.",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
     }
   },
   "ucdp-actor-8885": {

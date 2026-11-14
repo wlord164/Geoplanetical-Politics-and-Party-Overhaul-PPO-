@@ -5750,12 +5750,14 @@
         {
           "key": "COD-1894",
           "name": "Sud-Kivu",
-          "note": "The sources identify this broad area as part of the dispute. Provincial control is unspecified."
+          "contested": true,
+          "note": "AFC/M23 administered Bukavu at the scenario opening. Control of the surrounding stock province is unresolved."
         },
         {
           "key": "COD-1898",
           "name": "Nord-Kivu",
-          "note": "The sources identify this broad area as part of the dispute. Provincial control is unspecified."
+          "contested": true,
+          "note": "AFC/M23 administered Goma at the scenario opening. Control of the surrounding stock province is unresolved."
         }
       ],
       "geographicContext": [

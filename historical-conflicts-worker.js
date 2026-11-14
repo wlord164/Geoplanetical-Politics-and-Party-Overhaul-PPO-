@@ -529,6 +529,7 @@ function gpmHistoricalContestedCells(war) {
   return [...totals].filter(([, sides]) => sides[0] && sides[1]).map(([id, [b, a]]) => [id, {
     dominantKey: a >= b ? sideA : sideB, secondaryKey: a >= b ? sideB : sideA,
     dominance: Math.max(a, b) / (a + b),
+    sides: [{ countryKey: sideA, cells: a }, { countryKey: sideB, cells: b }],
   }]);
 }
 
@@ -544,12 +545,12 @@ function gpmHistoricalMapView(sim) {
     if (!id || Object.hasOwn(actors, id)) return;
     const actor = gpmHistoricalActorById(id);
     if (!actor) return;
-    const { name, shortName, administrationName, mapColor: color, wartimeMapName } = actor;
+    const { name, shortName, kind, strategicOnly, administrationName, mapColor: color, wartimeMapName } = actor;
     const sourceKey = /^\d+$/.test(actor.countryKey) ? actor.countryKey.padStart(3, "0") : actor.countryKey;
     const countryKey = sim.countries.has("gpm-historical-" + id) ? "gpm-historical-" + id :
       ["government", "state", "state-force"].includes(actor.kind) && sim.countries.has(sourceKey) ? sourceKey : null;
     const flag = actor.identity?.flag;
-    actors[id] = { id, name, shortName, mapName: wartimeMapName, administrationName,
+    actors[id] = { id, name, shortName, kind, strategicOnly, mapName: wartimeMapName, administrationName, sourceCountryKey: sourceKey,
       countryKey, color, ...(flag ? { identity: { flag } } : {}) };
   };
   for (const country of sim.countries.values()) {
@@ -557,7 +558,7 @@ function gpmHistoricalMapView(sim) {
     const id = country.key.slice("gpm-historical-".length);
     includeActor(id);
     const outcome = state.regionalOutcomes?.[id];
-    if (actors[id] && outcome?.polityKey !== country.key) nativeCountryActors[country.key] = id;
+    if (actors[id] && !actors[id].strategicOnly && outcome?.polityKey !== country.key) nativeCountryActors[country.key] = id;
   }
   for (const definition of gpmHistoricalDefinitions(state)) {
     const row = state.conflicts[definition.id];
@@ -565,9 +566,10 @@ function gpmHistoricalMapView(sim) {
     const status = war?.status || row?.status;
     if (!visibleStatuses.has(status)) continue;
     const native = !!row.nativeId || !!definition.openingGovernment && !!row.nativeActors;
-    const actorIds = [...new Set(definition.sides.flat())];
+    const actorIds = [...new Set([...definition.sides.flat(), ...(definition.associatedActorIds || [])])];
     actorIds.forEach(includeActor);
-    const front = { id: definition.id, name: definition.name, status, native, actorIds };
+    const front = { id: definition.id, name: definition.name, status, native,
+      crimeReport: definition.crimeReport, strategicOnly: definition.strategicOnly, actorIds };
     const regionByKey = new Map((definition.regions || []).map(region => [region.key, region]));
     const battle = new Map();
     for (const [id, pressure] of gpmHistoricalContestedCells(war)) {
@@ -592,9 +594,10 @@ function gpmHistoricalMapView(sim) {
       const credit = war && gDa(sim, war, region.key);
       const occupationKey = credit || province.__occupier || null;
       const pressure = battle.get(region.key);
-      const captured = !!(credit && !pressure && war.participants[credit] && credit !== province.__countryKey);
+      const captured = !!((status === "active" || status === "ceasefire") &&
+        credit && !pressure && war.participants[credit] && credit !== province.__countryKey);
       const controllerId = pressure && authorities[pressure.dominantKey] ||
-        (region.dominantActorId && !captured ? region.dominantActorId : native
+        (!captured && (region.dominantActorId || region.contested && region.controller)) || (native
         ? authorities[occupationKey || province.__countryKey] || region.controller || null
         : shared?.currentController ?? region.controller ?? null);
       const administratorId = region.administrator && !captured ? region.administrator : native
@@ -607,9 +610,14 @@ function gpmHistoricalMapView(sim) {
       const dominantKey = captured ? occupationKey : pressure?.dominantKey || actors[controllerId]?.countryKey;
       const secondaryKey = pressure?.secondaryKey || actors[region.secondaryActorId]?.countryKey || province.__countryKey;
       const mapped = regions.get(region.key) || { key: region.key, name: region.name || province.__name, fronts: [] };
-      mapped.fronts.push({ ...front, controllerId, administratorId, contested, occupationKey, captured,
+      const eligibleController = !!controllerId && !actors[controllerId]?.strategicOnly;
+      const controlled = !contested && !captured && !front.strategicOnly && eligibleController &&
+        (shared?.regionalOutcome?.actorId === controllerId && shared.regionalOutcome.native === true ||
+         !native && region.controller === controllerId && region.administrator === controllerId);
+      const political = !front.strategicOnly && (!front.crimeReport || eligibleController && (captured || contested || controlled));
+      mapped.fronts.push({ ...front, controllerId, administratorId, contested, occupationKey, captured, controlled, political,
         dominantKey, secondaryKey, dominance: pressure?.dominance ?? region.dominance,
-        dominantColor: pressure ? null : region.color, note: region.note || null });
+        dominantColor: pressure || captured ? null : region.color, note: region.note || null });
       regions.set(region.key, mapped);
     }
   }
@@ -647,22 +655,44 @@ function gpmHistoricalView(sim, { id } = {}) {
     if (id !== definition.id) continue;
     const outcomeRegions = new Set(row.victoryOutcome?.regionKeys || []);
     const openingRegions = new Map((regions || []).map(region => [region.key, region]));
-    const details = [...new Set([...openingRegions.keys(), ...outcomeRegions])].map(key => {
+    const liveControl = new Map();
+    const actorMap = row.nativeActors || {};
+    const actorIdForCountry = countryKey => actorMap[countryKey] || definition.sides.flat().find(actorId => {
+      const actor = gpmHistoricalActorById(actorId);
+      return (actor?.wartimeCountryKey || actor?.countryKey)?.padStart(3, "0") === countryKey;
+    });
+    if (war?.status === "active" || war?.status === "ceasefire") {
+      for (const [provinceId, pressure] of gpmHistoricalContestedCells(war)) {
+        const province = sim.world.provinces[provinceId];
+        if (province && war.participants[province.__countryKey]) liveControl.set(province.__provKey, pressure);
+      }
+    }
+    const details = [...new Set([...openingRegions.keys(), ...outcomeRegions, ...liveControl.keys()])].map(key => {
       const region = openingRegions.get(key) || { key };
       const province = sim.world.provByKey.get(region.key);
       const shared = state.regions[region.key] ||
         (province ? gpmHistoricalRegion(sim, definition, region) : {});
-      const occupier = province?.__occupier || null;
-      const actorMap = row.nativeActors || {};
-      const controller = actorMap[occupier] || shared.currentController || shared.controller;
+      const pressure = liveControl.get(key);
+      const credit = war && (war.status === "active" || war.status === "ceasefire") && gDa(sim, war, key);
+      const occupier = credit || province?.__occupier || null;
+      const captured = credit && !pressure && war.participants[credit] && credit !== province?.__countryKey;
+      const controller = (pressure && actorIdForCountry(pressure.dominantKey)) ||
+        (occupier && actorIdForCountry(occupier)) || shared.currentController || shared.controller;
+      const currentContested = !captured && !!(pressure || region.contested || (shared.currentContested ?? shared.contested));
+      const militarySides = pressure?.sides?.filter(side => side.countryKey).map(side =>
+        ({ ...side, actorId: actorIdForCountry(side.countryKey) }));
+      const militaryControl = currentContested && militarySides?.length === 2 &&
+        militarySides[0].countryKey !== militarySides[1].countryKey
+        ? { sides: militarySides, totalCells: militarySides[0].cells + militarySides[1].cells } : null;
       return { ...shared, ...region, controller: shared.controller, administrator: shared.administrator,
         contested: shared.contested, occupationKey: occupier, currentController: controller,
-        currentContested: shared.currentContested ?? shared.contested,
+        currentContested, militaryControl,
         runtimeOwner: province?.__countryKey || null };
     });
     const options = gpmHistoricalOptions(sim, definition, row);
     const actorIds = new Set([...definition.sides.flat(), ...(definition.associatedActorIds || []), ...details.flatMap(region =>
-      [region.controller, region.administrator]).filter(Boolean)]);
+      [region.controller, region.administrator, region.currentController, region.dominantActorId, region.secondaryActorId,
+       ...(region.militaryControl?.sides.map(side => side.actorId) || [])]).filter(id => gpmHistoricalActorById(id))]);
     selected = { ...result, regions: details, actors: [...actorIds].map(actorId => gpmHistoricalActorView(sim, gpmHistoricalActorById(actorId))),
       theatreKey: war?.mode === "operational" ? war.enemyKey : null,
       durationDays: war ? N6(sim, war) : null,

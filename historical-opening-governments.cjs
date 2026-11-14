@@ -11,9 +11,13 @@ const governments = {
     provinceKeys: ["YEM-3498", "YEM-3496", "YEM-152", "YEM-155", "YEM-153", "YEM-156", "YEM-3499", "YEM-333"],
     replacementCapitalKey: "YEM-3510", startDate: "2014-09-21", regime: "islamic_republic",
     partyName: "Ansar Allah", partyTag: "AA", mapName: "Ansar Allah", color: "#71794a",
-    laws: { religion_state: 3, freedom_of_worship: 1, religion_in_education: 5, media_freedom: { press: "muzzled", internet: "censored" } },
+    laws: {
+      religion_state: 3, freedom_of_worship: 1, religious_funding: 5, religion_in_education: 5,
+      media_freedom: { press: "muzzled", internet: "censored" },
+    },
     sources: [yemenControl, "https://warwatch.ch/situations/armed-conflicts-in-yemen/classification/",
-      "https://www.uscirf.gov/sites/default/files/2025-08/2025%20Factsheet%20Houthi.pdf"],
+      "https://www.uscirf.gov/sites/default/files/2025-08/2025%20Factsheet%20Houthi.pdf",
+      "https://digitallibrary.un.org/record/4004108/files/S_2023_130-EN.pdf"],
   },
   "ucdp-nonstate-15915": {
     parentKey: "887", parentActorId: plc, actorId: stc, title: "Southern Transitional Council",
@@ -24,7 +28,8 @@ const governments = {
   },
   "libya-national-truce": {
     parentKey: "434", parentActorId: "libya-gnu", actorId: "libya-gns", title: "Government of National Stability",
-    provinceKeys: ["LBY-2984"], regime: "provisional_council", partyTag: "GNS", color: "#8c6b9d",
+    provinceKeys: ["LBY-2984"], regime: "provisional_council", partyTag: "GNS",
+    mapName: "Government of National Stability", color: "#8c6b9d",
     reform: { headGovExists: 0, judicialReview: true },
     sources: ["https://digitallibrary.un.org/record/4073810/files/S_2024_914-EN.pdf",
       "https://unsmil.unmissions.org/en/node/134165",
@@ -33,10 +38,15 @@ const governments = {
   "ucdp-state-750": {
     parentKey: "706", parentActorId: "ucdp-actor-95", actorId: "ucdp-actor-717", title: "Al-Shabaab Administration",
     provinceKeys: ["SOM-2315"], startDate: "2006-01-01", regime: "islamic_emirate", partyTag: "AS", color: "#746850",
-    laws: { religion_state: 4, freedom_of_worship: 1, religion_in_education: 5 },
+    laws: {
+      religion_state: 4, freedom_of_worship: 1, religious_funding: 5, religion_in_education: 5,
+      death_penalty: "ordinary_crimes", same_sex_status: "capital",
+    },
     sources: ["https://dip-aws.euaa.europa.eu/coi/somalia/2025/security-situation/21-jubbaland/212-middle-juba",
       "https://www.ris.bka.gv.at/Dokumente/Bvwg/BVWGT_20260107_W268_2309024_1_00/BVWGT_20260107_W268_2309024_1_00.html",
-      "https://www.euaa.europa.eu/country-guidance-somalia/security-situation-recent-events"],
+      "https://www.euaa.europa.eu/country-guidance-somalia/security-situation-recent-events",
+      "https://www.euaa.europa.eu/country-guidance-somalia/34-individuals-refusing-pay-taxes-al-shabaab",
+      "https://digitallibrary.un.org/record/4046158"],
   },
 };
 

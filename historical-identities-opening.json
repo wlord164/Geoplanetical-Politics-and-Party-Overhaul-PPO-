@@ -1,4 +1,55 @@
 {
+  "ucdp-actor-8885": {
+    "flag": {
+      "name": "M23 banner used by the coalition’s M23 component",
+      "file": "historical-identity-assets/m23-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_March_23_Movement.svg",
+      "credit": "March 23 Movement variation of the DRC flag. PNG rendered from Wikimedia Commons.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "evidence": "https://web.archive.org/web/20120828232843/http://www.m23mars.org/"
+    }
+  },
+  "mmr-cndf": {
+    "flag": {
+      "name": "Chin National Organization / Chin National Defence Force flag",
+      "file": "historical-identity-assets/cndf-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:CNO-CNDF_Flag.svg",
+      "credit": "Vector by Albert Poliakoff. PNG rendering.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "evidence": "https://mizzima.com/article/chin-resistance-group-claims-37-junta-soldiers-killed-over-three-months"
+    }
+  },
+  "ucdp-actor-8622": {
+    "flag": {
+      "name": "Hadhramaut Tribal Alliance flag",
+      "file": "historical-identity-assets/hadhramaut-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Hadhramout_Tribes_Confederacy.svg",
+      "credit": "Vector redraw by MrPenguin20. PNG rendering.",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "evidence": "https://www.tarebhtoday.online/2024/12/21/109218/"
+    }
+  },
+  "ucdp-actor-7595": {
+    "flag": {
+      "name": "Shared OLF flag design used by the Oromo Liberation Army",
+      "file": "historical-identity-assets/ola-flag.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Oromo_Liberation_Front.svg",
+      "credit": "J. Ollé and Wikimedia Commons contributors. PNG rendering.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "evidence": "https://pbs.twimg.com/profile_banners/1592336396391530497/1683581090"
+    }
+  },
+  "syr-suwayda-local-groups": {
+    "flag": {
+      "name": "Suwayda National Guard emblem · provisional faction icon",
+      "file": "historical-identity-assets/suwayda-emblem.png",
+      "source": "https://commons.wikimedia.org/wiki/File:National_Guard_Suwayda_Emblem.svg",
+      "credit": "Suwayda National Guard insignia. PNG rendering from the Commons vector.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "evidence": "https://www.longwarjournal.org/archives/2025/09/profiles-of-militias-in-newly-formed-druze-national-guard-in-suwayda-syria.php",
+      "type": "emblem"
+    }
+  },
   "ucdp-actor-123": {
     "headOfState": {
       "name": "Mahdi al-Mashat",

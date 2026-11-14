@@ -12,6 +12,37 @@ const asiaContested = require("./historical-contested-opening.json");
 
 const asOf = "2026-01-01";
 const dataFiles = ["historical-pilots.json", "historical-world.json"];
+const mapIdentities = {
+  "sdn-rsf": ["Rapid Support Forces", "#b8788d"],
+  "mmr-sspc": ["Myanmar Military", "#829099"],
+  "mmr-nug": ["National Unity Government", "#e37269"],
+  "mmr-aa": ["Arakan Army", "#e6a244"],
+  "mmr-kio": ["Kachin Independence Army", "#55bd89"],
+  "mmr-knu": ["Karen National Union", "#708cef"],
+  "mmr-cnf": ["Chin National Front", "#b180e4"],
+  "mmr-cndf": ["Chin National Defence Force", "#e78bb8"],
+  "mmr-knpp": ["Karenni Army", "#59c3db"],
+  "mmr-mndaa": ["Kokang (MNDAA)", "#da8964"],
+  "mmr-tnla": ["Ta’ang (TNLA)", "#a5bd58"],
+  "mmr-uwsa": ["Wa State", "#48a4a5"],
+  "ucdp-actor-6716": ["JNIM", "#54c6a0"],
+  "is-sahel": ["ISSP", "#dba852"],
+  "ucdp-actor-8822": ["Azawad Liberation Front", "#9990e6"],
+};
+const organizedCrimeActors = new Set([
+  "ucdp-actor-3107", "ucdp-actor-3108", "ucdp-actor-3110",
+  "ucdp-actor-772", "ucdp-actor-4462", "ucdp-actor-3176", "ucdp-actor-6936",
+  "ucdp-actor-8285", "ucdp-actor-8388", "ucdp-actor-8586", "ucdp-actor-8294",
+  "ucdp-actor-1151", "ucdp-actor-1152", "ucdp-actor-775", "ucdp-actor-7256",
+  "ucdp-actor-7795", "ucdp-actor-7796", "ucdp-actor-7984", "ucdp-actor-6009",
+  "ucdp-actor-8006", "ucdp-actor-8588", "ucdp-actor-9341", "ucdp-actor-8095",
+  "ucdp-actor-9392", "ucdp-actor-7618", "ucdp-actor-9755", "ucdp-actor-793",
+  "ucdp-actor-7971", "ucdp-actor-8009", "ucdp-actor-9053", "ucdp-actor-9404",
+  "ucdp-actor-9403", "ucdp-actor-8442", "ucdp-actor-8866", "ucdp-actor-7930",
+  "ucdp-actor-8986", "ucdp-actor-8987", "ucdp-actor-9782", "ucdp-actor-9783",
+  "ucdp-actor-7214", "ucdp-actor-7922", "ucdp-actor-9067",
+]);
+const organizedCrimeFronts = new Set(["ucdp-state-17970", "warwatch-3416", "warwatch-707", "warwatch-711"]);
 
 function readCatalog() {
   const actors = [];
@@ -57,7 +88,10 @@ function readCatalog() {
     }
     const keys = countryKeys.map(key => /^\d+$/.test(key) ? String(Number(key)) : String(key));
     const target = currentIds.has(id) ? result.conflicts : result.legacyOnly;
-    target.push({ ...conflict, asOf, countryKeys: [...new Set(keys)] });
+    const parties = sides.flat().filter(actorId => !["government", "state", "state-force"].includes(actorById.get(actorId)?.kind));
+    const crimeReport = organizedCrimeFronts.has(id) || parties.some(actorId => organizedCrimeActors.has(actorId));
+    const strategicOnly = crimeReport && parties.every(actorId => organizedCrimeActors.has(actorId));
+    target.push({ ...conflict, crimeReport, strategicOnly, asOf, countryKeys: [...new Set(keys)] });
   }
   for (const [id, canonical] of covered) {
     if (!conflictIds.has(canonical)) throw new Error(`Invalid historical conflict alias ${id}: ${canonical}`);
@@ -70,6 +104,9 @@ function readCatalog() {
   result.legacyActors = Object.fromEntries(Object.entries(result.actors).filter(([id]) => !currentActors.has(id)));
   for (const id of Object.keys(result.legacyActors)) delete result.actors[id];
   for (const actor of [...Object.values(result.actors), ...Object.values(result.legacyActors)]) {
+    const identity = mapIdentities[actor.id];
+    if (identity) [actor.wartimeMapName, actor.mapColor] = identity;
+    if (organizedCrimeActors.has(actor.id)) actor.strategicOnly = true;
     if (/^\d+$/.test(actor.countryKey)) actor.countryKey = String(Number(actor.countryKey));
     const poolId = actor.strength?.sharedPoolId;
     const owner = poolId && actorById.get(poolId);
@@ -85,6 +122,18 @@ function readCatalog() {
         throw new Error("Invalid historical strength component: " + actor.id);
       }
     }
+  }
+  const colorsUsed = new Set(Object.values(mapIdentities).map(([, color]) => color));
+  const factionActors = Object.values(result.actors).filter(actor =>
+    !actor.mapColor && !["state", "state-force", "government"].includes(actor.kind)).sort((a, b) => a.id.localeCompare(b.id, "en"));
+  for (const [index, actor] of factionActors.entries()) {
+    const hue = Math.round((index * 137.508) % 360);
+    const saturation = 58 + Math.floor(index / 40) * 4;
+    let lightness = 59 + index % 4 * 5;
+    let color = `hsl(${hue} ${saturation}% ${lightness}%)`;
+    while (colorsUsed.has(color)) color = `hsl(${hue} ${saturation}% ${++lightness}%)`;
+    actor.mapColor = color;
+    colorsUsed.add(color);
   }
   result.victories = {};
   for (const [id, plans] of Object.entries(victoryDefinitions)) {
@@ -159,7 +208,7 @@ function readCatalog() {
       }
       regions.set(key, { ...regions.get(key), key, ...(name ? { name } : {}), contested: true,
         ...(dominantActorId ? { controller: dominantActorId, administrator: dominantActorId } : {}),
-        dominantActorId, secondaryActorId, dominance, color, note });
+        dominantActorId, secondaryActorId, dominance, color: result.actors[dominantActorId]?.mapColor || color, note });
       if (source && !front.sources.includes(source)) front.sources = [...front.sources, source];
     }
     front.regions = [...regions.values()];

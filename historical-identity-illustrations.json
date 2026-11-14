@@ -1,0 +1,57 @@
+{
+  "ucdp-actor-7542": {
+    "file": "historical-identity-assets/illustrative-bras.jpg",
+    "fictionalName": "Bijar Rasuljan"
+  },
+  "ucdp-actor-195": {
+    "file": "historical-identity-assets/illustrative-india.jpg",
+    "fictionalName": "Anil Venkat Narayan"
+  },
+  "ucdp-actor-4364": {
+    "file": "historical-identity-assets/illustrative-justice.jpg"
+  },
+  "mmr-cnf": {
+    "file": "historical-identity-assets/illustrative-cnf.jpg"
+  },
+  "mmr-cndf": {
+    "file": "historical-identity-assets/illustrative-cndf.jpg",
+    "fictionalName": "Mawi Hram Lian"
+  },
+  "ucdp-actor-8622": {
+    "file": "historical-identity-assets/illustrative-hadhramaut.jpg"
+  },
+  "ucdp-actor-209": {
+    "file": "historical-identity-assets/illustrative-hamas.jpg"
+  },
+  "is-sahel": {
+    "file": "historical-identity-assets/illustrative-issp.jpg",
+    "fictionalName": "Idrissa Mahamane Gambo"
+  },
+  "ucdp-actor-6716": {
+    "file": "historical-identity-assets/illustrative-jnim.jpg"
+  },
+  "mmr-knu": {
+    "file": "historical-identity-assets/illustrative-knu.jpg"
+  },
+  "mmr-knpp": {
+    "file": "historical-identity-assets/illustrative-knpp.jpg"
+  },
+  "mmr-mndaa": {
+    "file": "historical-identity-assets/illustrative-mndaa.jpg"
+  },
+  "ucdp-actor-7595": {
+    "file": "historical-identity-assets/illustrative-ola.jpg"
+  },
+  "mmr-tnla": {
+    "file": "historical-identity-assets/illustrative-tnla.jpg"
+  },
+  "syr-suwayda-local-groups": {
+    "file": "historical-identity-assets/illustrative-suwayda.jpg"
+  },
+  "ucdp-actor-356": {
+    "file": "historical-identity-assets/illustrative-ttp.jpg"
+  },
+  "warwatch-actor-3096": {
+    "file": "historical-identity-assets/illustrative-casamance.jpg"
+  }
+}

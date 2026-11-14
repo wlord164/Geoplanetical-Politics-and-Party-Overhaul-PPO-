@@ -1,5 +1,7 @@
 "use strict";
 
+const { readIdentityIllustrations } = require("./historical-identities.cjs");
+
 const style = `
   .gpm-history { display: grid; gap: var(--gap-3); min-width: 0; }
   .gpm-history :is(p, ul, dl) { margin: 0; }
@@ -31,6 +33,7 @@ const style = `
   .gpm-history-region-list { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); max-height: 12rem; overflow: auto; }
   .gpm-history-region dl { display: grid; grid-template-columns: max-content 1fr; gap: var(--gap-1) var(--gap-2); }
   .gpm-history-region dd { margin: 0; }
+  .gpm-history-control { display: grid; gap: var(--gap-1); }
   @media (max-width: 1200px) { .gpm-history-layout { grid-template-columns: minmax(0, 1fr); } .gpm-history-list { max-height: 16rem; } }
 `;
 
@@ -93,7 +96,13 @@ function gpmHistoricalActor(actor, outcome) {
   const renderOfficial = person => `<div class="gpm-history-leader">
       ${person.image ? `<img src="${b(person.image)}" alt="${b(person.name)}">` : ""}
       <div><b>${b(person.name)}${person.alias ? ` (${b(person.alias)})` : ""}</b>${person.role ? `<br><small>${b(person.role)}</small>` : ""}</div></div>`;
-  const media = [flag, administrationFlag, identity?.victoryFlag, ...openingOfficials.map(person => person.portrait)].filter(Boolean);
+  const representative = identity?.representative;
+  const illustration = !representative?.portrait?.image && !officials.some(person => person.image) &&
+    !openingOfficials.some(person => person.portrait?.image) && gpmHistoricalDossierIllustrations[actor.id];
+  const fictionalName = !openingOfficials.length && !officials.length && illustration?.fictionalName;
+  const illustrationLabel = fictionalName ? "Fictional scenario character" : "Illustrative portrait";
+  const media = [flag, administrationFlag, identity?.victoryFlag, representative?.portrait,
+    ...openingOfficials.map(person => person.portrait)].filter(Boolean);
   const ideology = actor.ppoIdeology;
   const related = ideology?.relatedAdministration;
   const fit = { close: "Close fit", partial: "Partial fit", none: "No party preset", unknown: "Insufficient evidence" };
@@ -118,7 +127,7 @@ function gpmHistoricalActor(actor, outcome) {
     const sources = gpmHistoricalSourceList(law.source);
     return `<li><b>${b(law.name)}</b>${law.status ? ` · ${b(gpmHistoricalLabel(law.status))}` : ""}${law.note ? `<br>${b(law.note)}` : ""}${sources ? `<ul class="gpm-history-sources">${sources}</ul>` : ""}</li>`;
   }).join("");
-  return `<article class="gpm-history-actor">
+  return `<article class="gpm-history-actor" data-history-actor="${b(actor.id)}">
     <div class="gpm-history-actor-heading">${flag ? `<img class="gpm-history-flag" src="${b(flag.image)}" alt="${b(flag.name)}" title="${b(flag.name)}">` : ""}
       <div><b>${b(actor.name || actor.id)}</b>${actor.shortName && actor.shortName !== actor.name ? ` <small>(${b(actor.shortName)})</small>` : ""}
         ${actor.kind || actor.role ? `<br><small>${b([actor.kind, actor.role].filter(Boolean).map(gpmHistoricalLabel).join(" · "))}</small>` : ""}</div></div>
@@ -126,8 +135,18 @@ function gpmHistoricalActor(actor, outcome) {
     ${officials.length ? `<small>${actor.leadership ? "Current leadership" : "Opening leadership"}</small>` : ""}
     ${officials.map(renderOfficial).join("")}
     ${historicalOfficials.length ? `<small>Opening leadership</small>${historicalOfficials.map(renderOfficial).join("")}` : ""}
+    ${representative ? `<small>Faction representative</small>${renderOfficial({
+      ...representative, image: representative.portrait.image,
+    })}` : ""}
+    ${illustration ? `<div class="gpm-history-leader" data-history-illustration>
+      <img src="${b(illustration.image)}" alt="${b(fictionalName ? illustrationLabel + " · " + fictionalName : illustrationLabel)}">
+      <div><small>${illustrationLabel}</small>${fictionalName ? `<br><b data-history-fictional-name>${b(fictionalName)}</b>` : ""}</div>
+    </div>` : ""}
     ${openingOfficials.length || media.length ? `<details><summary>Identity sources and image credits</summary><ul class="gpm-history-sources">
       ${openingOfficials.map(person => gpmHistoricalSource({ title: person.name, url: person.source })).join("")}
+      ${representative ? gpmHistoricalSource({ title: representative.name, url: representative.source }) : ""}
+      ${openingOfficials.map(person => person.portraitReference &&
+        gpmHistoricalSource({ title: `${person.name} photograph`, url: person.portraitReference }) || "").join("")}
       ${media.map(item => gpmHistoricalSource({ title: item.credit, url: item.source }) +
         gpmHistoricalSource({ title: "Image license", url: item.license }) +
         (item.evidence ? gpmHistoricalSource({ title: "Documented flag use", url: item.evidence }) : "")).join("")}</ul></details>` : ""}
@@ -177,13 +196,32 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
     ${items.map(item => {
       const region = byKey.get(keys.get(item.provId));
       return region ? `<path d="${b(item.d)}" fill="${colors[category(region)]}" data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
-        <title>${b(name(region))} · ${b(region.contested ? "Contested" : region.controller ? authority(region.controller) : "Control unspecified")}</title></path>` : "";
+        <title>${b(name(region))} · ${b((region.currentContested ?? region.contested) ? "Contested" : region.controller ? authority(region.controller) : "Control unspecified")}</title></path>` : "";
     }).join("")}</svg>`;
   const labels = {
     contested: "Contested", first: authority(conflict.sides?.[0]?.[0]), second: authority(conflict.sides?.[1]?.[0]),
     other: "Other actor", unmapped: "Control unspecified",
   };
   const categories = new Set(conflict.regions.map(category));
+  const contested = selected.currentContested ?? selected.contested;
+  const military = selected.militaryControl;
+  let militaryControl = "";
+  if (contested) {
+    let text;
+    if (military?.totalCells > 0 && military.sides?.length === 2) {
+      const firstShare = Math.round(1000 * military.sides[0].cells / military.totalCells) / 1000;
+      const percentage = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 });
+      text = `<small>Share of land cells with modeled military control.</small>
+        <ul>${military.sides.map((side, index) => `<li>${b(side.actorId ? authority(side.actorId) : U(side.countryKey))}
+          <b>${b(percentage.format(index ? 1 - firstShare : firstShare))}</b></li>`).join("")}</ul>`;
+    } else {
+      const names = [...new Set([selected.dominantActorId, selected.secondaryActorId, selected.currentController,
+        ...(conflict.sides || []).flat()].filter(Boolean).map(authority))];
+      text = `<p>Military control percentages unavailable.</p>${names.length ? `<p>Known parties · ${b(names.join(" / "))}</p>` : ""}`;
+    }
+    militaryControl = `<section class="gpm-history-control" aria-label="Military control breakdown" data-history-military-control>
+      <b>Military control breakdown</b>${text}</section>`;
+  }
   return `<section class="gpm-history-detail" aria-label="Regional control">
     <h4>Regional control</h4>
     ${layout ? `<div class="gpm-history-map">${paths(layout.paths, layout.W, layout.H)}${layout.insets.map(inset => paths(inset.paths, layout.box, layout.box)).join("")}
@@ -191,7 +229,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
         `<small><i aria-hidden="true" style="background:${colors[key]}"></i>${b(labels[key])}</small>`).join("")}</div></div>` : ""}
     <div class="gpm-history-region-list" data-keep-scroll="historical-regions">
       ${conflict.regions.map(region => `<button type="button" class="k" data-authority-safe data-history-region="${b(region.key)}" data-focus-key="history-region-${b(region.key)}" aria-pressed="${region === selected}">
-        <b>${b(name(region))}</b><small>${b(region.contested ? "Contested" : region.controller ? authority(region.controller) : "Control unspecified")}</small></button>`).join("")}</div>
+        <b>${b(name(region))}</b><small>${b((region.currentContested ?? region.contested) ? "Contested" : region.controller ? authority(region.controller) : "Control unspecified")}</small></button>`).join("")}</div>
     <div class="sh-inset gpm-history-region"><b>${b(name(selected))}</b>
       <dl><dt>Opening controller</dt><dd>${b(selected.controller ? authority(selected.controller) : "Unspecified")}</dd>
       ${Object.hasOwn(selected, "currentController") && selected.currentController !== selected.controller ? `<dt>Current controller</dt><dd>${b(selected.currentController ? authority(selected.currentController) : "Unspecified")}</dd>` : ""}
@@ -199,7 +237,8 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
       ${selected.legalOwner ? `<dt>Legal owner</dt><dd>${b(U(selected.legalOwner))}</dd>` : ""}
       ${selected.occupationKey ? `<dt>Current occupation</dt><dd>${b(U(selected.occupationKey))}</dd>` : ""}
       ${Number.isFinite(selected.disruption) ? `<dt>Disruption</dt><dd>${b(selected.disruption)} / 100</dd>` : ""}
-      ${(selected.currentContested ?? selected.contested) ? "<dt>Control</dt><dd>Contested</dd>" : ""}</dl>
+      ${contested ? "<dt>Control</dt><dd>Contested</dd>" : ""}</dl>
+      ${militaryControl}
       ${selected.localOutcomes?.length ? `<div><b>Local administrations</b><ul>${selected.localOutcomes.map(local => `<li>${b(local.administration || local.title)}</li>`).join("")}</ul></div>` : ""}
       ${selected.note ? `<p>${b(selected.note)}</p>` : ""}</div>
   </section>`;
@@ -208,12 +247,13 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
 function gpmHistoricalDetail(conflict, state, ui) {
   if (!conflict) return `<p>${state.pending ? "Loading conflict details…" : "Select a conflict to view its participants and regions."}</p>`;
   const actors = new Map((conflict.actors || []).map(actor => [actor.id, actor]));
+  const selectedActor = actors.get(state.actorId);
   const sides = (conflict.sides || []).map((side, index) => {
     const entries = side.map(id => actors.get(id) || { id, name: U(id) });
-    return `<section class="sh-inset gpm-history-side" aria-label="${b(entries[0]?.shortName || entries[0]?.name || `Side ${index + 1}`)}">${entries.map(actor => gpmHistoricalActor(actor, conflict.factionOutcomes?.[actor.id])).join("")}</section>`;
+    return `<section class="sh-inset gpm-history-side" aria-label="${b(entries[0]?.shortName || entries[0]?.name || `Side ${index + 1}`)}">${entries.filter(actor => actor.id !== state.actorId).map(actor => gpmHistoricalActor(actor, conflict.factionOutcomes?.[actor.id])).join("")}</section>`;
   });
   const combatants = new Set((conflict.sides || []).flat());
-  const others = [...actors.values()].filter(actor => !combatants.has(actor.id));
+  const others = [...actors.values()].filter(actor => actor.id !== state.actorId && !combatants.has(actor.id));
   const sources = gpmHistoricalSourceList(conflict.sources);
   const pendingTerm = (conflict.options || []).find(option => option.id === state.term);
   const action = (id, label, extra = "") => `<button type="button" class="k" data-history-action="${id}" data-focus-key="history-${id}" ${extra}>${label}</button>`;
@@ -253,6 +293,7 @@ function gpmHistoricalDetail(conflict, state, ui) {
   </section>` : "";
   return `<article class="gpm-history-detail" aria-label="${b(conflict.name)}">
     <header><h3>${b(conflict.name)}</h3><small>${b([conflict.status, conflict.kind, conflict.mode].filter(Boolean).map(gpmHistoricalLabel).join(" · "))}</small></header>
+    ${selectedActor ? gpmHistoricalActor(selectedActor, conflict.factionOutcomes?.[selectedActor.id]) : ""}
     ${conflict.note ? `<p>${b(conflict.note)}</p>` : ""}
     ${conflict.geographicContext?.length ? `<div><h4>Areas affected</h4><ul>${conflict.geographicContext.map(area => `<li>${b(area)}</li>`).join("")}</ul></div>` : ""}
     ${conflict.asOf || conflict.confidence ? `<small>${b([conflict.asOf && `Snapshot ${conflict.asOf}`, conflict.confidence && `${gpmHistoricalLabel(conflict.confidence)} confidence`].filter(Boolean).join(" · "))}</small>` : ""}
@@ -329,6 +370,10 @@ function gpmHistoricalConflictsView(host, ui, session) {
       : `<p>${data ? all.length ? "No conflicts match the filters." : "This campaign has no historical conflict snapshot." : state.pending ? "Loading conflicts…" : "Conflict data is unavailable."}</p>`);
     const selected = data?.selected;
     setHtml(detail, gpmHistoricalDetail(selected?.id && selected.id === state.selectedId ? selected : null, state, ui));
+    if (state.focusRegionDetails && !state.pending && selected?.id === state.selectedId) {
+      state.focusRegionDetails = false;
+      detail.querySelector("[data-history-military-control]")?.scrollIntoView({ block: "center", inline: "nearest" });
+    }
     feedback.textContent = state.status;
     host.setAttribute("aria-busy", String(!!state.pending || !!state.busy));
   };
@@ -369,6 +414,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
     else if (historySelect) {
       state.selectedId = historySelect;
       state.regionKey = null;
+      state.actorId = null;
       state.term = null;
       state.status = "";
       void state.load(historySelect, true);
@@ -430,6 +476,7 @@ function patchHistoricalConflictsRenderer(source, replaceOnce) {
     gpmHistoricalRegions, gpmHistoricalDetail, gpmHistoricalConflictsView, gpmBuildHistoricalConflicts];
   const initialize = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, initialize, "\nconst gpmHistoricalConflictsStyle = " + JSON.stringify(style) + ";\n"
+    + "const gpmHistoricalDossierIllustrations = " + JSON.stringify(readIdentityIllustrations()) + ";\n"
     + rendererFunctions.join("\n") + initialize);
   const mountStyle = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle + gpmUprisingStyle;";
   js = replaceOnce(js, mountStyle, mountStyle.replace(";", " + gpmHistoricalConflictsStyle;"));

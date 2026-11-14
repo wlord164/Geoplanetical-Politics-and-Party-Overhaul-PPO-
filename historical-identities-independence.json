@@ -31,6 +31,17 @@
     }
   },
   "ucdp-actor-7332": {
+    "representative": {
+      "name": "Ayaba Cho Lucas",
+      "role": "Founder of the Ambazonia Governing Council",
+      "source": "https://ris.bka.gv.at/Dokumente/Bvwg/BVWGT_20251106_I425_2274055_2_00/BVWGT_20251106_I425_2274055_2_00.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/ayaba-cho-lucas.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Lucas_Ayaba_Cho.jpg",
+        "credit": "Ipob Rapture Media, December 2022. Interview still as published on Wikimedia Commons.",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
     "flag": {
       "name": "Ambazonian independence flag",
       "file": "historical-identity-assets/ambazonia.png",
@@ -78,9 +89,9 @@
       "role": "Azawad Liberation Front president",
       "source": "https://africanperceptions.org/fr/2024/12/11191/",
       "portrait": {
-        "file": "historical-identity-assets/bilal-ag-acherif.jpg",
+        "file": "historical-identity-assets/bilal-ag-acherif.png",
         "source": "https://commons.wikimedia.org/wiki/File:Bilal_Ag_Ach%C3%A9rif_%C3%A0_Ouagadougou.png",
-        "credit": "Voice of America, Ouagadougou, November 16, 2012. Wikimedia crop by Khaerr, cropped further for PPO.",
+        "credit": "Voice of America, Ouagadougou, November 16, 2012. Cropped by Khaerr on Wikimedia Commons.",
         "license": "https://creativecommons.org/publicdomain/mark/1.0/"
       }
     },

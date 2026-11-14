@@ -72,12 +72,36 @@
           "status": "charter",
           "note": "Article 45 places the pre-transitional period before the official end of the wars. A foundational transition follows.",
           "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+        },
+        {
+          "name": "Independent media and public access to information",
+          "status": "charter",
+          "note": "Articles 30–31 guarantee independent print and electronic media and internet access to information, with limited statutory exceptions. This is a charter commitment.",
+          "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+        },
+        {
+          "name": "Limits on capital punishment",
+          "status": "charter",
+          "note": "Article 27 limits capital punishment to the most serious crimes and includes protections for minors, older people, and pregnant or nursing women.",
+          "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
+        },
+        {
+          "name": "Free basic education",
+          "status": "charter",
+          "note": "Article 36 calls for free, compulsory, pluralistic basic education. The game uses lower secondary as the closest level without assigning additional attendance ages.",
+          "source": "https://tasissudan.com/wp-content/uploads/2025/10/Sudan-Transitional-Constitution_2025.pdf"
         }
       ],
       "charterLawValues": {
         "religion_state": 0,
         "freedom_of_worship": 4,
-        "religion_in_education": 1
+        "religion_in_education": 2,
+        "media_freedom": {
+          "press": "free",
+          "internet": "open"
+        },
+        "death_penalty": "exceptional_crimes",
+        "free_public_education": "lower_secondary"
       },
       "objectives": [
         "Maintain the rival administration based in Nyala",
@@ -539,6 +563,12 @@
         ]
       ],
       "regions": [
+        {
+          "key": "MMR-3274",
+          "name": "Chin",
+          "contested": true,
+          "note": "The United League of Arakan administered Paletwa town. The game province includes territory governed by several other authorities."
+        },
         {
           "key": "MMR-3273",
           "name": "Rakhine",

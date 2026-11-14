@@ -71,16 +71,18 @@ function readMedia({ file, source, credit, license, ...details }, actorId) {
 
 function readIdentities() {
   const identities = Object.create(null);
+  const convention = JSON.parse(readFileSync(join(__dirname, "historical-flag-convention.json"), "utf8"));
   for (const name of ["sudan", "world", "independence", "opening"]) {
     const file = join(__dirname, `historical-identities-${name}.json`);
     const records = JSON.parse(readFileSync(file, "utf8"));
     for (const [id, record] of Object.entries(records)) {
       const identity = identities[id] ??= {};
-      for (const office of ["leader", "headOfState", "headOfGovernment"]) {
+      for (const office of ["leader", "headOfState", "headOfGovernment", "representative"]) {
         const person = record[office];
         if (!person) continue;
         if (Object.hasOwn(identity, office)) throw new Error("Duplicate historical identity: " + id + "/" + office);
-        if (!person.name || !person.role || !/^https:\/\//.test(person.source)) {
+        if (!person.name || !person.role || !/^https:\/\//.test(person.source) ||
+            (office === "representative" && !person.portrait)) {
           throw new Error("Invalid historical leader: " + id + "/" + office);
         }
         identity[office] = { ...person,
@@ -93,20 +95,52 @@ function readIdentities() {
       }
     }
   }
+  const flags = Object.fromEntries(Object.entries(convention.banners).map(([key, media]) => [key, readMedia(media, key)]));
+  for (const [id, key] of Object.entries(convention.actors)) {
+    if (!flags[key]) throw new Error("Unknown historical flag convention: " + id);
+    const identity = identities[id] ??= {};
+    identity.flag = flags[key];
+  }
   return identities;
+}
+
+function readIdentityIllustrations() {
+  const records = JSON.parse(readFileSync(join(__dirname, "historical-identity-illustrations.json"), "utf8"));
+  if (!records || typeof records !== "object" || Array.isArray(records)) {
+    throw new Error("Invalid historical dossier illustrations catalog");
+  }
+  return Object.fromEntries(Object.entries(records).map(([id, record]) => {
+    const { file, fictionalName } = record || {};
+    const extension = typeof file === "string" &&
+      /^historical-identity-assets\/illustrative-[a-z0-9][a-z0-9.-]*\.(jpg|jpeg|png|webp)$/.exec(file)?.[1];
+    if (!/^[a-z\d:-]+$/.test(id) || !extension ||
+        (fictionalName !== undefined && (typeof fictionalName !== "string" || !fictionalName.trim()))) {
+      throw new Error("Invalid historical dossier illustration: " + id);
+    }
+    const bytes = readFileSync(join(__dirname, file));
+    if (!bytes.length) throw new Error("Empty historical dossier illustration: " + file);
+    return [id, {
+      image: `data:image/${assetTypes[extension]};base64,${bytes.toString("base64")}`,
+      ...(fictionalName ? { fictionalName: fictionalName.trim() } : {}),
+    }];
+  }));
 }
 
 function patchHistoricalIdentityRenderer(source, replaceOnce) {
   const identities = readIdentities();
   const people = Object.fromEntries(Object.entries(identities).flatMap(([actorId, identity]) =>
     ["leader", "headOfState", "headOfGovernment"].filter(office => identity[office]).map(office =>
-      [`${actorId}:${office}`, { image: identity[office].portrait?.image || null, role: identity[office].role }])));
+      [`${actorId}:${office}`, { image: identity[office].portrait?.image || null, role: identity[office].role,
+        representative: !identity[office].portrait && identity.representative ?
+          { name: identity.representative.name, role: identity.representative.role, image: identity.representative.portrait.image } : null }])));
   const portraitSelector = 'function Ts(e,t,a){';
   let patched = replaceOnce(source, portraitSelector,
     `const gpmHistoricalPeople = ${JSON.stringify(people)};\n` +
     `${portraitSelector}const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person)return person.image;`);
   patched = replaceOnce(patched, 'let k=e.nationalExecutiveRoleId?o(', 'let k=gpmHistoricalPeople[n.gpmHistoricalPerson]?.role||(e.nationalExecutiveRoleId?o(');
   patched = replaceOnce(patched, ':o("inspector.leader.title"),_=t.year', ':o("inspector.leader.title")),_=t.year');
+  patched = replaceOnce(patched, 'let s=n?Ts(n,t.year):null;this._isetHtml("leaderAvatar",s?`<img class="il-av" src="${s}" alt="">`:Q.user)',
+    'const historical=gpmHistoricalPeople[n?.gpmHistoricalPerson],representative=historical?.representative;let s=n?(historical&&!historical.image?Pte(n,t.year):Ts(n,t.year)):null;this._isetHtml("leaderAvatar",representative?`<img class="il-av" src="${b(representative.image)}" alt="${b(representative.name)}" title="${b(representative.name+" · "+representative.role+" · Faction representative")}">`:s?`<img class="il-av" src="${s}" alt=""${historical&&!historical.image?\' title="Game-generated portrait"\':""}>`:Q.user),representative&&this._iset("leaderSub",`${historical.role} · Photo: ${representative.name}, faction representative`)');
   const flagSelector = 'function B9(e){return yH(e)||PX(e)}';
   const flagEntry = (flag, provisional) => ({
     url: flag.image, ratio: flag.ratio || 1.5, label: `${provisional ? "Provisional · " : ""}${flag.name}`,
@@ -114,7 +148,7 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
   const polityFlags = Object.fromEntries(Object.entries(identities).flatMap(([actorId, identity]) => {
     const regionalFlag = identity.victoryFlag || identity.administrationFlag || identity.flag;
     return [
-      [`gpm-historical-${actorId}`, identity.administrationFlag || identity.flag, false],
+      [`gpm-historical-${actorId}`, identity.flag || identity.administrationFlag, false],
       [`gpm-historical-polity-${actorId}`, regionalFlag, regionalFlag === identity.flag],
     ].filter(([, flag]) => flag).map(([key, flag, provisional]) => [key, flagEntry(flag, provisional)]);
   }));
@@ -133,4 +167,4 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
     'let n=Vc(e);const flag=m4(n);return`<span class="flag ${a||""}" data-flag="${n}"${gpmHistoricalFlagLabel(flag)}${R7e(flag,');
 }
 
-module.exports = { readIdentities, patchHistoricalIdentityRenderer, patchHistoricalNameWorker };
+module.exports = { readIdentities, readIdentityIllustrations, patchHistoricalIdentityRenderer, patchHistoricalNameWorker };

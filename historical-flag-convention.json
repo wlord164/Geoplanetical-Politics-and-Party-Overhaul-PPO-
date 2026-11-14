@@ -1,0 +1,39 @@
+{
+  "banners": {
+    "black": {
+      "name": "Black Shahada banner · PPO convention",
+      "file": "historical-identity-assets/shahada-black.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Shahadah_Flag.svg",
+      "credit": "Shahada calligraphy by Ingoman via Wikimedia Commons. PNG rendering.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    },
+    "white": {
+      "name": "White Shahada banner · PPO convention",
+      "file": "historical-identity-assets/shahada-white.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Shahadah_Flag.svg",
+      "credit": "Shahada calligraphy by Ingoman via Wikimedia Commons. PPO reversed the colors for the white variant.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.5
+    }
+  },
+  "actors": {
+    "phl-dawlah-islamiyah": "black",
+    "ucdp-actor-881": "black",
+    "is-iraq-syria": "black",
+    "is-west-africa": "black",
+    "ucdp-actor-1051": "black",
+    "ucdp-actor-6716": "black",
+    "ucdp-actor-4364": "black",
+    "is-sahel": "black",
+    "is-somalia": "black",
+    "ucdp-actor-717": "black",
+    "is-khorasan": "black",
+    "is-adf": "black",
+    "is-mozambique": "black",
+    "ucdp-actor-130": "white",
+    "ucdp-actor-356": "white",
+    "ucdp-actor-209": "white",
+    "ucdp-actor-208": "white"
+  }
+}
