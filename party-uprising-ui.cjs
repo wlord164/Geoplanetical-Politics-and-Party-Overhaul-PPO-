@@ -68,6 +68,7 @@ function gpmUprisingReason(reason) {
     headquarters_region: "Relocate party headquarters to an eligible region.",
     headquarters_foothold: "Raise foothold in your headquarters region to the target shown above.",
     division_required: "Finish preparing at least one division before declaring.",
+    division_manpower: "The joining regions cannot staff a prepared division.",
     stale: "The declaration terms changed. Review the updated proposal before confirming.",
     result: "A decisive war result is required for reunification.",
     conflict_mismatch: "The uprising no longer matches the active conflict.",
@@ -186,11 +187,19 @@ function gpmUprisingRoster(roster) {
   if (!roster?.length) return "";
   const grouped = new Map();
   for (const unit of roster) {
-    const label = unit.label + " · " + unit.kitLabel;
+    const staffing = Number.isFinite(unit.manpowerK)
+      ? " · " + gpmUprisingPersonnel(unit.manpowerK) + " / " + gpmUprisingPersonnel(unit.requiredK) + " personnel"
+        + (unit.understrength ? " · Understrength at declaration" : "")
+      : "";
+    const label = unit.label + " · " + unit.kitLabel + staffing;
     grouped.set(label, (grouped.get(label) || 0) + 1);
   }
   return '<ul class="gpm-uprising-roster">' + [...grouped].map(([label, count]) =>
     "<li>" + b(String(count)) + " × " + b(label) + "</li>").join("") + "</ul>";
+}
+
+function gpmUprisingPersonnel(amountK) {
+  return new Intl.NumberFormat(cs(), { maximumFractionDigits: 0 }).format(amountK * 1000);
 }
 
 function gpmUprisingEquipmentLabel(item) {
@@ -226,9 +235,9 @@ function gpmUprisingDivisionPanel(division, state, prep, button, date, money, cr
   const capacity = "Capacity grows by one for each eligible region at " + percent.format(prep.capacityThreshold)
     + " foothold, plus one when the headquarters reaches " + percent.format(prep.threshold) + ".";
   return '<div class="sh-inset"><strong>Prepared divisions</strong><p>' + b(String(division.count)) + " of "
-    + b(String(division.limit)) + " ready · " + b(credits(division.credits)) + " available</p>"
+    + b(String(division.limit)) + " prepared · " + b(credits(division.credits)) + " available</p>"
     + gpmUprisingRoster(division.roster) + "<small>" + b(capacity)
-    + " Completed divisions deploy at headquarters.</small>" + controls + "</div>";
+    + " Prepared divisions use the joining regions’ available personnel and deploy at headquarters.</small>" + controls + "</div>";
 }
 
 
@@ -388,7 +397,8 @@ function gpmUprisingPanel(state, ui) {
     });
     const preparations = startingRegions.length
       ? "<p>Regions at declaration: " + startingRegions.join(", ")
-        + ". Prepared divisions deployed: " + b(String(data.deployedCount || 0)) + ".</p>" + gpmUprisingRoster(data.deployedRoster)
+        + ". Prepared divisions deployed: " + b(String(data.deployedCount || 0)) + " of "
+        + b(String(data.preparedDivisionCount || 0)) + ".</p>" + gpmUprisingRoster(data.deployedRoster)
       : "";
     return "<p><strong>" + summary + "</strong></p><p>" + note + "</p>" + restoration + preparations
       + actions(button("war", "Open War Theatre"));
@@ -412,10 +422,14 @@ function gpmUprisingPanel(state, ui) {
   }
   const otherRegions = data.preparations?.regions.filter(entry => entry.defects && !entry.starting) || [];
   const deployment = data.preparations?.deploymentCount;
+  const manpower = data.preparations?.manpower;
   const preparationSummary = data.preparations
     ? "<dt>Other regions joining</dt><dd>"
       + (otherRegions.length ? otherRegions.map(entry => b(Ut(entry.key, entry.name))).join(", ") : "None")
-      + "</dd><dt>Prepared divisions ready to deploy</dt><dd>" + b(String(deployment ?? 0)) + gpmUprisingRoster(data.preparations.division.roster) + "</dd>"
+      + "</dd><dt>Prepared divisions</dt><dd>" + b(String(deployment ?? 0)) + gpmUprisingRoster(data.preparations.division.roster) + "</dd>"
+      + (manpower ? "<dt>Estimated deployment personnel</dt><dd>" + b(gpmUprisingPersonnel(manpower.availableK))
+        + " / " + b(gpmUprisingPersonnel(manpower.requiredK)) + (manpower.availableK < manpower.requiredK
+          ? ". Understrength formations need reinforcements." : "") + "</dd>" : "")
     : "";
   const name = data.restoresOriginalName ? data.breakawayName : state.selectedName || data.breakawayName;
   const options = (data.names || []).map(option => '<option' + (option === name ? " selected" : "")
@@ -714,7 +728,7 @@ function gpmBindUprising(profile, view, ui) {
 const rendererFunctions = [gpmRenderUprising, gpmUprisingReason, gpmUprisingPreparationReason,
   "const gpmUprisingFootholdBands = " + JSON.stringify(gpmUprisingFootholdBands) + ";",
   gpmUprisingPreparationColor, gpmUprisingSelectedRegion, gpmUprisingRegionalStatus, gpmUprisingMap,
-  gpmUprisingSelectedDivision, gpmUprisingRoster, gpmUprisingEquipmentLabel, gpmUprisingDivisionPanel,
+  gpmUprisingSelectedDivision, gpmUprisingRoster, gpmUprisingPersonnel, gpmUprisingEquipmentLabel, gpmUprisingDivisionPanel,
   gpmUprisingPreparations, gpmUprisingReadiness, gpmUprisingPanel, gpmSyncUprisingControl,
   gpmWatchUprisingControl, gpmBindUprising];
 

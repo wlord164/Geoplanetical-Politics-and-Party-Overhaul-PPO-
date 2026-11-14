@@ -273,7 +273,7 @@ function gpmHistoricalMapOpenFront(front, provinceKey = null, actorId = null) {
 }
 
 function gpmHistoricalSelectMapFront(front, region, pointer, opener) {
-  if (front.contested && region.provinceKey) {
+  if ((front.contested || front.captured) && region.provinceKey) {
     const map = ke?._gpmHistoricalMap;
     if (map) map.selectedWar = front.id;
     gpmOpenRegionalControlBox(he, ze, {
@@ -546,11 +546,12 @@ function gpmHistoricalClickProvince(globe, province, coords) {
     const fronts = gpmHistoricalFrontsAt(region, mode);
     if (!fronts.length) return false;
     const picked = fronts[0];
-    if (picked.contested) {
+    const faction = gpmHistoricalNamedFaction(state, picked.controllerId);
+    if (picked.contested || picked.captured && !faction) {
       gpmHistoricalSelectMapFront(picked, { name: region.name, provinceKey: province.__provKey, fronts });
       return true;
     }
-    if ((picked?.controlled || picked?.captured) && gpmHistoricalNamedFaction(state, picked.controllerId)) {
+    if ((picked.controlled || picked.captured) && faction) {
       gpmHistoricalOpenFaction(globe, { fronts: [picked], provinceKey: province.__provKey }, picked.controllerId);
       return true;
     }
@@ -579,6 +580,11 @@ function gpmHistoricalClickProvince(globe, province, coords) {
     gpmHistoricalOpenFaction(globe, { fronts: [picked], provinceKey: province.__provKey }, picked.controllerId);
     return true;
   }
+  if (picked?.captured) {
+    gpmHistoricalSelectMapFront(picked, { name: region.name, provinceKey: province.__provKey,
+      fronts: gpmHistoricalFrontsAt(region, mode) });
+    return true;
+  }
   if (nativeOwner && owner !== ze.playerKey) {
     gpmHistoricalOpenFaction(globe, { fronts: region?.fronts || [], provinceKey: province.__provKey }, nativeOwner);
     return true;
@@ -590,7 +596,7 @@ function gpmHistoricalMapPopup(state, item, button, pointer) {
   he.tooltip(null);
   const primary = item.fronts[0];
   if (!primary) return;
-  if (primary.contested) {
+  if (primary.contested || primary.captured) {
     gpmHistoricalSelectMapFront(primary, item, pointer, button);
     return;
   }
@@ -753,14 +759,14 @@ function gpmHistoricalPoliticalEdge(left, right, fills) {
   const bStatus = status(b);
   if (!aStatus && !bStatus) return null;
   return aStatus !== bStatus ||
-    a.id !== b.id || (a.dominantKey || a.controllerId) !== (b.dominantKey || b.controllerId) ? "control" : null;
+    (a.dominantKey || a.controllerId) !== (b.dominantKey || b.controllerId) ? "control" : null;
 }
 
 function gpmHistoricalPoliticalBorders(globe, state) {
   const areas = [...state.controlAreas.values()];
   const signature = JSON.stringify([
     [...state.fills].map(([id, { front }]) =>
-      [id, front.id, !!front.captured, !!front.contested, !!front.controlled, front.occupationKey, front.dominantKey, front.controllerId]),
+      [id, !!front.captured, !!front.contested, !!front.controlled, front.occupationKey, front.dominantKey, front.controllerId]),
     areas.map(area => area.id),
   ]);
   if (state.politicalBorderSignature === signature && state.politicalBaseBorders === globe.world.borders) return;
@@ -832,10 +838,12 @@ function gpmPaintHistoricalMap(globe, state, data) {
     const primary = politicalFronts[0];
     const nativeCapture = primary?.captured && !primary.contested;
     const contested = primary?.contested;
-    const fullControl = primary?.controlled && !primary.native && gpmHistoricalNamedFaction(state, primary.controllerId);
+    const ownerKey = province.__polityKey || province.__countryKey;
+    const fullControl = primary?.controlled && (!primary.native || primary.recognizedControl) &&
+      gpmHistoricalNamedFaction(state, primary.controllerId);
     const colorFront = nativeCapture || contested || fullControl ? primary : null;
     if (colorFront && Number.isInteger(province.__provId)) {
-      fills.set(province.__provId, { front: colorFront, ownerKey: province.__polityKey || province.__countryKey });
+      fills.set(province.__provId, { front: colorFront, ownerKey });
     }
     const strategic = strategicFronts;
     const outlined = strategic.filter(front => !front.crimeReport);
@@ -872,7 +880,8 @@ function gpmPaintHistoricalMap(globe, state, data) {
       labels.push(item);
     }
     const controller = gpmHistoricalNamedFaction(state, colorFront?.controllerId);
-    if (controller && status === "controlled" && hasShape && province.__centroid?.every(Number.isFinite)) {
+    if (controller && status === "controlled" && (!primary.recognizedControl || data.nativeCountryActors?.[ownerKey] !== controller.id) &&
+        hasShape && province.__centroid?.every(Number.isFinite)) {
       if (!controlled.has(controller.id)) controlled.set(controller.id, new Map());
       controlled.get(controller.id).set(province.__provId, { province, front: colorFront });
     }
@@ -945,7 +954,7 @@ function gpmPaintHistoricalMap(globe, state, data) {
   if (controlBox) {
     const region = regions.get(controlBox.provinceKey);
     const fronts = gpmHistoricalFrontsAt(region, controlBox.mode);
-    if (fronts[0]?.contested) controlBox.render({ ...region, provinceKey: controlBox.provinceKey, fronts });
+    if (fronts[0]?.contested || fronts[0]?.captured) controlBox.render({ ...region, provinceKey: controlBox.provinceKey, fronts });
     else gpmCloseRegionalControlBox(he);
   }
   gpmHistoricalPaintFills(globe, state);

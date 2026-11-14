@@ -266,11 +266,9 @@ function gpmUprisingTerritoryPlan(sim, parent, founder) {
     [region.key, region.shares[founder.id] || 0]));
   const rows = owned.map(province => ({
     province,
-    ...gpmUprisingFoothold(founder, province, support.get(province.__provKey)),
+    ...gpmUprisingFoothold(sim, founder, province, support.get(province.__provKey)),
     project: founder.gpmUprisingPreparations?.regions?.[province.__provKey]?.project || null,
-    eligible: province.__countryKey === parent.key && !province.__isCapital && !province.__occupier &&
-      !!partyRegionalProvince(sim, parent, province.__provId, province.__provKey) &&
-      province.__pop <= population * .80 && !!province.__adjAll?.some(id => ke(sim.world.provinces[id]) === parent.key),
+    eligible: partyUprisingProvinceEligible(sim, parent, province, population),
   }));
   const headquartersKey = founder.gpmRegional?.headquarters?.key;
   const headquarters = rows.find(row => row.province.__provKey === headquartersKey);
@@ -299,7 +297,19 @@ function gpmUprisingTerritoryPlan(sim, parent, founder) {
       joiningPopulation += neighbor.__pop;
     }
   }
-  return { reason, province, joining, rows, headquarters };
+  const staffing = gpmUprisingRoster(state).map(({ type }) => zo.formationTypes[type].manpowerK);
+  const requiredK = staffing.reduce((sum, manpowerK) => sum + manpowerK, 0);
+  const share = joiningPopulation / population;
+  const replacementK = (parent.forces?.personnel?.replacementK || 0) +
+    (parent.formations || []).reduce((sum, id) => {
+      const unit = sim.formations.get(id);
+      return sum + (unit && unit.type !== "reserve" ? unit.manpowerK || 0 : 0);
+    }, 0);
+  const availableK = parent.forces ? share * replacementK + (parent.employment ?
+    share * Math.max(0, (parent.employment.workingAgeM || 0) - b2(parent)) * 1000 : requiredK) : 0;
+  const manpower = { requiredK, availableK: Math.min(requiredK, availableK) };
+  const minimumK = requiredK / Math.max(...staffing) * .001;
+  return { reason: availableK < minimumK ? "division_manpower" : reason, province, joining, rows, headquarters, manpower };
 }
 
 function gpmUprisingEligibility(sim, parent, founder) {
@@ -357,6 +367,7 @@ function gpmUprisingProposal(sim, parent, founder) {
   const victorySupport = Math.min(1, founderSupport + victoryGain);
   const charter = gpmUprisingCharter(parent, founder, sim._simYear);
   const quoteId = JSON.stringify([sim.day, parentKey, founderId, [...territoryPlan.joining], divisions, incumbent, founderSupport,
+    territoryPlan.manpower,
     va(JSON.stringify([profile, names, charter.changes, restoresOriginalName ? starting : null]))]);
   return { province, territoryPlan, divisions, incumbent, founderSupport, victorySupport, charter, quoteId, names, profile, parentName,
     restoration: restoresOriginalName ? starting : null };
@@ -374,6 +385,7 @@ function gpmUprisingView(sim) {
   return {
     phase, available: phase === "ready", reason: proposal.reason || null, day: sim.day,
     preparations: proposal.territoryPlan ? gpmUprisingPreparationView(sim, parent, founder, proposal.territoryPlan) : null,
+    preparedDivisionCount: state?.preparedDivisionCount ?? state?.deployedCount ?? 0,
     deployedCount: state?.deployedCount || 0, deployedRoster: state?.deployedRoster || [],
     defectingRegions: state?.defectingRegions || [],
     countryKey: sim.playerKey, partyId: Uo(sim.player), founderId: founder?.id,
@@ -412,7 +424,7 @@ function gpmUprisingOpen(sim, country, input) {
   const provinceKey = province.__provKey;
   const childKey = childPrefix + parentKey + "-" + sim.day;
   const plan = { create: [{ key: childKey, parentKey, provIds: [...territoryPlan.joining],
-    a2: childKey, feature: W7o(childKey), name: breakawayName, hostile: true }] };
+    a2: childKey, feature: W7o(childKey), name: breakawayName, hostile: true, gpmUprisingFounderId: founderId }] };
   const goal = SQ(sim, { actorKey: childKey, targetCountryKey: parentKey, casusBelliId: "coercion" });
   const validation = Uyt(sim, plan);
   if (!validation.ok || !goal.ok) return { ok: false, reason: validation.reasonId || goal.reasonId };
@@ -443,7 +455,7 @@ function gpmUprisingOpen(sim, country, input) {
 
   // Completed preparations enter the native roster. Unfinished projects end at declaration.
   R7(sim, child);
-  gpmUprisingDeployPreparations(sim, child, province, divisions);
+  const deployed = gpmUprisingDeployPreparations(sim, child, province, divisions);
   delete founder.gpmUprisingPreparations;
   const target = wy(sim, parentKey);
   const war = fDa(sim, parent, { selectedTargetActorKey: parentKey,
@@ -460,7 +472,7 @@ function gpmUprisingOpen(sim, country, input) {
     selectedTargetActorKey: parentKey, casusBelli: "coercion" }, { category: "guerre", severity: "danger" });
   parent[statusField] = { version: 1, id: childKey, childKey, warId: war.id, phase: "active",
     openedDay: sim.day, provinceKey, founderId, founderSupport, victorySupport, charter, incumbent,
-    deployedCount: divisions.length, deployedRoster: divisions.map(gpmUprisingDivisionLabel),
+    preparedDivisionCount: divisions.length, deployedCount: deployed.length, deployedRoster: deployed,
     defectingRegions: [...territoryPlan.joining].map(id => sim.world.provinces[id].__provKey),
     parentName, breakawayName, victoryName: restoration?.name || breakawayName,
     restoresOriginalName: !!restoration, restoreCustomName: !!restoration?.custom, profile,
@@ -567,6 +579,6 @@ for (const action of ["form", "headquarters", "invest", "recruit", "aidRequest",
 }
 return { view: gpmUprisingView, flags: gpmUprisingFlags, matches: gpmUprisingMatches, record: gpmUprisingRecordResult,
   captureStartingIdentities: gpmUprisingCaptureStartingIdentities,
-  settle: gpmUprisingSettle, inspect: gpmUprisingStatus, advancePreparations: gpmUprisingAdvancePreparations,
+  settle: gpmUprisingSettle, inspect: gpmUprisingStatus, advancePreparations: gpmUprisingAdvancePreparations, refreshStaffing: gpmUprisingRefreshStaffing,
   applyCharter: gpmApplyUprisingCharter, installGovernment: gpmUprisingGovernment };
 })();

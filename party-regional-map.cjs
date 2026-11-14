@@ -11,7 +11,9 @@ const style = `
   .gpm-support-map svg { display: block; width: 100%; height: auto; }
   .gpm-support-map [data-gpm-support-main] { align-self: center; max-height: 22rem; }
   .gpm-support-map path { stroke: #202b38; stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
+  .gpm-support-map path[data-gpm-support-region]:focus { outline: none; }
   .gpm-support-map path:hover, .gpm-support-map path:focus-visible, .gpm-support-map path[data-selected] { stroke: #fff2cb; stroke-width: 2; }
+  .gpm-support-map path[data-gpm-support-region]:focus-visible:not([data-selected]) { stroke-dasharray: 3px 2px; }
   .gpm-support-insets { min-width: 0; display: grid; align-content: start; gap: var(--gap-1, 4px); max-height: 22rem; overflow: auto; }
   .gpm-support-inset { min-width: 0; display: grid; gap: 3px; padding: 5px; border: 1px solid var(--line, #434d59); border-radius: 5px; background: var(--panel, #1c232a); }
   .gpm-support-inset:has([data-selected]) { border-color: #fff2cb; }

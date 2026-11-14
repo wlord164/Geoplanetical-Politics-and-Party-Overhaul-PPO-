@@ -44,13 +44,14 @@ function gpmUprisingPreparationState(party) {
   };
 }
 
-function gpmUprisingFoothold(party, province, voteShare) {
+function gpmUprisingFoothold(sim, party, province, voteShare) {
   const regional = party.gpmRegional;
+  const key = province.__provKey;
   const sources = {
     support: Math.min(.12, .70 * (voteShare || 0)),
-    presence: .25 * (regional?.regions?.[province.__provKey]?.presence || 0),
-    headquarters: regional?.headquarters?.key === province.__provKey ? .12 : 0,
-    investment: party.gpmUprisingPreparations?.regions?.[province.__provKey]?.progress || 0,
+    presence: .25 * partyRegionalPresence(regional?.regions?.[key], sim.day, gpmCampaignRulesFor(sim)),
+    headquarters: partyRegionalHeadquartersWeight(regional, key),
+    investment: party.gpmUprisingPreparations?.regions?.[key]?.progress || 0,
   };
   const total = Object.values(sources).reduce((sum, value) => sum + value, 0);
   return { foothold: Math.min(1, Math.round(total * 1000) / 1000), sources };
@@ -226,7 +227,7 @@ function gpmUprisingPreparationView(sim, country, party, plan) {
   });
   return {
     regions, threshold: rule.threshold, capacityThreshold: rule.capacityThreshold,
-    deploymentCount: roster.length, defectingCount: plan.joining.size,
+    deploymentCount: roster.length, defectingCount: plan.joining.size, manpower: plan.manpower || null,
     headquarters: { key: headquarters?.province.__provKey || null, name: headquarters?.province.__name || null,
       eligible: !!headquarters?.eligible, foothold: headquarters?.foothold || 0,
       ready: !!headquarters?.eligible && headquarters.foothold >= rule.threshold,
@@ -285,23 +286,47 @@ function gpmUprisingPrepare(sim, country, input, action) {
   return { ok: true };
 }
 
+function gpmUprisingRefreshStaffing(formation) {
+  if (!formation.gpmUprisingStaffing) return;
+  formation.org = Math.max(formation.org, Math.round(100 * formation.manpowerK / formation.maxManpowerK));
+  if (formation.manpowerK >= formation.maxManpowerK - 1e-9) {
+    formation.state = "ready";
+    delete formation.gpmUprisingStaffing;
+  }
+}
+
 function gpmUprisingDeployPreparations(sim, child, headquarters, divisions) {
   const definitions = divisions.map(({ type }) => zo.formationTypes[type]);
   const total = definitions.reduce((sum, definition) => sum + definition.manpowerK, 0);
-  const manpower = _et(child, total, sim);
+  const personnel = Th(child);
+  if (!personnel) return [];
+  _et(child, Math.max(0, total - personnel.replacementK), sim);
+  const manpower = Math.min(total, personnel.replacementK);
+  if (manpower < .001) return [];
   const bases = YIe(sim, child);
   const slots = {};
+  const deployed = [];
   for (const [index, { type, kit }] of divisions.entries()) {
     const definition = definitions[index];
+    const assigned = manpower * definition.manpowerK / total;
+    if (assigned < .001) continue;
     const equip = Object.fromEntries(gpmUprisingDivisionEquipment(type, kit).map(({ id, units }) => [id, units]));
     for (const [id, units] of Object.entries(equip)) kV(child.forces, id, units);
     const formation = hK(sim, child, type, definition, equip, H_({ equip }, definition), definition.manpowerK,
       bases, slots, Fqr(sim, child, type), headquarters.__provKey);
     formation.manpowerK = 0;
-    Tbe(child, formation, manpower * definition.manpowerK / total);
+    Tbe(child, formation, assigned);
     formation.ammunitionUnitsPerDay = HSe(formation.equip, formation.manpowerK);
     formation.supply.ammoDays = 14;
     formation.location = { type: "province", provKey: headquarters.__provKey };
-    formation.state = "ready";
+    const understrength = formation.manpowerK < formation.maxManpowerK - 1e-9;
+    formation.state = understrength ? "forming" : "ready";
+    if (understrength) {
+      formation.gpmUprisingStaffing = true;
+      formation.org = Math.round(100 * formation.manpowerK / formation.maxManpowerK);
+    }
+    deployed.push(gpmUprisingDivisionLabel({ type, kit, manpowerK: formation.manpowerK,
+      requiredK: formation.maxManpowerK, understrength }));
   }
+  return deployed;
 }

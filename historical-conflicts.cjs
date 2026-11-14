@@ -226,7 +226,7 @@ function patchHistoricalConflictsWorker(source, replaceOnce) {
       "registerPartyCongressSize();\nconst gpmHistoricalCatalog = " + JSON.stringify(catalog) + ";\n" +
       worker + "\nconst gpmUprisingOfficialNames"],
     ["this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)",
-      "(o?(gpmSudanRestoreIdentity(b),gpmHistoricalRestoreOpeningCapitals(b)):await gpmHistoricalInitialize(b,this.commitTransportBoundary)),this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)"],
+      "(o?(gpmSudanRestoreIdentity(b),gpmHistoricalRestoreOpeningCapitals(b),gpmHistoricalRestoreNativeWars(b)):await gpmHistoricalInitialize(b,this.commitTransportBoundary)),this.sim=b,!o&&gpmUprising.captureStartingIdentities(b)"],
     ['function ol(e){return hae.byCountry&&hae.byCountry[e]||"generic"}',
       'function ol(e){return hae.byCountry&&hae.byCountry[gpmHistoricalCultureCountry(e)]||"generic"}'],
     ['role:e.role||null,_station:e._station||null}:null}function M7o',
@@ -238,6 +238,8 @@ function patchHistoricalConflictsWorker(source, replaceOnce) {
       "function*oxo(e,t){gpmHistoricalAdvance(e);gpmUprising.settle(e);"],
     ['e.domesticSectorAvailability[Wn[t]]:1,0,1),R=n?',
       'e.domesticSectorAvailability[Wn[t]]:1,0,1)*(kv(e)?.gpmHistoricalSupplyFactor??1),R=n?'],
+    ["return e.conflicts.set(t.id,t),_rt(e,t),t}function Rsa",
+      "return e.conflicts.set(t.id,t),gpmHistoricalLinkNativeWar(e,t),_rt(e,t),t}function Rsa"],
     ["function B9(e,t){let a=t?.id;if(!a)return!1;",
       "function B9(e,t){let a=t?.id;if(!a)return!1;gpmHistoricalCloseNative(e,t);"],
     ['e._onWarEnd&&e._onWarEnd(u),gpmUprising.record(e,s,a)',

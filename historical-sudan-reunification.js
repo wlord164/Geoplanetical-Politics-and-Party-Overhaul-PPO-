@@ -193,10 +193,12 @@ function gpmSudanReunify(sim) {
   if (!validation.ok) throw new Error("Sudan reunification could not proceed: " + validation.reasonId);
   const tasisWon = decision.winner === rival.key;
   const partyId = tasisWon ? gpmSudanInstallTasis(sim, country, rival) : _t(country);
-  const playerInSudan = sim.playerKey === rival.key || sim.playerKey === country.key;
-  if (playerInSudan) {
-    const handoff = sim.switchPlayerControl({ countryKey: country.key, partyId });
-    if (!handoff.ok || !handoff.current.controlsExecutive) throw new Error("Sudan postwar control handoff failed");
+  const legalParties = (country.pol?.parties || []).filter(party => party.legal !== false);
+  const playerPartySurvives = legalParties.some(party => party.id === country.pol.playerPartyId);
+  if (sim.playerKey === rival.key || sim.playerKey === country.key && !playerPartySurvives) {
+    const successor = legalParties.find(party => party.id === partyId) || legalParties[0];
+    const handoff = successor && sim.switchPlayerControl({ countryKey: country.key, partyId: successor.id });
+    if (!handoff?.ok) throw new Error("Sudan postwar control handoff failed");
   }
   const returned = kP(sim, plan);
   if (!returned.ok || sim.countries.has(rival.key)) throw new Error("Sudan wartime administration could not retire");

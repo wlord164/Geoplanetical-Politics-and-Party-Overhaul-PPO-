@@ -5,6 +5,7 @@ const path = require("node:path");
 const { createHash } = require("node:crypto");
 const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
+const { withInstallerTransaction } = require("./installer-transaction.cjs");
 const executableHash = "6c0f558ebc1674d309480e5f268280583424a920f8556a756e01c3136c41b675";
 const workerHash = "c38f7da0de30b5df6818e6884ff1b2763154351016b10163b3369533564a6fda";
 const archiveHash = "be810dd717afc249fc1b46ec349440d4732f4ce2aa3b58f77d3fcfd6972efd48";
@@ -16,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Political Control Borders.
+  archive: "239ed1c6ef396e16e964503b22c809d6222b32639bcacc9d53360a4f5d3a1f3a",
+  worker: "330ee4b1388cae85a1b3fb987e7af5dbc01e2ff635f0b2cfba44df50e490b44f",
+  renderer: "0142e701c8cff93f53a23cd118aa24576442776c6758624f29830e0bb41ce18c",
+  executable: "a28bb7c94adf47451deb82cfcf61c437ab16fc26bc3be987ca6c80c253b4d75c",
+}, {
   archive: "c685da27b3e63df5c4129a319d4fbce347666731d49c52a667d1b0aea6f80f91",
   worker: "330ee4b1388cae85a1b3fb987e7af5dbc01e2ff635f0b2cfba44df50e490b44f",
   renderer: "3e97091a5857751adf41cc0d827231140f32ef4d31a61b719ebd8fd96efebb3c",
@@ -238,7 +245,10 @@ function steamGamePath() {
     const folder = fs.readFileSync(manifest, "utf8").match(/"installdir"\s+"([^"\r\n]+)"/)?.[1];
     if (!folder || folder === "." || folder === ".." || path.basename(folder) !== folder) continue;
     const game = path.join(apps, "common", folder);
-    if (fs.existsSync(path.join(game, "Geoplanetical.exe"))) games.set(game.toLowerCase(), game);
+    if (fs.existsSync(path.join(game, "Geoplanetical.exe")) ||
+        fs.existsSync(path.join(game, "resources", ".party-mod-transaction", "moves.json"))) {
+      games.set(game.toLowerCase(), game);
+    }
   }
   if (games.size === 1) return games.values().next().value;
   throw new Error(games.size ? "More than one Steam installation was found. Pass the Geoplanetical folder as an argument."
@@ -306,6 +316,7 @@ function writePatchedArchive(original, target, headerBytes) {
     try {
       if (fs.writeSync(fd, headerBytes, 0, headerBytes.length, 16) !== headerBytes.length)
         throw new Error("Could not finish the game archive");
+      fs.fsyncSync(fd);
     } finally { fs.closeSync(fd); }
     return;
   }
@@ -332,11 +343,13 @@ function writePatchedArchive(original, target, headerBytes) {
         fs.writeFileSync(output, chunk.subarray(0, count));
         offset += count;
       }
+      fs.fsyncSync(output);
     } finally { fs.closeSync(output); }
   } finally { fs.closeSync(input); }
 }
 
 function getFiles(game) {
+  game = path.resolve(game);
   const resources = path.join(game, "resources");
   const renderer = path.join(resources, "app.asar.unpacked", "renderer");
   const archive = path.join(resources, "app.asar");
@@ -421,6 +434,10 @@ function isKnownRenderer(renderer, patch) {
 }
 
 function install(files) {
+  return withInstallerTransaction(files, (staged, commit) => installPatch(files, staged, commit));
+}
+
+function installPatch(files, staged, commit) {
   const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
   const backups = [[archive, backupArchive], [worker, backupWorker], [executable, backupExecutable]];
   const hasBackups = backups.some(([, backup]) => fs.existsSync(backup));
@@ -444,59 +461,43 @@ function install(files) {
       if (!previousPatches.some(previous => matchesPatch(current, previous))) throw new Error("The existing patch differs from the supported releases. No game files were replaced.");
     }
   }
-  const staged = fs.mkdtempSync(path.join(path.dirname(archive),
-    steamUpdated ? ".party-mod-previous-1.1.2-" : ".party-mod-"));
   const newArchive = path.join(staged, "app.asar");
   const newWorker = path.join(staged, "simulation-worker.bundle.js");
   const newRenderer = path.join(staged, "app.bundle.js");
   const newExecutable = path.join(staged, "Geoplanetical.exe");
   const legacyDirectory = path.join(staged, "steam-1.1.2");
-  const installed = [];
-  const moved = [];
-  let committed = false;
-  try {
-    writePatchedArchive(originalArchive, newArchive, patch.archive);
-    fs.writeFileSync(newWorker, patch.worker, { flag: "wx" });
-    fs.writeFileSync(newRenderer, patch.renderer, { flag: "wx" });
-    fs.writeFileSync(newExecutable, patch.executable, { flag: "wx" });
-    if (verifiedArchiveHash(newArchive) !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
-    if (steamUpdated) {
-      fs.mkdirSync(legacyDirectory);
-      const legacyFiles = backups.map(([, backup]) => backup);
-      if (detachedRenderer) legacyFiles.push(renderer);
-      for (const file of legacyFiles) {
-        const saved = path.join(legacyDirectory, path.basename(file));
-        fs.renameSync(file, saved);
-        moved.push([file, saved]);
-      }
-    }
-    const replacements = upgrading ? [archive, worker, renderer, executable].filter(file => fs.existsSync(file))
-      .map(file => [file, path.join(staged, "previous-" + path.basename(file))]) : backups;
-    for (const [file, saved] of replacements) {
-      fs.renameSync(file, saved);
-      moved.push([file, saved]);
-    }
-    for (const [source, destination] of [[newRenderer, renderer], [newWorker, worker], [newArchive, archive], [newExecutable, executable]]) {
-      fs.renameSync(source, destination);
-      installed.push(destination);
-    }
-    committed = true;
-  } catch (error) {
-    for (const file of installed.reverse()) fs.unlinkSync(file);
-    for (const [file, saved] of moved.reverse()) fs.renameSync(saved, file);
-    throw error;
-  } finally {
-    for (const file of [newArchive, newWorker, newRenderer, newExecutable]) if (fs.existsSync(file)) fs.unlinkSync(file);
-    if (committed && upgrading) for (const [, saved] of moved) fs.unlinkSync(saved);
-    if (!committed && fs.existsSync(legacyDirectory) && !fs.readdirSync(legacyDirectory).length)
-      fs.rmdirSync(legacyDirectory);
-    if (!fs.readdirSync(staged).length) fs.rmdirSync(staged);
+  fs.mkdirSync(staged);
+  writePatchedArchive(originalArchive, newArchive, patch.archive);
+  fs.writeFileSync(newWorker, patch.worker, { flag: "wx", flush: true });
+  fs.writeFileSync(newRenderer, patch.renderer, { flag: "wx", flush: true });
+  fs.writeFileSync(newExecutable, patch.executable, { flag: "wx", flush: true });
+  if (verifiedArchiveHash(newArchive) !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
+  const moves = [];
+  const legacy = steamUpdated ? `.party-mod-previous-1.1.2-${Date.now()}-${process.pid}` : null;
+  if (legacy) {
+    fs.mkdirSync(legacyDirectory);
+    const legacyFiles = backups.map(([, backup]) => backup);
+    if (detachedRenderer) legacyFiles.push(renderer);
+    for (const file of legacyFiles) moves.push([file, path.join(legacyDirectory, path.basename(file))]);
   }
+  const replacements = upgrading ? [archive, worker, renderer, executable].filter(file => fs.existsSync(file))
+    .map(file => [file, path.join(staged, "previous-" + path.basename(file))]) : backups;
+  moves.push(...replacements, [newRenderer, renderer], [newWorker, worker], [newArchive, archive], [newExecutable, executable]);
+  commit(moves, legacy);
 }
 
 function restore(files) {
+  return withInstallerTransaction(files, (staged, commit) => restorePatch(files, staged, commit));
+}
+
+function restorePatch(files, staged, commit) {
   const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
-  if (![backupArchive, backupWorker, backupExecutable].every(file => fs.existsSync(file))) throw new Error("The three original backup files are required for a restore.");
+  const backups = [backupArchive, backupWorker, backupExecutable];
+  if (backups.every(file => !fs.existsSync(file)) && !fs.existsSync(renderer) && isCurrentStock(files)) {
+    verifyArchivePayload(archive, openArchive(archive));
+    return;
+  }
+  if (!backups.every(file => fs.existsSync(file))) throw new Error("The three original backup files are required for a restore.");
   const patch = buildPatch(backupArchive, backupWorker, backupExecutable);
   const current = installedHashes(files, true);
   const repairedBySteam = current.archive === archiveHash && current.worker === workerHash &&
@@ -504,28 +505,11 @@ function restore(files) {
   if (!repairedBySteam && !matchesPatch(current, patchHashes(patch)) && !previousPatches.some(previous => matchesPatch(current, previous))) {
     throw new Error("The active game files changed since installation. Keep the updated files and use Steam Verify Integrity if needed.");
   }
-  const staged = fs.mkdtempSync(path.join(path.dirname(archive), ".party-mod-restore-"));
-  const moved = [];
-  const restored = [];
-  try {
-    for (const file of [renderer, worker, archive, executable]) {
-      if (!fs.existsSync(file)) continue;
-      const held = path.join(staged, path.basename(file));
-      fs.renameSync(file, held);
-      moved.push([held, file]);
-    }
-    for (const [backup, target] of [[backupWorker, worker], [backupArchive, archive], [backupExecutable, executable]]) {
-      fs.renameSync(backup, target);
-      restored.push([target, backup]);
-    }
-  } catch (error) {
-    for (const [target, backup] of restored.reverse()) fs.renameSync(target, backup);
-    for (const [held, file] of moved.reverse()) fs.renameSync(held, file);
-    throw error;
-  } finally {
-    for (const [held] of moved) if (fs.existsSync(held)) fs.unlinkSync(held);
-    fs.rmdirSync(staged);
-  }
+  fs.mkdirSync(staged);
+  const moves = [renderer, worker, archive, executable].filter(file => fs.existsSync(file))
+    .map(file => [file, path.join(staged, path.basename(file))]);
+  moves.push([backupWorker, worker], [backupArchive, archive], [backupExecutable, executable]);
+  commit(moves);
 }
 
 if (require.main === module) try {
@@ -536,8 +520,10 @@ if (require.main === module) try {
   if (tasks === "True") throw new Error("Close Geoplanetical before continuing.");
   if (tasks !== "False") throw new Error("Unable to verify that Geoplanetical is closed.");
   const game = path.resolve(process.argv[3] || steamGamePath());
-  if (!fs.existsSync(path.join(game, "Geoplanetical.exe"))) throw new Error("Geoplanetical.exe was not found in the selected folder.");
   const files = getFiles(game);
+  if (!fs.existsSync(files.executable) && !fs.existsSync(path.join(path.dirname(files.archive), ".party-mod-transaction", "moves.json"))) {
+    throw new Error("Geoplanetical.exe was not found in the selected folder.");
+  }
   if (action === "install") {
     install(files);
     console.log(`Politics and Party Overhaul (PPO) installed for Geoplanetical ${version}. Launch Geoplanetical from Steam.`);

@@ -37,7 +37,9 @@ const style = `
   .gpm-history-map { display: grid; gap: var(--gap-1); }
   .gpm-history-map svg { display: block; width: 100%; max-height: 16rem; background: var(--bg, #12191f); }
   .gpm-history-map path { stroke: #141b21; stroke-width: 1px; vector-effect: non-scaling-stroke; cursor: pointer; }
+  .gpm-history-map path[data-history-region]:focus { outline: none; }
   .gpm-history-map path:is([data-selected], :hover, :focus-visible) { stroke: #fff2bd; stroke-width: 2px; }
+  .gpm-history-map path[data-history-region]:focus-visible:not([data-selected]) { stroke-dasharray: 3px 2px; }
   .gpm-history-map-key { display: flex; flex-wrap: wrap; gap: var(--gap-2); }
   .gpm-history-map-key i { display: inline-block; width: .8em; height: .8em; margin-inline-end: .3em; border: 1px solid currentColor; }
   .gpm-history-section { padding-block-start: var(--gap-2); border-top: 1px solid var(--line, #545861); }
@@ -93,7 +95,7 @@ function gpmHistoricalLabel(value) {
     interstate: "Interstate war", nonstate: "Conflict between non-state groups", insurgency: "Insurgency", coalition: "Coalition",
     strategic: "Strategic", operational: "War Theatre", regional: "Regional simulation", native: "Native war", stock: "Base-game war",
     "aid-access": "Humanitarian access agreement", autonomy: "Regional autonomy agreement",
-    transition: "Transitional government agreement", "native-settlement": "War settlement",
+    transition: "Transitional government agreement", "native-settlement": "War settlement", "native-conflict": "War began",
     "political-agreement": "Political agreement", "decisive-victory": "Decisive victory", "negotiated-concession": "Negotiated concession",
     "government-transition": "Government transition", postwar: "Postwar policy",
     historical_term_unavailable: "That proposal is no longer available",
@@ -397,7 +399,7 @@ function gpmCloseRegionalControlBox(ui) {
 }
 
 function gpmOpenRegionalControlBox(ui, session, { region, mode, map, opener, x = g1[0], y = g1[1] }) {
-  if (ui.sim !== session || !map || !region.fronts[0]?.contested) return;
+  if (ui.sim !== session || !map || !region.fronts[0] || !(region.fronts[0].contested || region.fronts[0].captured)) return;
   gpmCloseRegionalControlBox(ui);
   ui.tooltip(null);
   const shell = document.createElement("aside");
@@ -420,7 +422,7 @@ function gpmOpenRegionalControlBox(ui, session, { region, mode, map, opener, x =
   function render(currentRegion) {
     region = currentRegion;
     const [primary, ...overlapping] = region.fronts;
-    const next = `<strong>${b(region.name)} · Contested</strong>
+    const next = `<strong>${b(region.name)} · ${primary.contested ? "Contested" : "Captured"}</strong>
       <div data-history-military-control>${gpmHistoricalOverlayFront(primary, map, ui.globe, true)}</div>
       ${overlapping.length ? `<details data-history-overlay-overlap>
         <summary>${overlapping.length} other ${overlapping.length === 1 ? "conflict" : "conflicts"}</summary>
@@ -499,7 +501,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
       const region = byKey.get(keys.get(item.provId));
       if (!region) return "";
       return `<path d="${b(item.d)}" fill="${colors[category(region)]}" tabindex="0" role="button"
-        aria-label="${b(name(region))} · ${b(regionStatus(region))}" data-focus-key="history-map-${b(region.key)}"
+        aria-label="${b(name(region))} · ${b(regionStatus(region))}" aria-pressed="${region === selected}" data-focus-key="history-map-${b(region.key)}"
         data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
         <title>${b(name(region))} · ${b(regionStatus(region))}</title></path>`;
     }).join("")}</svg>`;
@@ -533,6 +535,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
       ${selected.occupationKey ? `<dt>Current occupation</dt><dd>${b(U(selected.occupationKey))}</dd>` : ""}
       ${Number.isFinite(selected.disruption) ? `<dt>Disruption</dt><dd>${b(selected.disruption)} / 100</dd>` : ""}</dl>
       ${selected.localOutcomes?.length ? `<div><b>Local administrations</b><ul>${selected.localOutcomes.map(local => `<li>${b(local.administration || local.title)}</li>`).join("")}</ul></div>` : ""}
+      ${selected.overlappingFronts?.length ? `<div><b>Other conflicts in this region</b><ul>${selected.overlappingFronts.map(name => `<li>${b(name)}</li>`).join("")}</ul></div>` : ""}
       ${selected.note ? `<p>${b(selected.note)}</p>` : ""}</details></div>
   </section>`;
 }

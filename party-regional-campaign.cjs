@@ -20,6 +20,14 @@ function partyRegionalProvince(sim, country, id, key) {
     ? province : null;
 }
 
+function partyUprisingProvinceEligible(sim, country, province, population) {
+  if (province.__countryKey !== country.key || province.__isCapital || province.__occupier ||
+      !partyRegionalProvince(sim, country, province.__provId, province.__provKey)) return false;
+  population ??= Q6(sim, country.key).reduce((sum, row) => sum + (row.__pop || 0), 0);
+  return province.__pop <= population * .80 &&
+    !!province.__adjAll?.some(id => ke(sim.world.provinces[id]) === country.key);
+}
+
 function partyRegionalRallyWeight(rally, day, rules = gpmCampaignRulesFor()) {
   if (!rally || day < rally.day) return 0;
   const fullUntil = rally.fullUntil ?? rally.day;
@@ -166,6 +174,12 @@ function partyRegionalQuoteToken(quote) {
 }
 
 function partyRegionalStart(sim, country, party, kind, region, relocateHeadquarters = false, quoteToken = null) {
+  if (relocateHeadquarters) {
+    const province = region && partyRegionalProvince(sim, country, region.id, region.key);
+    if (!province || !partyUprisingProvinceEligible(sim, country, province)) {
+      return { ok: false, reason: "headquarters_region" };
+    }
+  }
   const quote = partyRegionalQuote(sim, country, party, kind, region, relocateHeadquarters);
   if (!quote.ok) return quote;
   if (quoteToken !== null && quoteToken !== partyRegionalQuoteToken(quote)) return { ok: false, reason: "stale" };
@@ -181,6 +195,7 @@ function partyRegionalStart(sim, country, party, kind, region, relocateHeadquart
   record.projects.push({
     kind, id: region.id, key: region.key, startDay: day, endDay: quote.endDay, activistsK: quote.activistsK,
     gain: quote.presenceGain?.[strongInvestment ? "strong" : "partial"] ?? quote.gain, strongInvestment,
+    ...(kind === "headquarters" ? { uprisingHeadquarters: relocateHeadquarters } : {}),
   });
   return { ok: true, endDay: quote.endDay };
 }
@@ -190,12 +205,19 @@ function advancePartyRegionalCampaign(sim, country, party) {
   if (!record || !party.organization) return;
   const day = sim.day || 0;
   const rules = gpmCampaignRulesFor(sim);
+  const hadHeadquarters = !!record.headquarters;
   if (record.headquarters && !partyRegionalProvince(sim, country, record.headquarters.id, record.headquarters.key)) {
     record.headquarters = null;
   }
   for (const project of [...record.projects]) {
     const province = partyRegionalProvince(sim, country, project.id, project.key);
-    const eligible = province && party.legal !== false;
+    // Before the origin was saved, an outstanding relocation is the only
+    // headquarters project that could coexist with an existing headquarters.
+    const uprisingHeadquarters = project.uprisingHeadquarters ??
+      (project.kind === "headquarters" && hadHeadquarters);
+    if (project.kind === "headquarters") project.uprisingHeadquarters = uprisingHeadquarters;
+    const eligible = province && party.legal !== false &&
+      (!uprisingHeadquarters || partyUprisingProvinceEligible(sim, country, province));
     if (eligible && day < project.endDay) continue;
     record.projects.splice(record.projects.indexOf(project), 1);
     party.organization.activistsK = zL(Math.min(1e5, party.organization.activistsK + project.activistsK));
@@ -560,7 +582,8 @@ function advancePartyRegionalAI(sim, country, electionIn, contest = null) {
 
 module.exports = {
   rules,
-  workerFunctions: ["const gpmRegionalAICache = new WeakMap();", partyRegionalProvince, partyRegionalRallyWeight, partyRegionalPresence, partyCampaignSmallPartyFactor,
+  workerFunctions: ["const gpmRegionalAICache = new WeakMap();", partyRegionalProvince, partyUprisingProvinceEligible,
+    partyRegionalRallyWeight, partyRegionalPresence, partyCampaignSmallPartyFactor,
     partyRegionalPermanentWeight, partyRegionalHeadquartersWeight, partyRegionalWeight,
     partyRegionalShares, partyRegionalNationalTotals, partyRegionalNormalize, partyRegionalNationalShares,
     partyRegionalQuote, partyRegionalQuoteToken, partyRegionalStart, advancePartyRegionalCampaign, partyRegionalReceipt, registerPartyRegionalCampaign,
