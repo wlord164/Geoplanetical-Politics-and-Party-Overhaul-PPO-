@@ -3,22 +3,28 @@
 const { readIdentityIllustrations } = require("./historical-identities.cjs");
 
 const style = `
-  .gpm-history { display: grid; gap: var(--gap-3); min-width: 0; }
+  .gpm-history { display: grid; gap: var(--gap-3); min-width: 0; container: gpm-conflicts / inline-size; }
   .gpm-history :is(p, ul, dl) { margin: 0; }
   .gpm-history h3, .gpm-history h4 { margin-block: 0 var(--gap-1); }
   .gpm-history-tools, .gpm-history-actions { display: flex; flex-wrap: wrap; align-items: end; gap: var(--gap-2); }
-  .gpm-history-tools label { display: grid; gap: var(--gap-1); }
+  .gpm-history-tools label { display: grid; gap: var(--gap-1); min-width: 0; }
   .gpm-history-tools label:first-child { flex: 1 1 14rem; }
   .gpm-history-tools :is(input, select) { width: 100%; min-width: 0; }
-  .gpm-history-layout { display: grid; grid-template-columns: minmax(9rem, .7fr) minmax(0, 1.6fr); gap: var(--gap-3); }
-  .gpm-history-list { display: grid; align-content: start; gap: var(--gap-1); max-height: 34rem; overflow: auto; }
-  .gpm-history-list button {
-    display: grid; justify-items: start; align-content: center; gap: 3px;
-    height: auto; min-height: 36px; padding: 6px 9px;
-    text-align: left; white-space: normal; overflow-wrap: anywhere; line-height: 1.2;
+  .gpm-history-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-3); }
+  .gpm-history-war-picker { display: grid; gap: var(--gap-1); }
+  .gpm-history-war-picker select { min-width: 0; width: 100%; }
+  .gpm-history-list { display: grid; align-content: start; gap: var(--gap-1); max-height: 34rem; overflow: auto; min-width: 0; }
+  .gpm-history-war-list { display: none; }
+  .gpm-history .gpm-history-list button.k, .gpm-history .gpm-history-actions button.k, [data-gpm-region-control-box] button.k {
+    align-content: center; height: auto; min-height: 2.25rem; max-height: none;
+    padding: 6px 9px; text-align: start; white-space: normal; overflow-wrap: anywhere; line-height: 1.25;
   }
+  .gpm-history .gpm-history-list button.k { display: grid; justify-items: start; gap: 3px; }
   .gpm-history-list button[aria-pressed=true] { border-color: var(--mark-late, #edc583); }
-  .gpm-history-detail, .gpm-history-side, .gpm-history-actor { display: grid; align-content: start; gap: var(--gap-2); min-width: 0; }
+  .gpm-history-detail, .gpm-history-side, .gpm-history-actor {
+    display: grid; align-content: start; gap: var(--gap-2); min-width: 0; overflow-wrap: anywhere;
+  }
+  .gpm-history-layout > [data-history-detail] { min-width: 0; }
   .gpm-history-sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--gap-2); }
   .gpm-history-side, .gpm-history-region { padding: var(--gap-2); }
   .gpm-history-actor + .gpm-history-actor { border-top: 1px solid var(--line, #545861); padding-top: var(--gap-2); }
@@ -31,7 +37,7 @@ const style = `
   .gpm-history-map { display: grid; gap: var(--gap-1); }
   .gpm-history-map svg { display: block; width: 100%; max-height: 16rem; background: var(--bg, #12191f); }
   .gpm-history-map path { stroke: #141b21; stroke-width: 1px; vector-effect: non-scaling-stroke; cursor: pointer; }
-  .gpm-history-map path[data-selected] { stroke: #fff2bd; stroke-width: 2px; }
+  .gpm-history-map path:is([data-selected], :hover, :focus-visible) { stroke: #fff2bd; stroke-width: 2px; }
   .gpm-history-map-key { display: flex; flex-wrap: wrap; gap: var(--gap-2); }
   .gpm-history-map-key i { display: inline-block; width: .8em; height: .8em; margin-inline-end: .3em; border: 1px solid currentColor; }
   .gpm-history-section { padding-block-start: var(--gap-2); border-top: 1px solid var(--line, #545861); }
@@ -39,7 +45,7 @@ const style = `
   .gpm-history-section > :not(summary) { margin-block-start: var(--gap-2); }
   .gpm-history-region-select { display: grid; gap: var(--gap-1); }
   .gpm-history-region-select select { min-width: 0; width: 100%; }
-  .gpm-history-region dl { display: grid; grid-template-columns: max-content 1fr; gap: var(--gap-1) var(--gap-2); }
+  .gpm-history-region dl { display: grid; grid-template-columns: minmax(5em, auto) minmax(0, 1fr); gap: var(--gap-1) var(--gap-2); }
   .gpm-history-region dd { margin: 0; }
   .gpm-history-control { display: grid; gap: var(--gap-1); }
   .gpm-history-control-bar { display: flex; gap: 1px; overflow: hidden; height: .55rem; background: var(--bg, #12191f); border-radius: var(--radius, 4px); }
@@ -50,8 +56,8 @@ const style = `
   .gpm-history-control-list b { font-variant-numeric: tabular-nums; }
   [data-gpm-region-control-box] {
     position: fixed; z-index: 28; display: grid; gap: 5px; box-sizing: border-box;
-    width: max-content; min-width: min(9rem, calc(100vw - 16px)); max-width: min(17rem, calc(100vw - 16px));
-    max-height: min(17rem, calc(100vh - 16px)); padding: 8px 10px; overflow: auto; overflow-wrap: anywhere;
+    width: max-content; min-width: min(12rem, calc(100vw - 16px)); max-width: min(21rem, calc(100vw - 16px));
+    max-height: min(25rem, calc(100vh - 16px)); padding: 8px 10px; overflow: auto; overflow-wrap: anywhere;
     color: var(--text, #eff3f7); background: #172029; border: 1px solid #56606b;
     border-radius: var(--radius, 4px); box-shadow: 0 4px 14px #0006; font-size: .82rem;
   }
@@ -59,6 +65,11 @@ const style = `
   [data-gpm-region-control-box] ul { padding: 0; list-style: none; }
   [data-gpm-region-control-box] [data-gpm-control-row] { display: flex; justify-content: space-between; gap: 12px; padding-block: 2px; }
   [data-gpm-region-control-box] [data-gpm-control-row] > b { flex: none; font-variant-numeric: tabular-nums; }
+  [data-gpm-region-control-box] [data-history-overlay-actions] { display: flex; flex-wrap: wrap; gap: 4px; }
+  [data-gpm-region-control-box] button.k { max-width: 100%; }
+  [data-gpm-region-control-box] details { border-top: 1px solid #8995a045; padding-top: 4px; }
+  [data-gpm-region-control-box] summary { cursor: pointer; }
+  [data-gpm-region-control-box] [data-history-overlay-front] { display: grid; gap: 3px; padding-block: 4px; }
   body:has([data-gpm-region-control-box]) #tooltip.gpm-history-map-tip { visibility: hidden; }
   [data-gpm-faction-inspector] .insp-head img.flag { object-fit: contain; }
   [data-gpm-faction-inspector] .insp-leader { cursor: default; }
@@ -67,7 +78,12 @@ const style = `
   [data-gpm-faction-inspector] .ir-cell { text-align: left; }
   [data-gpm-faction-inspector] .gpm-faction-laws { padding-inline-start: var(--gap-4); margin-block: var(--gap-1) 0; }
   [data-gpm-faction-inspector] .gpm-faction-laws li + li { margin-top: var(--gap-1); }
-  @media (max-width: 1200px) { .gpm-history-layout { grid-template-columns: minmax(0, 1fr); } .gpm-history-list { max-height: 16rem; } }
+  @container gpm-conflicts (min-width: 52rem) {
+    .gpm-history-layout { grid-template-columns: minmax(15rem, .7fr) minmax(24rem, 1.6fr); }
+    .gpm-history-war-picker { display: none; }
+    .gpm-history-war-list { display: grid; }
+  }
+  @container gpm-conflicts (max-width: 32rem) { .gpm-history-list { max-height: 14rem; } }
 `;
 
 function gpmHistoricalLabel(value) {
@@ -333,11 +349,43 @@ function gpmHistoricalControlSummary(region, conflict, authority, compact = fals
       <ul>${rows.map(side => `<li data-gpm-control-row><span>${b(side.name)}</span>
         <b>${b(percentage.format(side.percent / 100))}</b></li>`).join("")}</ul>`;
   }
-  if (compact) return "<p>Control percentages unavailable.</p>";
-  if (chart) return "<p>Military control percentages unavailable.</p>";
+  if (compact) return "<p>No measured split</p>";
   const names = [...new Set([region.dominantActorId, region.secondaryActorId, region.currentController,
     ...(conflict.sides || []).flat()].filter(Boolean).map(authority))];
-  return `<p>Military control percentages unavailable.</p>${names.length ? `<p>Known parties · ${b(names.join(" / "))}</p>` : ""}`;
+  const dominant = region.dominantActorId || (region.contested && region.controller);
+  return `<p>No measured split</p>${dominant ? `<p>${b(authority(dominant))} reported dominant</p>` : ""}
+    ${names.length ? `<p>Known parties · ${b(names.join(" / "))}</p>` : ""}`;
+}
+
+function gpmHistoricalFrontSummary(front, actors) {
+  const sideName = id => actors[id]?.shortName || actors[id]?.name;
+  const sides = (front.sides || []).map(side => [...new Set(side.map(sideName).filter(Boolean))].join(", ")).filter(Boolean);
+  const controller = sideName(front.controllerId);
+  const reported = sideName(front.reportedDominantId);
+  const status = front.contested ? "Contested" : front.captured ? "Captured" : front.controlled ? "Held" : gpmHistoricalLabel(front.status);
+  const name = controller || (front.occupationKey && U(front.occupationKey));
+  const clue = front.contested ? reported && (reported + " reported dominant") :
+    (front.captured || front.controlled) && name;
+  return { sides: sides.length ? sides.join(" vs ") : (front.actorIds || []).map(sideName).filter(Boolean).join(" / "), status, clue };
+}
+
+function gpmHistoricalOverlayFront(front, map, globe, primary = false) {
+  const summary = gpmHistoricalFrontSummary(front, map.actors);
+  const actors = [...new Set([front.reportedDominantId, ...(front.sides || []).flat(), ...(front.actorIds || [])].filter(Boolean))];
+  const actions = actors.map(id => gpmHistoricalFactionActions(globe, map, id)).filter(Boolean);
+  const button = (id, action, label) => label ? `<button type="button" class="k k-sm" data-history-faction="${b(id)}"
+    data-history-faction-action="${action}" data-focus-key="${b(front.id + id + action)}">${b(label)}</button>` : "";
+  const title = front.shortTitle || front.name;
+  return `<section data-history-overlay-front="${b(front.id)}">
+    ${primary ? `<b>${b(title)}</b>` : `<b>${b(title)} · ${b(summary.status)}</b>`}
+    ${summary.sides && summary.sides !== title ? `<p>${b(summary.sides)}</p>` : ""}
+    ${summary.clue ? `<p>${b(summary.clue)}</p>` : ""}
+    ${front.contested || front.control?.length ? gpmHistoricalControlSummary(front, null, null, true) : ""}
+    ${actions.length ? `<div data-history-overlay-actions>${actions.map(row =>
+      button(row.id, "open", row.openLabel) + button(row.id, "zoom", row.zoomLabel)).join("")}</div>` : ""}
+    ${!primary ? `<button type="button" class="k k-sm" data-history-overlay-details="${b(front.id)}"
+      data-focus-key="${b(front.id)}">View conflict</button>` : ""}
+  </section>`;
 }
 
 function gpmCloseRegionalControlBox(ui) {
@@ -348,29 +396,65 @@ function gpmCloseRegionalControlBox(ui) {
   selection.shell.remove();
 }
 
-async function gpmOpenRegionalControlBox(ui, session, { name, conflictId, provinceKey, x = g1[0], y = g1[1] }) {
-  if (ui.sim !== session) return;
+function gpmOpenRegionalControlBox(ui, session, { region, mode, map, opener, x = g1[0], y = g1[1] }) {
+  if (ui.sim !== session || !map || !region.fronts[0]?.contested) return;
   gpmCloseRegionalControlBox(ui);
   ui.tooltip(null);
   const shell = document.createElement("aside");
   shell.setAttribute("data-gpm-region-control-box", "");
-  shell.setAttribute("aria-label", "Military control in " + (name || Ut(provinceKey, provinceKey)));
-  shell.dataset.provinceKey = provinceKey;
-  shell.innerHTML = '<strong>Military control</strong><div role="status" data-history-military-control>Loading…</div>';
+  shell.setAttribute("aria-label", "Military control in " + region.name);
+  shell.tabIndex = -1;
+  shell.dataset.provinceKey = region.provinceKey;
   document.body.append(shell);
-  const content = shell.querySelector("[data-history-military-control]");
   const place = () => {
     const left = x + 12 + shell.offsetWidth <= window.innerWidth - 8 ? x + 12 : x - shell.offsetWidth - 12;
     const top = y + 12 + shell.offsetHeight <= window.innerHeight - 8 ? y + 12 : y - shell.offsetHeight - 12;
     shell.style.left = Math.max(8, Math.min(left, window.innerWidth - shell.offsetWidth - 8)) + "px";
     shell.style.top = Math.max(8, Math.min(top, window.innerHeight - shell.offsetHeight - 8)) + "px";
   };
-  place();
   const controller = new AbortController();
   const { signal } = controller;
-  const selection = { session, conflictId, provinceKey, shell, controller };
+  let html = "";
+  const selection = { session, mode, provinceKey: region.provinceKey, shell, controller, render };
   ui._gpmRegionControlBox = selection;
-  const current = () => ui._gpmRegionControlBox === selection && ui.sim === session && shell.isConnected;
+  function render(currentRegion) {
+    region = currentRegion;
+    const [primary, ...overlapping] = region.fronts;
+    const next = `<strong>${b(region.name)} · Contested</strong>
+      <div data-history-military-control>${gpmHistoricalOverlayFront(primary, map, ui.globe, true)}</div>
+      ${overlapping.length ? `<details data-history-overlay-overlap>
+        <summary>${overlapping.length} other ${overlapping.length === 1 ? "conflict" : "conflicts"}</summary>
+        ${overlapping.map(front => gpmHistoricalOverlayFront(front, map, ui.globe)).join("")}</details>` : ""}`;
+    if (html === next) return;
+    const detail = shell.querySelector("details");
+    const opened = detail?.open;
+    const focused = document.activeElement;
+    const active = shell.contains(focused);
+    const key = active && focused.dataset.focusKey;
+    const scroll = shell.scrollTop;
+    shell.innerHTML = next;
+    html = next;
+    const updated = shell.querySelector("details");
+    if (updated) updated.open = !!opened;
+    shell.scrollTop = scroll;
+    if (active) {
+      const replacement = key ? shell.querySelector(`[data-focus-key="${CSS.escape(key)}"]`) :
+        focused === detail?.querySelector("summary") ? updated?.querySelector("summary") : shell;
+      (replacement || shell).focus({ preventScroll: true });
+    }
+    place();
+  }
+  shell.addEventListener("click", event => {
+    const button = event.target.closest("button");
+    if (!button) return;
+    if (button.dataset.historyFaction) {
+      gpmHistoricalRunFactionAction(ui.globe, map, button.dataset.historyFaction, button.dataset.historyFactionAction);
+    } else if (button.dataset.historyOverlayDetails) {
+      const front = region.fronts.find(front => front.id === button.dataset.historyOverlayDetails);
+      if (front) gpmHistoricalMapOpenFront(front, region.provinceKey);
+    }
+  }, { signal });
+  shell.addEventListener("toggle", place, { capture: true, signal });
   document.addEventListener("pointerdown", event => {
     if (!shell.contains(event.target)) gpmCloseRegionalControlBox(ui);
   }, { capture: true, signal });
@@ -379,24 +463,11 @@ async function gpmOpenRegionalControlBox(ui, session, { name, conflictId, provin
     event.preventDefault();
     event.stopImmediatePropagation();
     gpmCloseRegionalControlBox(ui);
+    opener?.focus({ preventScroll: true });
   }, { capture: true, signal });
   window.addEventListener("resize", place, { signal });
-  try {
-    const result = await at(session, "gpm.historicalConflicts", { id: conflictId });
-    if (!current()) return;
-    const conflict = result?.selected;
-    const region = conflict?.regions?.find(entry => entry.key === provinceKey);
-    if (!region) throw new Error("Region absent from conflict view");
-    const actors = new Map((conflict.actors || []).map(actor => [actor.id, actor]));
-    const authority = id => actors.get(id)?.shortName || actors.get(id)?.name || U(id);
-    content.innerHTML = gpmHistoricalControlSummary(region, conflict, authority, true);
-    place();
-  } catch (error) {
-    if (!current()) return;
-    console.warn("[PPO] Regional control could not load", error);
-    content.textContent = "Could not load regional control.";
-    place();
-  }
+  render(region);
+  if (opener) shell.focus({ preventScroll: true });
 }
 
 function gpmHistoricalRegions(conflict, actors, state, ui) {
@@ -423,11 +494,13 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
       keys: new Map(features.map(feature => [feature.__provId, feature.__provKey])) };
   }
   const { layout, keys } = state.geometry;
-  const paths = (items, width, height) => `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Regional control and contestation">
+  const paths = (items, width, height) => `<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="Regional control and contestation">
     ${items.map(item => {
       const region = byKey.get(keys.get(item.provId));
       if (!region) return "";
-      return `<path d="${b(item.d)}" fill="${colors[category(region)]}" data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
+      return `<path d="${b(item.d)}" fill="${colors[category(region)]}" tabindex="0" role="button"
+        aria-label="${b(name(region))} · ${b(regionStatus(region))}" data-focus-key="history-map-${b(region.key)}"
+        data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
         <title>${b(name(region))} · ${b(regionStatus(region))}</title></path>`;
     }).join("")}</svg>`;
   const labels = {
@@ -452,7 +525,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
         `<option value="${b(region.key)}"${region === selected ? " selected" : ""}>${b(name(region))} · ${b(regionStatus(region))}</option>`).join("")}</select></label>
     <div class="sh-inset gpm-history-region">${militaryControl || `<p><b>${b(regionStatus(selected))}</b>
       ${(!selected.modeledContact || selected.occupationKey) && (selected.currentController ?? selected.controller) ? ` · ${b(authority(selected.currentController ?? selected.controller))}` : ""}</p>`}
-    <details class="gpm-history-section" data-history-panel="region"><summary>Region details</summary>
+    <details class="gpm-history-section" data-history-panel="region"><summary data-focus-key="history-region-details">Region details</summary>
       <dl>${selected.controller && selected.controller !== selected.currentController ? `<dt>Opening controller</dt><dd>${b(authority(selected.controller))}</dd>` : ""}
       ${selected.currentController && (!selected.modeledContact || selected.occupationKey) ? `<dt>Current controller</dt><dd>${b(authority(selected.currentController))}</dd>` : ""}
       ${selected.administrator ? `<dt>Administrator</dt><dd>${b(authority(selected.administrator))}</dd>` : ""}
@@ -474,7 +547,6 @@ function gpmHistoricalDetail(conflict, state, ui) {
   });
   const combatants = new Set((conflict.sides || []).flat());
   const others = [...actors.values()].filter(actor => actor.id !== state.actorId && !combatants.has(actor.id));
-  const parties = (conflict.sides || []).map(side => side.map(id => actors.get(id)?.shortName || actors.get(id)?.name || U(id)).join(", "));
   const sources = gpmHistoricalSourceList(conflict.sources);
   const pendingTerm = (conflict.options || []).find(option => option.id === state.term);
   const action = (id, label, extra = "") => `<button type="button" class="k" data-history-action="${id}" data-focus-key="history-${id}" ${extra}>${label}</button>`;
@@ -507,25 +579,24 @@ function gpmHistoricalDetail(conflict, state, ui) {
     ${outcome.scope === "local" || outcome.scope === "autonomy" && outcome.native === false ? "<p>Local authority recorded within the stock region.</p>" : ""}
     ${outcome.regionalLaws?.length ? `<ul>${outcome.regionalLaws.map(law => `<li><b>${b(law.name)}</b><br>${b(law.note)}<ul class="gpm-history-sources">${gpmHistoricalSourceList(law.source)}</ul></li>`).join("")}</ul>` : ""}</section>` : "";
   const negotiations = proposals || conflict.pending || history || conflict.settlement ? `<details class="gpm-history-section" data-history-panel="negotiations"${state.term || conflict.pending ? " open" : ""}>
-    <summary>Negotiations</summary><div class="gpm-history-detail">
+    <summary data-focus-key="history-negotiations">Negotiations</summary><div class="gpm-history-detail">
     ${conflict.pending ? `<p>${b(conflict.pending.label)} proposed by ${b(U(conflict.pending.offeredBy))}. Review due ${b(ui.gameDate(conflict.pending.reviewDay))}.</p>` : ""}
     ${conflict.settlement ? `<p>Settlement · ${b(gpmHistoricalLabel(conflict.settlement))}</p>` : ""}
     ${proposals}${history ? `<ul>${history}</ul>` : ""}
   </div></details>` : "";
   return `<article class="gpm-history-detail" aria-label="${b(conflict.name)}">
-    <header><h3>${b(conflict.name)}</h3><small>${b(gpmHistoricalLabel(conflict.status))}</small></header>
-    ${parties.some(Boolean) ? `<p>${b(parties.filter(Boolean).join(" vs. "))}</p>` : ""}
+    <header><h3 title="${b(conflict.name)}">${b(conflict.shortTitle || conflict.name)}</h3><small>${b(gpmHistoricalLabel(conflict.status))}</small></header>
     ${gpmHistoricalRegions(conflict, actors, state, ui)}
     ${conflict.theatreKey ? `<div class="gpm-history-actions">${action("theatre", "Open War Theatre", "data-authority-safe")}</div>` : ""}
     ${negotiations}
-    ${postwar ? `<details class="gpm-history-section" data-history-panel="outcome"><summary>Postwar outcome</summary>${postwar}</details>` : ""}
+    ${postwar ? `<details class="gpm-history-section" data-history-panel="outcome"><summary data-focus-key="history-outcome">Postwar outcome</summary>${postwar}</details>` : ""}
     ${actors.size ? `<details class="gpm-history-section" data-history-panel="participants"${selectedActor ? " open" : ""}>
-      <summary>Participants</summary>
+      <summary data-focus-key="history-participants">Participants</summary>
       ${selectedActor ? gpmHistoricalActor(selectedActor, conflict.factionOutcomes?.[selectedActor.id]) : ""}
       ${sides.length ? `<div class="gpm-history-sides">${sides.join("")}</div>` : ""}
       ${others.length ? `<section class="gpm-history-side sh-inset" aria-label="Other actors"><h4>Other actors</h4>${others.map(actor => gpmHistoricalActor(actor)).join("")}</section>` : ""}
     </details>` : ""}
-    <details class="gpm-history-section" data-history-panel="background"><summary>Background and sources</summary><div class="gpm-history-detail">
+    <details class="gpm-history-section" data-history-panel="background"><summary data-focus-key="history-background">Background and sources</summary><div class="gpm-history-detail">
     ${conflict.note ? `<p>${b(conflict.note)}</p>` : ""}
     ${conflict.geographicContext?.length ? `<div><h4>Areas affected</h4><ul>${conflict.geographicContext.map(area => `<li>${b(area)}</li>`).join("")}</ul></div>` : ""}
     ${conflict.asOf || conflict.confidence ? `<small>${b([conflict.asOf && `Snapshot ${conflict.asOf}`, conflict.confidence && `${gpmHistoricalLabel(conflict.confidence)} confidence`].filter(Boolean).join(" · "))}</small>` : ""}
@@ -548,7 +619,23 @@ function gpmHistoricalConflictsView(host, ui, session) {
   if (!host || !session) return;
   let state = ui._gpmHistory;
   if (!state || state.session !== session) state = ui._gpmHistory = { session, query: "", status: "", request: 0 };
+  const mapSelection = ui._gpmHistoryMapSelection;
+  const fromMap = mapSelection?.session === session;
+  if (fromMap) {
+    ui._gpmHistoryMapSelection = null;
+    state.selectedId = mapSelection.id;
+    state.regionKey = mapSelection.provinceKey;
+    state.actorId = mapSelection.actorId;
+    state.filter = "";
+    state.query = "";
+    state.term = null;
+  }
   if (state.host === host && state.playerKey === session.playerKey) {
+    if (fromMap) {
+      host.querySelector("[data-history-search]").value = "";
+      void state.load(state.selectedId, true);
+      return;
+    }
     const changed = state.data?.day !== session.day || state.lastCommitRevision !== session.status?.commitRevision;
     if (!state.pending && !state.busy && changed && performance.now() - state.lastRequest > 1500) void state.load();
     return;
@@ -565,6 +652,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
   const incidents = host.querySelector("[data-history-incidents]");
   const search = host.querySelector("[data-history-search]");
   const list = host.querySelector("[data-history-list]");
+  const warPicker = host.querySelector("[data-history-war-picker]");
   const detail = host.querySelector("[data-history-detail]");
   const current = () => ui.sim === session && ui._gpmHistory === state && state.host === host && host.isConnected;
   const active = () => host.contains(document.activeElement) ? document.activeElement?.dataset.focusKey : null;
@@ -573,16 +661,23 @@ function gpmHistoricalConflictsView(host, ui, session) {
     if (element._historyHtml === html) return;
     const key = active();
     const scroll = element.scrollTop;
+    const scrollers = [];
+    for (let parent = element.parentElement; parent && parent !== document.body; parent = parent.parentElement) {
+      if (parent.scrollTop) scrollers.push([parent, parent.scrollTop]);
+    }
     const panelOwner = element._historyPanelOwner;
-    const opened = panelOwner === state.selectedId
-      ? [...element.querySelectorAll("[data-history-panel][open]")].map(panel => panel.dataset.historyPanel) : [];
+    const panelState = panelOwner === state.selectedId
+      ? new Map([...element.querySelectorAll("[data-history-panel]")].map(panel => [panel.dataset.historyPanel, panel.open])) : new Map();
     element.innerHTML = html;
     element._historyHtml = html;
-    element.scrollTop = scroll;
     element._historyPanelOwner = state.selectedId;
     for (const panel of element.querySelectorAll("[data-history-panel]")) {
-      if (opened.includes(panel.dataset.historyPanel)) panel.open = true;
+      if (panelState.has(panel.dataset.historyPanel) && !(panel.dataset.historyPanel === "negotiations" && state.term)) {
+        panel.open = panelState.get(panel.dataset.historyPanel);
+      }
     }
+    element.scrollTop = scroll;
+    for (const [scroller, position] of scrollers) scroller.scrollTop = position;
     restoreFocus(key);
   };
   const paint = () => {
@@ -596,15 +691,22 @@ function gpmHistoricalConflictsView(host, ui, session) {
     setHtml(filter, `<option value="">All statuses</option>${statuses.map(status => `<option value="${b(status)}"${state.filter === status ? " selected" : ""}>${b(gpmHistoricalLabel(status))}</option>`).join("")}`);
     const query = kt(state.query.trim());
     const matches = conflict => !query || kt([
-      conflict.name, gpmHistoricalLabel(conflict.kind), ...(conflict.countryKeys || []).map(key => U(key)),
+      conflict.name, conflict.shortTitle, ...(conflict.participantNames || []),
+      gpmHistoricalLabel(conflict.kind), ...(conflict.countryKeys || []).map(key => U(key)),
     ].join(" ")).includes(query);
     const statusOrder = ["active", "occupation", "ceasefire", "suspended", "settled"];
     const order = status => statusOrder.includes(status) ? statusOrder.indexOf(status) : statusOrder.length;
-    const byStatus = (a, b) => order(a.status) - order(b.status) || a.name.localeCompare(b.name, cs());
+    const byStatus = (a, b) => order(a.status) - order(b.status) || (a.shortTitle || a.name).localeCompare(b.shortTitle || b.name, cs());
     const rows = wars.filter(conflict => (!state.filter || conflict.status === state.filter) && matches(conflict)).sort(byStatus);
     const incidentRows = incidentReports.filter(matches).sort(byStatus);
     const buttons = conflicts => conflicts.map(conflict => `<button type="button" class="k" data-authority-safe data-history-select="${b(conflict.id)}" data-focus-key="history-select-${b(conflict.id)}" aria-pressed="${state.selectedId === conflict.id}">
-      <b>${b(conflict.name)}</b><small>${b(gpmHistoricalLabel(conflict.status))}</small></button>`).join("");
+      <b title="${b(conflict.name)}">${b(conflict.shortTitle || conflict.name)}</b><small>${b(gpmHistoricalLabel(conflict.status))}</small></button>`).join("");
+    const optionRows = rows.slice();
+    const selected = data?.selected;
+    if (selected && selected.id === state.selectedId && !rows.some(conflict => conflict.id === selected.id)) optionRows.unshift(selected);
+    setHtml(warPicker, `<option value="">${rows.length ? "Select a war" : "No matching wars"}</option>
+      ${optionRows.map(conflict => `<option value="${b(conflict.id)}">${b(conflict.shortTitle || conflict.name)} · ${b(gpmHistoricalLabel(conflict.status))}</option>`).join("")}`);
+    warPicker.value = optionRows.some(conflict => conflict.id === state.selectedId) ? state.selectedId : "";
     host.querySelector("[data-history-count]").textContent = wars.length ? `${wars.filter(conflict => conflict.status === "active").length} active` : "";
     setHtml(list, rows.length ? buttons(rows)
       : `<p>${data ? wars.length ? "No wars match these filters." : "No wars available." : state.pending ? "Loading wars…" : "Conflict data is unavailable."}</p>`);
@@ -612,7 +714,6 @@ function gpmHistoricalConflictsView(host, ui, session) {
     if (incidents._historySelection !== state.selectedId && incidentRows.some(conflict => conflict.id === state.selectedId)) incidents.open = true;
     incidents._historySelection = state.selectedId;
     setHtml(incidents.querySelector("[data-history-incident-list]"), buttons(incidentRows));
-    const selected = data?.selected;
     setHtml(detail, gpmHistoricalDetail(selected?.id && selected.id === state.selectedId ? selected : null, state, ui));
     feedback.textContent = state.status;
     host.setAttribute("aria-busy", String(!!state.pending || !!state.busy));
@@ -645,6 +746,23 @@ function gpmHistoricalConflictsView(host, ui, session) {
   search.value = state.query;
   search.oninput = () => { state.query = search.value; paint(); };
   filter.onchange = () => { state.filter = filter.value; paint(); };
+  const selectConflict = id => {
+    if (!id || id === state.selectedId || state.busy) return;
+    state.selectedId = id;
+    state.regionKey = null;
+    state.actorId = null;
+    state.term = null;
+    state.status = "";
+    if (ui.globe?._gpmHistoricalMap) ui.globe._gpmHistoricalMap.selectedWar = id;
+    void state.load(id, true);
+  };
+  warPicker.onchange = () => selectConflict(warPicker.value);
+  host.onkeydown = event => {
+    if (!event.target.matches("[data-history-region]") || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    state.regionKey = event.target.dataset.historyRegion;
+    paint();
+  };
   host.onchange = event => {
     if (!event.target.matches("[data-history-region-picker]")) return;
     state.regionKey = event.target.value;
@@ -659,12 +777,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
       state.status = await y0(historySource) ? "Source URL copied." : "Clipboard access is unavailable. Select the URL to copy it.";
     } else if (state.busy) return;
     else if (historySelect) {
-      state.selectedId = historySelect;
-      state.regionKey = null;
-      state.actorId = null;
-      state.term = null;
-      state.status = "";
-      void state.load(historySelect, true);
+      selectConflict(historySelect);
     } else if (historyRegion) state.regionKey = historyRegion;
     else if (historyTerm) state.term = historyTerm;
     else if (historyAction === "cancel") state.term = null;
@@ -715,8 +828,11 @@ function gpmBuildHistoricalConflicts(container, ui, session) {
     <small role="status" data-history-feedback></small>
     <div class="gpm-history-layout">
       <div class="gpm-history-detail">
-        <div class="gpm-history-list" role="group" aria-label="Wars" data-history-list data-keep-scroll="historical-conflicts"></div>
-        <details class="gpm-history-section" data-history-incidents hidden><summary>Incident reports</summary>
+        <label class="gpm-history-war-picker">War
+          <select class="k" data-authority-safe data-history-war-picker data-focus-key="history-war-picker"></select>
+        </label>
+        <div class="gpm-history-list gpm-history-war-list" role="group" aria-label="Wars" data-history-list data-keep-scroll="historical-conflicts"></div>
+        <details class="gpm-history-section" data-history-incidents hidden><summary data-focus-key="history-incident-reports">Incident reports</summary>
           <div class="gpm-history-list" data-history-incident-list></div></details>
       </div><div data-history-detail></div>
     </div>
@@ -727,7 +843,7 @@ function gpmBuildHistoricalConflicts(container, ui, session) {
 function patchHistoricalConflictsRenderer(source, replaceOnce) {
   const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalSource, gpmHistoricalSourceList, gpmHistoricalActor,
     gpmMountHistoricalInspector, gpmHistoricalFactionHeading, gpmHistoricalFactionProfile, gpmOpenHistoricalFactionInspector,
-    gpmHistoricalControlSummary, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,
+    gpmHistoricalControlSummary, gpmHistoricalFrontSummary, gpmHistoricalOverlayFront, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,
     gpmHistoricalRegions, gpmHistoricalDetail, gpmHistoricalConflictsView, gpmBuildHistoricalConflicts];
   const initialize = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, initialize, "\nconst gpmHistoricalConflictsStyle = " + JSON.stringify(style) + ";\n"

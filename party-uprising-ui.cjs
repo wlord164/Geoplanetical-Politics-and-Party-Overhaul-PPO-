@@ -282,6 +282,8 @@ function gpmUprisingPreparations(state, ui, button) {
       <h4>${b(name(selected))}</h4>
       <p><strong class="gpm-uprising-foothold">${b(percent.format(selected.foothold))} foothold</strong> · ${b(gpmUprisingRegionalStatus(selected, threshold))}</p>
       ${contributors.length ? "<small>" + b(contributors.join(" · ")) + "</small>" : ""}
+      <small>Invest in Foothold builds uprising readiness. For electoral projects, open Regional Campaigning.</small>
+      ${button("regional", "Open Regional Campaigning")}
       ${hqControls}
       ${project ? `<small>Investment completes ${b(date(project.endDay))} · +${b(points(project.gain))} foothold.</small>`
         : `<small>${b(terms + reason(quote))}</small>${button("invest", "Invest in Foothold", !quote?.ok)}`}</div>`;
@@ -680,6 +682,12 @@ function gpmBindUprising(profile, view, ui) {
     } else if (action === "refresh") {
       state.status = "";
       void load();
+    } else if (action === "regional") {
+      if (state.selectedRegion) {
+        ui._gpmSupportSelection = { key: countryKey, party: partyId, province: state.selectedRegion };
+      }
+      profile.querySelector("#gpm-tab-regional")?.click();
+      profile.querySelector("#gpm-tab-regional")?.focus({ preventScroll: true });
     } else if (action === "removeFlag") {
       state.flagRequest = null;
       state.flag = null;

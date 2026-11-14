@@ -551,6 +551,14 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '_refreshTabUnsafe(e=null){', '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);');
   js = replaceOnce(js, 'showScreen(e){for(let t of document.querySelectorAll(".screen"))',
     'showScreen(e){if(e!=="game")gpmCloseRegionalMap(this);for(let t of document.querySelectorAll(".screen"))');
+  js = replaceOnce(js, '${this._mpAdvRulerHtml(n)}',
+    '${this._mpAdvRulerHtml(n)}<small data-gpm-spending-preview style="white-space:pre-line">${b(gpmCampaignSpendingText(n,this))}</small>');
+  js = replaceOnce(js, 'r("[data-mp-log]",this._mpLogHtml(n.campaign));let d=',
+    'r("[data-mp-log]",this._mpLogHtml(n.campaign)),r("[data-gpm-spending-preview]",gpmCampaignSpendingText(u,this));let d=');
+  js = replaceOnce(js, 'p.contestId&&a.party?.campaignPreviews?.[p.contestId]||a.party?.actionPreviews?.campaign',
+    'p.contestId?a.party?.campaignPreviews?.[p.contestId]:a.party?.actionPreviews?.campaign');
+  js = replaceOnce(js, '||e.party?.actionPreviews?.[t]||{ok:!1,reason:"resources",cost:{},effect:{}}',
+    '||(t==="campaign"&&a.contestId?e.party?.campaignPreviews?.[a.contestId]:e.party?.actionPreviews?.[t])||{ok:!1,reason:"resources",cost:{},effect:{}}');
   js = patchHistoricalConflictsRenderer(patchUprisingRenderer(js), replaceOnce);
   js = patchHistoricalConflictMapRenderer(js, replaceOnce);
   const { patchHistoricalIdentityRenderer } = require("./historical-identities.cjs");
@@ -613,9 +621,20 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'if(m>0)for(let g in p.shares)p.shares[g]/=m;let f=null,y=-1;',
     'if(m>0)for(let g in p.shares)p.shares[g]/=m;if(gpmApplyRegions)p.shares=partyRegionalShares(e,p.shares,p.key,t.day);let f=null,y=-1;');
   js = replaceOnce(js, 'function lSa(e,t){let a=t.pol;if(!a)return;', 'function lSa(e,t){let a=t.pol;if(!a)return;gpmBindCampaignPolity(e,a);');
+  js = replaceOnce(js, 'countries.set(i.key,i);let c=[],u=(v,b,S)=>',
+    'countries.set(i.key,i);gpmBindCampaignPolity(e,i.pol);let c=[],u=(v,b,S)=>');
   // Regional seat rules use the adjusted local shares. National rules use their population-weighted change.
+  js = replaceOnce(js, 'function iE(e,t,a=null){let r=a?.kind||null', 'function iE(e,t,a=null,gpmForecast=null){let r=a?.kind||null');
+  js = replaceOnce(js, 'd=u&&c.score||0,p=Upt(l,d,poo(e,t,l,u?c:null));',
+    'd=gpmForecast?.partyId===l.id?gpmForecast.score:u&&c.score||0,p=Upt(gpmForecast?.base?{...l,support:gpmForecast.base[l.id]??l.support}:l,d,poo(e,t,l,u?c:null));');
+  js = replaceOnce(js, 'let l=nE(t,i,e.day||0,o.contestId||null);return n2e(e,t,a,l,o)',
+    'let l=nE(t,i,e.day||0,o.contestId||null);return partyCampaignSpendPreview(e,t,a,l,o)');
   js = replaceOnce(js, 'if(s.transfer)return gGr(s,t,a,{rulingId:r,rig:Wwe(e,o),polity:n,electoralMap:i});let l={},c=0;',
     'if(s.transfer)return gGr(s,t,a,{rulingId:r,rig:Wwe(e,o),polity:n,electoralMap:i});if(n&&["direct","equal-per-state","delegated"].includes(e.selectMode||"direct"))t=partyRegionalNationalShares(n,i,t);let l={},c=0;');
+  js = replaceOnce(js, 'let M=y1a(I,w,e.apportionment);for(let _ in M)',
+    'let M=y1a(I,w,e.apportionment);if(i?.gpmDistrictSeats)i.gpmDistrictSeats.set(S.id,{total:w,seats:M});for(let _ in M)');
+  js = replaceOnce(js, 'd=h=>{let v=jnt(c,h),b={};',
+    'd=h=>{i?.gpmDistrictSeats?.clear();let v=jnt(c,h),b={};');
   js = replaceOnce(js, 'reportOrder:[]},_=r.parties.filter(J=>b[J.id]!=null).map(J=>({id:J.id,votes:Math.max(0,S[J.id]||0)}))',
     'reportOrder:[]},gpmNational=partyRegionalNationalShares(r,PE(e,t),S),_=r.parties.filter(J=>b[J.id]!=null).map(J=>({id:J.id,votes:Math.max(0,gpmNational[J.id]||0)}))');
   js = replaceOnce(js, 'u=$pt(e,t,c,i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}',

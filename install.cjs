@@ -16,6 +16,11 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  archive: "182d43a81129ea384e50a85a3f70ab221179331f0ab84ee051f487114c57141e",
+  worker: "d4e5cd8118ad7f325f628141e0c542454bdd4c90f50b526d5df61c4161dc7e33",
+  renderer: "f0e75aa908b240c9d11cac130b3d69682b87f087b4f22040745ee52b7c33ccff",
+  executable: "2c1081517b9614de6a3caeb994988b961a7073b0f2eb04ae8485dbfc962f5bb0",
+}, {
   archive: "c886ef0ecfb0108de29d81c2cd6a70e1594309b6cb16c9202b5c99ff2f3e6290",
   worker: "05acfcaf21fd27b0eafae38be0f97a3a00d780c30d096772e52af11d48c1eccb",
   renderer: "4798b0b4048bbfdd2ad7f83c9e566eb4077ded140aeabd3a29d8ba8b47824c55",

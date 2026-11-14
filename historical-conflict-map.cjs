@@ -53,14 +53,15 @@ const style = `
   .gpm-history-faction-label button:focus-visible { outline: 1px solid #ffdf9d; }
   .gpm-history-faction-label button[hidden] { display: none; }
   .gpm-history-map-popup { position: fixed; z-index: 27; max-height: 300px; overflow: auto; }
-  .gpm-history-map-popup button { text-align: start; }
-  .gpm-history-map-popup small { display: block; }
-  #tooltip.gpm-history-map-tip { max-width: min(350px, 90vw); white-space: normal; }
-  .gpm-history-map-tip section { border-top: 1px solid #8995a045; padding-top: 3px; }
-  .gpm-history-map-tip small { display: block; }
-  .gpm-history-map-tip img {
-    width: 16px; height: 11px; margin-inline-end: 4px; object-fit: contain; vertical-align: middle;
+  .gpm-history-map-popup button.k {
+    height: auto; min-height: 2rem; padding-block: 5px; line-height: 1.25;
+    text-align: start; white-space: normal; overflow-wrap: anywhere;
   }
+  .gpm-history-map-marker[data-selected-war]::before { outline: 2px solid #ffe1a0; outline-offset: 2px; }
+  .gpm-history-map-marker[data-selected-war] { z-index: 1; }
+  .gpm-history-map-popup small { display: block; }
+  #tooltip.gpm-history-map-tip { max-width: min(300px, 90vw); white-space: normal; overflow-wrap: anywhere; }
+  .gpm-history-map-tip small { display: block; }
 `;
 
 const colors = {
@@ -72,7 +73,21 @@ const colors = {
   occupation: 0xc3a1fa,
   ceasefire: 0x69d0b8,
   suspended: 0x9bacbc,
+  selected: 0xffe1a0,
 };
+
+function gpmHistoricalPrimaryFront(fronts) {
+  return fronts.find(front => front.captured && !front.contested) ||
+    fronts.find(front => front.contested && front.control?.length) ||
+    fronts.find(front => front.contested && front.reportedDominantId) ||
+    fronts.find(front => front.contested && (front.dominantKey || front.dominantColor)) ||
+    fronts.find(front => front.contested) ||
+    fronts.find(front => front.controlled) || fronts[0];
+}
+
+function gpmHistoricalOrderedFronts(fronts, primary = gpmHistoricalPrimaryFront(fronts)) {
+  return primary ? [primary, ...fronts.filter(front => front !== primary)] : [];
+}
 
 function gpmHistoricalMapStatus(fronts) {
   return ["active", "occupation", "ceasefire", "suspended"].find(status =>
@@ -110,13 +125,26 @@ function gpmHistoricalNativeMapActor(key) {
 }
 
 function gpmHistoricalLabelOwnerAt(globe, lon, lat) {
-  const data = globe._gpmHistoricalMap?.data;
-  if (!data?.nativeCountryActors) return -1;
+  const state = globe._gpmHistoricalMap;
+  if (!state?.nativeLabelCells?.has(l0e(pK(DE(lon)), mK(lat)))) return -1;
   const province = globe.world.provinces[globe._provinceAt(lon, lat)];
   const key = province?.__polityKey || province?.__countryKey;
-  if (!data.nativeCountryActors[key]) return -1;
+  if (!state.data.nativeCountryActors[key]) return -1;
   const feature = globe.world.byKey?.get(key);
   return Number.isInteger(feature?.__idx) ? feature.__idx : -1;
+}
+
+function gpmHistoricalLabelCells(provinces, nativeActors) {
+  const cells = new Set();
+  let index = s0e.get(provinces);
+  if (!index || index.count !== provinces.length) {
+    index = { ...bGe(provinces), count: provinces.length };
+    s0e.set(provinces, index);
+  }
+  for (const [cell, entries] of index.buckets) {
+    if (entries.some(({ id }) => nativeActors[provinces[id].__polityKey || provinces[id].__countryKey])) cells.add(cell);
+  }
+  return cells;
 }
 
 function gpmHistoricalProvinceColor(value) {
@@ -220,12 +248,11 @@ function gpmHistoricalPaintFills(globe, state) {
     const secondary = color(front.secondaryKey) || owner;
     const opposing = secondary && secondary.some((channel, index) => channel !== primary[index])
       ? secondary : primary.map(channel => (channel + 116) / 2);
-    const dominance = Number.isFinite(front.dominance) ? Math.max(.5, Math.min(.94, front.dominance)) : .67;
+    const dominance = Number.isFinite(front.dominance) ? Math.max(.5, Math.min(.81, front.dominance)) : .67;
     const ink = front.captured ? primary.map(channel => Math.round(channel + .10 * (255 - channel))) :
       front.controlled ? primary : primary.map((channel, index) => {
       const blend = channel * dominance + opposing[index] * (1 - dominance);
-      const neutral = owner?.[index] ?? 128;
-      return Math.round(.84 * blend + .16 * neutral);
+      return Math.round(.64 * blend + .36 * 143);
     });
     pixels.set([...ink, front.captured || front.controlled ? 255 : 239], provinceId * 4);
     count++;
@@ -241,6 +268,8 @@ function gpmHistoricalMapOpenFront(front, provinceKey = null, actorId = null) {
   if (state?.session === ze && state.busy) return;
   if (he._gpmFactionInspector) he.closeInspector();
   gpmCloseRegionalControlBox(he);
+  const map = ke?._gpmHistoricalMap;
+  if (map) map.selectedWar = front.id;
   he._gpmHistoryMapSelection = { session: ze, id: front.id, provinceKey, actorId };
   if (he.activeModule === "military" && he._subSel.military === "historical-conflicts") {
     gpmHistoricalConflictsView(K("content-body")?.querySelector("[data-gpm-history]"), he, ze);
@@ -249,14 +278,91 @@ function gpmHistoricalMapOpenFront(front, provinceKey = null, actorId = null) {
   }
 }
 
-function gpmHistoricalSelectMapFront(front, region, pointer) {
+function gpmHistoricalSelectMapFront(front, region, pointer, opener) {
   if (front.contested && region.provinceKey) {
-    void gpmOpenRegionalControlBox(he, ze, {
-      name: region.name, conflictId: front.id, provinceKey: region.provinceKey,
-      x: pointer?.clientX, y: pointer?.clientY,
+    const map = ke?._gpmHistoricalMap;
+    if (map) map.selectedWar = front.id;
+    gpmOpenRegionalControlBox(he, ze, {
+      region, x: pointer?.clientX, y: pointer?.clientY, opener,
+      mode: iCt("earth"), map,
     });
   } else {
     gpmHistoricalMapOpenFront(front, region.provinceKey);
+  }
+}
+
+function gpmHistoricalFrontsAt(region, mode, area) {
+  if (area) return area.fronts;
+  return mode === "atlas" ? region?.politicalFronts || [] : region?.strategicFronts || [];
+}
+
+function gpmHistoricalFactionCountry(globe, actorId) {
+  const key = globe._gpmHistoricalMap?.actors[actorId]?.countryKey;
+  const feature = key && globe.world.byKey?.get(key);
+  return feature?.__playable ? feature : null;
+}
+
+function gpmOpenHistoricalCountry(globe, country) {
+  globe.setSelected(country.__key);
+  he.openInspector(country.__key, ze, Wk, iue(country));
+}
+
+function gpmHistoricalFactionActions(globe, state, actorId) {
+  const actor = gpmHistoricalNamedFaction(state, actorId);
+  if (!actor) return null;
+  const country = gpmHistoricalFactionCountry(globe, actorId);
+  const holding = state.holdings?.get(actorId);
+  if (!country && !holding) return null;
+  return {
+    id: actorId,
+    openLabel: country ? "Open " + (actorId === "mmr-knu" ? "Karen National Union" : actor.name) : null,
+    zoomLabel: holding ? "Zoom to " + (actor.shortName || actor.name) + " territory" : null,
+  };
+}
+
+function gpmHistoricalRunFactionAction(globe, state, actorId, action) {
+  if (!gpmHistoricalFactionActions(globe, state, actorId)) return;
+  if (action === "open") {
+    const country = gpmHistoricalFactionCountry(globe, actorId);
+    if (!country) return;
+    gpmCloseRegionalControlBox(he);
+    gpmOpenHistoricalCountry(globe, country);
+  } else if (action === "zoom") {
+    const holding = state.holdings?.get(actorId);
+    if (!holding) return;
+    gpmCloseRegionalControlBox(he);
+    // A country may include an occupied or disputed outlying province. Center on verified land.
+    const [lon, lat] = holding.coords;
+    const distance = iCt("earth") === "atlas" ? 2.04 : 2.17;
+    globe.focusLatLon(lon, lat, distance);
+  }
+}
+
+function gpmHistoricalWarHighlight(globe, state, id) {
+  state.selectionDirty = false;
+  const rings = [];
+  if (id) {
+    for (const [key, region] of state.regions) {
+      if (!region.strategicFronts.some(front => front.id === id && !front.crimeReport)) continue;
+      const shape = globe.world.provByKey?.get(key)?.geometry;
+      if (shape?.type === "Polygon") rings.push(...shape.coordinates);
+      if (shape?.type === "MultiPolygon") rings.push(...shape.coordinates.flat());
+    }
+  }
+  let border = state.borders.get("selected");
+  if (border || rings.length) {
+    const geometry = { type: "MultiLineString", coordinates: rings };
+    if (border) Mut(border, geometry, yt * 1.0022, .018);
+    else {
+      border = GO(globe, geometry, { radius: yt * 1.0022, minDeg: .018, order: 44, color: gpmHistoricalMapColors.selected,
+        width: 1.4, opacity: .88, casingColor: 0x111920, casingWidth: 2.2, casingOpacity: .50 });
+      state.borders.set("selected", border);
+    }
+    DP(border, state.showSituation && border.count > 0);
+  }
+  for (const marker of state.markers || []) {
+    const picked = !!id && marker.el._gpmHistoricalLocation?.fronts.some(front => front.id === id);
+    marker.el.toggleAttribute("data-selected-war", !!picked);
   }
 }
 
@@ -267,9 +373,8 @@ function gpmHistoricalOpenFaction(globe, item, actorId) {
     (faction?.kind === "uprising" && faction.countryKey);
   const country = nativeKey && globe.world.byKey?.get(nativeKey);
   if (country?.__playable) {
-    globe.setSelected(nativeKey);
     globe.focusCountry(country);
-    he.openInspector(nativeKey, ze, Wk, iue(country));
+    gpmOpenHistoricalCountry(globe, country);
     return;
   }
   const front = item.fronts.find(front => [front.controllerId, front.administratorId, ...front.actorIds].includes(actorId));
@@ -444,12 +549,11 @@ function gpmHistoricalClickProvince(globe, province, coords) {
   const owner = province.__polityKey || province.__countryKey;
   const nativeOwner = state.data.nativeCountryActors?.[owner];
   if (mode === "strategic") {
-    const fronts = region?.fronts.filter(front => front.strategic !== false);
-    if (!fronts?.length) return false;
-    const picked = state.fills.get(province.__provId)?.front;
-    const disputed = picked?.contested && fronts.includes(picked) ? picked : fronts.find(front => front.contested);
-    if (disputed) {
-      gpmHistoricalSelectMapFront(disputed, { name: region.name, provinceKey: province.__provKey });
+    const fronts = gpmHistoricalFrontsAt(region, mode);
+    if (!fronts.length) return false;
+    const picked = fronts[0];
+    if (picked.contested) {
+      gpmHistoricalSelectMapFront(picked, { name: region.name, provinceKey: province.__provKey, fronts });
       return true;
     }
     if ((picked?.controlled || picked?.captured) && gpmHistoricalNamedFaction(state, picked.controllerId)) {
@@ -472,7 +576,8 @@ function gpmHistoricalClickProvince(globe, province, coords) {
   }
   const picked = state.fills.get(province.__provId)?.front;
   if (picked?.contested) {
-    gpmHistoricalSelectMapFront(picked, { name: region.name, provinceKey: province.__provKey });
+    gpmHistoricalSelectMapFront(picked, { name: region.name, provinceKey: province.__provKey,
+      fronts: gpmHistoricalFrontsAt(region, mode) });
     return true;
   }
   if (gpmHistoricalNamedFaction(state, picked?.controllerId) &&
@@ -489,12 +594,13 @@ function gpmHistoricalClickProvince(globe, province, coords) {
 
 function gpmHistoricalMapPopup(state, item, button, pointer) {
   he.tooltip(null);
-  const disputed = item.fronts.find(front => front.contested && front.control?.length) ||
-    item.fronts.find(front => front.contested);
-  if (disputed) {
-    gpmHistoricalSelectMapFront(disputed, item, pointer);
+  const primary = item.fronts[0];
+  if (!primary) return;
+  if (primary.contested) {
+    gpmHistoricalSelectMapFront(primary, item, pointer, button);
     return;
   }
+  state.selectedWar = primary.id;
   if (item.fronts.length === 1) {
     gpmHistoricalSelectMapFront(item.fronts[0], item, pointer);
     return;
@@ -508,10 +614,10 @@ function gpmHistoricalMapPopup(state, item, button, pointer) {
     const choice = document.createElement("button");
     choice.type = "button";
     choice.className = "k k-sm";
-    choice.textContent = front.name;
+    choice.textContent = front.shortTitle || front.name;
     choice.addEventListener("click", event => {
       popup.hidden = true;
-      gpmHistoricalSelectMapFront(front, item, event);
+      gpmHistoricalSelectMapFront(front, { ...item, fronts: gpmHistoricalOrderedFronts(item.fronts, front) }, event, button);
     });
     popup.append(choice);
   }
@@ -543,7 +649,7 @@ function gpmMountHistoricalMap(globe, session) {
       ${[["active", "Active fighting"], ["ceasefire", "Ceasefires"], ["occupation", "Occupations"]].map(([status, label]) => `
         <label><input type="checkbox" value="${status}" data-gpm-history-map-status${state.statusFilter.has(status) ? " checked" : ""}>
           <i style="--ink:${gpmHistoricalMapInk(status)}" aria-hidden="true"></i>${label}</label>`).join("")}
-      <span><i style="--ink:${gpmHistoricalMapInk("contested")}" aria-hidden="true"></i>Contested areas use the dominant side’s hue</span>
+      <span><i style="--ink:${gpmHistoricalMapInk("contested")}" aria-hidden="true"></i>Muted fill and a neutral border mark contested regions</span>
       <span><i style="--ink:${gpmHistoricalMapInk("captured")}" aria-hidden="true"></i>Yellow border shows captured territory</span>
       <small>Zoom in to read faction names. Select a colored area to inspect its faction.</small>
       <small>Strategic view shows mapped conflict areas and simulated fronts. Select a diamond for details.</small>
@@ -642,12 +748,14 @@ function gpmClearHistoricalMap(globe) {
 
 function gpmPaintHistoricalMap(globe, state, data) {
   state.data = data;
-  const lines = new Map(Object.keys(gpmHistoricalMapColors).map(status => [status, { keys: [], rings: [] }]));
+  const lines = new Map(Object.keys(gpmHistoricalMapColors).filter(status => status !== "selected")
+    .map(status => [status, { keys: [], rings: [] }]));
   const regions = new Map();
   const fills = new Map();
   const locations = [];
   const labels = [];
   const controlled = new Map();
+  const holdings = new Map();
   state.controlAreas = new Map();
   const provinceByKey = globe.world.provByKey || new Map(globe.world.provinces.map(province => [province.__provKey, province]));
   state.actors = data.actors || {};
@@ -657,20 +765,20 @@ function gpmPaintHistoricalMap(globe, state, data) {
     const shown = region.fronts.filter(front => state.statusFilter.has(front.status));
     if (!shown.length) continue;
     const name = Ut(region.key, region.name || province.__name);
-    regions.set(region.key, { ...region, name, fronts: shown });
     const shape = province.geometry;
     const territorial = shown.filter(front => front.political !== false && !front.strategicOnly);
-    const nativeCapture = territorial.find(front => front.captured && !front.contested);
-    const contested = territorial.find(front => front.contested && front.control?.length) ||
-      territorial.find(front => front.contested && (front.dominantKey || front.dominantColor)) ||
-      territorial.find(front => front.contested);
-    const fullControl = !contested && territorial.find(front => front.controlled && !front.native &&
-      gpmHistoricalNamedFaction(state, front.controllerId));
-    const colorFront = nativeCapture || contested || fullControl;
+    const politicalFronts = gpmHistoricalOrderedFronts(territorial);
+    const strategicFronts = gpmHistoricalOrderedFronts(shown.filter(front => front.strategic !== false));
+    regions.set(region.key, { ...region, name, fronts: shown, politicalFronts, strategicFronts });
+    const primary = politicalFronts[0];
+    const nativeCapture = primary?.captured && !primary.contested;
+    const contested = primary?.contested;
+    const fullControl = primary?.controlled && !primary.native && gpmHistoricalNamedFaction(state, primary.controllerId);
+    const colorFront = nativeCapture || contested || fullControl ? primary : null;
     if (colorFront && Number.isInteger(province.__provId)) {
       fills.set(province.__provId, { front: colorFront, ownerKey: province.__polityKey || province.__countryKey });
     }
-    const strategic = shown.filter(front => front.strategic !== false);
+    const strategic = strategicFronts;
     const outlined = strategic.filter(front => !front.crimeReport);
     const hasShape = shape?.type === "Polygon" || shape?.type === "MultiPolygon";
     const status = nativeCapture ? "captured" : contested ? "contested" : fullControl ? "controlled" :
@@ -716,19 +824,38 @@ function gpmPaintHistoricalMap(globe, state, data) {
       labels.push(gpmHistoricalAreaLabel(group, actorId, gpmHistoricalMapName(state.actors[actorId]), fronts));
     }
   }
+  const byCountry = new Map();
+  const selectableFactions = Object.values(state.actors).filter(actor => actor.countryKey &&
+    gpmHistoricalNamedFaction(state, actor.id));
+  const factionKeySet = new Set([...Object.keys(data.nativeCountryActors || {}), ...selectableFactions.map(actor => actor.countryKey)]);
+  for (const province of globe.world.provinces) {
+    const key = province.__polityKey || province.__countryKey;
+    const front = fills.get(province.__provId)?.front;
+    if (!factionKeySet.has(key) || front?.captured || !province.__centroid?.every(Number.isFinite) ||
+        !["Polygon", "MultiPolygon"].includes(province.geometry?.type)) continue;
+    if (!byCountry.has(key)) byCountry.set(key, []);
+    byCountry.get(key).push(province);
+  }
   for (const [key, id] of Object.entries(data.nativeCountryActors || {})) {
     const country = globe.world.byKey?.get(key);
     if (!state.actors[id] || !country) continue;
-    const owned = globe.world.provinces.filter(province =>
-      (province.__polityKey || province.__countryKey) === key &&
-      !fills.get(province.__provId)?.front.captured &&
-      province.__centroid?.every(Number.isFinite) &&
-      ["Polygon", "MultiPolygon"].includes(province.geometry?.type));
+    const owned = byCountry.get(key) || [];
     const stateName = gpmHistoricalMapName(state.actors[id]);
     for (const group of gpmHistoricalProvinceGroups(owned)) {
       const fronts = group.flatMap(province => regions.get(province.__provKey)?.fronts || []);
       labels.push(gpmHistoricalAreaLabel(group, id, stateName, fronts, key));
     }
+  }
+  for (const label of labels) {
+    const actorId = label.actorIds[0];
+    if (label.nativeKey && label.provinceKeys.some(key => regions.get(key)?.politicalFronts[0]?.contested)) continue;
+    const previous = holdings.get(actorId);
+    if (!previous || label.priority > previous.priority) holdings.set(actorId, label);
+  }
+  for (const actor of selectableFactions) {
+    const owned = byCountry.get(actor.countryKey);
+    const province = owned?.find(province => !fills.get(province.__provId)?.front.contested);
+    if (province) holdings.set(actor.id, { coords: province.__centroid });
   }
   for (const [status, line] of lines) {
     const current = state.borders.get(status);
@@ -743,9 +870,9 @@ function gpmPaintHistoricalMap(globe, state, data) {
       const territorialBoundary = status === "contested" || status === "controlled";
       const territory = territorialBoundary || status === "reported";
       const border = GO(globe, geometry, { radius: yt * 1.0021, minDeg: .018, order: captured ? 43 : 40,
-        color: territory ? Hr.atlasProvince : gpmHistoricalMapColors[status],
-        width: captured ? .92 : territory ? .54 : 1.05,
-        opacity: captured ? .72 : territorialBoundary ? .50 : territory ? .26 : .56,
+        color: status === "contested" ? gpmHistoricalMapColors.contested : territory ? Hr.atlasProvince : gpmHistoricalMapColors[status],
+        width: captured ? .92 : territory ? .72 : 1.05,
+        opacity: captured ? .72 : status === "contested" ? .88 : territorialBoundary ? .50 : territory ? .26 : .56,
         casingColor: territory ? Hr.casing : 0x111920,
         casingWidth: captured ? 2.1 : territory ? 1.15 : 1.9,
         casingOpacity: captured ? .13 : territory ? 0 : .4 });
@@ -763,15 +890,22 @@ function gpmPaintHistoricalMap(globe, state, data) {
   }
   state.regions = regions;
   state.fills = fills;
+  state.holdings = holdings;
+  state.selectionDirty = true;
   const controlBox = he._gpmRegionControlBox;
-  if (controlBox && !regions.get(controlBox.provinceKey)?.fronts.some(front =>
-    front.id === controlBox.conflictId && front.contested)) gpmCloseRegionalControlBox(he);
+  if (controlBox) {
+    const region = regions.get(controlBox.provinceKey);
+    const fronts = gpmHistoricalFrontsAt(region, controlBox.mode);
+    if (fronts[0]?.contested) controlBox.render({ ...region, provinceKey: controlBox.provinceKey, fronts });
+    else gpmCloseRegionalControlBox(he);
+  }
   gpmHistoricalPaintFills(globe, state);
   const nativeLabels = new Map(Object.entries(data.nativeCountryActors || {}).map(([key, id]) => {
     const actor = state.actors[id];
     const provinceKeys = labels.filter(label => label.nativeKey === key).flatMap(label => label.provinceKeys).sort();
     return [key, { parent: actor?.sourceCountryKey, signature: [gpmHistoricalMapName(actor), ...provinceKeys].join("|") }];
   }));
+  state.nativeLabelCells = gpmHistoricalLabelCells(globe.world.provinces, data.nativeCountryActors || {});
   const previousNativeLabels = state.nativeLabelOwners || new Map();
   const changedNativeLabels = state.pendingNativeLabelRefits ||= new Set();
   for (const key of new Set([...nativeLabels.keys(), ...previousNativeLabels.keys()])) {
@@ -792,7 +926,7 @@ function gpmPaintHistoricalMap(globe, state, data) {
   state.nativeLabelOwners = nativeLabels;
   const markerLayout = dd(globe, "gpm-history", locations.sort((a, b) => (b.priority || 0) - (a.priority || 0)), {
     layerClass: "gpm-history-map-locations",
-    contentKey: item => JSON.stringify([item.name, item.status, item.fronts.map(front => [front.id, front.name, front.status])]),
+    contentKey: item => JSON.stringify([item.name, item.status, item.fronts.map(front => [front.id, front.shortTitle, front.status])]),
     projectionKey: item => item.coords.join("|"),
     createElement: () => {
       const button = document.createElement("button");
@@ -827,7 +961,7 @@ function gpmPaintHistoricalMap(globe, state, data) {
       el.dataset.provinceKey = item.provinceKey;
       el.style.setProperty("--ink", gpmHistoricalMapInk(item.status));
       const label = item.name + " · " +
-        (item.fronts.length === 1 ? item.fronts[0].name : item.fronts.length + " conflicts");
+        (item.fronts.length === 1 ? item.fronts[0].shortTitle || item.fronts[0].name : item.fronts.length + " conflicts");
       el.setAttribute("aria-label", label);
     },
     project: item => {
@@ -890,6 +1024,15 @@ function gpmPaintHistoricalMap(globe, state, data) {
   globe._frameGate.invalidate();
 }
 
+function gpmPrefetchHistoricalMap(session) {
+  const day = session.day;
+  const revision = session.status?.commitRevision;
+  session._gpmHistoricalPrefetch = at(session, "gpm.historicalMap").then(
+    data => ({ data, day, revision }),
+    () => null
+  );
+}
+
 async function gpmRefreshHistoricalMap(globe, session, territoryChanged = false) {
   if (!globe || !session) return;
   const state = globe._gpmHistoricalMap || gpmMountHistoricalMap(globe, session);
@@ -907,7 +1050,11 @@ async function gpmRefreshHistoricalMap(globe, session, territoryChanged = false)
   state.lastRequest = now;
   const revision = state.territoryRevision;
   try {
-    const result = await at(session, "gpm.historicalMap");
+    const prefetch = session._gpmHistoricalPrefetch;
+    session._gpmHistoricalPrefetch = null;
+    const initial = prefetch && await prefetch;
+    const result = !territoryChanged && initial && initial.day === day && initial.revision === commitRevision
+      ? initial.data : await at(session, "gpm.historicalMap");
     if (globe._gpmHistoricalMap === state && ze === session && revision === state.territoryRevision &&
         Array.isArray(result?.regions)) {
       gpmPaintHistoricalMap(globe, state, result);
@@ -990,6 +1137,10 @@ function gpmPositionHistoricalMap(globe) {
     state.markerLayer.hidden = !showSituation;
     state.labelLayer.hidden = !showTerritory;
     if (state.nativeLabelLayer) state.nativeLabelLayer.visible = showTerritory;
+  }
+  if (showSituation && (state.selectionDirty || state.drawnWar !== state.selectedWar)) {
+    gpmHistoricalWarHighlight(globe, state, state.selectedWar);
+    state.drawnWar = state.selectedWar;
   }
   if (!showSituation && !showTerritory) return;
   const camera = globe.camera;
@@ -1100,12 +1251,12 @@ function gpmHistoricalMapHover(globe, coords) {
   const province = globe.world.provinces[globe._provinceAt(lon, lat)];
   const region = state.regions.get(province?.__provKey);
   if (!region) return null;
-  const political = iCt("earth") === "atlas";
+  const mode = iCt("earth");
+  const political = mode === "atlas";
   const area = political && gpmHistoricalAreaAt(state, province, coords);
-  const fronts = area ? area.fronts : region.fronts.filter(front =>
-    political ? front.political !== false && !front.strategicOnly : front.strategic !== false);
+  const fronts = gpmHistoricalFrontsAt(region, mode, area);
   return fronts.length ? { type: "gpmHistoricalMap", region: { ...region, name: area?.name || region.name, fronts },
-    actors: state.actors, political } : null;
+    actors: state.actors } : null;
 }
 
 function gpmHistoricalMapHoverAt(event) {
@@ -1114,34 +1265,15 @@ function gpmHistoricalMapHoverAt(event) {
   return gpmHistoricalMapHover(ke, ke._latLonAt(event.clientX, event.clientY));
 }
 
-function gpmRenderHistoricalMapTip(node, { region, actors, political }) {
-  const flag = media => {
-    const image = media?.image;
-    return typeof image === "string" && /^data:image\/(?:png|jpeg|webp|svg\+xml);base64,/.test(image)
-      ? `<img src="${b(image)}" alt="${b(media.name || "")}">` : "";
-  };
-  const shownFronts = region.fronts.slice(0, 3).map(front => {
-    const participants = (front.actorIds || []).map(id => actors[id]).filter(actor =>
-      actor && (!political || !actor.strategicOnly));
-    const name = political && front.crimeReport
-      ? participants.map(gpmHistoricalMapName).filter(Boolean).join(" / ") || region.name : front.name;
-    const heading = `<b>${b(name)}</b><small>${b(gpmHistoricalLabel(front.status))}</small>`;
-    const controller = actors[front.controllerId];
-    const administrator = actors[front.administratorId];
-    const controllerName = gpmHistoricalMapName(controller) || (front.occupationKey && U(front.occupationKey));
-    const dominator = front.dominantKey && front.dominantKey === front.secondaryKey ? null :
-      controllerName || (front.dominantKey && U(front.dominantKey));
-    const localControl = front.captured && !front.contested ? `Captured · ${controllerName || dominator || "Unspecified"}`
-      : front.contested ? `Contested${dominator ? " · " + dominator + " dominant" : ""}` : controllerName || "Unspecified";
-    const civilAuthority = administrator?.id !== "sdn-rsf" && (administrator?.administrationName || administrator?.name);
-    const parties = !controller && !front.occupationKey ? participants : [];
-    return `<section>${heading}
-      <small>Military control · ${flag(controller?.identity?.flag)}${b(localControl)}</small>
-      ${civilAuthority ? `<small>Administration · ${flag(administrator?.identity?.administrationFlag)}${b(civilAuthority)}</small>` : ""}
-      ${parties.map(actor => `<small>${flag(actor.identity?.flag)}${b(gpmHistoricalMapName(actor))}</small>`).join("")}</section>`;
-  }).join("");
-  const html = `<strong>${b(region.name)}</strong>` +
-    shownFronts + (region.fronts.length > 3 ? `<small>+${region.fronts.length - 3} more conflicts</small>` : "");
+function gpmRenderHistoricalMapTip(node, { region, actors }) {
+  const front = region.fronts[0];
+  const summary = gpmHistoricalFrontSummary(front, actors);
+  const title = front.shortTitle || front.name;
+  const html = `<strong>${b(region.name)} · ${b(summary.status)}</strong>
+    <small>${b(title)}</small>
+    ${summary.sides && summary.sides !== title ? `<small>${b(summary.sides)}</small>` : ""}
+    ${summary.clue ? `<small>${b(summary.clue)}</small>` : ""}
+    ${region.fronts.length > 1 ? `<small>+${region.fronts.length - 1} more</small>` : ""}`;
   if (!node.classList.contains("gpm-history-map-tip") || node._gpmHistoricalMapHtml !== html) {
     node.classList.remove(...bae);
     node.classList.add("gpm-history-map-tip");
@@ -1151,13 +1283,14 @@ function gpmRenderHistoricalMapTip(node, { region, actors, political }) {
 }
 
 function patchHistoricalConflictMapRenderer(source, replaceOnce) {
-  const functions = [gpmHistoricalMapStatus, gpmHistoricalMapInk, gpmHistoricalMapVisible, gpmHistoricalMapName, gpmHistoricalNativeMapName,
-    gpmHistoricalNativeMapFlag, gpmHistoricalNativeMapActor, gpmHistoricalLabelOwnerAt, gpmHistoricalProvinceColor,
+  const functions = [gpmHistoricalPrimaryFront, gpmHistoricalOrderedFronts, gpmHistoricalMapStatus, gpmHistoricalMapInk, gpmHistoricalMapVisible, gpmHistoricalMapName, gpmHistoricalNativeMapName,
+    gpmHistoricalNativeMapFlag, gpmHistoricalNativeMapActor, gpmHistoricalLabelOwnerAt, gpmHistoricalLabelCells, gpmHistoricalProvinceColor,
     gpmHistoricalAreaMask, gpmHistoricalPaintFills, gpmHistoricalMapOpenFront, gpmHistoricalSelectMapFront,
-    gpmHistoricalOpenFaction, gpmHistoricalNamedFaction, gpmHistoricalLabelMesh,
+    gpmHistoricalFrontsAt, gpmHistoricalFactionCountry, gpmOpenHistoricalCountry, gpmHistoricalFactionActions,
+    gpmHistoricalRunFactionAction, gpmHistoricalWarHighlight, gpmHistoricalOpenFaction, gpmHistoricalNamedFaction, gpmHistoricalLabelMesh,
     gpmHistoricalLabelPath, gpmHistoricalProvinceGroups, gpmHistoricalAreaLabel, gpmHistoricalAreaAt, gpmHistoricalClickProvince,
     gpmHistoricalMapPopup, gpmMountHistoricalMap, gpmClearHistoricalMap, gpmPaintHistoricalMap,
-    gpmRefreshHistoricalMap, gpmPositionHistoricalMap, gpmHistoricalMapHover, gpmHistoricalMapHoverAt,
+    gpmPrefetchHistoricalMap, gpmRefreshHistoricalMap, gpmPositionHistoricalMap, gpmHistoricalMapHover, gpmHistoricalMapHoverAt,
     gpmRenderHistoricalMapTip];
   const mount = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, mount, "\nconst gpmHistoricalMapColors = " + JSON.stringify(colors) +
@@ -1203,7 +1336,7 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
   js = replaceOnce(js, 'else n.classList.remove(...bae),n.textContent=String(e);this._positionTip(t,a)',
     'else if(e?.type==="gpmHistoricalMap")gpmRenderHistoricalMapTip(n,e);else n.classList.remove(...bae),n.textContent=String(e);this._positionTip(t,a)');
   js = replaceOnce(js, 'let n=t3&&ke._latLonAt&&ke.interactive&&!ke._dragging?ke._latLonAt(e.clientX,e.clientY):null,r=',
-    'const gpmHistoryTip=gpmHistoricalMapHoverAt(e);if(gpmHistoryTip){he.tooltip(gpmHistoryTip,e.clientX,e.clientY);return}let n=t3&&ke._latLonAt&&ke.interactive&&!ke._dragging?ke._latLonAt(e.clientX,e.clientY):null,r=');
+    'const gpmHistoryTip=gpmHistoricalMapHoverAt(e);if(gpmHistoryTip){he._hideTooltip?.();he.tooltip(gpmHistoryTip,e.clientX,e.clientY);return}let n=t3&&ke._latLonAt&&ke.interactive&&!ke._dragging?ke._latLonAt(e.clientX,e.clientY):null,r=');
   js = replaceOnce(js, 'e?he.tooltip(lFe(e),g1[0],g1[1]):he.tooltip(null),e&&an.sfx("hover")',
     'e?he.tooltip(gpmHistoricalMapHover(ke,ke._hoverLL)||lFe(e),g1[0],g1[1]):he.tooltip(null),e&&an.sfx("hover")');
   js = replaceOnce(js,
@@ -1226,6 +1359,7 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
   js = replaceOnce(js, "resetSessionVisuals(){this._resetStrikes()", "resetSessionVisuals(){gpmClearHistoricalMap(this);this._resetStrikes()");
   js = replaceOnce(js, "this._updateBaseMarkers(),this._updateFormationMarkers()",
     "this._updateBaseMarkers(),gpmPositionHistoricalMap(this),this._updateFormationMarkers()");
+  js = replaceOnce(js, 'yq("load",u?.saveRepairs)', 'yq("load",u?.saveRepairs),gpmPrefetchHistoricalMap(s)');
   js = replaceOnce(js, 'he.showScreen("game"),Xe("hud-focus")', 'he.showScreen("game"),void gpmRefreshHistoricalMap(ke,ze),Xe("hud-focus")');
   js = replaceOnce(js, 'eFe($s.applyTerritoryChange(p)),$I.clear(),Hk()',
     'eFe($s.applyTerritoryChange(p)),$I.clear(),Hk();void gpmRefreshHistoricalMap(ke,ze,true)');
@@ -1233,25 +1367,7 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
     "$s.onTerritoryProjected=p=>{ke._territoryMutated=!0,eFe(p);void gpmRefreshHistoricalMap(ke,ze,true)}");
   js = replaceOnce(js, '{id:"module",run:()=>he.refreshTabTick(ze,e)},',
     '{id:"module",run:()=>he.refreshTabTick(ze,e)},{id:"ppo-historical-map",run:()=>{void gpmRefreshHistoricalMap(ke,ze)}},');
-  const existingPanel = "  if (state.host === host && state.playerKey === session.playerKey) {";
-  return replaceOnce(js, existingPanel, `
-  const mapSelection = ui._gpmHistoryMapSelection;
-  const fromMap = mapSelection?.session === session;
-  if (fromMap) {
-    ui._gpmHistoryMapSelection = null;
-    state.selectedId = mapSelection.id;
-    state.regionKey = mapSelection.provinceKey;
-    state.actorId = mapSelection.actorId;
-    state.filter = "";
-    state.query = "";
-    state.term = null;
-  }
-${existingPanel}
-    if (fromMap) {
-      host.querySelector("[data-history-search]").value = "";
-      void state.load(state.selectedId, true);
-      return;
-    }`);
+  return js;
 }
 
 module.exports = { patchHistoricalConflictMapRenderer };
