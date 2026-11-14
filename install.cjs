@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Stabilization Hotfix.
+  archive: "6813f676955c48a973909da7325bf87a7bf875f1590834f090b122caf54afd8b",
+  worker: "a7bfb4e17d374a49303d255690bedb17cdc5e6340cbeb1a6575e7be73e3bc4a9",
+  renderer: "94dd70ed5c0fced7c3c6b638ddb49f0504e58844c07a9d189665c937b82bb704",
+  executable: "a5dbe48fca4da6a8a2836821b687f598d2ff15449274ef9e23abe14c677d74a0",
+}, {
   // Political Control Borders.
   archive: "239ed1c6ef396e16e964503b22c809d6222b32639bcacc9d53360a4f5d3a1f3a",
   worker: "330ee4b1388cae85a1b3fb987e7af5dbc01e2ff635f0b2cfba44df50e490b44f",

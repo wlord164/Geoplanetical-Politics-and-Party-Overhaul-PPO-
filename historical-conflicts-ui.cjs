@@ -169,6 +169,8 @@ function gpmHistoricalActor(actor, outcome) {
     Number.isFinite(strength.gamePersonnel) ? `${strength.gamePersonnel.toLocaleString(cs())} scenario personnel` : null,
     Number.isFinite(strength.readiness) ? `${new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 0 }).format(strength.readiness)} scenario readiness` : null,
   ].filter(Boolean).join(" · ") : "";
+  const capabilityBasis = strength?.basis === "scenario-estimate" ? "Comparative scenario estimate" :
+    strength?.basis === "native-roster" ? "Native game roster" : "";
   const native = actor.nativeForces;
   const nativeForces = native && [
     native.active == null ? null : `${native.active.toLocaleString(cs())} active`,
@@ -210,11 +212,12 @@ function gpmHistoricalActor(actor, outcome) {
     ${actor.governingProgram ? `<div><b>Governing program</b><p>${b(actor.governingProgram)}</p><ul class="gpm-history-sources">${gpmHistoricalSourceList(actor.governingProgramSources)}</ul></div>` : ""}
     ${actor.victoryName && (!outcome || ["national", "autonomy", "independence", "native", "local"].includes(outcome.scope)) ? `<div><b>Formal name if victorious</b><p>${b(actor.victoryName)}${actor.victoryAdministration ? ` · ${b(actor.victoryAdministration)}` : ""}</p>${actor.victoryGovernment ? `<p>${b(actor.victoryGovernment)}</p>` : ""}<small>${b(actor.victoryKind)}</small><ul class="gpm-history-sources">${gpmHistoricalSourceList(actor.victorySources)}</ul></div>` : ""}
     ${actor.objectives?.length ? `<div><b>Objectives</b><ul>${actor.objectives.map(objective => `<li>${b(objective)}</li>`).join("")}</ul></div>` : ""}
-    ${strength ? `<div><b>Strength estimate</b><br>${b(strength.range || "Uncertain")}
+    ${strength ? `<div><b>Strength estimate</b><br>${b(strength.range || capabilityBasis || "Uncertain")}
       ${strength.asOf ? `<small> · ${b(strength.asOf)}</small>` : ""}${strength.confidence ? `<small> · ${b(gpmHistoricalLabel(strength.confidence))} confidence</small>` : ""}
       ${strength.note ? `<p>${b(strength.note)}</p>` : ""}${estimates ? `<ul class="gpm-history-sources">${estimates}</ul>` : ""}
       ${components ? `<ul>${components}</ul>` : ""}
-      ${simulation ? `<p><b>Starting simulation values</b> · ${b(simulation)}</p>` : ""}</div>` : `<p>No corroborated force estimate in this catalog.</p>`}
+      ${strength.basis === "scenario-estimate" && strength.range ? `<small>${b(capabilityBasis)}</small>` : ""}
+      ${simulation ? `<p><b>Starting simulation values</b> · ${b(simulation)}</p>` : ""}</div>` : ""}
     ${nativeForces ? `<p><b>National armed forces in the game</b> · ${b(nativeForces)}</p>` : ""}
     ${laws ? `<details><summary>Governing laws and policies</summary><ul>${laws}</ul></details>` : ""}
     ${actor.nativeGovernment ? `<p>See the Laws screen for national laws.</p>` : ""}
@@ -359,12 +362,20 @@ function gpmHistoricalControlSummary(region, conflict, authority, compact = fals
     ${names.length ? `<p>Known parties · ${b(names.join(" / "))}</p>` : ""}`;
 }
 
+function gpmHistoricalControlStatus({ contested, captured, controlled, modeledContact, reportedRegion }) {
+  if (contested) return "Contested";
+  if (captured) return "Captured";
+  if (controlled) return "Held";
+  if (modeledContact) return "Modeled front";
+  return reportedRegion ? "Reported area" : null;
+}
+
 function gpmHistoricalFrontSummary(front, actors) {
   const sideName = id => actors[id]?.shortName || actors[id]?.name;
   const sides = (front.sides || []).map(side => [...new Set(side.map(sideName).filter(Boolean))].join(", ")).filter(Boolean);
   const controller = sideName(front.controllerId);
   const reported = sideName(front.reportedDominantId);
-  const status = front.contested ? "Contested" : front.captured ? "Captured" : front.controlled ? "Held" : gpmHistoricalLabel(front.status);
+  const status = gpmHistoricalControlStatus(front) || gpmHistoricalLabel(front.status);
   const name = controller || (front.occupationKey && U(front.occupationKey));
   const clue = front.contested ? reported && (reported + " reported dominant") :
     (front.captured || front.controlled) && name;
@@ -479,14 +490,19 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
     conflict.regions.find(region => region.currentContested ?? region.contested) || conflict.regions[0];
   const name = region => Ut(region.key, region.name);
   const authority = id => actors.get(id)?.shortName || actors.get(id)?.name || U(id);
+  const describeControl = region => gpmHistoricalControlStatus({ ...region,
+    contested: region.currentContested ?? region.contested,
+    captured: !!region.occupationKey && !region.currentContested });
   const category = region => {
-    if (region.currentContested ?? region.contested) return "contested";
+    const status = describeControl(region);
+    if (status === "Contested") return "contested";
+    if (status === "Captured") return "captured";
     const controller = region.currentController ?? region.controller;
-    if (!controller || region.modeledContact && !region.occupationKey) return "unmapped";
+    if (!region.controlled || !controller) return "unmapped";
     const side = conflict.sides?.findIndex(members => members.includes(controller));
     return side === 0 ? "first" : side === 1 ? "second" : "other";
   };
-  const colors = { contested: "#af7643", first: "#416b86", second: "#7d64a3", other: "#56826d", unmapped: "#525b66" };
+  const colors = { contested: "#af7643", captured: "#b6a153", first: "#416b86", second: "#7d64a3", other: "#56826d", unmapped: "#525b66" };
   const world = ui.globe?.world;
   const byKey = new Map(conflict.regions.map(region => [region.key, region]));
   const signature = JSON.stringify([...byKey.keys()]);
@@ -506,14 +522,11 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
         <title>${b(name(region))} · ${b(regionStatus(region))}</title></path>`;
     }).join("")}</svg>`;
   const labels = {
-    contested: "Contested", first: authority(conflict.sides?.[0]?.[0]), second: authority(conflict.sides?.[1]?.[0]),
+    contested: "Contested", captured: "Captured", first: authority(conflict.sides?.[0]?.[0]), second: authority(conflict.sides?.[1]?.[0]),
     other: "Other actor", unmapped: "Control unspecified",
   };
   const categories = new Set(conflict.regions.map(category));
-  const regionStatus = region => (region.currentContested ?? region.contested) ? "Contested"
-    : region.occupationKey ? "Occupied"
-    : region.modeledContact ? "War front"
-    : (region.currentController ?? region.controller) ? "Controlled" : "Control unspecified";
+  const regionStatus = region => describeControl(region) || "Control unspecified";
   const militaryControl = (selected.currentContested ?? selected.contested) || selected.control?.length
     ? `<section class="gpm-history-control" aria-label="Military control breakdown" data-history-military-control>
       <b>Military control</b>${gpmHistoricalControlSummary(selected, conflict, authority, false, true)}</section>` : "";
@@ -526,10 +539,10 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
       <select class="k" data-authority-safe data-history-region-picker data-focus-key="history-region-picker">${conflict.regions.map(region =>
         `<option value="${b(region.key)}"${region === selected ? " selected" : ""}>${b(name(region))} · ${b(regionStatus(region))}</option>`).join("")}</select></label>
     <div class="sh-inset gpm-history-region">${militaryControl || `<p><b>${b(regionStatus(selected))}</b>
-      ${(!selected.modeledContact || selected.occupationKey) && (selected.currentController ?? selected.controller) ? ` · ${b(authority(selected.currentController ?? selected.controller))}` : ""}</p>`}
+      ${selected.controlled && selected.currentController ? ` · ${b(authority(selected.currentController))}` : ""}</p>`}
     <details class="gpm-history-section" data-history-panel="region"><summary data-focus-key="history-region-details">Region details</summary>
       <dl>${selected.controller && selected.controller !== selected.currentController ? `<dt>Opening controller</dt><dd>${b(authority(selected.controller))}</dd>` : ""}
-      ${selected.currentController && (!selected.modeledContact || selected.occupationKey) ? `<dt>Current controller</dt><dd>${b(authority(selected.currentController))}</dd>` : ""}
+      ${selected.currentController && (selected.controlled || selected.occupationKey || selected.currentContested) ? `<dt>Current controller</dt><dd>${b(authority(selected.currentController))}</dd>` : ""}
       ${selected.administrator ? `<dt>Administrator</dt><dd>${b(authority(selected.administrator))}</dd>` : ""}
       ${selected.legalOwner ? `<dt>Legal owner</dt><dd>${b(U(selected.legalOwner))}</dd>` : ""}
       ${selected.occupationKey ? `<dt>Current occupation</dt><dd>${b(U(selected.occupationKey))}</dd>` : ""}
@@ -846,7 +859,7 @@ function gpmBuildHistoricalConflicts(container, ui, session) {
 function patchHistoricalConflictsRenderer(source, replaceOnce) {
   const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalSource, gpmHistoricalSourceList, gpmHistoricalActor,
     gpmMountHistoricalInspector, gpmHistoricalFactionHeading, gpmHistoricalFactionProfile, gpmOpenHistoricalFactionInspector,
-    gpmHistoricalControlSummary, gpmHistoricalFrontSummary, gpmHistoricalOverlayFront, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,
+    gpmHistoricalControlSummary, gpmHistoricalControlStatus, gpmHistoricalFrontSummary, gpmHistoricalOverlayFront, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,
     gpmHistoricalRegions, gpmHistoricalDetail, gpmHistoricalConflictsView, gpmBuildHistoricalConflicts];
   const initialize = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, initialize, "\nconst gpmHistoricalConflictsStyle = " + JSON.stringify(style) + ";\n"

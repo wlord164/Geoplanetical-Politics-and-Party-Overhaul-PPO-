@@ -202,6 +202,7 @@ function gpmSudanReunify(sim) {
   }
   const returned = kP(sim, plan);
   if (!returned.ok || sim.countries.has(rival.key)) throw new Error("Sudan wartime administration could not retire");
+  gpmRetireBreakawayFlag(sim, rival, tasisWon ? country : null);
   // The Tasis charter gives its own English rendering of the continuing state name.
   VPt(sim, country.key, tasisWon ? "Republic of Sudan" : "");
   const winnerActor = row.nativeActors?.[decision.winner] || (tasisWon ? gpmSudanRivalActor : "sdn-saf");

@@ -61,13 +61,14 @@ function gpmUprisingReason(reason) {
     flag: "Choose a supported flag image.",
     case_exists: "An uprising has already taken place in this campaign.",
     founder_control: "Switch to the legal founding party to review an uprising.",
-    unsupported_party_roles: "Your party must hold no government offices or assembly seats.",
+    incumbent_required: "An incumbent party must be in government before an uprising can begin.",
+    unsupported_party_roles: "Your party must be outside the government and its formal support agreements.",
     existing_war: "The current conflict must end before an uprising can begin.",
     territory: "The country needs an unoccupied region outside its capital with a land border to the rest of the country.",
     headquarters_required: "Establish party headquarters to set your starting region.",
     headquarters_region: "Relocate party headquarters to an eligible region.",
     headquarters_foothold: "Raise foothold in your headquarters region to the target shown above.",
-    division_required: "Finish preparing at least one division before declaring.",
+    division_required: "Complete training and receive equipment for at least one division before declaring.",
     division_manpower: "The joining regions cannot staff a prepared division.",
     stale: "The declaration terms changed. Review the updated proposal before confirming.",
     result: "A decisive war result is required for reunification.",
@@ -80,8 +81,10 @@ function gpmUprisingPreparationReason(reason) {
     region: "The capital, occupied regions, and ineligible territories cannot receive investment.",
     resources: "The party does not have enough available activists.",
     headquarters: "The headquarters is already in this region.",
+    headquarters_required: "Establish an eligible party headquarters to receive equipment.",
     headquarters_region: "The capital, occupied regions, and ineligible territories cannot host the uprising headquarters.",
     division_terms: "Select an available division type and equipment kit.",
+    foreign_funding_required: "Accept a grant in My Party > Foreign Funding to unlock Standard equipment.",
     budget: "The party treasury cannot cover the cost.",
     wing: "Form the party wing first.",
     formed: "The party wing is already formed.",
@@ -191,7 +194,9 @@ function gpmUprisingRoster(roster) {
       ? " · " + gpmUprisingPersonnel(unit.manpowerK) + " / " + gpmUprisingPersonnel(unit.requiredK) + " personnel"
         + (unit.understrength ? " · Understrength at declaration" : "")
       : "";
-    const label = unit.label + " · " + unit.kitLabel + staffing;
+    const recruits = unit.cadreK ?? unit.activistsK;
+    const label = unit.label + " · " + unit.kitLabel + staffing
+      + (recruits > 0 ? " · " + gpmUprisingPersonnel(recruits) + " party recruits" : "");
     grouped.set(label, (grouped.get(label) || 0) + 1);
   }
   return '<ul class="gpm-uprising-roster">' + [...grouped].map(([label, count]) =>
@@ -213,30 +218,46 @@ function gpmUprisingEquipmentLabel(item) {
 function gpmUprisingDivisionPanel(division, state, prep, button, date, money, credits, reason, percent) {
   const { options, type, kit } = gpmUprisingSelectedDivision(division, state);
   const quote = kit?.quote;
-  const cost = Number.isFinite(quote?.cash) && Number.isFinite(quote?.days)
-    ? money(quote.cash) + (quote.creditCost > 0 ? " + " + credits(quote.creditCost) : "") + " · " + quote.days + " days."
+  const cost = Number.isFinite(quote?.cash) && Number.isFinite(quote?.activistsK)
+    ? money(quote.cash) + (quote.creditCost > 0 ? " + " + credits(quote.creditCost) : "")
+      + " · " + gpmUprisingPersonnel(quote.activistsK) + " activists leave the party pool permanently."
     : "";
   const opts = (choices, selected) => choices.map(choice =>
     '<option value="' + b(choice.id) + '"' + (selected === choice ? " selected" : "") + ">" + b(choice.label) + "</option>").join("");
-  const equipment = (kit?.equipment || []).filter(item => item.units > 0).map(item =>
+  const equipmentList = items => (items || []).filter(item => item.units > 0).map(item =>
     Number(item.units).toLocaleString(cs()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
+  const equipment = equipmentList(kit?.equipment);
+  const stock = equipmentList(division.stockpile);
+  const headquarters = prep.headquarters;
+  const destination = headquarters?.eligible && headquarters.name || "party headquarters";
+  const stockpile = stock || headquarters?.eligible
+    ? "<p><strong>HQ stockpile</strong> · " + b(stock ? stock + " reserved for divisions" : "Empty") + "</p>"
+    : "";
+  const schedule = quote?.ok && Number.isFinite(quote.deliveryDay) && Number.isFinite(quote.endDay)
+    ? "<small>Equipment arrives at " + b(destination) + " on " + b(date(quote.deliveryDay)) + ". Division ready on "
+      + b(date(quote.endDay)) + ".</small>" : "";
   const project = division.project;
+  const delivery = project?.delivered ? "Equipment reserved at headquarters."
+    : project?.deliveryPaused ? "Equipment delivery is waiting for an eligible headquarters."
+    : Number.isFinite(project?.deliveryDay) ? "Equipment due " + date(project.deliveryDay) + "." : "";
   const controls = project
     ? "<p>" + b(project.label || "Division") + (project.kitLabel ? " · " + b(project.kitLabel) : "")
-      + "</p><small>Ready " + b(date(project.endDay)) + ".</small>"
+      + "</p>" + (delivery ? "<small>" + b(delivery) + "</small>" : "")
+      + "<small>" + (project.deliveryPaused ? "Training scheduled to finish " : "Ready ") + b(date(project.endDay)) + (project.activistsK
+        ? " · " + b(gpmUprisingPersonnel(project.activistsK)) + " activists recruited" : "") + ".</small>"
     : kit
       ? '<label class="gpm-uprising-prep-item">Division type<select class="k" data-gpm-uprising-field="division-type">'
         + opts(options, type) + '</select></label>'
         + '<label class="gpm-uprising-prep-item">Equipment kit<select class="k" data-gpm-uprising-field="equipment-kit">'
         + opts(type.kits, kit) + '</select></label>'
         + (equipment ? "<small>" + b(equipment) + "</small>" : "")
-        + "<small>" + b(cost + reason(quote)) + "</small>" + button("recruit", "Prepare Division", !quote?.ok)
+        + "<small>" + b(cost + reason(quote)) + "</small>" + schedule + button("recruit", "Prepare Division", !quote?.ok)
       : "<small>Division preparation is unavailable.</small>";
   const capacity = "Capacity grows by one for each eligible region at " + percent.format(prep.capacityThreshold)
     + " foothold, plus one when the headquarters reaches " + percent.format(prep.threshold) + ".";
   return '<div class="sh-inset"><strong>Prepared divisions</strong><p>' + b(String(division.count)) + " of "
     + b(String(division.limit)) + " prepared · " + b(credits(division.credits)) + " available</p>"
-    + gpmUprisingRoster(division.roster) + "<small>" + b(capacity)
+    + stockpile + gpmUprisingRoster(division.roster) + "<small>" + b(capacity)
     + " Prepared divisions use the joining regions’ available personnel and deploy at headquarters.</small>" + controls + "</div>";
 }
 
@@ -353,7 +374,7 @@ function gpmUprisingReadiness(prep, percent) {
         : "Establish party headquarters in an eligible region" },
     { ready: !!headquarters?.ready,
       text: "Headquarters foothold " + (headquarters?.key ? percent.format(headquarters.foothold) : "—") + " / " + percent.format(threshold) },
-    { ready: division.count > 0, text: division.count > 0 ? "At least one division prepared" : "Prepare at least one division" },
+    { ready: division.count > 0, text: division.count > 0 ? "At least one division trained and equipped" : "Train and equip at least one division" },
   ];
   if (headquarters?.key && !headquarters.eligible) items[0].text = "Relocate headquarters to an eligible region";
   return '<ul class="gpm-uprising-readiness" aria-label="Declaration requirements">' + items.map(({ ready, text }) =>
@@ -409,6 +430,8 @@ function gpmUprisingPanel(state, ui) {
       return victory
         ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.victoryName || data.breakawayName)
           + seatOutcome + ".</p><p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
+          + (data.integratedDivisions ? "<p>Breakaway divisions transferred to the national military: "
+            + b(String(data.integratedDivisions)) + ".</p>" : "")
           + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")
         : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(party) + " is banned.</p>";
     }
@@ -447,6 +470,11 @@ function gpmUprisingPanel(state, ui) {
   const nameOutcome = data.restoresOriginalName ? "Victory restores <strong>" + b(data.victoryName) + "</strong>."
     : "The reunited country keeps the breakaway name.";
   const heading = state.confirm ? "Confirm declaration" : "Declaration preview";
+  const vacatedSeats = data.vacatedSeats > 0
+    ? "<p>Your party gives up " + b(String(data.vacatedSeats))
+      + (data.vacatedSeats === 1 ? " seat" : " seats")
+      + " in the original legislature when you declare. Larger parties receive priority in the redistribution.</p>"
+    : "";
   const controls = state.confirm
     ? actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading))
     : actions(button("review", "Review Declaration", state.loading), button("refresh", "Refresh", state.loading));
@@ -460,6 +488,7 @@ function gpmUprisingPanel(state, ui) {
     + "</dd>" + preparationSummary + "<dt>Current base national support</dt><dd>" + b(before) + "</dd></dl>"
     + "<p>Declaring transfers your control to the breakaway government based in " + b(region)
     + " and starts a civil war with " + b(data.parentName) + ".</p>"
+    + vacatedSeats
     + (state.confirm && data.preparations ? "<p>Any unfinished projects and outstanding aid requests end at declaration.</p>" : "")
     + '<div class="gpm-uprising-outcomes">'
     + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country'
@@ -627,7 +656,7 @@ function gpmBindUprising(profile, view, ui) {
       form: "Party wing formed.",
       invest: "Regional investment started.",
       headquarters: "Headquarters project started.",
-      recruit: "Division preparation started.",
+      recruit: "Division preparation and equipment delivery scheduled.",
       aidRequest: "Foreign aid requested.",
       aidAccept: "Foreign aid accepted.",
       aidDecline: "Foreign aid declined.",
@@ -750,6 +779,9 @@ function patchUprisingRenderer(source) {
   const styleMount = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;";
   replaceOnce(styleMount, styleMount.replace(";", " + gpmUprisingStyle;"));
   const flagLookup = "function m4(e){return n8(),e=Vc(e),e?NA.get(e)||nB.get(e)||B9(e):null}";
+  const { dynamicFlagKey } = require("./party-uprising.cjs");
+  replaceOnce("l7e=e=>Emt.test(a8(e))||vX(a8(e))!==null",
+    `l7e=e=>Emt.test(a8(e))||vX(a8(e))!==null||${dynamicFlagKey}.test(a8(e))`);
   replaceOnce(flagLookup, `function m4(e){
     const data=n8(),key=Vc(e);
     if(!key)return null;
@@ -757,6 +789,12 @@ function patchUprisingRenderer(source) {
     return NA.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||nB.get(key)||B9(key)||
       (parent&&(NA.get(parent)||nB.get(parent)||B9(parent)))||null;
   }`);
+  replaceOnce("function h4(e){return m7e(n8(),e)}",
+    'function h4(e){const data=n8(), mode=m7e(data,e), legacy=data?.gpmUprisingFlags?.[Vc(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
+  replaceOnce("function $9(e){let t=n8();return t?.images?.[t?.image?.[Vc(e)]]||null}",
+    'function $9(e){const data=n8(),key=Vc(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
+  replaceOnce("function w7e(e){return n8(),e=Vc(e),e?nB.get(e)||B9(e):null}",
+    'function w7e(e){const data=n8(),key=Vc(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(nB.get(key)||B9(key)||(parent&&(NA.get(parent)||nB.get(parent)||B9(parent)))||null):null}');
   const initialize = "\nmountPartyButtons();\n";
   replaceOnce(initialize, "\nconst gpmUprisingStyle = " + JSON.stringify(style) + ";\n"
     + rendererFunctions.join("\n") + initialize);

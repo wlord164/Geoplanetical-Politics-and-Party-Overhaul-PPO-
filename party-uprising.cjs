@@ -6,6 +6,7 @@ const officialNames = require("./party-official-country-names.cjs");
 const { workerFunctions: naming } = require("./party-uprising-names.cjs");
 const { workerFunctions: regimes } = require("./party-uprising-regimes.cjs");
 const { workerFunctions: continuity } = require("./party-uprising-continuity.cjs");
+const dynamicFlagKey = /^(?:ppo-uprising-[a-z0-9][a-z0-9:-]*-\d+|gpm-historical-[a-z0-9][a-z0-9:-]*)$/;
 const preparationCode = readFileSync(join(__dirname, "party-uprising-preparations.js"), "utf8");
 const uprisingCode = readFileSync(join(__dirname, "party-uprising-worker.js"), "utf8");
 const workerCode = "const gpmUprisingOfficialNames = " + JSON.stringify(officialNames) + ";\n" +
@@ -25,6 +26,10 @@ function patchUprisingWorker(source, replaceOnce) {
     ['(a==="gpm.foreignFunding"?',
       '(a==="gpm.uprising"?gpmUprising.view(r):a==="gpm.foreignFunding"?'],
     ['independence:tbt(e)})', 'independence:tbt(e),gpmUprisingFlags:gpmUprising.flags(e)})'],
+    ['vg=e=>Mbo.test(VP(e))||_ke(VP(e))!==null',
+      `vg=e=>Mbo.test(VP(e))||_ke(VP(e))!==null||${dynamicFlagKey}.test(VP(e))`],
+    ['setBaseFlag(t){return{ok:YXa(this,t)}}',
+      'setBaseFlag(t){const ok=YXa(this,t);if(ok)gpmUprising.clearLegacyFlag(this,t);return{ok}}'],
     ['e._onWarEnd&&e._onWarEnd(u)}function Zyt(',
       'e._onWarEnd&&e._onWarEnd(u),gpmUprising.record(e,s,a)}function Zyt('],
     ['t.support.e<=0&&!e.playerControlsGovernment(a)&&Zyt',
@@ -53,4 +58,4 @@ function patchUprisingWorker(source, replaceOnce) {
   return anchors.reduce((code, [anchor, replacement]) => replaceOnce(code, anchor, replacement), source);
 }
 
-module.exports = { patchUprisingWorker };
+module.exports = { patchUprisingWorker, dynamicFlagKey };

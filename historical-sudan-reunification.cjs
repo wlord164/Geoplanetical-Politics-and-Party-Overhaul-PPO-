@@ -6,7 +6,7 @@ const worker = readFileSync(join(__dirname, "historical-sudan-reunification.js")
 
 function patchSudanReunificationWorker(source, replaceOnce) {
   const hooks = [
-    ['function gpmHistoricalStrength(actorId)', worker + '\nfunction gpmHistoricalStrength(actorId)'],
+    ['function gpmHistoricalStrength(sim, actorId, kind)', worker + '\nfunction gpmHistoricalStrength(sim, actorId, kind)'],
     ['let c=e.countries.get(t),u=IOe(e,l),d=HE(e,o,s,i,l);',
       'let c=e.countries.get(t),u=IOe(e,l),d=gpmHistoricalCivilWarTerms(e,o,s,i,l,undefined,"negotiated-concession");'],
     ['l=kG(e,t,i.key,s.key),c=IOe(e,l),u=HE(e,t,i.key,s.key,l);',

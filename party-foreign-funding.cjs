@@ -126,6 +126,11 @@ function partyForeignFundingGrants(state) {
   return state?.grants || (state?.grant ? [state.grant] : []);
 }
 
+function partyForeignFundingHasAcceptedGrant(state) {
+  return !!(state && (state.hasAcceptedGrant || partyForeignFundingGrants(state).some(grant => grant.amountM > 0) ||
+    ["declared", "settled", "kept", "repaid"].includes(state.last?.status) && state.last.amountM > 0));
+}
+
 function partyForeignFundingStoreGrants(state, grants) {
   state.grants = grants;
   delete state.grant;
@@ -143,6 +148,7 @@ function partyForeignFundingCurrentGrant(state) {
 function partyForeignFundingMerge(sim, country, survivor, absorbedId, previous) {
   if (previous) {
     const state = partyForeignFundingState(survivor);
+    state.hasAcceptedGrant = partyForeignFundingHasAcceptedGrant(state) || partyForeignFundingHasAcceptedGrant(previous);
     state.nextRequestDay = Math.max(state.nextRequestDay || 0, previous.nextRequestDay || 0);
     const grants = [...partyForeignFundingGrants(state), ...partyForeignFundingGrants(previous)]
       .sort((a, b) => a.closeDay - b.closeDay);
@@ -193,6 +199,7 @@ function partyForeignFundingRequest(sim, country, party, input) {
 }
 
 function partyForeignFundingReceipt(state, deal, status, day, extra = {}) {
+  if (partyForeignFundingHasAcceptedGrant(state)) state.hasAcceptedGrant = true;
   state.last = { status, day, donor: deal.donor, amountM: deal.amountM, ...extra };
 }
 
@@ -294,6 +301,7 @@ function partyForeignFundingAnswer(sim, country, party, input, action) {
   }
   if (!partyForeignFundingTransfer(donor, party, offer.amountM)) return { ok: false, reason: "capacity" };
   state.offer = null;
+  state.hasAcceptedGrant = true;
   if (offer.visibility === "declared") {
     const credibilityLost = partyForeignFundingPenalty(country, party, 2);
     partyForeignFundingReceipt(state, offer, "declared", day, { credibilityLost });
@@ -412,7 +420,7 @@ module.exports = {
   workerFunctions: [partyForeignFundingTreasury, partyForeignFundingTransfer, partyForeignFundingParticipant,
     partyForeignFundingDonor, partyForeignFundingDonorLabel, partyForeignFundingLeftAffinity, partyForeignFundingAmounts, partyForeignFundingQuote,
     partyForeignFundingSeatShare,
-    partyForeignFundingDirectory, partyForeignFundingRoll, partyForeignFundingState, partyForeignFundingGrants,
+    partyForeignFundingDirectory, partyForeignFundingRoll, partyForeignFundingState, partyForeignFundingGrants, partyForeignFundingHasAcceptedGrant,
     partyForeignFundingStoreGrants, partyForeignFundingCurrentGrant, partyForeignFundingMerge, partyForeignFundingRequest,
     partyForeignFundingReceipt, partyForeignFundingPenalty, partyForeignFundingSettle, advancePartyForeignFunding,
     partyForeignFundingAnswer, advancePartyForeignFundingAI, registerPartyForeignFunding, partyForeignFundingView],

@@ -12,14 +12,14 @@ const uprisingPreparationRules = {
 };
 
 const uprisingDivisionTypes = {
-  infantry: { label: "Infantry", cash: .036, days: 24 },
-  motorized: { label: "Motorized", cash: .052, days: 28 },
-  mechanized: { label: "Mechanized", cash: .082, days: 35 },
-  artillery: { label: "Artillery", cash: .066, days: 31 },
+  infantry: { label: "Infantry", cash: .036, days: 24, activistsK: .08 },
+  motorized: { label: "Motorized", cash: .052, days: 28, activistsK: .12 },
+  mechanized: { label: "Mechanized", cash: .082, days: 35, activistsK: .16 },
+  artillery: { label: "Artillery", cash: .066, days: 31, activistsK: .14 },
 };
 const uprisingEquipmentKits = {
-  basic: { label: "Basic", share: .50, extraCash: 0, extraDays: 0 },
-  standard: { label: "Standard", share: 1, extraCash: .026, extraDays: 7 },
+  basic: { label: "Basic", share: .50, extraCash: 0, extraDays: 0, deliveryDays: 10 },
+  standard: { label: "Standard", share: 1, extraCash: .026, extraDays: 7, foreignFunding: true },
 };
 const uprisingLegacyDivision = { type: "infantry", kit: "basic" };
 
@@ -29,7 +29,9 @@ function gpmUprisingRoster(state) {
 }
 
 function gpmUprisingTraining(state) {
-  return state?.training ? { ...uprisingLegacyDivision, ...state.training } : null;
+  if (!state?.training) return null;
+  const project = { ...uprisingLegacyDivision, ...state.training };
+  return { deliveryDay: project.endDay, ...project };
 }
 
 function gpmUprisingDivisionLabel(division) {
@@ -39,7 +41,7 @@ function gpmUprisingDivisionLabel(division) {
 
 function gpmUprisingPreparationState(party) {
   return party.gpmUprisingPreparations ??= {
-    wing: false, regions: {}, divisions: [], training: null, credits: 0,
+    wing: false, regions: {}, divisions: [], stockpile: {}, training: null, credits: 0,
     aid: { nextRequestDay: 0, pending: null, offer: null, last: null },
   };
 }
@@ -100,18 +102,69 @@ function gpmUprisingDivisionEquipment(type, kit) {
     ({ id, units: Math.ceil(units * uprisingEquipmentKits[kit].share) }));
 }
 
-function gpmUprisingRecruitmentQuote(sim, party, capacity, type, kit) {
+function gpmUprisingKitInventory(type, kit) {
+  return Object.fromEntries(gpmUprisingDivisionEquipment(type, kit).map(({ id, units }) => [id, units]));
+}
+
+function gpmUprisingStockpile(state) {
+  if (state?.stockpile) return { ...state.stockpile };
+  const stock = {};
+  for (const { type, kit } of gpmUprisingRoster(state)) {
+    for (const [id, units] of Object.entries(gpmUprisingKitInventory(type, kit))) {
+      stock[id] = (stock[id] || 0) + units;
+    }
+  }
+  return stock;
+}
+
+function gpmUprisingStockedDivisions(state) {
+  const stock = gpmUprisingStockpile(state);
+  // A delivery belongs to its own project as soon as it arrives.
+  if (state?.training?.delivered) {
+    for (const [id, units] of Object.entries(state.training.equipment || {})) stock[id] = (stock[id] || 0) - units;
+  }
+  const ready = [];
+  for (const division of gpmUprisingRoster(state)) {
+    const equipment = division.equipment || (!state.stockpile && gpmUprisingKitInventory(division.type, division.kit));
+    if (!equipment) continue;
+    const items = Object.entries(equipment);
+    if (!items.length || !items.every(([id, units]) => Number.isInteger(units) && units > 0 && stock[id] >= units)) continue;
+    for (const [id, units] of items) stock[id] -= units;
+    ready.push({ ...division, equipment });
+  }
+  return ready;
+}
+
+function gpmUprisingMigrateStockpile(state) {
+  if (state.stockpile) return;
+  // Existing preparations already paid for their kit in the released game.
+  state.stockpile = gpmUprisingStockpile(state);
+  state.divisions = gpmUprisingRoster(state).map(division => ({ ...division,
+    equipment: gpmUprisingKitInventory(division.type, division.kit) }));
+}
+
+function gpmUprisingSupplyHeadquarters(sim, country, party) {
+  const headquarters = party.gpmRegional?.headquarters;
+  const province = headquarters && partyRegionalProvince(sim, country, headquarters.id, headquarters.key);
+  return !!province && partyUprisingProvinceEligible(sim, country, province);
+}
+
+function gpmUprisingRecruitmentQuote(sim, party, plan, type, kit) {
   if (!Object.hasOwn(uprisingDivisionTypes, type) || !Object.hasOwn(uprisingEquipmentKits, kit))
     return { ok: false, reason: "division_terms" };
   const state = party.gpmUprisingPreparations;
   const model = uprisingDivisionTypes[type];
   const packageTerms = uprisingEquipmentKits[kit];
   const days = model.days + packageTerms.extraDays;
+  const deliveryDay = sim.day + (packageTerms.deliveryDays ?? days);
   const creditCost = state?.credits > 0 ? 1 : 0;
   const cash = (dP(model.cash) + dP(packageTerms.extraCash) - creditCost * dP(uprisingPreparationRules.aidDiscount)) / _u;
   const reason = !state?.wing ? "wing" : state.training ? "active" :
-    gpmUprisingRoster(state).length >= capacity ? "division_limit" : null;
-  return { ...gpmUprisingCashQuote(party, cash, reason), creditCost, days, endDay: sim.day + days };
+    !plan.headquarters?.eligible ? "headquarters_required" :
+    gpmUprisingRoster(state).length >= gpmUprisingCapacity(plan) ? "division_limit" :
+    packageTerms.foreignFunding && !partyForeignFundingHasAcceptedGrant(party.gpmForeignFunding) ? "foreign_funding_required" :
+    party.organization.activistsK < model.activistsK ? "resources" : null;
+  return { ...gpmUprisingCashQuote(party, cash, reason), activistsK: model.activistsK, creditCost, days, deliveryDay, endDay: sim.day + days };
 }
 
 function gpmUprisingAidQuote(country, party, donor) {
@@ -171,7 +224,11 @@ function gpmUprisingAidAction(sim, country, party, input, action) {
 
 function gpmUprisingAdvancePreparations(sim, country, party) {
   const state = party.gpmUprisingPreparations;
-  if (!state || !party.organization || party.legal === false) return;
+  if (!state || !party.organization) return;
+  if (party.legal === false) {
+    state.training = null;
+    return;
+  }
   for (const [key, local] of Object.entries(state.regions)) {
     const province = sim.world.provByKey.get(key);
     if (!province || ke(province) !== country.key) {
@@ -181,10 +238,18 @@ function gpmUprisingAdvancePreparations(sim, country, party) {
       local.project = null;
     }
   }
-  if (state.training && sim.day >= state.training.endDay) {
-    const { type, kit } = gpmUprisingTraining(state);
-    state.divisions = [...gpmUprisingRoster(state), { type, kit }];
-    state.training = null;
+  gpmUprisingMigrateStockpile(state);
+  const training = gpmUprisingTraining(state);
+  if (training && sim.day >= training.deliveryDay) {
+    const { type, kit, activistsK, equipment = gpmUprisingKitInventory(type, kit) } = training;
+    if (!training.delivered && (!training.equipment || gpmUprisingSupplyHeadquarters(sim, country, party))) {
+      for (const [id, units] of Object.entries(equipment)) state.stockpile[id] = (state.stockpile[id] || 0) + units;
+      state.training.delivered = true;
+    }
+    if (state.training.delivered && sim.day >= training.endDay) {
+      state.divisions.push({ type, kit, equipment, ...(activistsK > 0 ? { activistsK } : {}) });
+      state.training = null;
+    }
   }
   const aid = state.aid;
   if (aid.pending && sim.day >= aid.pending.responseDay) {
@@ -208,13 +273,13 @@ function gpmUprisingPreparationView(sim, country, party, plan) {
   const state = party.gpmUprisingPreparations;
   const rule = uprisingPreparationRules;
   const aid = state?.aid;
-  const roster = gpmUprisingRoster(state).map(gpmUprisingDivisionLabel);
+  const roster = gpmUprisingStockedDivisions(state).map(gpmUprisingDivisionLabel);
   const training = gpmUprisingTraining(state);
   const capacity = gpmUprisingCapacity(plan);
   const options = Object.entries(uprisingDivisionTypes).map(([type, { label }]) => ({ id: type, label,
     kits: Object.entries(uprisingEquipmentKits).map(([kit, terms]) => ({ id: kit, label: terms.label,
       equipment: gpmUprisingDivisionEquipment(type, kit),
-      quote: gpmUprisingRecruitmentQuote(sim, party, capacity, type, kit) })) }));
+      quote: gpmUprisingRecruitmentQuote(sim, party, plan, type, kit) })) }));
   const headquarters = plan.headquarters;
   const headquartersProject = party.gpmRegional?.projects?.find(project => project.kind === "headquarters");
   const regions = plan.rows.map(row => {
@@ -234,7 +299,10 @@ function gpmUprisingPreparationView(sim, country, party, plan) {
       project: headquartersProject ? { key: headquartersProject.key, endDay: headquartersProject.endDay } : null },
     wing: { formed: !!state?.wing, quote: gpmUprisingCashQuote(party, rule.wingCash, state?.wing ? "formed" : null) },
     division: { count: roster.length, limit: capacity, credits: state?.credits || 0, roster, options,
-      project: training ? gpmUprisingDivisionLabel(training) : null },
+      stockpile: Object.entries(gpmUprisingStockpile(state)).filter(([, units]) => units > 0).map(([id, units]) => ({ id, units })),
+      standardSupplyUnlocked: partyForeignFundingHasAcceptedGrant(party.gpmForeignFunding),
+      project: training ? { ...gpmUprisingDivisionLabel(training), delivered: !!training.delivered,
+        deliveryPaused: !!training.equipment && !training.delivered && !headquarters?.eligible } : null },
     foreignAid: {
       donors: state?.wing && !aid.pending && !aid.offer && sim.day >= aid.nextRequestDay
         ? gpmUprisingAidDonors(sim, country, party) : [],
@@ -262,11 +330,14 @@ function gpmUprisingPrepare(sim, country, input, action) {
   const plan = gpmUprisingTerritoryPlan(sim, country, party);
   if (action === "recruit") {
     const { divisionType, equipmentKit } = input;
-    const quote = gpmUprisingRecruitmentQuote(sim, party, gpmUprisingCapacity(plan), divisionType, equipmentKit);
+    const quote = gpmUprisingRecruitmentQuote(sim, party, plan, divisionType, equipmentKit);
     if (!quote.ok) return quote;
     gpmUprisingSpend(party, quote.cash);
     state.credits -= quote.creditCost;
-    state.training = { type: divisionType, kit: equipmentKit, endDay: quote.endDay };
+    party.organization.activistsK = zL(party.organization.activistsK - quote.activistsK);
+    gpmUprisingMigrateStockpile(state);
+    state.training = { type: divisionType, kit: equipmentKit, activistsK: quote.activistsK, endDay: quote.endDay,
+      equipment: gpmUprisingKitInventory(divisionType, equipmentKit), deliveryDay: quote.deliveryDay, delivered: false };
   } else {
     const row = plan.rows.find(({ province }) =>
       province.__provId === input.provinceId && province.__provKey === input.provinceKey);
@@ -295,23 +366,34 @@ function gpmUprisingRefreshStaffing(formation) {
   }
 }
 
-function gpmUprisingDeployPreparations(sim, child, headquarters, divisions) {
+function gpmUprisingDeployPreparations(sim, child, headquarters, divisions, stockpile) {
   const definitions = divisions.map(({ type }) => zo.formationTypes[type]);
   const total = definitions.reduce((sum, definition) => sum + definition.manpowerK, 0);
   const personnel = Th(child);
   if (!personnel) return [];
   _et(child, Math.max(0, total - personnel.replacementK), sim);
   const manpower = Math.min(total, personnel.replacementK);
-  if (manpower < .001) return [];
+  const cadres = divisions.map(({ activistsK }, index) =>
+    Math.min(definitions[index].manpowerK, Math.max(0, Number(activistsK) || 0)));
+  const requestedCadres = cadres.reduce((sum, cadre) => sum + cadre, 0);
+  const availableCadres = Math.min(requestedCadres, manpower);
+  const otherPersonnel = manpower - availableCadres;
+  const otherRequirement = total - requestedCadres;
   const bases = YIe(sim, child);
   const slots = {};
   const deployed = [];
-  for (const [index, { type, kit }] of divisions.entries()) {
+  for (const [index, { type, kit, equipment }] of divisions.entries()) {
     const definition = definitions[index];
-    const assigned = manpower * definition.manpowerK / total;
+    // Cadres count within the regular personnel draw from the joining regions.
+    const cadre = requestedCadres ? availableCadres * cadres[index] / requestedCadres : 0;
+    const remaining = otherRequirement ? otherPersonnel * (definition.manpowerK - cadres[index]) / otherRequirement : 0;
+    const assigned = cadre + remaining;
     if (assigned < .001) continue;
-    const equip = Object.fromEntries(gpmUprisingDivisionEquipment(type, kit).map(({ id, units }) => [id, units]));
-    for (const [id, units] of Object.entries(equip)) kV(child.forces, id, units);
+    const equip = { ...equipment };
+    for (const [id, units] of Object.entries(equip)) {
+      stockpile[id] -= units;
+      kV(child.forces, id, units);
+    }
     const formation = hK(sim, child, type, definition, equip, H_({ equip }, definition), definition.manpowerK,
       bases, slots, Fqr(sim, child, type), headquarters.__provKey);
     formation.manpowerK = 0;
@@ -326,7 +408,12 @@ function gpmUprisingDeployPreparations(sim, child, headquarters, divisions) {
       formation.org = Math.round(100 * formation.manpowerK / formation.maxManpowerK);
     }
     deployed.push(gpmUprisingDivisionLabel({ type, kit, manpowerK: formation.manpowerK,
+      ...(cadre > 0 ? { cadreK: Math.min(cadre, formation.manpowerK) } : {}),
       requiredK: formation.maxManpowerK, understrength }));
   }
+  for (const [id, units] of Object.entries(stockpile)) {
+    if (units > 0) kV(child.forces, id, units);
+  }
+  R7(sim, child);
   return deployed;
 }

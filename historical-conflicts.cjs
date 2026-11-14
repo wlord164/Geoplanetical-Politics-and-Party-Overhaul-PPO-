@@ -5,6 +5,7 @@ const { join } = require("node:path");
 const { applyHistoricalCutoff } = require("./historical-cutoff.cjs");
 const victoryDefinitions = require("./historical-victories.cjs");
 const { readHistoricalFactionReview } = require("./historical-faction-review.cjs");
+const { reviewHistoricalStrength } = require("./historical-strength.cjs");
 const { readIdentities } = require("./historical-identities.cjs");
 const regionalReview = require("./historical-faction-review.json");
 const opening = require("./historical-opening-governments.cjs");
@@ -123,6 +124,7 @@ function readCatalog() {
       }
     }
   }
+  reviewHistoricalStrength(result);
   const colorsUsed = new Set(Object.values(mapIdentities).map(([, color]) => color));
   const factionActors = Object.values(result.actors).filter(actor =>
     !actor.mapColor && !["state", "state-force", "government"].includes(actor.kind)).sort((a, b) => a.id.localeCompare(b.id, "en"));
@@ -242,6 +244,14 @@ function patchHistoricalConflictsWorker(source, replaceOnce) {
       "return e.conflicts.set(t.id,t),gpmHistoricalLinkNativeWar(e,t),_rt(e,t),t}function Rsa"],
     ["function B9(e,t){let a=t?.id;if(!a)return!1;",
       "function B9(e,t){let a=t?.id;if(!a)return!1;gpmHistoricalCloseNative(e,t);"],
+    ['if(!Eo(o,l)||!u||c?.side===u.side)return{ok:!1,reasonId:"combatant"};',
+      'if(!Eo(o,l)||!Eo(o,i.__countryKey)||!u||c?.side===u.side)return{ok:!1,reasonId:"combatant"};if(!gpmHistoricalCheckOccupation(e,o,i,l))return{ok:!1,reasonId:"regional_war_scope"};'],
+    ['P&&t.has(S)&&w&&I&&o(w)&&w.side!==I.side||(zvt(y,v)',
+      'P&&t.has(S)&&w&&I&&o(w)&&o(I)&&w.side!==I.side||(zvt(y,v)'],
+    ['if(i&&e.countries?.has?.(s)&&r(l)&&c&&l.side!==c.side)continue;',
+      'if(i&&e.countries?.has?.(s)&&r(l)&&c&&r(c)&&l.side!==c.side)continue;'],
+    ['function TIa(e,t,a){let r=e.world.provinces||[],o=new Set,n=new Set,i=0;for(let s=0;s<r.length;s++){let l=r[s];if(!(!l||!t.has(BIa(l))))for(let c of l.__adjAll||[]){let u=r[c];!u||!a.has(BIa(u))||(o.add(s),n.add(c),i++)}}',
+      'function TIa(e,t,a,controller=BIa){let r=e.world.provinces||[],o=new Set,n=new Set,i=0;for(let s=0;s<r.length;s++){let l=r[s];if(!(!l||!t.has(controller(l))))for(let c of l.__adjAll||[]){let u=r[c];!u||!a.has(controller(u))||(o.add(s),n.add(c),i++)}}'],
     ['e._onWarEnd&&e._onWarEnd(u),gpmUprising.record(e,s,a)',
       'e._onWarEnd&&e._onWarEnd(u),gpmUprising.record(e,s,a),gpmHistoricalCloseNative(e,s,a)'],
   ];
