@@ -13,7 +13,7 @@ const sections = [
   ] },
   { title: "Legislative start", fields: [
     number("startingSeats", "Seats in the main elected chamber", 0, 12, 1,
-      "Seats come from existing parties. Holding any seat blocks the uprising route while you hold it."),
+      "Starting seats come from existing parties. Parties with seats can still stage an uprising. The remaining parties fill the vacated seats, with larger parties favored."),
   ] },
   { title: "Support decay", fields: [
     number("rallyGraceDays", "Days before rally support starts to fade", 0, 365, 1),

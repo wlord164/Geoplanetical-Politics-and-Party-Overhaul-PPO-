@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Follow-up Hotfix.
+  archive: "e2d9ca3cc86588bda07fa183c0b0aa45ff43582e7c181a68a3c222dc50f81218",
+  worker: "d36afb31029be6748b17dc28d4c062f10ff78cbac959ab0b2016972beea44352",
+  renderer: "57575cd948e816253c33085bc8da3e6161125e082b3dc42063e20502d472759f",
+  executable: "28fff77e891b6fb2019f17c746bfaa358f151aa5b73753a71e1824f01507aa01",
+}, {
   // Stabilization Hotfix.
   archive: "6813f676955c48a973909da7325bf87a7bf875f1590834f090b122caf54afd8b",
   worker: "a7bfb4e17d374a49303d255690bedb17cdc5e6340cbeb1a6575e7be73e3bc4a9",

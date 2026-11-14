@@ -20,11 +20,10 @@ const setupStyle = `
   .gpm-campaign-rules details { margin-block-end: 8px; border: 1px solid var(--line, #566372); border-radius: 5px; }
   .gpm-campaign-rules summary { cursor: pointer; padding: 8px 10px; font-weight: 600; }
   .gpm-campaign-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); align-items: start; gap: 12px; padding: 0 10px 12px; }
-  .gpm-campaign-rules [data-campaign-regions], .gpm-campaign-rules [data-campaign-seat-note] { grid-column: 1 / -1; }
+  .gpm-campaign-rules [data-campaign-regions] { grid-column: 1 / -1; }
   .gpm-campaign-rules [data-campaign-regions]:empty, .gpm-campaign-rules [hidden] { display: none; }
   .gpm-campaign-region-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 6px; max-height: 164px; overflow: auto; margin-top: 8px; }
   .gpm-campaign-region-list label { display: flex; align-items: center; gap: 6px; padding-inline: 2px; }
-  .gpm-campaign-rules [data-campaign-seat-note] { color: var(--mark-late, #edc583); }
 `;
 
 function gpmCampaignRuleValues() {
@@ -102,8 +101,6 @@ function gpmShowCampaignRules(entry) {
   const description = form.querySelector("[data-campaign-preset-description]");
   function renderContext() {
     description.textContent = presets[draft.preset]?.description || "Use your own campaign settings.";
-    const seats = form.querySelector("[data-campaign-seat-note]");
-    if (seats) seats.hidden = !(draft.startingSeats > 0);
     const regionOptions = form.querySelector("[data-campaign-regions]");
     if (regionOptions) {
       regionOptions.hidden = !(draft.startingPresence > 0);
@@ -115,16 +112,12 @@ function gpmShowCampaignRules(entry) {
   function renderFields() {
     const opened = new Map([...sectionsElement.querySelectorAll("details")].map(details => [details.dataset.section, details.open]));
     sectionsElement.innerHTML = sections.map(({ title, fields }, index) => {
-      const hasSeats = fields.some(field => field.id === "startingSeats");
       const hasPresence = fields.some(field => field.id === "startingPresence");
-      let extra = hasSeats ? '<small data-campaign-seat-note hidden>Holding a seat makes your party ineligible to start an uprising.</small>' : "";
-      if (hasPresence) {
-        extra += `<div data-campaign-regions hidden>${regions.length ? `<label>Starting regions <input type="search" data-campaign-region-search placeholder="Find a region"></label>
+      const extra = hasPresence ? `<div data-campaign-regions hidden>${regions.length ? `<label>Starting regions <input type="search" data-campaign-region-search placeholder="Find a region"></label>
           <small data-campaign-region-count role="status"></small><div class="gpm-campaign-region-list" role="group" aria-label="Starting regions">
           ${regions.map(region => `<label data-campaign-region><input type="checkbox" value="${b(region.key)}" ${
             draft.startingRegions.includes(region.key) ? "checked" : ""}>${b(region.name)}</label>`).join("")}</div>`
-          : "<small>Choose a country with eligible regions to assign local presence.</small>"}</div>`;
-      }
+          : "<small>Choose a country with eligible regions to assign local presence.</small>"}</div>` : "";
       return `<details data-section="${index}" ${(opened.get(String(index)) ?? index < 2) ? "open" : ""}>
         <summary>${b(title)}</summary><div class="gpm-campaign-fields">${fields.filter(field => field.id !== "startingRegions")
           .map(field => gpmCampaignRuleField(field, draft[field.id])).join("")}${extra}</div></details>`;
