@@ -203,12 +203,6 @@ function gpmHistoricalAreaMask(globe, state, area) {
       (row * atlasWidth + index * raster.width) * 4);
   }
   state.controlAtlas.texture.needsUpdate = true;
-  const border = GO(globe, { type: "MultiLineString", coordinates: polygons.flat() }, {
-    radius: yt * 1.0009, minDeg: .012, order: 40, color: Hr.atlasProvince, width: .54,
-    opacity: .50, casingColor: Hr.casing, casingWidth: 1.15, casingOpacity: 0,
-  });
-  DP(border, false);
-  state.borders.set(area.id + "-area", border);
   const mask = { widthDegrees: east - west, bounds: [west, south, 1 / (east - west), 1 / (north - south)],
     contains(lon, lat) {
       const x = Math.floor((lon - west) / (east - west) * raster.width);
@@ -649,8 +643,8 @@ function gpmMountHistoricalMap(globe, session) {
       ${[["active", "Active fighting"], ["ceasefire", "Ceasefires"], ["occupation", "Occupations"]].map(([status, label]) => `
         <label><input type="checkbox" value="${status}" data-gpm-history-map-status${state.statusFilter.has(status) ? " checked" : ""}>
           <i style="--ink:${gpmHistoricalMapInk(status)}" aria-hidden="true"></i>${label}</label>`).join("")}
-      <span><i style="--ink:${gpmHistoricalMapInk("contested")}" aria-hidden="true"></i>Muted fill and a neutral border mark contested regions</span>
-      <span><i style="--ink:${gpmHistoricalMapInk("captured")}" aria-hidden="true"></i>Yellow border shows captured territory</span>
+      <span><i style="--ink:#202930" aria-hidden="true"></i>Dark borders and muted fills mark contested territory</span>
+      <span><i style="--ink:${gpmHistoricalMapInk("captured")}" aria-hidden="true"></i>Yellow dashes mark confirmed wartime captures</span>
       <small>Zoom in to read faction names. Select a colored area to inspect its faction.</small>
       <small>Strategic view shows mapped conflict areas and simulated fronts. Select a diamond for details.</small>
     </div>`;
@@ -708,6 +702,7 @@ function gpmClearHistoricalMap(globe) {
     border.mesh.removeFromParent();
     border.casingMesh.removeFromParent();
     border.mesh.geometry.dispose();
+    if (border.sharedMaterial) continue;
     border.mat.dispose();
     border.casingMat.dispose();
     for (const material of [border.mat, border.casingMat]) {
@@ -746,9 +741,73 @@ function gpmClearHistoricalMap(globe) {
   globe._gpmHistoricalMap = null;
 }
 
+function gpmHistoricalPoliticalEdge(left, right, fills) {
+  const a = fills.get(left.__provId)?.front;
+  const b = fills.get(right.__provId)?.front;
+  const leftCapture = a?.captured ? a.occupationKey || a.dominantKey : null;
+  const rightCapture = b?.captured ? b.occupationKey || b.dominantKey : null;
+  if (leftCapture !== rightCapture) return "captured";
+  if (leftCapture || left.__countryKey !== right.__countryKey) return null;
+  const status = front => front?.contested ? "contested" : front?.controlled ? "controlled" : null;
+  const aStatus = status(a);
+  const bStatus = status(b);
+  if (!aStatus && !bStatus) return null;
+  return aStatus !== bStatus ||
+    a.id !== b.id || (a.dominantKey || a.controllerId) !== (b.dominantKey || b.controllerId) ? "control" : null;
+}
+
+function gpmHistoricalPoliticalBorders(globe, state) {
+  const areas = [...state.controlAreas.values()];
+  const signature = JSON.stringify([
+    [...state.fills].map(([id, { front }]) =>
+      [id, front.id, !!front.captured, !!front.contested, !!front.controlled, front.occupationKey, front.dominantKey, front.controllerId]),
+    areas.map(area => area.id),
+  ]);
+  if (state.politicalBorderSignature === signature && state.politicalBaseBorders === globe.world.borders) return;
+  state.politicalBorderSignature = signature;
+  state.politicalBaseBorders = globe.world.borders;
+  const geometry = globe.world.gpmPoliticalEdges((a, b) => gpmHistoricalPoliticalEdge(a, b, state.fills));
+  for (const { geometry: area } of areas) {
+    geometry.control.coordinates.push(...(area.type === "Polygon" ? area.coordinates : area.coordinates.flat()));
+  }
+  const radius = yt * 1.00135;
+  for (const [kind, shape] of Object.entries(geometry)) {
+    const current = state.borders.get(kind);
+    if (current) {
+      Mut(current, shape, radius, .012);
+    } else if (shape.coordinates.length) {
+      const base = globe.borderLines;
+      if (kind === "control") {
+        const { geometry, positions } = Eye(shape, radius, .012);
+        const mesh = new Ru(geometry, base.mat);
+        const casingMesh = new Ru(geometry, base.casingMat);
+        mesh.renderOrder = base.mesh.renderOrder;
+        casingMesh.renderOrder = base.casingMesh.renderOrder;
+        mesh.frustumCulled = casingMesh.frustumCulled = false;
+        globe._borderScene.add(casingMesh, mesh);
+        state.borders.set(kind, { mesh, casingMesh, count: positions.length / 6, sharedMaterial: true });
+      } else {
+        const border = GO(globe, shape, {
+          radius, minDeg: .012, order: 43, color: gpmHistoricalMapColors.captured, width: .92,
+          opacity: .72, casingColor: Hr.casing, casingWidth: 2.1, casingOpacity: .13,
+        });
+        for (const material of [border.mat, border.casingMat]) {
+          material.dashed = true;
+          material.dashSize = .013;
+          material.gapSize = .008;
+        }
+        state.borders.set(kind, border);
+      }
+    }
+    const border = state.borders.get(kind);
+    if (kind === "captured" && border?.count) border.mesh.computeLineDistances();
+  }
+  state.presentationDirty = true;
+}
+
 function gpmPaintHistoricalMap(globe, state, data) {
   state.data = data;
-  const lines = new Map(Object.keys(gpmHistoricalMapColors).filter(status => status !== "selected")
+  const lines = new Map(["reported", "active", "occupation", "ceasefire", "suspended"]
     .map(status => [status, { keys: [], rings: [] }]));
   const regions = new Map();
   const fills = new Map();
@@ -786,7 +845,7 @@ function gpmPaintHistoricalMap(globe, state, data) {
     const situationStatus = outlined.length ? gpmHistoricalMapStatus(outlined) : null;
     if (hasShape) {
       const rings = shape.type === "Polygon" ? shape.coordinates : shape.coordinates.flat();
-      for (const type of new Set([status, situationStatus])) {
+      for (const type of [status === "reported" && status, situationStatus]) {
         if (!type) continue;
         const line = lines.get(type);
         line.keys.push(region.key);
@@ -866,30 +925,20 @@ function gpmPaintHistoricalMap(globe, state, data) {
       Mut(current, geometry, yt * 1.0021, .018);
       current.signature = signature;
     } else {
-      const captured = status === "captured";
-      const territorialBoundary = status === "contested" || status === "controlled";
-      const territory = territorialBoundary || status === "reported";
-      const border = GO(globe, geometry, { radius: yt * 1.0021, minDeg: .018, order: captured ? 43 : 40,
-        color: status === "contested" ? gpmHistoricalMapColors.contested : territory ? Hr.atlasProvince : gpmHistoricalMapColors[status],
-        width: captured ? .92 : territory ? .72 : 1.05,
-        opacity: captured ? .72 : status === "contested" ? .88 : territorialBoundary ? .50 : territory ? .26 : .56,
+      const territory = status === "reported";
+      const border = GO(globe, geometry, { radius: yt * 1.0021, minDeg: .018, order: 40,
+        color: territory ? Hr.atlasProvince : gpmHistoricalMapColors[status],
+        width: territory ? .72 : 1.05,
+        opacity: territory ? .26 : .56,
         casingColor: territory ? Hr.casing : 0x111920,
-        casingWidth: captured ? 2.1 : territory ? 1.15 : 1.9,
-        casingOpacity: captured ? .13 : territory ? 0 : .4 });
-      if (captured) {
-        for (const mat of [border.mat, border.casingMat]) {
-          mat.dashed = true;
-          mat.dashSize = .013;
-          mat.gapSize = .008;
-        }
-      }
+        casingWidth: territory ? 1.15 : 1.9,
+        casingOpacity: territory ? 0 : .4 });
       state.borders.set(status, { ...border, signature });
     }
-    const capture = status === "captured" && state.borders.get(status);
-    if (capture?.count) capture.mesh.computeLineDistances();
   }
   state.regions = regions;
   state.fills = fills;
+  gpmHistoricalPoliticalBorders(globe, state);
   state.holdings = holdings;
   state.selectionDirty = true;
   const controlBox = he._gpmRegionControlBox;
@@ -1080,6 +1129,7 @@ function gpmPositionHistoricalMap(globe) {
   const political = mode === "atlas";
   const showSituation = visible && mode === "strategic";
   const showTerritory = visible && political;
+  if (showTerritory && state.politicalBaseBorders !== globe.world.borders) gpmHistoricalPoliticalBorders(globe, state);
   if (globe.controls && !globe._cinema && globe.activeBody === "earth") {
     const minimum = showTerritory ? 2.010 : 2.15;
     const near = showTerritory ? .004 : .1;
@@ -1130,8 +1180,7 @@ function gpmPositionHistoricalMap(globe) {
     }
     if (!visible && K("tooltip")?.classList.contains("gpm-history-map-tip")) he.tooltip(null);
     for (const [status, border] of state.borders) {
-      const shown = status.endsWith("-area") ? showTerritory && state.controlAreas.has(status.slice(0, -5)) :
-        ["captured", "contested", "controlled", "reported"].includes(status) ? showTerritory : showSituation;
+      const shown = ["captured", "control", "reported"].includes(status) ? showTerritory : showSituation;
       DP(border, shown && border.count > 0);
     }
     state.markerLayer.hidden = !showSituation;
@@ -1289,7 +1338,8 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
     gpmHistoricalFrontsAt, gpmHistoricalFactionCountry, gpmOpenHistoricalCountry, gpmHistoricalFactionActions,
     gpmHistoricalRunFactionAction, gpmHistoricalWarHighlight, gpmHistoricalOpenFaction, gpmHistoricalNamedFaction, gpmHistoricalLabelMesh,
     gpmHistoricalLabelPath, gpmHistoricalProvinceGroups, gpmHistoricalAreaLabel, gpmHistoricalAreaAt, gpmHistoricalClickProvince,
-    gpmHistoricalMapPopup, gpmMountHistoricalMap, gpmClearHistoricalMap, gpmPaintHistoricalMap,
+    gpmHistoricalMapPopup, gpmMountHistoricalMap, gpmClearHistoricalMap,
+    gpmHistoricalPoliticalEdge, gpmHistoricalPoliticalBorders, gpmPaintHistoricalMap,
     gpmPrefetchHistoricalMap, gpmRefreshHistoricalMap, gpmPositionHistoricalMap, gpmHistoricalMapHover, gpmHistoricalMapHoverAt,
     gpmRenderHistoricalMapTip];
   const mount = "\nmountPartyButtons();\n";
@@ -1360,6 +1410,24 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
   js = replaceOnce(js, "this._updateBaseMarkers(),this._updateFormationMarkers()",
     "this._updateBaseMarkers(),gpmPositionHistoricalMap(this),this._updateFormationMarkers()");
   js = replaceOnce(js, 'yq("load",u?.saveRepairs)', 'yq("load",u?.saveRepairs),gpmPrefetchHistoricalMap(s)');
+  js = replaceOnce(js, '$s.applyWorld(),$s.syncLights()', '$s.applyWorld(),$s.structure()?.bornCountries?.length&&(ke._territoryMutated=!0),$s.syncLights()');
+  // Keep compact border loops aligned with the fine province fill at close zoom.
+  js = replaceOnce(js, 'function W3e(e,t,a,n){if(!e||e.length<2)return;',
+    `function W3e(e,t,a,n){if(!e||e.length<2)return;
+    const first=e[0],last=e[e.length-1];
+    if(a===.012&&t===yt*1.00135&&first[0]===last[0]&&first[1]===last[1]&&
+      e.every(([lon,lat])=>Math.hypot(lon-first[0],lat-first[1])<10*a)){
+      a=Number.EPSILON;t=yt*1.0008;
+    }`);
+  js = replaceOnce(js, 'provinceBordersFor:le,adjacency:L', `provinceBordersFor:le,gpmPoliticalEdges:classify=>{
+    const edges={control:{type:"MultiLineString",coordinates:[]},captured:{type:"MultiLineString",coordinates:[]}};
+    for(const [arc,owners] of W){
+      if(owners.length!==2)continue;
+      const kind=classify(p[owners[0]],p[owners[1]]);
+      if(kind)edges[kind].coordinates.push(O(arc));
+    }
+    return edges;
+  },adjacency:L`);
   js = replaceOnce(js, 'he.showScreen("game"),Xe("hud-focus")', 'he.showScreen("game"),void gpmRefreshHistoricalMap(ke,ze),Xe("hud-focus")');
   js = replaceOnce(js, 'eFe($s.applyTerritoryChange(p)),$I.clear(),Hk()',
     'eFe($s.applyTerritoryChange(p)),$I.clear(),Hk();void gpmRefreshHistoricalMap(ke,ze,true)');
