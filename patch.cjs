@@ -26,6 +26,10 @@ const { style: lawShortlistStyle, rendererFunctions: lawShortlistRenderer } = re
 const campaignRules = require("./party-campaign-rules.cjs");
 const { setupStyle, setupFunctions } = require("./party-campaign-rules-ui.cjs");
 const { workerFunctions: campaignFounding } = require("./party-campaign-founding.cjs");
+const { workerFunctions: domesticForecast } = require("./party-domestic-forecast.cjs");
+const { patchDomesticWorker } = require("./party-domestic-worker.cjs");
+const { patchAgreementWorker } = require("./party-agreements.cjs");
+const { patchPartyDomesticRenderer } = require("./party-domestic-ui.cjs");
 
 const version = "1.1.3";
 const rendererHash = "2679c9f8f13e9628b5908f0e11ea4d5627d0612f261f2312690eae21006095ee";
@@ -358,12 +362,10 @@ function createStartingParty(sim, draft) {
   const country = sim.player;
   const politics = country?.pol;
   if (!politics?.parties?.length || sim.day !== 0) throw new Error("This country cannot register a starting party");
-  const incumbentSupport = politics.parties.map(party => Math.max(0, party.support || 0));
-  const totalSupport = incumbentSupport.reduce((total, support) => total + support, 0);
-  if (!Number.isFinite(totalSupport) || totalSupport <= 0) throw new Error("This country has no valid starting party support");
   const rules = gpmCampaignRulesFor(sim);
   const supportCap = gpmFoundingSupportCap(rules);
-  const seedSupport = Math.min(totalSupport * supportCap, Math.max(...incumbentSupport) / 4);
+  const seedSupport = gpmFoundingSupportSeed(politics, rules);
+  if (seedSupport <= 0) throw new Error("This country has no valid starting party support");
   const previous = Lio(politics.parties);
   const change = R1a(politics, ideology, seedSupport, (party, parties) => {
     Vda(party, ol(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
@@ -389,6 +391,13 @@ function createStartingParty(sim, draft) {
   if (control.controlsExecutive || control.controlsCabinet || control.heldOfficeIds.length) {
     throw new Error("The new party unexpectedly received a government office");
   }
+}
+
+function gpmApplyEmergingPartyFounding(sim, country, change) {
+  if (change.type !== "emerge") return;
+  const party = YL(country, change.id);
+  const rules = gpmCampaignRulesFor(sim);
+  if (party?.organization) gpmApplyCampaignFounding(sim, country, party, rules, rules);
 }
 
 function bindElectorateWidth(view) {
@@ -563,7 +572,8 @@ function patchRenderer(bytes) {
   js = patchHistoricalConflictMapRenderer(js, replaceOnce);
   const { patchHistoricalIdentityRenderer } = require("./historical-identities.cjs");
   js = patchSudanReunificationRenderer(js, replaceOnce);
-  return Buffer.from(patchHistoricalIdentityRenderer(js, replaceOnce));
+  js = patchHistoricalIdentityRenderer(js, replaceOnce);
+  return Buffer.from(patchPartyDomesticRenderer(js, replaceOnce));
 }
 
 function patchWorker(bytes) {
@@ -581,18 +591,18 @@ function patchWorker(bytes) {
     "\nfunction Zia(e){gpmHistoricalProvinceTransport(e.world,Nle);let t={};");
   js = replaceOnce(js, "function Jia(e,t,a=null){let r=$ia(t);WPe(r);",
     "function Jia(e,t,a=null){let r=$ia(t);WPe(r);gpmHistoricalProvinceTransport(e.world,Nle,r.byProvince);");
-  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
+  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(qa.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Ie("advancePartyModDay",()=>advancePartyModDay(e)),t.has(qa.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:',
-    'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,campaigns:');
+    'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,campaigns:');
   js = replaceOnce(js, 'qMa(t,n,s),s1a(t,n,s),',
-    'qMa(t,n,s),s1a(t,n,s),n.gone&&n.into&&gpmTransferAbsorbedPartyFunding(e,t,n,s),');
+    'qMa(t,n,s),s1a(t,n,s),gpmTransferPartyLifecycle(e,t,n,s),');
   js = replaceOnce(js, 'I.pol.parties=(i.pol.parties||[]).map(K=>({...JSON.parse(JSON.stringify(K)),campaigns:{},parliament:{lastProposalDay:null,lastConfidenceDay:null}}))',
     'I.pol.parties=(i.pol.parties||[]).map(K=>gpmPartyForCountryBirth(K,typeof t.gpmUprisingFounderId==="string"?null:P))');
   js = replaceOnce(js, 'e.people&&lut(e,I),w&&(w.__bornIdentity=kM(GBe(I,w))),I}function F5o',
-    'e.people&&lut(e,I),w&&(w.__bornIdentity=kM(GBe(I,w))),gpmCommitCountryBirthParties(i,I,t.gpmUprisingFounderId),I}function F5o');
+    'e.people&&lut(e,I),w&&(w.__bornIdentity=kM(GBe(I,w))),gpmCommitCountryBirthParties(i,I,t.gpmUprisingFounderId,P),I}function F5o');
   js = replaceOnce(js, 'registerPartyOrganizing();\nregisterPartyCongressSize();',
-    `${gpmTransferAbsorbedPartyFunding}\n${gpmPartyForCountryBirth}\n${gpmCommitCountryBirthParties}\nregisterPartyOrganizing();\nregisterPartyCongressSize();`);
+    `${gpmTransferPartyLifecycle}\n${gpmPartyForCountryBirth}\n${gpmCommitCountryBirthParties}\nregisterPartyOrganizing();\nregisterPartyCongressSize();`);
   js = replaceOnce(js, 'function SKa(e,t){return n1a(e,t),QAa(e,t),e._reviewPartyParliamentAi(t)}', 'function SKa(e,t){return gpmBindCampaignPolity(e,t.pol),n1a(e,t),QAa(e,t),advancePartyModAI(e,t),e._reviewPartyParliamentAi(t)}');
   // Preserve existing balances and exact refunds in base currency units.
   js = replaceOnce(js, 'a.treasuryM=pL(aK(a.treasuryM||0,0,1e4))', 'a.treasuryM=pL(aK(a.treasuryM||0,0,1e4),6)');
@@ -612,7 +622,10 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'electorate:Kr(o._electorateBreakdown(n)),electoral:', 'electorate:(gpmElectorate=Kr(o._electorateBreakdown(n))),electoral:');
   js = replaceOnce(js, 'party:yNo(r)}}var gNo', 'party:yNo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId))}}var gNo');
   js = replaceOnce(js, 'outreach:i1a(e,t,a),negotiations:JAa(e,t,a)', 'outreach:i1a(e,t,a),organizing:partyOrganizingView(e,t,a),congress:partyCongressView(e,t,a,gpmElectorate),supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:JAa(e,t,a)');
-  js = replaceOnce(js, 'function Wio(e,t){', `${isCustomParty}\nfunction Wio(e,t){`);
+  js = replaceOnce(js, 'function Wio(e,t){', `${isCustomParty}\n${gpmApplyEmergingPartyFounding}\nfunction Wio(e,t){`);
+  js = replaceOnce(js, 'n=R1a(a,f,m*.55,u)', 'n=R1a(a,f,gpmFoundingSupportSeed(a,gpmCampaignRulesFor(e)),u)');
+  js = replaceOnce(js, 'e._reconcilePolity(t),t._landscapeCd=24',
+    'e._reconcilePolity(t),gpmApplyEmergingPartyFounding(e,t,n),t._landscapeCd=24');
   js = replaceOnce(js, 'if((y.support||0)<.06&&(g.support||0)<.06&&om(y.ideology,g.ideology)<.35)', 'if(!isCustomParty(y)&&!isCustomParty(g)&&(y.support||0)<.06&&(g.support||0)<.06&&om(y.ideology,g.ideology)<.35)');
   js = replaceOnce(js, 'let m=i.find(f=>(f._starve||0)>=24);', 'let m=i.find(f=>!isCustomParty(f)&&(f._starve||0)>=24);');
   js = replaceOnce(js, 'if(t==="switchPlayerControl")return e.switchPlayerControl(o[0]||{});', 'if(t==="switchPlayerControl")return o[0]?.partyModRename?renameDomesticParty(e,o[0]):e.switchPlayerControl(o[0]||{});');
@@ -659,12 +672,27 @@ function patchWorker(bytes) {
   const { patchHistoricalNameWorker } = require("./historical-identities.cjs");
   let historical = replaceOnce(patchHistoricalConflictsWorker(patchUprisingWorker(js, replaceOnce), replaceOnce),
     'this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)',
-    'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
+    'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),gpmMigrateDomesticCampaign(b),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
   historical = replaceOnce(historical, '(a==="gpm.historicalMap"?',
-    '(a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:a==="gpm.historicalMap"?');
+    '(a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:a==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(r,r.player,Uo(r.player),t.params?.contestId):a==="gpm.historicalMap"?');
   const { patchWorkingCapital } = require("./working-capital.cjs");
   historical = patchWorkingCapital(historical, replaceOnce);
-  return Buffer.from(patchHistoricalNameWorker(patchSudanReunificationWorker(historical, replaceOnce), replaceOnce));
+  let worker = patchHistoricalNameWorker(patchSudanReunificationWorker(historical, replaceOnce), replaceOnce);
+  worker = patchDomesticWorker(worker, replaceOnce);
+  worker = patchAgreementWorker(worker, replaceOnce);
+  worker = replaceOnce(worker, 'regionalCampaign:partyRegionalCampaignView(e,t,a),',
+    'regionalCampaign:partyRegionalCampaignView(e,t,a),agreement:partyAgreementView(e,t,a),');
+  worker = replaceOnce(worker, 'campaignPlan:gpmDomesticView(e,t,a),',
+    'campaignPlan:{...gpmDomesticView(e,t,a),agenda:gpmDomesticAgenda(e,t,a),recentResult:gpmPartyElectionRecapView(t,a)},');
+  worker = replaceOnce(worker, ',situation:ELe(e,a),pressures:NBo(e,a),technology:',
+    ',situation:ELe(e,a),gpmDomesticAgenda:gpmDomesticAgenda(e,a,Uo(a)),pressures:NBo(e,a),technology:');
+  worker = replaceOnce(worker, 'e._onLegislative(t,i,p,h,d,b)?.electionResolved===!0?e._politicalCampaigns.delete(u):i.composition=p',
+    '(()=>{const recap=gpmPartyElectionRecap(e,t,i,m,p,d,s);if(e._onLegislative(t,i,p,h,d,b)?.electionResolved===!0){e._politicalCampaigns.delete(u);gpmStorePartyElectionRecap(t,recap)}else i.composition=p})()');
+  worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,...a})',
+    '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,...a})');
+  worker = replaceOnce(worker, 'Adr(t.pol).map(({gpmForeignFunding,...party})=>party)',
+    'Adr(t.pol).map(({gpmForeignFunding,gpmDomestic,...party})=>party)');
+  return Buffer.from(worker);
 }
 
 function advancePartyModDay(sim) {
@@ -692,16 +720,24 @@ function partyOrganizationForMerger(party) {
   return organization;
 }
 
-function gpmTransferAbsorbedPartyFunding(sim, country, event, snapshots) {
-  const survivor = Cu(country, event.into);
-  if (survivor?.organization) {
-    partyForeignFundingMerge(sim, country, survivor, event.gone, snapshots.get(event.gone)?.funding);
+function gpmTransferPartyLifecycle(sim, country, event, snapshots) {
+  if (event.type === "split") {
+    const parent = Cu(country, event.parent);
+    const child = Cu(country, event.child);
+    if (parent && child) gpmDomesticMoveMembers(parent, child, .25);
   }
+  if (!event.gone || !event.into) return;
+  const survivor = Cu(country, event.into);
+  if (!survivor?.organization) return;
+  const old = snapshots.get(event.gone);
+  partyForeignFundingMerge(sim, country, survivor, event.gone, old?.funding);
+  if (old?.domestic) gpmDomesticMoveMembers({ gpmDomestic: old.domestic }, survivor, 1);
 }
 
 function gpmPartyForCountryBirth(party, share) {
   const copy = { ...JSON.parse(JSON.stringify(party)), campaigns: {},
     parliament: { lastProposalDay: null, lastConfidenceDay: null } };
+  delete copy.gpmDomestic;
   delete copy.gpmOrganizing;
   delete copy.gpmRegional;
   delete copy.gpmForeignFunding;
@@ -720,12 +756,14 @@ function gpmPartyForCountryBirth(party, share) {
   return copy;
 }
 
-function gpmCommitCountryBirthParties(parent, child, founderId) {
+function gpmCommitCountryBirthParties(parent, child, founderId, share) {
   if (typeof founderId === "string") return;
   for (const copy of child.pol?.parties || []) {
     if (!copy.organization) continue;
-    const organization = Cu(parent, copy.id)?.organization;
+    const previous = Cu(parent, copy.id);
+    const organization = previous?.organization;
     if (!organization) continue;
+    gpmDomesticMoveMembers(previous, copy, share);
     organization.treasuryM = (dP(organization.treasuryM) - dP(copy.organization.treasuryM)) / _u;
     organization.activistsK = zL(organization.activistsK - copy.organization.activistsK);
   }

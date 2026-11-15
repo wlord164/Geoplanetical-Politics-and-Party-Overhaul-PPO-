@@ -31,7 +31,7 @@ function partyUprisingProvinceEligible(sim, country, province, population) {
 function partyRegionalRallyWeight(rally, day, rules = gpmCampaignRulesFor()) {
   if (!rally || day < rally.day) return 0;
   const fullUntil = rally.fullUntil ?? rally.day;
-  const halfLife = rally.fullUntil == null ? gpmRegionalRules.legacyRallyHalfLife : rules.rallyHalfLife;
+  const halfLife = rally.halfLife ?? (rally.fullUntil == null ? gpmRegionalRules.legacyRallyHalfLife : rules.rallyHalfLife);
   const weight = rally.weight * (halfLife > 0 ? Math.pow(.5, Math.max(0, day - fullUntil) / halfLife) : 1);
   return weight >= .001 ? weight : 0;
 }
@@ -194,9 +194,20 @@ function partyRegionalStart(sim, country, party, kind, region, relocateHeadquart
   const strongInvestment = kind === "investment" && roll < quote.chance;
   record.projects.push({
     kind, id: region.id, key: region.key, startDay: day, endDay: quote.endDay, activistsK: quote.activistsK,
+    domesticMembership: true,
     gain: quote.presenceGain?.[strongInvestment ? "strong" : "partial"] ?? quote.gain, strongInvestment,
+    ...(kind === "investment" ? {
+      expectedGain: quote.presenceGain.strong * quote.chance + quote.presenceGain.partial * (1 - quote.chance),
+    } : {}),
+    ...(kind === "rally" ? { rallyGraceDays: gpmCampaignRulesFor(sim).rallyGraceDays,
+      rallyHalfLife: gpmCampaignRulesFor(sim).rallyHalfLife } : {}),
     ...(kind === "headquarters" ? { uprisingHeadquarters: relocateHeadquarters } : {}),
   });
+  if (typeof gpmDomesticReceipt === "function") {
+    gpmDomesticReceipt(sim, country, party, kind, {
+      cashM: -quote.cash, activistsK: -quote.activistsK, details: region.key,
+    });
+  }
   return { ok: true, endDay: quote.endDay };
 }
 
@@ -220,7 +231,13 @@ function advancePartyRegionalCampaign(sim, country, party) {
       (!uprisingHeadquarters || partyUprisingProvinceEligible(sim, country, province));
     if (eligible && day < project.endDay) continue;
     record.projects.splice(record.projects.indexOf(project), 1);
-    party.organization.activistsK = zL(Math.min(1e5, party.organization.activistsK + project.activistsK));
+    const previousActivists = party.organization.activistsK;
+    party.organization.activistsK = zL(Math.min(1e5, previousActivists + project.activistsK));
+    if (typeof gpmDomesticReceipt === "function") {
+      gpmDomesticReceipt(sim, country, party, "activists-returned", {
+        activistsK: party.organization.activistsK - previousActivists, details: project.kind,
+      });
+    }
     const local = record.regions[project.key] ??= { presence: 0 };
     if (!eligible) {
       partyRegionalReceipt(record, local, project, "cancelled", day);
@@ -231,7 +248,8 @@ function advancePartyRegionalCampaign(sim, country, party) {
     if (project.kind === "rally") {
       const existing = partyRegionalRallyWeight(local.rally, finishDay, rules);
       local.rally = {
-        day: finishDay, fullUntil: finishDay + rules.rallyGraceDays,
+        day: finishDay, fullUntil: finishDay + (project.rallyGraceDays ?? rules.rallyGraceDays),
+        halfLife: project.rallyHalfLife ?? rules.rallyHalfLife,
         weight: Math.min(gpmRegionalRules.rallyLimit, existing + project.gain),
       };
     } else if (project.kind === "investment") {
@@ -244,6 +262,9 @@ function advancePartyRegionalCampaign(sim, country, party) {
       record.headquarters = { id: project.id, key: project.key, weight: project.gain ?? gpmRegionalRules.headquartersWeight };
     }
     partyRegionalReceipt(record, local, project, result, finishDay);
+    if (project.domesticMembership && typeof gpmDomesticEarnMembers === "function") {
+      gpmDomesticEarnMembers(sim, country, party, project.kind, project.activistsK, finishDay);
+    }
     if (country.pol.campaignPolls) country.pol.campaignPolls = {};
   }
 }
@@ -310,6 +331,7 @@ function partyCampaignChamberRules(chamber) {
   return {
     chamberId: chamber.id, totalSeats: chamber.seats,
     threshold: rules.threshold > 0 ? rules.threshold : null,
+    legalThreshold: rules.legalThreshold > 0 ? rules.legalThreshold : null,
     mode: rules.transfer ? "regional" : "national", formula: rules.formula,
     apportionment: rules.apportionment,
     districtMagnitude: Number.isFinite(rules.magnitude) ? rules.magnitude : null,
@@ -317,7 +339,7 @@ function partyCampaignChamberRules(chamber) {
   };
 }
 
-function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints = 0, { day, base } = {}) {
+function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints = 0, { day, base, projectedPolity, local = false } = {}) {
   const contest = Xe(country)?.contests?.[contestId];
   const party = YL(country, partyId);
   if (!contest || !Number.isFinite(contest.nextDay) || !party?.organization) return null;
@@ -327,7 +349,7 @@ function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints 
   const score = campaign?.score || 0;
   const nextScore = vn(J0(score + proposedPoints, 0, 50));
   const effectiveOffset = poo(sim, country, party, campaign) + ((party.organization.credibility ?? .5) - .5) * 12;
-  const polity = country.pol;
+  const polity = projectedPolity || country.pol;
   gpmBindCampaignPolity(sim, polity);
   const chamber = polity.chambers?.find(item => contest.targetOrganId === "chamber:" + item.id);
   const map = PE(sim, country);
@@ -346,8 +368,27 @@ function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints 
       }
     }
     const shares = partyRegionalNationalShares(polity, map, eligible);
-    const seats = chamber ? hft(polity, { ...chamber }, raw, map).seats[partyId] || 0 : null;
-    return { support: shares[partyId] || 0, seats, shares };
+    const districtSeats = local ? new Map() : null;
+    const seats = chamber ? hft(polity, { ...chamber }, raw, districtSeats ? { ...map, gpmDistrictSeats: districtSeats } : map).seats[partyId] || 0 : null;
+    const regional = chamber && f1a(chamber).transfer;
+    const qualifyingShare = (regional ? eligible[partyId] : shares[partyId]) || 0;
+    let bestDistrict = null;
+    if (regional && districtSeats?.size) {
+      const gate = f1a(chamber).threshold || 0;
+      const eligibleForDistricts = Object.fromEntries(Object.entries(eligible).map(([id, value]) => [id, value >= gate ? value : 0]));
+      for (const row of Ywe(polity, map, eligibleForDistricts)) {
+        const result = districtSeats.get(row.id);
+        if (!result) continue;
+        const own = row.shares[partyId] || 0;
+        const leader = Math.max(0, ...Object.keys(row.shares).filter(id => id !== partyId).map(id => row.shares[id]));
+        const margin = own - leader;
+        if (!bestDistrict || margin > bestDistrict.margin) {
+          bestDistrict = { key: row.key, name: row.name, margin, seats: result.seats[partyId] || 0, total: result.total };
+        }
+      }
+    }
+    return { support: shares[partyId] || 0, seats, shares, qualifyingShare,
+      localMargin: bestDistrict?.margin ?? null, bestDistrict };
   };
   const before = estimate(score);
   const after = nextScore === score ? before : estimate(nextScore);
@@ -418,7 +459,7 @@ function partyRegionalBreakdown(polity, estimate, shares, regionKey, day) {
     const headquarters = record?.headquarters?.key === regionKey;
     const headquartersWeight = partyRegionalHeadquartersWeight(record, regionKey);
     const rally = local?.rally;
-    const rallyHalfLife = rally?.fullUntil == null ? gpmRegionalRules.legacyRallyHalfLife : rules.rallyHalfLife;
+    const rallyHalfLife = rally?.halfLife ?? (rally?.fullUntil == null ? gpmRegionalRules.legacyRallyHalfLife : rules.rallyHalfLife);
     const rallyWeight = partyRegionalRallyWeight(rally, day, rules);
     const rallyFullUntil = rallyWeight > 0 ? rally.fullUntil ?? rally.day : null;
     const rallyExpiresDay = rallyWeight > 0 && rallyHalfLife > 0
@@ -515,15 +556,17 @@ function partyRegionalCampaignView(sim, country, partyId) {
   };
 }
 
-function advancePartyRegionalAI(sim, country, electionIn, contest = null) {
+function advancePartyRegionalAI(sim, country, electionIn, contest = null, plannedParty = null, policy = null) {
   const rules = gpmCampaignRulesFor(sim);
   if (rules.regionalAI === "domestic" && country.key !== sim.playerKey) return;
   const preferred = electionIn <= 70 ? "rally" : "investment";
   const eligible = (country.pol?.parties || []).filter(party => party.organization && party.legal !== false &&
     !party.gpmUprisingShell && !party.gpmUprisingExcluded &&
-    !iGr(sim, country, party.id) && party.organization.treasuryM > .02 &&
+    (plannedParty ? plannedParty === party : !iGr(sim, country, party.id)) && party.organization.treasuryM > .02 &&
     party.organization.activistsK > .08 && (party.gpmRegional?.projects.length || 0) < rules.maxRegionalProjects);
   if (!eligible.length) return;
+  const chamber = (country.pol.chambers || []).find(item => contest?.targetOrganId === "chamber:" + item.id);
+  const nationalFirstSeat = policy?.goal === "firstSeat" && chamber && !f1a(chamber).transfer;
   // Share one world pass across the country's staggered monthly decisions.
   let index = gpmRegionalAICache.get(sim);
   const month = Math.floor(sim.day / 30);
@@ -545,6 +588,8 @@ function advancePartyRegionalAI(sim, country, electionIn, contest = null) {
   if (!populated.length) return;
   const focus = rules.aiPlanning === "basic" ? 6 : rules.aiPlanning === "strong" ? 18 : 12;
   const regionKeys = new Set(populated.slice(0, focus).map(region => region.id));
+  const targetedRegion = populated.find(region => region.key === policy?.targetProvinceKey);
+  if (targetedRegion) regionKeys.add(targetedRegion.id);
   const other = populated.slice(focus);
   if (other.length) {
     const offset = (Math.floor(sim.day / 30) + (country.hash >>> 0)) % other.length;
@@ -556,7 +601,9 @@ function advancePartyRegionalAI(sim, country, electionIn, contest = null) {
   const estimates = Ywe(country.pol, { day: sim.day, regions: [...regions.values()], partyPerf: sim._partyPerf(country) });
   for (const party of eligible) {
     let best = null;
-    const reserve = contest ? partyModAICampaignReserve(sim, country, party, contest) : null;
+    const reserve = policy ? gpmDomesticReserve(sim, country, party, policy) :
+      contest ? partyModAICampaignReserve(sim, country, party, contest) : null;
+
     const candidates = party.gpmRegional?.headquarters || electionIn <= 90
       ? [preferred] : [preferred, "headquarters"];
     for (const estimate of estimates) {
@@ -567,12 +614,18 @@ function advancePartyRegionalAI(sim, country, electionIn, contest = null) {
       if (!support) continue;
       for (const kind of candidates) {
         const quote = partyRegionalQuote(sim, country, party, kind, region);
-        if (quote.endDay >= sim.day + electionIn || !partyModAICanCommit(party, quote, electionIn, reserve)) continue;
+        if (!quote.ok || quote.endDay >= sim.day + electionIn) continue;
+        if (!policy && !partyModAICanCommit(party, quote, electionIn, reserve)) continue;
+        if (policy && !gpmDomesticCanCommit(sim, country, party, {
+          cashM: quote.cash, activistsK: quote.activistsK, influence: 0,
+        }, policy, { reserve, endDay: quote.endDay })) continue;
         const weight = kind === "investment"
           ? (quote.chance * quote.presenceGain.strong + (1 - quote.chance) * quote.presenceGain.partial) * gpmRegionalRules.presenceWeight
           : quote.gain * (kind === "headquarters" ? 1.5 : 1);
         const competition = rules.aiPlanning === "basic" ? 1 : Math.exp(-(rules.aiPlanning === "strong" ? 6 : 4) * (leader - support));
-        const score = Math.sqrt(region.pop) * support * competition * weight / Math.max(.000001, quote.cash);
+        const targetFit = targetedRegion?.id === region.id ? 2 : 1;
+        const constituency = nationalFirstSeat ? region.pop : Math.sqrt(region.pop) * competition;
+        const score = targetFit * constituency * support * weight / Math.max(.000001, quote.cash);
         if (score > (best?.score || 0)) best = { kind, region, score };
       }
     }

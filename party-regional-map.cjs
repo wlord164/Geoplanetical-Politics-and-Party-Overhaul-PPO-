@@ -153,19 +153,27 @@ function gpmRegionalBreakdownOpened(root) {
     parties: new Set([...root.querySelectorAll("[data-gpm-breakdown-party][open]")].map(el => el.dataset.gpmBreakdownParty)) };
 }
 
+function gpmRegionalThresholdText(rules) {
+  const threshold = Number.isFinite(rules.threshold) && rules.threshold > 0 ? rules.threshold : null;
+  const legal = Number.isFinite(rules.legalThreshold) && rules.legalThreshold > 0 ? rules.legalThreshold : null;
+  return [legal !== null ? `${gpmRegionalPercent(legal)} legal threshold` : "",
+    threshold !== null && threshold !== legal ? `${gpmRegionalPercent(threshold)} modeled threshold` : ""].filter(Boolean).join(" · ");
+}
+
 function gpmRegionalNational(national) {
   if (!Number.isFinite(national?.support)) return "";
-  const details = [`<strong>${b(gpmRegionalPercent(national.support))}</strong> projected national support`];
-  if (Number.isFinite(national.threshold) && national.threshold > 0) {
-    const gap = national.threshold - national.support;
-    details.push(`${b(gpmRegionalPercent(national.threshold))} seat threshold` +
-      (gap > 0 ? ` · ${b(gpmRegionalPoints(gap).replace(/^\+/, ""))} short` : " · cleared"));
+  const details = [`<strong>${b(gpmRegionalPercent(national.support))}</strong> national vote estimate`];
+  const qualifyingShare = national.qualifyingShare ?? (national.mode === "national" ? national.support : null);
+  if (Number.isFinite(qualifyingShare) && national.threshold > 0) {
+    const gap = national.threshold - qualifyingShare;
+    details.push(gap > 0 ? `${b(gpmRegionalPoints(gap).replace(/^\+/, ""))} short of the threshold` : "Threshold cleared");
   }
   if (Number.isInteger(national.seats)) {
     details.push(`${national.seats} projected ${national.seats === 1 ? "seat" : "seats"}` +
       (Number.isInteger(national.totalSeats) ? " of " + national.totalSeats : ""));
   }
-  return `<p>${details.join(" · ")}</p><small>${b(gpmRegionalSeatRules(national))} · Estimate based on current conditions.</small>`;
+  const rules = [gpmRegionalSeatRules(national), gpmRegionalThresholdText(national)].filter(Boolean).join(" · ");
+  return `<p>${details.join(" · ")}</p><small>${b(rules)} · Estimate under current conditions. See Campaign Plan for the election-day outlook.</small>`;
 }
 
 function gpmRegionalSeatRules(rules) {
@@ -194,8 +202,12 @@ function gpmCampaignSpendingText(quote, ui) {
     : forecast.proposedPoints >= forecast.operationCap ? "This operation reaches its " + forecast.operationCap + "-point cap."
     : "Larger commitments have diminishing returns, up to " + forecast.operationCap + " points per operation. " +
       forecast.weightHeadroom.toFixed(2) + " effective points of headroom remain.";
-  const threshold = forecast.threshold > 0 ? " · " + gpmRegionalPercent(forecast.threshold) + " threshold" : "";
-  return ui.gameDate(forecast.electionDay) + " · " + headline + seats + spend + "\n" + gpmRegionalSeatRules(forecast) + threshold + " · " + limit +
+  const threshold = gpmRegionalThresholdText(forecast);
+  const qualification = forecast.mode === "regional" && forecast.threshold > 0 &&
+    Number.isFinite(before.qualifyingShare) && Number.isFinite(after.qualifyingShare)
+    ? ` · Share used for threshold ${gpmRegionalPercent(before.qualifyingShare)} → ${gpmRegionalPercent(after.qualifyingShare)}` : "";
+  const rules = [gpmRegionalSeatRules(forecast), threshold].filter(Boolean).join(" · ");
+  return ui.gameDate(forecast.electionDay) + " · " + headline + seats + spend + qualification + "\n" + rules + " · " + limit +
     " Estimate based on current conditions.";
 }
 
@@ -264,7 +276,7 @@ function gpmRegionalProjection(quote, ui) {
       ? ` · ${gpmRegionalPoints(outcome.nationalAfter - forecast.nationalBefore)} nationally` : "";
     return `<small>${b(label + chance + " · " + local + " locally" + national)}</small>`;
   }).join("");
-  return outcomes + `<small>Estimate for ${b(ui.gameDate(forecast.day))} if other conditions hold.</small>`;
+  return outcomes.join("") + `<small>Vote estimate on completion, ${b(ui.gameDate(forecast.day))}, if other conditions hold.</small>`;
 }
 
 function gpmRegionalSupportScale(regions) {
@@ -679,7 +691,8 @@ function gpmCloseRegionalMap(ui, returnToParty = false) {
 module.exports = {
   style,
   rendererFunctions: [gpmRegionalActionName, gpmRegionalReason, gpmRegionalRegionName, gpmRenderRegionalOverview,
-    gpmRegionalPercent, gpmRegionalPoints, gpmRegionalBreakdown, gpmRegionalBreakdownOpened, gpmRegionalNational, gpmRegionalSeatRules,
+    gpmRegionalPercent, gpmRegionalPoints, gpmRegionalBreakdown, gpmRegionalBreakdownOpened, gpmRegionalThresholdText,
+    gpmRegionalNational, gpmRegionalSeatRules,
     gpmCampaignSpendingText, gpmRegionalProjection, gpmRegionalProjectControls, gpmRegionalInlineTools, gpmRegionalClearPending,
     gpmRegionalSupportScale, gpmRegionalSupportPosition, gpmRegionalSupportColor, gpmRegionalSupportLegend,
     gpmRegionalMapLayout, gpmBindRegionalOverview, gpmRenderRegionalMap,

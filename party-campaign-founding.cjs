@@ -5,6 +5,13 @@ function gpmFoundingSupportCap(rules) {
     ? rules.startingSupport / 100 : .02;
 }
 
+function gpmFoundingSupportSeed(politics, rules) {
+  const support = (politics?.parties || []).map(party => Math.max(0, party.support || 0));
+  const total = support.reduce((sum, value) => sum + value, 0);
+  if (!Number.isFinite(total) || total <= 0) return 0;
+  return Math.min(total * gpmFoundingSupportCap(rules), Math.max(...support) / 4);
+}
+
 function gpmFoundingSeatPlan(country, party, requested) {
   const politics = country.pol;
   const institution = Xe(country);
@@ -55,6 +62,13 @@ function gpmFoundingSeatPlan(country, party, requested) {
 }
 
 function gpmApplyCampaignFounding(sim, country, party, rules, draft) {
+  if (party.gpmFoundingPackage) return party.gpmFoundingPackage;
+  const result = gpmCommitCampaignFounding(sim, country, party, rules, draft);
+  party.gpmFoundingPackage = result;
+  return result;
+}
+
+function gpmCommitCampaignFounding(sim, country, party, rules, draft) {
   if (rules.startingCash != null) party.organization.treasuryM = rules.startingCash / 1e6;
   if (rules.startingActivists != null) party.organization.activistsK = rules.startingActivists / 1e3;
   if (rules.startingInfluence != null) party.organization.influence = rules.startingInfluence;
@@ -100,5 +114,6 @@ function gpmApplyCampaignFounding(sim, country, party, rules, draft) {
 }
 
 module.exports = {
-  workerFunctions: [gpmFoundingSupportCap, gpmFoundingSeatPlan, gpmApplyCampaignFounding],
+  workerFunctions: [gpmFoundingSupportCap, gpmFoundingSupportSeed, gpmFoundingSeatPlan,
+    gpmApplyCampaignFounding, gpmCommitCampaignFounding],
 };
