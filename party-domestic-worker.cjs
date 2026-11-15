@@ -107,13 +107,33 @@ function gpmDomesticMoveMembers(source, target, share) {
   return moved;
 }
 
+function gpmDomesticWithStaff(sim, country, party, apply) {
+  if (!iGr(sim, country, party.id)) return apply(null);
+  const previous = gpmDomesticStaffScope.get(sim);
+  const scope = { party, actions: 0 };
+  gpmDomesticStaffScope.set(sim, scope);
+  try {
+    return apply(scope);
+  } finally {
+    if (previous) gpmDomesticStaffScope.set(sim, previous);
+    else gpmDomesticStaffScope.delete(sim);
+  }
+}
+
 function gpmDomesticReceipt(sim, country, party, kind, amount = {}) {
   if (sim.countries?.get(country.key) !== country || !party?.organization || !country.pol?.parties?.includes(party)) return;
-  const { cashM = 0, activistsK = 0, influence = 0, details = null } = amount;
-  if (!cashM && !activistsK && !influence) return;
+  const { cashM = 0, activistsK = 0, influence = 0, details = null, staffDecision = false } = amount;
+  const scope = gpmDomesticStaffScope.get(sim);
+  const staff = scope?.party === party && !["activists-returned", "membership-dues", "membership-upkeep"].includes(kind);
+  if (!cashM && !activistsK && !influence && !(staffDecision && staff)) return;
   const state = gpmDomesticState(party);
   const ledger = state.ledger ??= [];
-  ledger.unshift({ day: sim.day || 0, kind, cashM, activistsK, influence, details });
+  const entry = { day: sim.day || 0, kind, cashM, activistsK, influence, details };
+  if (staff) {
+    entry.staff = true;
+    scope.actions++;
+  }
+  ledger.unshift(entry);
   ledger.length = Math.min(ledger.length, 30);
   if (cashM >= 0 || kind === "membership-upkeep") return;
   const month = o2e(sim);
@@ -259,11 +279,11 @@ function registerPartyDomestic() {
 function patchDomesticWorker(source, replaceOnce) {
   const functions = [gpmDomesticMoney, gpmDomesticNormalizePlan, gpmDomesticEligibleParty, gpmDomesticPlanFor, gpmDomesticPolicy,
     gpmDomesticAllowsDonation, gpmDomesticDonationBudget, gpmDomesticState, gpmDomesticMembership, gpmDomesticMemberWeight, gpmDomesticMoveMembers,
-    gpmDomesticReceipt, gpmDomesticEarnMembers,
+    gpmDomesticWithStaff, gpmDomesticReceipt, gpmDomesticEarnMembers,
     gpmDomesticAssessMembership, gpmDomesticCompleteOutreach, gpmDomesticContestList, gpmDomesticFocusedContest,
     gpmDomesticReserve, gpmDomesticSpendThisMonth,
     gpmDomesticCanCommit, gpmDomesticView, registerPartyDomestic];
-  const declarations = `const gpmDomesticDefaults=${JSON.stringify(defaults)};\n` +
+  const declarations = `const gpmDomesticStaffScope = new WeakMap();\nconst gpmDomesticDefaults=${JSON.stringify(defaults)};\n` +
     `const gpmDomesticMembershipTerms=${JSON.stringify(membershipTerms)};\n${functions.join("\n")}\nregisterPartyDomestic();\n`;
   source = replaceOnce(source, "registerPartyOrganizing();\nregisterPartyCongressSize();",
     declarations + "registerPartyOrganizing();\nregisterPartyCongressSize();");

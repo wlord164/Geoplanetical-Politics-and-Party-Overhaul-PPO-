@@ -27,16 +27,23 @@ function renderPartyCongressChart(data, total, ui) {
   const colors = ["#e36469", "#886fd7", "#4894e2", "#62b69d", "#e0a759", "#d275a8", "#72b5be", "#bb8d72"];
   const dots = [];
   const legend = [];
+  const unrepresented = [];
+  const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumSignificantDigits: 2 });
   let pointIndex = 0;
 
-  for (const [index, group] of factions.entries()) {
+  for (const group of factions) {
+    if (!group.seats) {
+      unrepresented.push(`<span data-gpm-faction="${b(group.label)}">${b(group.label)} (${b(percent.format(group.share))})</span>`);
+      continue;
+    }
+    const index = legend.length;
     const id = `gpm-faction-${index}`;
     const color = colors[index] || `hsl(${Math.round(index * 137.508) % 360}, 65%, 68%)`;
     for (let seat = 0; seat < group.seats; seat++) {
       const point = points[pointIndex++];
       dots.push(`<circle class="seat" data-pty="${id}" cx="${(170 + point.x).toFixed(1)}" cy="${(168 + point.y).toFixed(1)}" r="${dotRadius.toFixed(1)}" fill="${color}"/>`);
     }
-    const detail = [...(group.labels || []), ...group.names].join(", ");
+    const detail = group.names.join(", ");
     const count = `${group.seats} ${group.seats === 1 ? "delegate" : "delegates"}`;
     legend.push(`<span class="hc-leg-item" tabindex="0" data-pty="${id}" data-gpm-faction="${b(group.label)}"${detail ? ` data-tip="${b(detail)}"` : ""} aria-label="${b([group.label, count, detail].filter(Boolean).join(", "))}"><i style="background:${color}"></i>${b(group.label)} <b>${group.seats}</b></span>`);
   }
@@ -47,7 +54,7 @@ function renderPartyCongressChart(data, total, ui) {
       ${dots.join("")}
     </svg>
     <div class="hc-legend">${legend.join("")}</div>
-  </div>`;
+  </div>${unrepresented.length ? `<small><strong>No delegates</strong> · ${unrepresented.join(" · ")}</small>` : ""}`;
 }
 
 function partyCongressPriorityName(kind) {
@@ -73,7 +80,9 @@ function partyCongressVoteSummary(vote, ui, forecast = false) {
   if (forecast) return count + " · " + (vote.passed ? "Would pass" : "Would fall short");
   const proposal = vote.kind === "priority" ? partyCongressPriorityName(vote.priority) + " priority" :
     vote.kind === "programme" ? (partyCongressProgrammes()[vote.programme]?.label || "Party programme") : vote.proposed + " delegates";
-  const grant = vote.passed && vote.bargain ? " · Grant paid to " + vote.bargain.label : "";
+  const label = vote.bargain?.label;
+  const grant = !vote.passed || !label ? "" : label === "Other factions"
+    ? " · Organizing grant paid" : " · Grant paid to " + label;
   return "Last vote · " + proposal + (vote.passed ? " adopted · " : " rejected · ") + count + grant;
 }
 
