@@ -11,23 +11,23 @@ function partyCongressRecognitionSeats(total) {
 }
 
 const factionTitles = {
-  "Authoritarian Left Nationalism": "Authoritarian Nationalist Left",
-  "Progressive Left Nationalism": "Progressive Nationalist",
-  "Socially Conservative Left Nationalism": "Conservative Nationalist Left",
-  "Left Nationalism": "Left Nationalist",
-  "Authoritarian National Conservatism": "Hardline National Conservative",
+  "Authoritarian Left Nationalism": "Left Nationalism",
+  "Progressive Left Nationalism": "Civic Nationalism",
+  "Socially Conservative Left Nationalism": "Left Conservatism",
+  "Left Nationalism": "Economic Nationalism",
+  "Authoritarian National Conservatism": "Integral Nationalism",
   "National Conservatism": "National Conservative",
   "Authoritarian Nationalism": "Authoritarian Nationalist",
   "Liberal Nationalism": "Liberal Nationalist",
   "Market-Oriented Nationalism": "Market Nationalist",
   "Nationalism": "Nationalist",
-  "Socially Conservative Authoritarian Left": "Conservative State Socialist",
+  "Socially Conservative Authoritarian Left": "Conservative Socialism",
   "Authoritarian Left": "Authoritarian Socialist",
   "Authoritarian Market Right": "Authoritarian Capitalist",
   "Authoritarian Conservatism": "Authoritarian Conservative",
   "Socially Progressive Authoritarianism": "Authoritarian Progressive",
   "Authoritarian Centrism": "Authoritarian Centrist",
-  "Socially Conservative Left": "Conservative Left",
+  "Socially Conservative Left": "Paternalistic Conservatism",
   "Internationalist Statist Left": "Internationalist Socialist",
   "Statist Left": "State Socialist",
   "Social Democracy": "Social Democrat",
@@ -43,13 +43,40 @@ const factionTitles = {
   "Social Liberalism": "Social Liberal",
   "Progressivism": "Progressive",
   "Social Conservatism": "Social Conservative",
-  "Liberal Centrism": "Liberal Centrist",
-  "Internationalist Centrism": "Internationalist Centrist",
+  "Liberal Centrism": "Constitutional Liberalism",
+  "Internationalist Centrism": "Internationalism",
   "Centrism": "Centrist",
 };
 
 function partyCongressFactionLabel(key) {
+  if (key?.startsWith("doctrine:")) return gpmCongressDoctrine(key.slice(9))?.label || key;
   return Object.hasOwn(gpmCongressFactionTitles, key) ? gpmCongressFactionTitles[key] : key;
+}
+
+function partyCongressFactionId(key) {
+  return key.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function partyCongressProfileDoctrine(data, profile, legacyKey) {
+  const context = data.identity?.congressDoctrine;
+  if (!context || data.factionLegacyProtectedLabels?.includes(legacyKey)) return null;
+  const assigned = data.factionLegacyAssignments?.[legacyKey];
+  if (assigned) return gpmCongressDoctrine(assigned);
+  const platform = gpmCongressDoctrine(context.platform);
+  if (!platform || profile.origin === "platform") return platform;
+  const wings = (context.wings || []).map(gpmCongressDoctrine).filter(Boolean);
+  const distance = candidate => gpmAxes.reduce((sum, { id }) =>
+    sum + (profile.ideology[id] - candidate.axes[id]) ** 2, 0);
+  if (!wings.length) return legacyKey === estimatePartyIdeology(platform.axes) && distance(platform) <= .64 ? platform : null;
+  let closest = platform;
+  let best = distance(platform);
+  for (const wing of wings) {
+    const separation = distance(wing);
+    if (separation >= best || separation > .64) continue;
+    closest = wing;
+    best = separation;
+  }
+  return closest;
 }
 
 function partyCongressPlatformTradition(data) {
@@ -65,10 +92,15 @@ function partyCongressPlatformTradition(data) {
 function partyCongressFactions(data, total) {
   const byLabel = new Map();
   for (const profile of data.profiles || []) {
-    const label = estimatePartyIdeology(profile.ideology);
-    if (!label || !Number.isFinite(profile.weight) || profile.weight <= 0) continue;
-    const group = byLabel.get(label) || { label, weight: 0, economicWeight: 0, governmentWeight: 0, names: [],
+    const legacyKey = estimatePartyIdeology(profile.ideology);
+    if (!legacyKey || !Number.isFinite(profile.weight) || profile.weight <= 0) continue;
+    const doctrine = partyCongressProfileDoctrine(data, profile, legacyKey);
+    const label = doctrine ? "doctrine:" + doctrine.id : legacyKey;
+    const group = byLabel.get(label) || { label, id: partyCongressFactionId(label),
+      doctrineId: doctrine?.id ?? null, positions: doctrine?.positions || null, description: doctrine?.description || "",
+      weight: 0, economicWeight: 0, governmentWeight: 0, names: [], legacyWeights: {},
       axisWeights: { econ: 0, gov: 0, social: 0, nat: 0 }, sources: { platform: 0, supporters: 0, people: 0 } };
+    group.legacyWeights[legacyKey] = (group.legacyWeights[legacyKey] || 0) + profile.weight;
     group.weight += profile.weight;
     if (profile.origin === "platform") group.sources.platform += profile.weight;
     if (profile.origin === "supporter-estimate") group.sources.supporters += profile.weight;
@@ -79,8 +111,11 @@ function partyCongressFactions(data, total) {
     byLabel.set(label, group);
   }
   for (const figure of data.figures || []) {
-    const group = byLabel.get(estimatePartyIdeology(figure.ideology));
-    if (group && figure.name) group.names.push(figure.name);
+    const legacyKey = estimatePartyIdeology(figure.ideology);
+    if (!legacyKey || !figure.name) continue;
+    const doctrine = partyCongressProfileDoctrine(data, { origin: "person", ideology: figure.ideology }, legacyKey);
+    const group = byLabel.get(doctrine ? "doctrine:" + doctrine.id : legacyKey);
+    if (group) group.names.push(figure.name);
   }
   const groups = [...byLabel.values()];
   const weight = groups.reduce((sum, group) => sum + group.weight, 0);
@@ -94,7 +129,7 @@ function partyCongressFactions(data, total) {
     const representation = group.weight * (factors[group.label] || 1);
     group.share = representation / fullRepresentation;
     for (const source of Object.keys(group.sources)) group.sources[source] /= group.weight;
-    group.displayLabel = tradition?.key === group.label && group.sources.platform >= .5
+    group.displayLabel = !group.doctrineId && tradition?.key === group.label && group.sources.platform >= .5
       ? tradition.label : partyCongressFactionLabel(group.label);
     const quota = total * representation / fullRepresentation;
     group.seats = Math.floor(quota);
@@ -103,13 +138,18 @@ function partyCongressFactions(data, total) {
   }
   const byRemainder = [...groups].sort((a, b) => b.remainder - a.remainder || a.label.localeCompare(b.label));
   for (let index = 0; index < unassigned; index++) byRemainder[index].seats++;
-  return groups.sort((a, b) => a.economicWeight / a.weight - b.economicWeight / b.weight || a.label.localeCompare(b.label));
+  const tokenOrder = [...groups].sort((a, b) =>
+    a.economicWeight / a.weight - b.economicWeight / b.weight || a.label.localeCompare(b.label));
+  tokenOrder.forEach((group, index) => { group.forecastOrder = index; });
+  return groups.sort((a, b) => b.seats - a.seats || a.label.localeCompare(b.label));
 }
 
 function partyCongressBallot(kind, current, factions) {
   const yes = factions.reduce((sum, group) => sum + group.yes, 0);
   const needed = Math.floor(current / 2) + 1;
-  return { ok: true, kind, current, total: current, needed, yes, passed: yes >= needed, factions };
+  const ordered = factions.map((group, index) => ({ ...group, id: partyCongressFactionId(group.label), forecastOrder: index }))
+    .sort((a, b) => b.currentSeats - a.currentSeats || b.proposedSeats - a.proposedSeats || a.label.localeCompare(b.label));
+  return { ok: true, kind, current, total: current, needed, yes, passed: yes >= needed, factions: ordered };
 }
 
 function partyCongressSizeVote(data, proposed, bargainLabel = "") {
@@ -120,9 +160,10 @@ function partyCongressSizeVote(data, proposed, bargainLabel = "") {
   if (data.day < data.nextSizeVoteDay) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextSizeVoteDay };
   }
-  const currentFactions = partyCongressFactions(data, current);
+  const byForecast = (a, b) => a.forecastOrder - b.forecastOrder;
+  const currentFactions = partyCongressFactions(data, current).sort(byForecast);
   if (!currentFactions.length) return { ok: false, reason: "unavailable" };
-  const proposedFactions = partyCongressFactions(data, proposed);
+  const proposedFactions = partyCongressFactions(data, proposed).sort(byForecast);
   const currentSeatsByFaction = new Map(currentFactions.filter(group => group.seats > 0).map(group => [group.label, group.seats]));
   const proposedSeatsByFaction = new Map(proposedFactions.filter(group => group.seats > 0).map(group => [group.label, group.seats]));
   const labels = new Set([...currentSeatsByFaction.keys(), ...proposedSeatsByFaction.keys()]);
@@ -198,7 +239,8 @@ function partyCongressPriorityVote(data, priority) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextPriorityVoteDay };
   }
   const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
-  const factions = partyCongressFactions(data, current).filter(group => group.seats > 0).map(group => {
+  const factions = partyCongressFactions(data, current).filter(group => group.seats > 0)
+    .sort((a, b) => a.forecastOrder - b.forecastOrder).map(group => {
     const economicLean = group.economicWeight / group.weight;
     const preferred = economicLean < 0 ? "investment" : "rally";
     const conviction = Math.min(1, Math.abs(economicLean) / .6);
@@ -232,8 +274,19 @@ function partyCongressProgrammes() {
   return gpmCongressProgrammes;
 }
 
+function partyCongressAvailableProgrammes(data) {
+  const family = data?.identity?.congressDoctrine?.family;
+  return Object.fromEntries(Object.entries(partyCongressProgrammes()).filter(([, choice]) =>
+    !choice.family || choice.family === family));
+}
+
+function partyCongressIssueAffinity(positions, choice) {
+  const stance = positions?.[choice.issue];
+  return Number.isFinite(stance) ? 1 - Math.abs(stance - choice.value) : 0;
+}
+
 function partyCongressProgrammeVote(data, programme) {
-  const choices = partyCongressProgrammes();
+  const choices = partyCongressAvailableProgrammes(data);
   const choice = Object.hasOwn(choices, programme) ? choices[programme] : null;
   if (!choice || !data) return { ok: false, reason: "unavailable" };
   if (data.programme) return { ok: false, reason: "active", nextVoteDay: data.programme.untilDay };
@@ -243,11 +296,19 @@ function partyCongressProgrammeVote(data, programme) {
   const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
   const endorsements = new Map((data.factionEndorsements || []).filter(offer => offer.programme === programme)
     .map(offer => [offer.label, offer.extraYes]));
-  const factions = partyCongressFactions(data, current).filter(group => group.seats > 0).map(group => {
-    const alignment = choice.direction * group[choice.axis] / group.weight;
+  const factions = partyCongressFactions(data, current).filter(group => group.seats > 0)
+    .sort((a, b) => a.forecastOrder - b.forecastOrder).map(group => {
+    const alignment = choice.issue ? partyCongressIssueAffinity(group.positions, choice) : choice.direction * group[choice.axis] / group.weight;
     const support = Math.max(0, Math.min(1, .55 + .40 * alignment));
     let reason = alignment > .12 ? "This programme fits the faction’s politics." :
       alignment < -.12 ? "The faction favors different policy priorities." : "The faction is open to this programme.";
+    if (choice.issue) {
+      const target = choice.issueLabel || choice.label;
+      reason = !Number.isFinite(group.positions?.[choice.issue]) ? "No recorded stance on " + target + "."
+        : alignment >= .55 ? "Its position on " + target + " supports this proposal."
+        : alignment <= -.43 ? "This crosses its red line on " + target + "."
+        : "Its position on " + target + " is open to compromise.";
+    }
     const baselineYes = Math.round(group.seats * support);
     const pledgedYes = Math.min(group.seats - baselineYes, endorsements.get(group.label) || 0);
     if (pledgedYes) reason += ` Its leader's endorsement brings ${pledgedYes} more delegates.`;
@@ -262,7 +323,8 @@ function partyCongressForecastKey(vote) {
   if (!vote.ok) return null;
   return JSON.stringify([
     vote.kind, vote.current, vote.proposed, vote.priority, vote.programme, vote.untilDay, vote.bargain ?? null,
-    vote.factions.map(({ label, currentSeats, proposedSeats, yes }) => [label, currentSeats, proposedSeats, yes]),
+    [...vote.factions].sort((a, b) => (a.forecastOrder ?? 0) - (b.forecastOrder ?? 0))
+      .map(({ label, currentSeats, proposedSeats, yes }) => [label, currentSeats, proposedSeats, yes]),
   ]);
 }
 
@@ -272,10 +334,13 @@ function partyCongressActiveProgramme(party, day) {
     ? programme : null;
 }
 
-function partyCongressProgrammeLawBonus(party, lawId, day) {
+function partyCongressProgrammeLawBonus(party, lawId, day, target) {
   const programme = partyCongressActiveProgramme(party, day);
   if (!programme) return 0;
-  return partyCongressProgrammes()[programme.kind].laws.includes(lawId) ? 1 : 0;
+  const choice = partyCongressProgrammes()[programme.kind];
+  if (!choice.laws.includes(lawId)) return 0;
+  if (!choice.lawTargets || target === undefined) return 1;
+  return Jr(choice.lawTargets[lawId], target) ? 1 : 0;
 }
 
 function partyCongressEligible(party) {
@@ -353,13 +418,14 @@ function registerPartyCongressSize() {
 
 module.exports = {
   sharedFunctions: [
-    `const gpmCongressProgrammes = ${JSON.stringify(congressProgrammes)};`,
+    `const gpmCongressProgrammes = {...${JSON.stringify(congressProgrammes)}, ...gpmCongressDoctrineProposals};`,
     `const gpmCongressFactionTitles = ${JSON.stringify(factionTitles)};`,
     `const gpmCongressRecognitionPercent = ${gpmCongressRecognitionPercent};`,
-    partyCongressFactionLabel, partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressRecognitionSeats,
+    partyCongressFactionLabel, partyCongressFactionId, partyCongressProfileDoctrine,
+    partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressRecognitionSeats,
     partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
     partyCongressPriorityIsValid, partyCongressPriorityCost, partyCongressPriorityVote,
-    partyCongressProgrammes, partyCongressProgrammeVote, partyCongressForecastKey,
+    partyCongressProgrammes, partyCongressAvailableProgrammes, partyCongressIssueAffinity, partyCongressProgrammeVote, partyCongressForecastKey,
   ],
   workerFunctions: [partyCongressActivePriority, partyCongressActiveProgramme, partyCongressProgrammeLawBonus,
     partyCongressEligible, applyPartyCongressVote, partyCongressAgenda, registerPartyCongressSize],

@@ -39,11 +39,13 @@ function gpmFactionDevelopmentReview(day, state, faction) {
   organization.factor = 1 + Math.min(.15, organization.members / 500 + fulfilledIssues.size * .01);
   const completed = programme => new Set(outcomes.filter(outcome => outcome.programme === programme)
     .map(outcome => outcome.issue)).size;
-  const programmes = Object.keys(partyCongressProgrammes());
-  faction.redLines = programmes.filter(id => gpmFactionAlignment(faction.ideology, id) <= -.43);
+  const family = gpmCongressDoctrine(faction.doctrineId)?.family;
+  const available = partyCongressAvailableProgrammes({ identity: { congressDoctrine: { family } } });
+  const programmes = Object.keys(available);
+  const affinity = id => gpmFactionAlignment(faction.ideology, id, faction.positions);
+  faction.redLines = programmes.filter(id => affinity(id) <= -.43);
   faction.priorities = programmes.filter(id => !faction.redLines.includes(id)).sort((a, b) =>
-    gpmFactionAlignment(faction.ideology, b) - .3 * completed(b) -
-    (gpmFactionAlignment(faction.ideology, a) - .3 * completed(a)) || a.localeCompare(b)).slice(0, 1);
+    affinity(b) - .3 * completed(b) - (affinity(a) - .3 * completed(a)) || a.localeCompare(b)).slice(0, 1);
 
   const agendaLaws = partyCongressProgrammes()[faction.priorities[0]]?.laws || [];
   faction.issuePriorities = Object.entries(gpmFactionIssues).flatMap(([id, issue]) => {
@@ -64,12 +66,13 @@ function gpmFactionObserveLaw(sim, country, procedure, before, after) {
   const party = YL(country, procedure.sponsorPartyId);
   const state = party?.gpmFactionPolitics;
   const programme = state && partyCongressActiveProgramme(party, sim.day);
-  if (!programme || !partyCongressProgrammeLawBonus(party, procedure.lawId, sim.day)) return;
+  if (!programme || !partyCongressProgrammeLawBonus(party, procedure.lawId, sim.day, after)) return;
   const issue = Object.keys(gpmFactionIssues).find(id => gpmFactionIssues[id].laws.includes(procedure.lawId));
   if (!issue) return;
 
   const law = ba(procedure.lawId);
-  if (!law || jWe(party, law, before, country) <= jWe(party, law, after, country)) return;
+  const choice = partyCongressProgrammes()[programme.kind];
+  if (!law || (!choice.lawTargets && jWe(party, law, before, country) <= jWe(party, law, after, country))) return;
   const outcomes = state.policyOutcomes ??= [];
   if (outcomes.some(outcome => outcome.id === procedure.id)) return;
   const programmeDay = party.gpmCongressSizeState.lastProgrammeVote?.day ?? programme.untilDay - 180;
