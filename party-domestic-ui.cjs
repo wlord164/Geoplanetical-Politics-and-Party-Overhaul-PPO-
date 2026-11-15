@@ -226,12 +226,16 @@ function gpmDomesticAgendaEntries(agenda) {
     row && typeof row.id === "string" && typeof row.title === "string");
 }
 
-function gpmDomesticAgendaHtml(agenda, ui) {
-  const rows = gpmDomesticAgendaEntries(agenda).filter(row => row.status !== "completed");
+function gpmDomesticAgendaHtml(state, ui) {
+  const rows = gpmDomesticAgendaEntries(state.data.agenda).filter(row => row.status !== "completed");
   if (!rows.length) return "";
-  return `<h4>Party schedule</h4><ul class="gpm-domestic-list">${rows.slice(0, 5).map(row =>
-    `<li><button class="k k-nav" type="button" ${gpmDomesticAgendaRoute(row)}>${b(row.title)}</button>
-      <small>${b([Number.isFinite(row.deadlineDay) && ui.gameDate(row.deadlineDay), row.status].filter(Boolean).join(" · "))}</small></li>`).join("")}</ul>`;
+  return `<h4>Party schedule</h4><ul class="gpm-domestic-list">${rows.slice(0, 5).map(row => {
+    const contest = row.kind === "vote" ? state.contests.find(item => item.id === row.contestId) : null;
+    const title = contest?.label ? `Election · ${contest.label}` : contest?.kind === "presidential" ? "Executive election"
+      : row.kind === "vote" ? "Legislative election" : row.title;
+    return `<li><button class="k k-nav" type="button" ${gpmDomesticAgendaRoute(row)}>${b(title)}</button>
+      <small>${b([Number.isFinite(row.deadlineDay) && ui.gameDate(row.deadlineDay), row.status].filter(Boolean).join(" · "))}</small></li>`;
+  }).join("")}</ul>`;
 }
 
 function gpmDomesticAgendaRoute(row) {
@@ -290,7 +294,7 @@ function gpmPaintDomestic(state, ui) {
   html("account", gpmDomesticAccount(state, ui));
   html("projects", gpmDomesticProjectRows(state, ui));
   html("log", gpmDomesticActivity(state, ui));
-  html("agenda", gpmDomesticAgendaHtml(state.data.agenda, ui));
+  html("agenda", gpmDomesticAgendaHtml(state, ui));
   html("forecast", state.forecast ? gpmDomesticForecastHtml(state.forecast, ui) +
     (Number.isFinite(state.forecastDay) ? `<small>Estimate as of ${b(ui.gameDate(state.forecastDay))}.</small>` : "") +
     (state.forecastError ? `<small>${b(state.forecastError)}</small>` : "") :

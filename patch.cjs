@@ -171,7 +171,7 @@ function setupIdeology(form) {
   return readIdeology;
 }
 
-function partyDialog({ create, parties = [], selectedPartyId, submit }) {
+function partyDialog({ create, parties = [], selectedPartyId, countryKey, submit }) {
   const dialog = document.createElement("dialog");
   dialog.className = "gpm-party-dialog";
   dialog.innerHTML = `<form>
@@ -199,24 +199,25 @@ function partyDialog({ create, parties = [], selectedPartyId, submit }) {
   const save = form.querySelector('[type="submit"]');
   const target = form.elements.targetParty;
   if (target) {
-    for (const party of parties) target.add(new Option(Sa(party), party.id));
+    for (const party of parties) target.add(new Option(Sa(party, countryKey), party.id));
     target.value = selectedPartyId;
     const fillNames = () => {
       const party = parties.find(item => item.id === target.value);
-      nameField.value = Sa(party);
-      tagField.value = s0(party, parties);
+      nameField.value = Sa(party, countryKey);
+      tagField.value = party?.nameDesc?.gpmTag ?? s0(party, parties, countryKey);
     };
     target.onchange = fillNames;
     fillNames();
   }
-  dialog.querySelector("[data-cancel]").onclick = () => dialog.close();
+  const cancel = dialog.querySelector("[data-cancel]");
+  cancel.onclick = () => dialog.close();
   dialog.addEventListener("close", () => dialog.remove(), { once: true });
   dialog.addEventListener("cancel", event => { if (save.disabled) event.preventDefault(); });
   form.onsubmit = async event => {
     event.preventDefault();
     const partyName = nameField.value.trim();
     if (!partyName) { nameField.focus(); return; }
-    save.disabled = true;
+    save.disabled = cancel.disabled = true;
     error.hidden = true;
     try {
       await submit({ name: partyName, tag: tagField.value.trim(), ideology: readIdeology?.(), ideologyPreset: form.elements.platform?.value, partyId: target?.value });
@@ -224,7 +225,7 @@ function partyDialog({ create, parties = [], selectedPartyId, submit }) {
     } catch (failure) {
       error.textContent = failure.message || "The party could not be updated.";
       error.hidden = false;
-      save.disabled = false;
+      save.disabled = cancel.disabled = false;
     }
   };
   document.body.append(dialog);
@@ -305,21 +306,46 @@ function mountPartyButtons() {
       try { start.click(); } finally { gpmNewParty = null; }
     }});
   };
-  document.addEventListener("click", event => {
-    if (!event.target.closest("[data-gpm-rename]") || document.querySelector(".gpm-party-dialog")) return;
+  let openingRename = false;
+  document.addEventListener("click", async event => {
+    const trigger = event.target.closest?.("[data-gpm-rename]");
+    if (!trigger || openingRename || document.querySelector(".gpm-party-dialog")) return;
     const session = ze;
     const control = session?.playerControl;
-    const parties = session?.player?.pol?.parties || [];
-    if (!parties.some(item => item.id === control?.partyId)) return;
-    partyDialog({ parties, selectedPartyId: control.partyId, submit: async draft => {
-      if (ze !== session) throw new Error("The active campaign changed.");
-      const result = await Te(session, "switchPlayerControl", [{
-        countryKey: control.countryKey, partyId: draft.partyId,
-        partyModRename: { name: draft.name, tag: draft.tag },
-      }]);
-      if (!result?.ok) throw new Error("The party could not be renamed.");
-      if (ze === session) he._renderModule?.();
-    }});
+    if (!control?.partyId) return;
+    openingRename = trigger.disabled = true;
+    trigger.parentElement.querySelector("[data-gpm-rename-error]")?.remove();
+    try {
+      const view = await session.queryView("politics.country");
+      if (ze !== session || session.playerControl?.partyId !== control.partyId ||
+          session.playerControl?.countryKey !== control.countryKey || !document.querySelector('[data-gpm-rename]')) return;
+      const parties = view?.player?.pol?.parties || [];
+      if (!parties.some(item => item.id === control.partyId)) throw new Error("The party list could not be loaded.");
+      partyDialog({ parties, selectedPartyId: control.partyId, countryKey: control.countryKey, submit: async draft => {
+        if (ze !== session || session.playerControl?.partyId !== control.partyId ||
+            session.playerControl?.countryKey !== control.countryKey) throw new Error("The active campaign or party changed.");
+        const result = await Te(session, "applyPlayerAction", [{
+          verb: "gpm.party.rename", countryKey: control.countryKey, targetPartyId: draft.partyId,
+          rename: { name: draft.name, tag: draft.tag },
+        }]);
+        if (!result?.ok) {
+          throw new Error(result?.reason === "name"
+            ? "Enter a name of 1–100 characters and an optional abbreviation of up to 24 characters."
+            : "The selected party could not be renamed.");
+        }
+        if (ze === session) he.refreshTab?.(session);
+      }});
+    } catch (error) {
+      if (trigger.isConnected) {
+        const message = document.createElement("small");
+        message.dataset.gpmRenameError = "";
+        message.setAttribute("role", "alert");
+        message.textContent = error.message || "The party list could not be loaded.";
+        trigger.after(message);
+      }
+    } finally {
+      openingRename = trigger.disabled = false;
+    }
   });
 }
 
@@ -332,22 +358,30 @@ function validatePartyName(value) {
   return { name, tag };
 }
 
-function renameDomesticParty(sim, input) {
-  const identity = validatePartyName(input.partyModRename);
-  const player = sim.player;
-  if (!identity || !player || player.key !== input.countryKey || typeof input.partyId !== "string") {
+function renameDomesticParty(sim, country, input) {
+  const identity = validatePartyName(input.rename);
+  if (!identity) return { ok: false, reason: "name" };
+  if (country?.key !== input.countryKey || country !== sim.player || typeof input.targetPartyId !== "string") {
     return { ok: false, reason: "party" };
   }
-  const party = fS(player, input.partyId);
+  const party = fS(country, input.targetPartyId);
   if (!party) return { ok: false, reason: "party" };
-  party.nameDesc = { ...party.nameDesc, gpmName: identity.name, gpmTag: identity.tag };
+  const descriptor = party.nameDesc || {};
+  if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag) return { ok: true, changed: false };
+  // Keep the founding status separate from the display name, including for generated party IDs.
+  const origin = /^np\d+$/.test(party.id) ? { gpmFounded: isCustomParty(party) } : {};
+  party.nameDesc = { ...descriptor, ...origin, gpmName: identity.name, gpmTag: identity.tag };
   return { ok: true, changed: true };
+}
+
+function registerPartyRename() {
+  n5t("gpm.party.rename", { apply: renameDomesticParty });
 }
 
 function isCustomParty(party) {
   const descriptor = party?.nameDesc;
   return descriptor?.gpmFounded === true ||
-    (typeof descriptor?.gpmName === "string" && /^np\d+$/.test(party.id));
+    (descriptor?.gpmFounded !== false && typeof descriptor?.gpmName === "string" && /^np\d+$/.test(party.id));
 }
 
 function createStartingParty(sim, draft) {
@@ -591,7 +625,7 @@ function patchWorker(bytes) {
     "\nfunction Zia(e){gpmHistoricalProvinceTransport(e.world,Nle);let t={};");
   js = replaceOnce(js, "function Jia(e,t,a=null){let r=$ia(t);WPe(r);",
     "function Jia(e,t,a=null){let r=$ia(t);WPe(r);gpmHistoricalProvinceTransport(e.world,Nle,r.byProvince);");
-  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
+  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${registerPartyRename}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyRename();\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(qa.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Ie("advancePartyModDay",()=>advancePartyModDay(e)),t.has(qa.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:',
     'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,campaigns:');
@@ -628,7 +662,6 @@ function patchWorker(bytes) {
     'e._reconcilePolity(t),gpmApplyEmergingPartyFounding(e,t,n),t._landscapeCd=24');
   js = replaceOnce(js, 'if((y.support||0)<.06&&(g.support||0)<.06&&om(y.ideology,g.ideology)<.35)', 'if(!isCustomParty(y)&&!isCustomParty(g)&&(y.support||0)<.06&&(g.support||0)<.06&&om(y.ideology,g.ideology)<.35)');
   js = replaceOnce(js, 'let m=i.find(f=>(f._starve||0)>=24);', 'let m=i.find(f=>!isCustomParty(f)&&(f._starve||0)>=24);');
-  js = replaceOnce(js, 'if(t==="switchPlayerControl")return e.switchPlayerControl(o[0]||{});', 'if(t==="switchPlayerControl")return o[0]?.partyModRename?renameDomesticParty(e,o[0]):e.switchPlayerControl(o[0]||{});');
   js = replaceOnce(js, 'this.sim=b,t.profileWorldTrade===!0', 'this.sim=b,o?retirePartyCongresses(b):t.playerControl?.partyModCreate&&createStartingParty(b,t.playerControl.partyModCreate),t.profileWorldTrade===!0');
   js = replaceOnce(js, 'comp:e.nameDesc.comp||null}:null}function qdr', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null,gpmHistoricalIdeology:e.nameDesc.gpmHistoricalIdeology||null,gpmHistoricalIdeologyEquivalent:e.nameDesc.gpmHistoricalIdeologyEquivalent||null}:null}function qdr');
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
@@ -682,8 +715,12 @@ function patchWorker(bytes) {
   worker = patchAgreementWorker(worker, replaceOnce);
   worker = replaceOnce(worker, 'regionalCampaign:partyRegionalCampaignView(e,t,a),',
     'regionalCampaign:partyRegionalCampaignView(e,t,a),agreement:partyAgreementView(e,t,a),');
-  worker = replaceOnce(worker, 'campaignPlan:gpmDomesticView(e,t,a),',
-    'campaignPlan:{...gpmDomesticView(e,t,a),agenda:gpmDomesticAgenda(e,t,a),recentResult:gpmPartyElectionRecapView(t,a)},');
+  // Source the controlled party's summary before the public party roster strips its private state.
+  worker = replaceOnce(worker, 'function yNo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding){',
+    'function yNo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan){');
+  worker = replaceOnce(worker, 'campaignPlan:gpmDomesticView(e,t,a),', 'campaignPlan:gpmPlan,');
+  worker = replaceOnce(worker, 'party:yNo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId))',
+    'party:yNo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId),{...gpmDomesticView(e,t,r.partyId),agenda:gpmDomesticAgenda(e,t,r.partyId),recentResult:gpmPartyElectionRecapView(t,r.partyId)})');
   worker = replaceOnce(worker, ',situation:ELe(e,a),pressures:NBo(e,a),technology:',
     ',situation:ELe(e,a),gpmDomesticAgenda:gpmDomesticAgenda(e,a,Uo(a)),pressures:NBo(e,a),technology:');
   worker = replaceOnce(worker, 'e._onLegislative(t,i,p,h,d,b)?.electionResolved===!0?e._politicalCampaigns.delete(u):i.composition=p',
