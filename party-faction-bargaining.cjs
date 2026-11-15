@@ -196,7 +196,7 @@ function gpmFactionClose(sim, country, party, state, offer, status, reason) {
     faction.trust = Math.max(0, faction.trust - 15);
     if (offer.cashM && party.organization) {
       party.organization.treasuryM = gpmDomesticMoney(party.organization.treasuryM + offer.cashM);
-      gpmDomesticReceipt(sim, country, party, "faction-refund", { cashM: offer.cashM, details: faction.label });
+      gpmDomesticReceipt(sim, country, party, "faction-refund", { cashM: offer.cashM, details: faction.displayLabel || faction.label });
     }
   }
   gpmFactionCloseDevelopment(state, faction, offer);
@@ -270,13 +270,14 @@ function gpmFactionAction(sim, country, party, input, actor = "player") {
   }
   if (partyCongressActiveProgramme(party, sim.day) ||
     sim.day < (party.gpmCongressSizeState?.nextProgrammeVoteDay || 0)) return { ok: false, reason: "programme" };
-  if (state.factions[offer.factionId].redLines.includes(offer.programme)) return { ok: false, reason: "red-line" };
+  const faction = state.factions[offer.factionId];
+  if (faction.redLines.includes(offer.programme)) return { ok: false, reason: "red-line" };
   if (!gpmFactionCashAvailable(sim, party, offer.cashM, actor, offer.subject)) return { ok: false, reason: "budget" };
   if (offer.cashM) party.organization.treasuryM = gpmDomesticMoney(party.organization.treasuryM - offer.cashM);
   Object.assign(offer, { status: "accepted", reason: offer.cashM ? "reserved" : "accepted", acceptedDay: sim.day,
     reservedMonth: o2e(sim), acceptedBy: actor });
   gpmDomesticReceipt(sim, country, party, "faction-commitment", { cashM: -offer.cashM,
-    details: state.factions[offer.factionId].label, staffDecision: true });
+    details: faction.displayLabel || faction.label, staffDecision: true });
   return { ok: true, changed: true, offer: gpmFactionPublicOffer(offer) };
 }
 
@@ -327,7 +328,7 @@ function gpmFactionAgenda(sim, country, partyId) {
   const state = YL(country, partyId)?.gpmFactionPolitics;
   return (state?.offers || []).filter(offer => gpmFactionOpen(offer) && offer.deadlineDay > sim.day)
     .map(offer => ({ id: offer.id, kind: "congress", tab: "congress",
-      title: `${state.factions[offer.factionId].label} · ${partyCongressProgrammes()[offer.programme].label}`,
+      title: `${state.factions[offer.factionId].displayLabel || state.factions[offer.factionId].label} · ${partyCongressProgrammes()[offer.programme].label}`,
       day: offer.day, deadlineDay: offer.deadlineDay, status: offer.status }));
 }
 
