@@ -271,7 +271,7 @@ function registerPartyDomestic() {
       if (!gpmDomesticEligibleParty(country, party) || !iGr(sim, country, party.id)) return { ok: false, reason: "party" };
       const state = gpmDomesticState(party);
       state.plan = gpmDomesticNormalizePlan(input.plan);
-      return { ok: true, changed: true, plan: state.plan };
+      return { ok: true, changed: true, day: sim.day, plan: state.plan, campaignPlan: gpmDomesticView(sim, country, party.id) };
     },
   });
 }

@@ -333,7 +333,7 @@ function gpmOpenDomesticAgendaLink(ui, node) {
 
 function gpmPaintDomestic(state, ui) {
   const panel = state.panel;
-  if (!panel?.isConnected) return;
+  if (!panel?.isConnected || panel.closest('[role="tabpanel"]')?.hidden) return;
   const html = (name, value) => {
     const node = panel.querySelector(`[data-gpm-domestic-${name}]`);
     if (node._gpmRenderedHtml !== value) {
@@ -360,18 +360,23 @@ function gpmPaintDomestic(state, ui) {
     resultDetails.open = state.resultOpen === true;
     resultDetails.ontoggle = () => { if (resultDetails.isConnected) state.resultOpen = resultDetails.open; };
   }
-  const status = panel.querySelector("[data-gpm-domestic-status]");
-  status.textContent = state.status;
-  for (const input of panel.querySelectorAll("[data-gpm-domestic-form] [name]")) {
-    input.disabled = state.saving || !state.fundingEnabled && ["allowForeignFunding", "allowForeignDonations"].includes(input.name);
-  }
-  panel.querySelector('[type="submit"]').disabled = state.saving || !state.dirty;
+  gpmPaintDomesticForm(state);
   panel.querySelector("[data-gpm-domestic-refresh]").disabled = state.forecastPending || !state.contestId;
   if (state.focusRecap && !state.forecastPending && recap.textContent) {
     state.focusRecap = false;
     recap.scrollIntoView({ block: "nearest" });
     recap.focus({ preventScroll: true });
   }
+}
+
+function gpmPaintDomesticForm(state) {
+  const panel = state.panel;
+  if (!panel?.isConnected) return;
+  panel.querySelector("[data-gpm-domestic-status]").textContent = state.status;
+  for (const input of panel.querySelectorAll("[data-gpm-domestic-form] [name]")) {
+    input.disabled = state.saving || !state.fundingEnabled && ["allowForeignFunding", "allowForeignDonations"].includes(input.name);
+  }
+  panel.querySelector('[type="submit"]').disabled = state.saving || !state.dirty;
 }
 
 function gpmReadDomesticDraft(form) {
@@ -395,40 +400,52 @@ function gpmFillDomesticDraft(form, draft) {
   }
 }
 
-async function gpmRequestDomesticForecast(state, ui, force = false) {
+function gpmRequestDomesticForecast(state, ui, force = false) {
   const id = state.contestId;
   if (!id) {
     state.forecast = null;
     state.forecastPending = false;
     state.forecastError = "";
-    state.forecastRequest++;
+    state.forecastRequest = null;
     gpmPaintDomestic(state, ui);
     return;
   }
   const day = state.view.day || 0;
-  if (!force && state.forecastContestId === id && (state.forecastPending || day - state.forecastDay < 7)) return;
-  const request = ++state.forecastRequest;
-  state.forecastContestId = id;
-  state.forecastDay = day;
-  if (state.forecast?.contestId !== id) state.forecast = null;
-  state.forecastPending = true;
-  state.forecastError = "";
-  gpmPaintDomestic(state, ui);
+  const recent = state.forecastContestId === id && day - state.forecastDay < 7;
+  if (state.forecastRequest?.id !== id && (force || !recent)) {
+    state.forecastRequest = { id, day };
+    state.forecastContestId = id;
+    if (state.forecast?.contestId !== id) state.forecast = null;
+    state.forecastPending = true;
+    state.forecastError = "";
+    gpmPaintDomestic(state, ui);
+  }
+  if (state.forecastRequest && !state.forecastRunning) void gpmRunDomesticForecast(state, ui);
+}
+
+async function gpmRunDomesticForecast(state, ui) {
+  const isCurrent = () => ui._gpmCampaignPlanUi === state && ui._mpSession === state.session;
+  state.forecastRunning = true;
   try {
-    const result = await at(state.session, "gpm.partyCampaignPlanForecast", { contestId: id });
-    if (state.forecastRequest !== request || ui._gpmCampaignPlanUi !== state) return;
-    state.forecast = result?.contestId === id ? result : null;
-    state.forecastDay = day;
-    if (!state.forecast) state.forecastError = "An estimate is unavailable for this contest.";
-  } catch {
-    if (state.forecastRequest !== request || ui._gpmCampaignPlanUi !== state) return;
-    state.forecastError = "Could not refresh the estimate. Try again.";
-    state.forecastDay = day;
-  } finally {
-    if (state.forecastRequest === request && ui._gpmCampaignPlanUi === state) {
+    while (isCurrent() && state.forecastRequest && state.panel?.isConnected && !state.panel.closest('[role="tabpanel"]')?.hidden) {
+      const request = state.forecastRequest;
+      let result, error;
+      try {
+        result = await at(state.session, "gpm.partyCampaignPlanForecast", { contestId: request.id });
+        if (result?.contestId !== request.id) error = "An estimate is unavailable for this contest.";
+      } catch {
+        error = "Could not refresh the estimate. Try again.";
+      }
+      if (!isCurrent() || request !== state.forecastRequest) continue;
+      state.forecastRequest = null;
       state.forecastPending = false;
+      state.forecastDay = request.day;
+      state.forecastError = error || "";
+      if (!error) state.forecast = result;
       gpmPaintDomestic(state, ui);
     }
+  } finally {
+    state.forecastRunning = false;
   }
 }
 
@@ -436,7 +453,7 @@ async function gpmSaveCampaignPlan(state, ui) {
   if (state.saving || !state.dirty || ui._mpSession !== state.session) return;
   state.saving = true;
   state.status = "Saving plan…";
-  gpmPaintDomestic(state, ui);
+  gpmPaintDomesticForm(state);
   try {
     const plan = state.draft;
     const result = await Te(state.session, "applyPlayerAction", [{ verb: "gpm.party.domestic.plan", partyId: state.partyId, plan }]);
@@ -449,36 +466,31 @@ async function gpmSaveCampaignPlan(state, ui) {
     }
     state.draft = result.plan || plan;
     state.appliedPlan = state.draft;
-    state.data = { ...state.data, plan: state.appliedPlan };
+    if (result.campaignPlan?.partyId === state.partyId && !(state.view.day > result.day)) {
+      state.data = { ...state.data, ...result.campaignPlan, plan: state.appliedPlan };
+    } else {
+      state.data = { ...state.data, plan: state.appliedPlan };
+    }
     state.dirty = false;
     state.status = state.draft.enabled ? "Plan saved. Staff can act on the campaign schedule." : "Plan saved. Staff automation is off.";
-    state.planSavedAt = state.view.day;
-    gpmPaintDomestic(state, ui);
-    try {
-      const snapshot = await at(state.session, G.POLITICS);
-      if (ui._gpmCampaignPlanUi !== state || ui._mpSession !== state.session) return;
-      const refreshed = Va(state.session, snapshot);
-      const profile = state.panel?.closest(".gpm-party-profile");
-      if (profile && refreshed?.day >= state.view.day && refreshed.player?.key === state.countryKey &&
-          refreshed.party?.campaignPlan?.partyId === state.partyId) gpmBindCampaignPlan(profile, refreshed, ui);
-    } catch (error) {
-      console.warn("[PPO] Could not refresh the saved campaign plan view", error);
+    state.planSavedAt = Number.isFinite(result.day) ? result.day : state.view.day;
+    const profile = state.panel?.closest(".gpm-party-profile");
+    if (profile) {
+      const view = { ...state.view, party: { ...state.view.party, campaignPlan: state.data } };
+      gpmBindCampaignPlan(profile, view, ui, false);
+      gpmFillDomesticDraft(state.panel.querySelector("[data-gpm-domestic-form]"), state.draft);
     }
-    if (ui._gpmCampaignPlanUi !== state || ui._mpSession !== state.session) return;
-    ui.refreshHUD?.(state.session);
-    ui.refreshTab?.(state.session);
-    void gpmRequestDomesticForecast(state, ui, true);
   } catch {
     if (ui._gpmCampaignPlanUi === state) state.status = "Could not save this plan. Try again.";
   } finally {
     if (ui._gpmCampaignPlanUi === state) {
       state.saving = false;
-      gpmPaintDomestic(state, ui);
+      gpmPaintDomesticForm(state);
     }
   }
 }
 
-function gpmBindCampaignPlan(profile, view, ui) {
+function gpmBindCampaignPlan(profile, view, ui, refreshForecast = true) {
   const panel = profile.querySelector(".gpm-domestic");
   const data = view.party?.campaignPlan;
   if (!panel || !data) return;
@@ -487,7 +499,7 @@ function gpmBindCampaignPlan(profile, view, ui) {
   let state = ui._gpmCampaignPlanUi;
   if (!state || state.session !== session || state.partyId !== data.partyId || state.countryKey !== countryKey) {
     state = ui._gpmCampaignPlanUi = { session, partyId: data.partyId, countryKey, draft: data.plan,
-      contestId: null, dirty: false, saving: false, status: "", forecastRequest: 0, forecastDay: -Infinity };
+      contestId: null, dirty: false, saving: false, status: "", forecastRequest: null, forecastDay: -Infinity };
   }
   state.view = view;
   if (state.appliedPlan && view.day > state.planSavedAt) state.appliedPlan = null;
@@ -538,7 +550,7 @@ function gpmBindCampaignPlan(profile, view, ui) {
       state.draft = gpmReadDomesticDraft(form);
       state.dirty = true;
       state.status = "";
-      gpmPaintDomestic(state, ui);
+      gpmPaintDomesticForm(state);
     };
     form.onsubmit = event => {
       event.preventDefault();
@@ -560,7 +572,7 @@ function gpmBindCampaignPlan(profile, view, ui) {
     panel.querySelector("[data-gpm-domestic-refresh]").onclick = () => void gpmRequestDomesticForecast(state, ui, true);
   }
   gpmPaintDomestic(state, ui);
-  void gpmRequestDomesticForecast(state, ui, Boolean(requested));
+  if (refreshForecast) gpmRequestDomesticForecast(state, ui, Boolean(requested));
 }
 
 function patchPartyDomesticRenderer(js, replaceOnce) {
@@ -588,7 +600,7 @@ const rendererFunctions = [gpmRenderCampaignPlan, gpmDomesticMoney, gpmDomesticC
   gpmDomesticForecastHtml, gpmDomesticRecap, gpmDomesticProjectRows, gpmDomesticActivityLabel, gpmDomesticActivityTarget,
   gpmDomesticStaffStatus, gpmDomesticActivity, gpmDomesticAgendaEntries,
   gpmDomesticAgendaHtml, gpmDomesticAgendaRoute, gpmDomesticSitroomRows, gpmDismissDomesticRecent,
-  gpmOpenDomesticAgendaLink, gpmPaintDomestic, gpmReadDomesticDraft,
-  gpmFillDomesticDraft, gpmRequestDomesticForecast, gpmSaveCampaignPlan, gpmBindCampaignPlan];
+  gpmOpenDomesticAgendaLink, gpmPaintDomestic, gpmPaintDomesticForm, gpmReadDomesticDraft,
+  gpmFillDomesticDraft, gpmRequestDomesticForecast, gpmRunDomesticForecast, gpmSaveCampaignPlan, gpmBindCampaignPlan];
 
 module.exports = { patchPartyDomesticRenderer };
