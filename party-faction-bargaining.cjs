@@ -31,7 +31,24 @@ function gpmFactionSetDoctrine(faction, group) {
   faction.displayLabel = group.displayLabel;
   faction.doctrineId = group.doctrineId;
   faction.positions = group.positions;
-  faction.ideology = Object.fromEntries(gpmAxes.map(({ id }) => [id, group.axisWeights[id] / group.weight]));
+}
+
+function gpmFactionHasRedLine(faction, programme) {
+  const choice = partyCongressProgrammes()[programme];
+  return choice?.issue ? partyCongressIssueAffinity(faction.positions, choice) <= -.43
+    : (faction.redLines || []).includes(programme);
+}
+
+function gpmFactionAddMigratedDoctrinePolicy(faction) {
+  const family = gpmCongressDoctrine(faction.doctrineId)?.family;
+  const choices = Object.entries(partyCongressProgrammes()).filter(([, choice]) => choice.issue && choice.family === family);
+  const opposing = choices.filter(([id]) => gpmFactionHasRedLine(faction, id)).map(([id]) => id);
+  const supported = choices.map(([id, choice]) => ({ id, affinity: partyCongressIssueAffinity(faction.positions, choice) }))
+    .filter(choice => choice.affinity > .12)
+    .sort((a, b) => b.affinity - a.affinity || a.id.localeCompare(b.id));
+  // A migrated term keeps legacy priorities and red lines. Only the newly available motions need positions.
+  faction.redLines = [...new Set([...(faction.redLines || []), ...opposing])];
+  if (supported.length) faction.priorities = [...new Set([supported[0].id, ...(faction.priorities || [])])];
 }
 
 function gpmFactionMigratePartyDoctrines(sim, country, party) {
@@ -73,6 +90,7 @@ function gpmFactionMigratePartyDoctrines(sim, country, party) {
     faction.id = target.id;
     faction.label = target.label;
     gpmFactionSetDoctrine(faction, target);
+    gpmFactionAddMigratedDoctrinePolicy(faction);
   }
   for (const offer of state.offers || []) {
     const previousId = offer.factionId;
@@ -124,6 +142,7 @@ function gpmFactionReview(sim, country, party) {
   const baselineByLabel = new Map(baseline.map(group => [group.label, group]));
   const refresh = (faction, group) => {
     gpmFactionSetDoctrine(faction, group);
+    faction.ideology = Object.fromEntries(gpmAxes.map(({ id }) => [id, group.axisWeights[id] / group.weight]));
     gpmFactionDevelopmentReview(sim.day, state, faction);
   };
   for (const faction of Object.values(state.factions)) {
@@ -261,7 +280,7 @@ function gpmFactionQuote(sim, country, party, input, actor) {
   const money = Math.max(needed, gpmDomesticMoney(cashM));
   const support = .18 + .10 * affinity + .002 * (faction.trust - 50) + (subject === "organizing" ? .08 : 0);
   const extraYes = Math.min((group?.currentSeats || 0) - (group?.yes || 0), Math.max(1, Math.round(faction.seats * support)));
-  const decision = faction.redLines.includes(programme) ? ["refused", "red-line"] :
+  const decision = gpmFactionHasRedLine(faction, programme) ? ["refused", "red-line"] :
     !extraYes ? ["refused", "programme"] :
     !gpmFactionCashAvailable(sim, party, money, actor, subject) ? ["refused", "budget"] :
     cashM < needed ? ["countered", "market"] : ["offered", affinity >= .12 ? "aligned" : "open"];
@@ -371,7 +390,7 @@ function gpmFactionAction(sim, country, party, input, actor = "player") {
   if (partyCongressActiveProgramme(party, sim.day) ||
     sim.day < (party.gpmCongressSizeState?.nextProgrammeVoteDay || 0)) return { ok: false, reason: "programme" };
   const faction = state.factions[offer.factionId];
-  if (faction.redLines.includes(offer.programme)) return { ok: false, reason: "red-line" };
+  if (gpmFactionHasRedLine(faction, offer.programme)) return { ok: false, reason: "red-line" };
   if (!gpmFactionCashAvailable(sim, party, offer.cashM, actor, offer.subject)) return { ok: false, reason: "budget" };
   if (offer.cashM) party.organization.treasuryM = gpmDomesticMoney(party.organization.treasuryM - offer.cashM);
   Object.assign(offer, { status: "accepted", reason: offer.cashM ? "reserved" : "accepted", acceptedDay: sim.day,
@@ -447,6 +466,7 @@ function registerPartyFactionBargaining() {
 module.exports = { workerFunctions: [
   `const gpmFactionMandateDefaults = ${JSON.stringify(defaultMandate)};`,
   gpmFactionMandate, gpmFactionId, gpmFactionResolveId, gpmFactionAlignment, gpmFactionSetDoctrine,
+  gpmFactionHasRedLine, gpmFactionAddMigratedDoctrinePolicy,
   gpmFactionOpen, gpmFactionMigratePartyDoctrines, gpmMigrateFactionDoctrines, gpmFactionPublicOffer, gpmFactionReview, gpmFactionUpdateLeaders,
   gpmFactionLiveLeader, gpmFactionEndorsements, gpmFactionPresentationTitles, gpmFactionPresentationTitle, gpmFactionView, gpmFactionCongressData, gpmFactionCashAvailable, gpmFactionQuote, gpmFactionClose,
   gpmFactionExpire, gpmFactionSettleVote, gpmFactionAction, gpmFactionAutomate, gpmFactionDaily, gpmFactionAgenda,
