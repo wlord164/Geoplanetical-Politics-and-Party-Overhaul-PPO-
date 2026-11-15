@@ -276,7 +276,7 @@ function gpmRegionalProjection(quote, ui) {
       ? ` · ${gpmRegionalPoints(outcome.nationalAfter - forecast.nationalBefore)} nationally` : "";
     return `<small>${b(label + chance + " · " + local + " locally" + national)}</small>`;
   }).join("");
-  return outcomes.join("") + `<small>Vote estimate on completion, ${b(ui.gameDate(forecast.day))}, if other conditions hold.</small>`;
+  return outcomes + `<small>Vote estimate on completion, ${b(ui.gameDate(forecast.day))}, if other conditions hold.</small>`;
 }
 
 function gpmRegionalSupportScale(regions) {
