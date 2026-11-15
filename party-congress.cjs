@@ -37,6 +37,7 @@ function renderPartyCongressChart(factions, total, ui) {
     const sources = [
       ["Party platform", group.sources.platform],
       ["Voter alignment", group.sources.supporters],
+      ["Membership and outreach", group.sources.members],
       ["Known figures", group.sources.people],
     ].filter(([, weight]) => weight > 0).map(([name, weight]) => name + " " + percent.format(weight));
     const scores = Object.entries({ econ: "Economy", social: "Social policy", gov: "Authority", nat: "National orientation" })

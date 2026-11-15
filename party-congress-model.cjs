@@ -49,6 +49,8 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
   const figurePool = .10;
   const blocInfluence = .70;
   const blocIdeals = new Map(Fwe(country).map(group => [group.id, group.ideal]));
+  const votingPressure = country.pol?.gpmPoliticalCrisis?.weights;
+  if (votingPressure && Object.keys(votingPressure).length) electorate = partyCongressPlanningData(sim, country).electorate;
   const support = partySupportBaseView(sim, country, partyId, electorate);
   const evidence = [];
   for (const bloc of support?.blocs || []) {
@@ -59,6 +61,20 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
       id, platform[id] * (1 - blocInfluence) + ideal[id] * blocInfluence,
     ]));
     evidence.push({ origin: "supporter-estimate", sourceId: bloc.id, ideology, weight: supportPool * bloc.shareOfSupport });
+  }
+  // Member strength changes Congress only where the party has actually organized in a voter bloc.
+  const membershipShare = .35 * Math.min(1, gpmDomesticMembership(party).members / Math.max(250, (country.pop || 0) * 75));
+  if (membershipShare > 0 && evidence.length) {
+    const organized = evidence.map(profile => ({ ...profile, origin: "membership", weight: profile.weight * Math.max(
+      party.gpmOrganizing?.groups?.[profile.sourceId] || 0, party.outreach?.networks?.[profile.sourceId] || 0) }));
+    const organization = organized.reduce((sum, profile) => sum + profile.weight, 0);
+    if (organization > 0) {
+      const pool = membershipShare * evidence.reduce((sum, profile) => sum + profile.weight, 0);
+      for (const profile of evidence) profile.weight *= 1 - membershipShare;
+      for (const profile of organized) {
+        if (profile.weight > 0) evidence.push({ ...profile, weight: pool * profile.weight / organization });
+      }
+    }
   }
   if (figures.length) {
     const weight = figurePool / figures.length;
@@ -109,7 +125,7 @@ function partyCongressPlanningData(sim, country) {
   }
   if (!index.countries.has(country.key)) {
     index.countries.set(country.key, {
-      electorate: sim._electorateBreakdown(country),
+      electorate: sim._electorateBreakdown(country, false),
       people: index.people.get(String(country.key)) || [],
     });
   }

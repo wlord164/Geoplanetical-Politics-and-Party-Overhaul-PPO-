@@ -54,6 +54,8 @@ Back a live, unresolved peaceful mobilization to build support in its affected b
 
 Meetings and backing share a +50% voting-weight cap per party and bloc. Each quote scales with the room under that cap. The panel shows the organizing half-life saved for the campaign, which is 180 days under Standard rules. Bloc gains feed the game's national support calculation.
 
+Sustained pressure from lost jobs, rising prices, outbreaks, or political instability can increase support for opposition parties when confidence in the government is low. Credibility, real organizing capacity, and fit with local voters determine which parties gain. The effect builds over several weeks and eases during recovery. A party benefiting from the shift can recruit more members when its public campaign work completes. Congress considers membership and outreach separately from those changes in national voting intentions.
+
 In My Party, open Party Congress to see estimated ideological factions in an Assembly-style semicircle. Each dot represents one modeled delegate. Congress starts at 100 delegates. The legend names each represented faction. The breakdown also lists named tendencies with no delegates.
 
 Use the slider to propose a Congress of 50 to 200 delegates. Check each faction's current and proposed representation, reasons, and expected yes and no votes. A faction can gain delegates but still oppose the motion if its share of Congress shrinks. More than half of the current delegates must vote yes. On a motion forecast to fail, you can offer one opposing faction an organizing grant to persuade some of its delegates. The preview shows the cost and extra votes. The party treasury pays the grant only if the motion passes.

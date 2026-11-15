@@ -791,6 +791,7 @@ function patchWorker(bytes) {
     'Adr(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party)');
   worker = patchFactionPeopleWorker(worker, replaceOnce);
   worker = patchFactionDevelopmentWorker(worker, replaceOnce);
+  worker = require("./party-radicalization.cjs").patchPoliticalCrisisWorker(worker, replaceOnce);
   return Buffer.from(worker);
 }
 

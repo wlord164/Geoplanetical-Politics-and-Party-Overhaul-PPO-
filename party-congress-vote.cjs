@@ -99,11 +99,12 @@ function partyCongressFactions(data, total) {
     const group = byLabel.get(label) || { label, id: partyCongressFactionId(label),
       doctrineId: doctrine?.id ?? null, positions: doctrine?.positions || null, description: doctrine?.description || "",
       weight: 0, economicWeight: 0, governmentWeight: 0, names: [], legacyWeights: {},
-      axisWeights: { econ: 0, gov: 0, social: 0, nat: 0 }, sources: { platform: 0, supporters: 0, people: 0 } };
+      axisWeights: { econ: 0, gov: 0, social: 0, nat: 0 }, sources: { platform: 0, supporters: 0, members: 0, people: 0 } };
     group.legacyWeights[legacyKey] = (group.legacyWeights[legacyKey] || 0) + profile.weight;
     group.weight += profile.weight;
     if (profile.origin === "platform") group.sources.platform += profile.weight;
     if (profile.origin === "supporter-estimate") group.sources.supporters += profile.weight;
+    if (profile.origin === "membership") group.sources.members += profile.weight;
     if (profile.origin === "person") group.sources.people += profile.weight;
     group.economicWeight += profile.weight * profile.ideology.econ;
     group.governmentWeight += profile.weight * (profile.ideology.gov || 0);
