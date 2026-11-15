@@ -257,6 +257,12 @@ function mountPartyButtons() {
     .gpm-organizing-action button { justify-self: start; }
     .gpm-organizing-action label { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }
     .gpm-party-congress { display: grid; gap: var(--gap-2); }
+    .gpm-congress-leading { display: grid; gap: var(--gap-1); padding: var(--gap-2); border: 1px solid var(--line, #474950); border-radius: var(--radius-1, 6px); }
+    .gpm-congress-leading div { display: flex; align-items: baseline; justify-content: space-between; gap: var(--gap-2); flex-wrap: wrap; }
+    .gpm-congress-leading strong { font-size: 1.15em; }
+    .gpm-congress-evidence { margin-top: var(--gap-2); }
+    .gpm-congress-evidence ul { display: grid; gap: var(--gap-2); padding-left: var(--gap-3); }
+    .gpm-congress-evidence li small { display: block; color: var(--text-2); }
     .gpm-congress-control { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }
     .gpm-congress-size-label { display: block; }
     .gpm-congress-size-range { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--gap-2); }
