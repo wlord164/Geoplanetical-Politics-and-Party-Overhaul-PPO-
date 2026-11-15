@@ -64,7 +64,7 @@ Each ballot has a 14-day wait before it can be held again. An adopted campaign p
 
 Congress names the largest ideological faction above the chart and lists represented factions in delegate order. A bloc backed by the party’s declared platform can carry that tradition’s name. Open Faction positions and evidence for policy scores, sources, and tendencies with no delegates. Hover over a faction to highlight its seats.
 
-Convene a Congress review to organize factions and fill their leadership roles. Click a faction representative’s portrait or name to open their native People profile. To negotiate, select a programme pledge or an organizing grant and check the expected response. The leader may accept the terms, counter, or refuse. Congress applies agreed endorsements to the actual programme vote.
+Convene a Congress review to organize factions and fill their leadership roles. Factions with at least 5% of awarded delegates can earn a representative under the party charter. Click a faction representative’s portrait or name to open their native People profile. To negotiate, select a programme pledge or an organizing grant and check the expected response. The leader may accept the terms, counter, or refuse. Congress applies agreed endorsements to the actual programme vote.
 
 An accepted organizing grant reserves the agreed cash. Adopting the programme delivers the grant and recruits members. A breach releases the reserve and reduces trust. The faction history records the outcome and the reason. Bills and public offices follow their existing legislative and appointment procedures.
 

@@ -4,6 +4,12 @@ function partyCongressSizeIsValid(size) {
   return Number.isInteger(size) && size >= 50 && size <= 200;
 }
 
+const gpmCongressRecognitionPercent = 5;
+
+function partyCongressRecognitionSeats(total) {
+  return Math.ceil(total * gpmCongressRecognitionPercent / 100);
+}
+
 const factionTitles = {
   "Authoritarian Left Nationalism": "Authoritarian Nationalist Left",
   "Progressive Left Nationalism": "Progressive Nationalist",
@@ -349,7 +355,9 @@ module.exports = {
   sharedFunctions: [
     `const gpmCongressProgrammes = ${JSON.stringify(congressProgrammes)};`,
     `const gpmCongressFactionTitles = ${JSON.stringify(factionTitles)};`,
-    partyCongressFactionLabel, partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
+    `const gpmCongressRecognitionPercent = ${gpmCongressRecognitionPercent};`,
+    partyCongressFactionLabel, partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressRecognitionSeats,
+    partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
     partyCongressPriorityIsValid, partyCongressPriorityCost, partyCongressPriorityVote,
     partyCongressProgrammes, partyCongressProgrammeVote, partyCongressForecastKey,
   ],

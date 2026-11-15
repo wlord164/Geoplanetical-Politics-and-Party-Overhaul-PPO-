@@ -36,28 +36,36 @@ function gpmFactionReview(sim, country, party) {
   if (old && sim.day < old.nextReviewDay) return { ok: false, reason: "review", nextReviewDay: old.nextReviewDay };
   const planning = partyCongressPlanningData(sim, country);
   const data = partyCongressView(sim, country, party.id, planning.electorate, planning.people);
-  const groups = partyCongressFactions({ ...data, factionDelegateFactors: {} }, data.size);
-  if (!groups.some(group => group.seats > 0)) return { ok: false, reason: "review" };
+  const baseline = partyCongressFactions({ ...data, factionDelegateFactors: {} }, data.size);
+  if (!baseline.length) return { ok: false, reason: "review" };
 
   const state = party.gpmFactionPolitics ??= { version: 1, factions: {}, offers: [], nextId: 1 };
-  const organized = groups.filter(group => group.seats > 0).sort((a, b) => b.seats - a.seats || a.label.localeCompare(b.label));
-  for (const group of organized.slice(0, 2)) {
-    const id = gpmFactionId(group.label);
-    state.factions[id] ??= { id, label: group.label, trust: 50, organizedDay: sim.day };
-  }
-  for (const faction of Object.values(state.factions)) {
-    const group = groups.find(item => item.label === faction.label);
-    faction.seats = group?.seats || 0;
-    if (!group) continue;
+  const baselineByLabel = new Map(baseline.map(group => [group.label, group]));
+  const refresh = (faction, group) => {
     faction.displayLabel = group.displayLabel;
     faction.ideology = Object.fromEntries(gpmAxes.map(({ id }) => [id, group.axisWeights[id] / group.weight]));
     gpmFactionDevelopmentReview(sim.day, state, faction);
+  };
+  for (const faction of Object.values(state.factions)) {
+    const group = baselineByLabel.get(faction.label);
+    faction.seats = group?.seats || 0;
+    if (group) refresh(faction, group);
   }
+
   const represented = partyCongressFactions({ ...data, factionDelegateFactors: gpmFactionDelegateFactors(state) }, data.size);
+  represented.sort((a, b) => b.seats - a.seats || a.label.localeCompare(b.label));
+  const minimum = partyCongressRecognitionSeats(data.size);
   for (const group of represented) {
-    const faction = state.factions[gpmFactionId(group.label)];
-    if (!faction) continue;
-    faction.organization.delegateChange = group.seats - faction.seats;
+    const id = gpmFactionId(group.label);
+    let faction = state.factions[id];
+    if (!faction) {
+      if (group.seats < minimum) continue;
+      faction = state.factions[id] = { id, label: group.label, trust: 50, organizedDay: sim.day };
+      refresh(faction, group);
+      // A newly recognized faction starts with neutral representation at this review.
+      faction.organization.factor = 1;
+    }
+    faction.organization.delegateChange = group.seats - baselineByLabel.get(group.label).seats;
     faction.seats = group.seats;
   }
 

@@ -217,11 +217,16 @@ function partyCongressBargainingHtml(state, ui, view) {
     '<button class="k" type="button" data-gpm-bargain-action="' + action + '"' + attributes + '>' + b(label) + '</button>';
   const focus = id => ' data-gpm-profile-focus="faction-' + b(id) + '"';
   const review = Number.isFinite(data.nextReviewDay) ? ui.gameDate(data.nextReviewDay) : "";
+  const currentSize = view?.party?.congress?.size;
+  const size = partyCongressSizeIsValid(currentSize) ? currentSize : 100;
+  const required = partyCongressRecognitionSeats(size);
+  const recognition = '<small data-gpm-congress-recognition data-minimum-delegates="' + required +
+    '" data-congress-delegates="' + size + '">Factions with at least ' + gpmCongressRecognitionPercent +
+    '% of delegates (' + required + ' of ' + size + ') qualify for a representative at a Congress review.</small>';
   const intro = data.initialized
     ? (data.day >= data.nextReviewDay ? button("review", "Convene Congress review", focus("review")) :
       (review ? '<small>Next scheduled Congress review ' + b(review) + '.</small>' : ""))
-    : '<p>Congress selects organized factions and their leaders at its first review.</p>' +
-      button("review", "Convene Congress review", focus("review")) +
+    : button("review", "Convene Congress review", focus("review")) +
       (review ? '<small>Scheduled review ' + b(review) + '.</small>' : "");
   const programmeNames = ids => (ids || []).map(id => programmes.find(choice => choice.id === id)?.label).filter(Boolean).join(", ");
   const roster = factions.length ? '<ul class="gpm-congress-roster" aria-label="Organized factions">' +
@@ -310,7 +315,7 @@ function partyCongressBargainingHtml(state, ui, view) {
       '<input class="k" type="number" name="reserveM" min="0" max="1000000000" step="1" value="' + dollars(mandate.reserveM) + '"' +
       focus("staff-reserve") + '></label></div>' +
     '<button class="k" type="submit"' + focus("staff-save") + '>Save mandate</button></form></details>';
-  return intro + roster + negotiation + permissions;
+  return recognition + intro + roster + negotiation + permissions;
 }
 
 function bindPartyCongressBargaining(panel, congress, ui, view) {

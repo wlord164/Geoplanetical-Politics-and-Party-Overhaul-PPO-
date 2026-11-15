@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Verified Congress Layout candidate.
+  archive: "47ab85f5f44b3ef1f8ec891990621127abf627058342869685ccb1e5470539e5",
+  worker: "67faacc21d82e5a6bd915f6d2d4ad3cff3aaa55f46c9008cf18446e7340e1940",
+  renderer: "2470d35f3979d0e705e366bd4d8bc27ef7578031940d0712eab73c4148ea08fe",
+  executable: "604a91791380a4c0aa6f7bee8f90066380c2e3253272a2ec28a35281ea89490e",
+}, {
   // Verified Congress Portraits and Ideology candidate.
   archive: "0b42cd8510f6745191543ad4449435efd92d43350c8907e5c0f064c46ca954ac",
   worker: "67faacc21d82e5a6bd915f6d2d4ad3cff3aaa55f46c9008cf18446e7340e1940",
