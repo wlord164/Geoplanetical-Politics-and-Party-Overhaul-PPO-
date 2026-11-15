@@ -224,7 +224,7 @@ function partyCongressBargainingHtml(state, ui, view) {
       button("review", "Convene Congress review", focus("review")) +
       (review ? '<small>Scheduled review ' + b(review) + '.</small>' : "");
   const programmeNames = ids => (ids || []).map(id => programmes.find(choice => choice.id === id)?.label).filter(Boolean).join(", ");
-  const roster = factions.length ? '<ul class="gpm-congress-vote-rows" aria-label="Organized factions">' +
+  const roster = factions.length ? '<ul class="gpm-congress-roster" aria-label="Organized factions">' +
     factions.map(faction => {
       const leader = faction.leader;
       const leaderId = leader?.personId || leader?.id;
@@ -236,7 +236,7 @@ function partyCongressBargainingHtml(state, ui, view) {
         : '<span class="gov-face" data-gpm-faction-portrait><span class="gov-initials" aria-hidden="true">' +
           b(dgt(leaderName)) + '</span></span>';
       const leaderAction = leaderId
-        ? '<button class="k k-ghost gov-person" style="width:auto;max-width:100%" type="button"' +
+        ? '<button class="k k-ghost gov-person" type="button"' +
           ' data-gpm-bargain-action="person" data-gpm-faction-person="' + b(leaderId) + '"' + focus(faction.id + "-profile") + '>' +
           portrait + '<span class="gov-person-copy"><b>' + b(leaderName) + '</b></span></button>'
         : "<small>Leadership vacant</small>";
@@ -251,15 +251,17 @@ function partyCongressBargainingHtml(state, ui, view) {
       const completedIssues = (faction.issuePriorities || []).filter(issue => issue.lastDeliveredDay != null).map(issue => issue.label);
       const select = leaderId ? button("select", "Negotiate", ' data-gpm-faction-id="' + b(faction.id) + '" aria-pressed="' +
         (selectedId === faction.id) + '"' + focus(faction.id + "-negotiate")) : "";
-      return '<li class="gpm-congress-faction"><strong>' + b(faction.displayLabel || faction.label) + '</strong><span class="num">' +
-        b(faction.seats + (faction.seats === 1 ? " delegate" : " delegates")) + '</span>' +
-        '<span class="gpm-congress-control">' + leaderAction + select + '</span>' +
+      return '<li class="gpm-congress-representative">' +
+        '<div class="gpm-congress-rep-header"><strong>' + b(faction.displayLabel || faction.label) + '</strong><span class="num">' +
+        b(faction.seats + (faction.seats === 1 ? " delegate" : " delegates")) + '</span></div>' +
+        '<div class="gpm-congress-rep-controls">' + leaderAction + select + '</div>' +
+        '<div class="gpm-congress-rep-details">' +
         '<small>' + b([leaderStatus, trust].filter(Boolean).join(" · ")) + '</small>' +
         (organized || representation ? '<small>' + b([organized, representation].filter(Boolean).join(" · ")) + '</small>' : "") +
         (priorities ? '<small>' + b("Priorities · " + priorities) + '</small>' : "") +
         (currentIssues.length ? '<small>' + b("Issues on the agenda · " + currentIssues.join(", ")) + '</small>' : "") +
         (completedIssues.length ? '<small>' + b("Delivered · " + completedIssues.join(", ")) + '</small>' : "") +
-        (redLines ? '<small>' + b("Red lines · " + redLines) + '</small>' : "") + '</li>';
+        (redLines ? '<small>' + b("Red lines · " + redLines) + '</small>' : "") + '</div></li>';
     }).join("") + '</ul>' : "";
   const faction = factions.find(item => item.id === selectedId);
   let negotiation = "";

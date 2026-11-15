@@ -278,6 +278,22 @@ function mountPartyButtons() {
     .gpm-congress-faction strong { overflow-wrap: anywhere; }
     .gpm-congress-faction > span:first-of-type { display: grid; justify-items: end; text-align: right; }
     .gpm-congress-faction > span:last-of-type, .gpm-congress-faction > small { grid-column: 1 / -1; }
+    .gpm-congress-roster { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-1); margin: 0; padding: 0; list-style: none; }
+    .gpm-congress-representative { display: grid; min-width: 0; gap: var(--gap-1); padding: var(--gap-2); border: 1px solid var(--line, #474950); overflow-wrap: anywhere; }
+    @supports (grid-template-rows: subgrid) {
+      .gpm-congress-roster { grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+      .gpm-congress-representative { grid-row: span 3; grid-template-rows: subgrid; }
+    }
+    .gpm-congress-rep-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--gap-1); }
+    .gpm-congress-rep-header .num { white-space: nowrap; }
+    .gpm-congress-rep-controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--gap-1); min-width: 0; }
+    .gpm-congress-rep-controls .k { min-width: 0; max-width: 100%; min-height: var(--h-ctl); height: auto; white-space: normal; overflow-wrap: anywhere; }
+    .gpm-congress-rep-controls .gov-person { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); align-items: start; flex: 1 1 8rem; width: auto; text-align: left; }
+    .gpm-congress-rep-controls .gov-person-copy { min-width: 0; padding-block-start: .3em; }
+    .gpm-congress-rep-controls .gov-person-copy b { display: block; white-space: normal; overflow: visible; overflow-wrap: anywhere; text-overflow: clip; }
+    .gpm-congress-rep-controls [data-gpm-faction-portrait] { width: 2.75rem; height: 2.75rem; }
+    .gpm-congress-rep-controls [data-gpm-faction-portrait] img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .gpm-congress-rep-details { display: grid; align-content: start; gap: var(--gap-1); min-width: 0; }
     .gpm-party-profile { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-2); }
     .gpm-party-profile-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); gap: var(--gap-1); }
     .gpm-party-profile-tabs .k { min-width: 0; height: auto; min-height: var(--h-ctl); padding: var(--gap-1) var(--gap-2); white-space: normal; overflow-wrap: anywhere; text-align: center; }
