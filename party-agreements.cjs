@@ -67,7 +67,7 @@ function partyAgreementTerms(sim, country, leadId, supportId) {
     ...entry,
     interest: jWe(lead, entry.law, country.laws[entry.law.id], country) -
       jWe(lead, entry.law, entry.choice.value, country),
-    programme: partyCongressProgrammeLawBonus(support, entry.law.id, day),
+    programme: partyCongressProgrammeLawBonus(support, entry.law.id, day, entry.choice.value),
   })).filter(entry => entry.interest >= -8 && $mt(country, entry.law).ok)
     .sort((a, b) => b.programme - a.programme || b.appeal + b.interest - (a.appeal + a.interest) ||
       a.law.id.localeCompare(b.law.id));
@@ -291,14 +291,14 @@ function patchAgreementWorker(source, replaceOnce) {
     ['function cRa(e){for(let t of e.countries.values())if(t?.procedures?.length){',
       'function cRa(e){for(let t of e.countries.values())if(t?.gpmSupportAgreement&&partyAgreementReview(e,t),t?.procedures?.length){'],
     ['return t.procedures.push(v),u==="government"&&(t.approval=', 'return t.procedures.push(v),partyAgreementBillTabled(e,t,v),u==="government"&&(t.approval='],
-    ['appeal:O6(w+s*I,2)', 'appeal:O6(w+s*I+6*partyCongressProgrammeLawBonus(o,y.id,e.day||0),2)'],
+    ['appeal:O6(w+s*I,2)', 'appeal:O6(w+s*I+6*partyCongressProgrammeLawBonus(o,y.id,e.day||0,P.value),2)'],
     ['let l=i.reaction.appeal*.65+i.reaction.partyFit*.25+(i.feasibility.score||0)*.1;return s.reaction.appeal*.65+s.reaction.partyFit*.25+(s.feasibility.score||0)*.1-l',
-      'let l=u=>u.reaction.appeal*.65+u.reaction.partyFit*.25+(u.feasibility.score||0)*.1+(u.promise.kind===xF ? .12*partyCongressProgrammeLawBonus(o,u.promise.subjectId,e.day||0) : 0);return l(s)-l(i)'],
+      'let l=u=>u.reaction.appeal*.65+u.reaction.partyFit*.25+(u.feasibility.score||0)*.1+(u.promise.kind===xF ? .12*partyCongressProgrammeLawBonus(o,u.promise.subjectId,e.day||0,u.promise.target) : 0);return l(s)-l(i)'],
     ['score:l.reaction.appeal*.65+l.reaction.partyFit*.25+(l.feasibility?.score||0)*n',
-      'score:l.reaction.appeal*.65+l.reaction.partyFit*.25+(l.feasibility?.score||0)*n+(l.promise.kind===xF ? .12*partyCongressProgrammeLawBonus(a,l.promise.subjectId,e.day||0) : 0)'],
+      'score:l.reaction.appeal*.65+l.reaction.partyFit*.25+(l.feasibility?.score||0)*n+(l.promise.kind===xF ? .12*partyCongressProgrammeLawBonus(a,l.promise.subjectId,e.day||0,l.promise.target) : 0)'],
     ['jqe(r,a,t.params||{})', '(a==="gpm.partyAgreement"?partyAgreementQuery(r):jqe(r,a,t.params||{}))'],
     ['|| margin(b) - margin(a) || b.gain - a.gain || x(a.lawId, b.lawId));',
-      '|| partyCongressProgrammeLawBonus(party,b.lawId,day)-partyCongressProgrammeLawBonus(party,a.lawId,day)\n    || margin(b) - margin(a) || b.gain - a.gain || x(a.lawId, b.lawId));'],
+      '|| Number(b.programme || partyCongressProgrammeLawBonus(party,b.lawId,day,b.value))-Number(a.programme || partyCongressProgrammeLawBonus(party,a.lawId,day,a.value))\n    || margin(b) - margin(a) || b.gain - a.gain || x(a.lawId, b.lawId));'],
   ];
   return changes.reduce((code, [before, after]) => replaceOnce(code, before, after), source);
 }

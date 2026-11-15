@@ -46,7 +46,7 @@ To rename a party in your current country, go to My Party and click Rename Party
 
 In Politics > Electorate, use the Panel width slider and expand a voter bloc. The Vote split lists every party in the estimate with its color, abbreviation, and vote share to up to two decimal places. Hover over an abbreviation to see the full party name. The slider remembers your preferred width for Electorate.
 
-In Politics > Assembly, expand a party to see the four ideology scores on a -100 to +100 scale. My Party shows your declared tradition, founding preset, and the founding positions recorded for that preset. Choosing a preset and adjusting its scores keeps your chosen tradition. The preset picker distinguishes mixed-economy, market-oriented, and liberal centre platforms. Law, assent, and constitutional reform results retain the party profile at the time of the ballot. The four scores still feed the existing simulation rules.
+In Politics > Assembly, expand a party to see the four ideology scores on a -100 to +100 scale. My Party shows your declared tradition, founding preset, and recorded founding positions. Choosing a preset and adjusting its scores keeps your chosen tradition. New parties have a single Centrist founding choice. Existing saves retain their previous preset. Law, assent, and constitutional reform results retain the party profile at the time of the ballot. The four scores still feed the existing simulation rules.
 
 In My Party > Party organizing, choose a voter bloc and check the cost, assigned activists, return date, and projected national support. Public meetings run for 21 days, with 30 days between meetings and 90 days before returning to the same bloc. Legal parties without seats receive up to 50% off the cash and activist requirements at 2.5% support or below. The discount tapers out at 5%. Meetings can also build the existing Outreach network up to 32% strength in a compatible bloc.
 
@@ -62,7 +62,9 @@ Congress also votes on a campaign priority. For 90 days, the chosen project (reg
 
 Each ballot has a 14-day wait before it can be held again. An adopted campaign priority runs its full 90 days before Congress can replace it. The approved delegate count, last results, waiting periods, and active priority are stored in the campaign save. Existing campaigns keep their approved delegate count.
 
-Congress names the largest ideological faction above the chart and lists represented factions in delegate order. A bloc backed by the party’s declared platform can carry that tradition’s name. Open Faction positions and evidence for policy scores, sources, and tendencies with no delegates. Hover over a faction to highlight its seats.
+Congress names the largest ideological faction above the chart and lists each seated faction in delegate order. A declared tradition can have compatible factions with their own policy positions. Open Faction positions and evidence for the outlook and evidence behind each estimate. Hover over a faction to highlight its seats.
+
+Different traditions can bring different choices to the programme ballot. For example, Orthodox Marxist–Leninist and Reformist Marxist–Leninist delegates may split over state production planning and enterprise autonomy. When a programme is adopted, the law shortlist and campaign promises prioritize feasible proposals that advance it. Each law still follows its regular approval procedure.
 
 Convene a Congress review to organize factions and fill their leadership roles. Factions with at least 5% of awarded delegates can earn a representative under the party charter. Click a faction representative’s portrait or name to open their native People profile. To negotiate, select a programme pledge or an organizing grant and check the expected response. The leader may accept the terms, counter, or refuse. Congress applies agreed endorsements to the actual programme vote.
 

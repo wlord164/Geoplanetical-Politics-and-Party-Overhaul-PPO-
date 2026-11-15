@@ -1,9 +1,16 @@
 "use strict";
 
+const centreWings = ["centrist", "mixedEconomyCentrist", "marketCentrist", "liberalCentrist"];
+
 const presets = {
-  center: { label: "Centrist", values: [0, 0, 0, 0] },
+  center: {
+    label: "Centrist", values: [0, 0, 0, 0],
+    congressDoctrine: { family: "centre", platform: "centrist", wings: centreWings },
+  },
   mixedEconomyCentre: {
+    foundingChoice: false,
     label: "Mixed-Economy Centre", values: [-20, -5, -15, -5],
+    congressDoctrine: { family: "centre", platform: "mixedEconomyCentrist", wings: centreWings },
     program: "A mixed economy with broad social insurance. Its starting platform favors the livelihoods programme.",
     positions: {
       ownership: { label: "Ownership", value: "Public and private provision", priority: "central" },
@@ -12,7 +19,9 @@ const presets = {
     },
   },
   marketCentre: {
+    foundingChoice: false,
     label: "Market-Oriented Centre", values: [28, -5, -18, -5],
+    congressDoctrine: { family: "centre", platform: "marketCentrist", wings: centreWings },
     program: "Competitive markets and targeted income support. Its starting platform favors enterprise and investment.",
     positions: {
       ownership: { label: "Ownership", value: "Private enterprise with competition rules", priority: "central" },
@@ -21,7 +30,9 @@ const presets = {
     },
   },
   liberalCentre: {
+    foundingChoice: false,
     label: "Liberal Centre", values: [2, -42, -55, -10],
+    congressDoctrine: { family: "centre", platform: "liberalCentrist", wings: centreWings },
     program: "Civil liberties, independent institutions and limits on executive power. Its starting platform favors the civil liberties programme.",
     positions: {
       civilLiberties: { label: "Civil liberties", value: "Protect expression, worship and association", priority: "central" },
@@ -31,9 +42,22 @@ const presets = {
   },
   socialDemocrat: { label: "Social Democrat", values: [-35, -40, -40, -20] },
   democraticSocialist: { label: "Democratic Socialist", values: [-75, -45, -55, -30] },
-  councilCommunist: { label: "Council Communist", values: [-100, -65, -75, -55] },
+  councilCommunist: {
+    label: "Council Communist", values: [-100, -65, -75, -55],
+    congressDoctrine: { family: "councilCommunism", platform: "councilCommunist", wings: [] },
+    program: "Worker councils hold political authority, with civil protections for independent organization and public debate.",
+  },
   anarchoCommunist: { label: "Anarcho-Communist", values: [-100, -95, -100, -90] },
-  marxistLeninist: { label: "Marxist–Leninist", values: [-95, -25, 80, -45] },
+  marxistLeninist: {
+    label: "Marxist–Leninist", values: [-95, -25, 80, -45],
+    congressDoctrine: { family: "marxistLeninist", platform: "orthodoxMarxistLeninist",
+      wings: ["orthodoxMarxistLeninist", "reformistMarxistLeninist"] },
+    program: "Party leadership with public ownership. Orthodox and reformist wings disagree on how much autonomy state enterprises should have.",
+    positions: {
+      economicControl: { label: "Economic organization", value: "State production planning", priority: "central" },
+      competition: { label: "Democratic competition", value: "Directing role for a single party", priority: "central" },
+    },
+  },
   hardlineStateSocialist: { label: "Hardline State Socialist", values: [-100, 0, 100, -15] },
   leftNationalist: { label: "Left Nationalist", values: [-65, 0, 40, 75] },
   green: { label: "Green", values: [-35, -80, -55, -60] },
@@ -44,7 +68,25 @@ const presets = {
   paternalistConservative: { label: "Paternalist Conservative", values: [-20, 65, 15, 45] },
   nationalConservative: { label: "National Conservative", values: [30, 75, 40, 80] },
   religiousTraditionalist: { label: "Religious Traditionalist", values: [0, 100, 75, 30] },
-  corporatistNationalist: { label: "Corporatist Nationalist", values: [-35, 85, 85, 90] },
+  corporatistNationalist: {
+    label: "Corporatist Nationalist", values: [-35, 85, 85, 90],
+    congressDoctrine: { family: "conservativeCorporatism", platform: "conservativeCorporatist", wings: ["conservativeCorporatist"] },
+    program: "State supervision of licensed employer and worker organizations, with bargaining organized by industry.",
+    positions: {
+      laborRepresentation: { label: "Labor representation", value: "Licensed sector bargaining", priority: "central" },
+      economicControl: { label: "Economic organization", value: "Private enterprise with public coordination", priority: "secondary" },
+    },
+  },
+  electoralRadicalRight: {
+    label: "Electoral Radical Right", values: [12, 65, 40, 92],
+    congressDoctrine: { family: "electoralRadicalRight", platform: "electoralRadicalRight", wings: ["electoralRadicalRight"] },
+    program: "Restrictive citizenship eligibility and national preference under an elected executive and competitive multiparty elections.",
+    positions: {
+      nationalMembership: { label: "Citizenship policy", value: "Longer residency and limited routes to citizenship", priority: "central" },
+      competition: { label: "Democratic competition", value: "Competitive multiparty elections", priority: "central" },
+    },
+    laws: { nationality_law: { birthright: "none", residenceYears: 15, dualCitizenship: false } },
+  },
   authoritarianUltranationalist: { label: "Authoritarian Ultranationalist", values: [0, 95, 100, 100] },
   islamicDemocracy: {
     label: "Islamic Democracy", values: [-10, 50, -65, 15],
@@ -63,11 +105,13 @@ const presets = {
   },
   fascist: {
     label: "Fascism", values: [-30, 85, 100, 100],
+    congressDoctrine: { family: "fascist", platform: "centralistFascist", wings: ["centralistFascist", "corporatistFascist"] },
     program: "A leader-centered one-party state with official unions and restrictions on strikes and the press.",
     laws: { union_freedom: "official", strike_right: "restricted", media_freedom: { press: "muzzled", internet: "censored" } },
   },
   maoist: {
     label: "Maoism", values: [-100, -30, 85, 35],
+    congressDoctrine: { family: "maoism", platform: "maoist", wings: [] },
     program: "A revolutionary party government, agrarian redistribution and expropriation powers.",
     laws: { land_tenure: "redistribution", regime_propriete: "expropriation_allowed" },
   },
@@ -78,6 +122,7 @@ const presets = {
   },
   anarchoSyndicalist: {
     label: "Anarcho-Syndicalism", values: [-95, -75, -95, -70],
+    congressDoctrine: { family: "anarchoSyndicalism", platform: "anarchoSyndicalist", wings: [] },
     program: "Federated worker-run unions, workplace self-management and protected industrial action.",
     laws: { union_freedom: "free", strike_right: "protected" },
   },

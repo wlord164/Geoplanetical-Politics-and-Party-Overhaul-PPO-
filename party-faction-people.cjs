@@ -110,7 +110,7 @@ function gpmCreateFactionLeader(sim, country, party, faction, charter, usedLeade
 
 function gpmFactionLeadershipRecord(person, country, party, faction, day, year, status) {
   const career = person.gpmFactionCareer ||= [];
-  career.push({ countryKey: country.key, partyId: party.id, factionId: faction.id, factionName: faction.label || faction.id,
+  career.push({ countryKey: country.key, partyId: party.id, factionId: faction.id, factionName: faction.displayLabel || faction.label || faction.id,
     sinceDay: day, sinceYear: year, status });
 }
 

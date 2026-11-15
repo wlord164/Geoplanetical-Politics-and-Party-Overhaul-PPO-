@@ -7,11 +7,15 @@ function partyLawShortlist(sim) {
   const reason = fft(querySim, country, partyId);
   const party = country?.pol?.parties.find(item => item.id === partyId);
   const platform = gpmPresets[gpmActiveIdeologyPreset(party)];
+  const active = partyCongressActiveProgramme(party, day);
+  const programmeTargets = partyCongressProgrammes()[active?.kind]?.lawTargets || {};
   const candidates = new Map(QRa(querySim, country, partyId, false).map(item => [item.law.id, item]));
-  for (const lawId of Object.keys(platform?.laws || {})) {
+  const authoredLaws = new Set([...Object.keys(platform?.laws || {}), ...Object.keys(programmeTargets)]);
+  for (const lawId of authoredLaws) {
     const law = ba(lawId);
     const current = country.laws?.[lawId];
-    const target = gpmIdeologyLawTarget(platform, lawId, current, querySim._simYear || 2026);
+    const programme = Object.hasOwn(programmeTargets, lawId);
+    const target = programme ? programmeTargets[lawId] : gpmIdeologyLawTarget(platform, lawId, current, querySim._simYear || 2026);
     if (!law || current == null || target === undefined) continue;
     candidates.delete(lawId);
     if (Jr(current, target) || (country.lawCooldown?.[lawId] || 0) > day ||
@@ -24,11 +28,11 @@ function partyLawShortlist(sim) {
     if (choices.length) {
       const choice = choices[0];
       const gain = jWe(party, law, current, country) - jWe(party, law, choice.value, country);
-      candidates.set(lawId, { law, choice, gain, priority: true });
+      candidates.set(lawId, { law, choice, gain, priority: true, programme });
     }
   }
   const laws = [];
-  for (const { law, choice, gain, priority } of candidates.values()) {
+  for (const { law, choice, gain, priority, programme } of candidates.values()) {
     if (!$mt(country, law).ok) continue;
     const forecast = querySim.forecastBillFor(country, law, choice.value, {
       sponsorKind: "party",
@@ -41,6 +45,7 @@ function partyLawShortlist(sim) {
     const { requiredVotes, vetoRisk, courtRisk } = Zwa(stages._res?.history);
     laws.push({
       lawId: law.id, value: Ga(choice.value), choiceId: choice.id, gain: O6(gain, 2), ...(priority ? { priority } : {}),
+      ...(programme ? { programme } : {}),
       passes: forecast.passes, yes: forecast.fc.yes, total: forecast.fc.total,
       requiredVotes, vetoRisk, courtRisk,
     });

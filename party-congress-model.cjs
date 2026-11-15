@@ -22,6 +22,8 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
     programme: partyCongressActiveProgramme(party, day),
     identity: gpmPartyIdentity(party),
     factionDelegateFactors: gpmFactionDelegateFactors(party.gpmFactionPolitics),
+    factionLegacyAssignments: party.gpmFactionPolitics?.legacyAssignments,
+    factionLegacyProtectedLabels: party.gpmFactionPolitics?.legacyProtectedLabels,
     ...factionData,
     factionEndorsements: factionData?.factionEndorsements ??
       (typeof gpmFactionEndorsements === "function" ? gpmFactionEndorsements(sim, country, party) : []),
@@ -42,7 +44,8 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
 
   // The platform anchors the estimate. Blocs shape tendencies within the party,
   // and known figures contribute a smaller share. Missing evidence stays with the platform.
-  const supportPool = .45;
+  // An authored founding platform starts with a narrow majority. Organization can shift it over time.
+  const supportPool = overview.identity.congressDoctrine ? .38 : .45;
   const figurePool = .10;
   const blocInfluence = .70;
   const blocIdeals = new Map(Fwe(country).map(group => [group.id, group.ideal]));
@@ -130,7 +133,7 @@ function advancePartyCongressAI(sim, country, party, policy) {
 
   if (canAdoptProgramme) {
     const endorsed = new Set(data.factionEndorsements.map(offer => offer.programme));
-    const candidates = Object.entries(partyCongressProgrammes()).filter(([, choice]) =>
+    const candidates = Object.entries(partyCongressAvailableProgrammes(data)).filter(([, choice]) =>
       choice.laws.some(id => country.laws?.[id] != null))
       .map(([id]) => partyCongressProgrammeVote(data, id))
       .filter(vote => vote.ok && vote.passed)

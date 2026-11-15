@@ -36,7 +36,8 @@ function gpmPartyLawRows(laws, country) {
     return `<li><div>
       <strong>${b(name)}</strong>
       ${value ? `<small>${b(value)}</small>` : ""}
-      <small>${b(law.priority ? `Party priority · ${vote}` : `+${formatGain.format(law.gain)} points toward your platform · ${vote}`)}</small>
+      <small>${b(law.programme ? `Congress programme · ${vote}` :
+        law.priority ? `Party priority · ${vote}` : `+${formatGain.format(law.gain)} points toward your platform · ${vote}`)}</small>
       <small>${b([law.passes ? "Likely to pass" : "Unlikely to pass", ...risks].join(" · "))}</small>
       </div><button class="k" type="button" data-gpm-law-review="${index}" aria-label="${b("Review proposal for " + name)}">Review proposal</button></li>`;
   }).join("");
