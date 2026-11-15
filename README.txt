@@ -62,9 +62,9 @@ Congress also votes on a campaign priority. For 90 days, the chosen project (reg
 
 Each ballot has a 14-day wait before it can be held again. An adopted campaign priority runs its full 90 days before Congress can replace it. The approved delegate count, last results, waiting periods, and active priority are stored in the campaign save. Existing campaigns keep their approved delegate count.
 
-The Congress estimate combines the party platform, electorate bloc leanings, and native People. The breakdown describes the positions behind each tendency and shows where the estimate came from. Hover over a faction to highlight its seats and figures.
+Congress names the largest ideological faction above the chart and lists represented factions in delegate order. A bloc backed by the party’s declared platform can carry that tradition’s name. Open Faction positions and evidence for policy scores, sources, and tendencies with no delegates. Hover over a faction to highlight its seats.
 
-Convene a Congress review to organize factions and fill their leadership roles. Open a leader's native People profile from the faction list. To negotiate, select a programme pledge or an organizing grant and check the expected response. The leader may accept the terms, counter, or refuse. Congress applies agreed endorsements to the actual programme vote.
+Convene a Congress review to organize factions and fill their leadership roles. Click a faction representative’s portrait or name to open their native People profile. To negotiate, select a programme pledge or an organizing grant and check the expected response. The leader may accept the terms, counter, or refuse. Congress applies agreed endorsements to the actual programme vote.
 
 An accepted organizing grant reserves the agreed cash. Adopting the programme delivers the grant and recruits members. A breach releases the reserve and reduces trust. The faction history records the outcome and the reason. Bills and public offices follow their existing legislative and appointment procedures.
 

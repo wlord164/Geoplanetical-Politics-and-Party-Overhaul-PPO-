@@ -65,7 +65,14 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
   }
 
   const platformWeight = 1 - evidence.reduce((sum, profile) => sum + profile.weight, 0);
-  return { ...overview, profiles: [{ origin: "platform", sourceId: partyId, ideology: platform, weight: platformWeight }, ...evidence], figures };
+  const congress = { ...overview, profiles: [{ origin: "platform", sourceId: partyId, ideology: platform, weight: platformWeight }, ...evidence], figures };
+  if (congress.bargaining?.factions.length) {
+    const titles = new Map(partyCongressFactions(congress, size).map(group => [group.label, group.displayLabel]));
+    congress.bargaining = { ...congress.bargaining, factions: congress.bargaining.factions.map(faction => ({
+      ...faction, displayLabel: titles.get(faction.label) || partyCongressFactionLabel(faction.label),
+    })) };
+  }
+  return congress;
 }
 
 function retirePartyCongress(party) {

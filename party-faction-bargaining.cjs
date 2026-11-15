@@ -96,6 +96,16 @@ function gpmFactionEndorsements(sim, country, party) {
   });
 }
 
+function gpmFactionPresentationTitles(sim, country, party) {
+  const { electorate, people } = partyCongressPlanningData(sim, country);
+  const congress = partyCongressView(sim, country, party.id, electorate, people);
+  return new Map(partyCongressFactions(congress, congress.size).map(group => [group.label, group.displayLabel]));
+}
+
+function gpmFactionPresentationTitle(sim, country, party, faction) {
+  return gpmFactionPresentationTitles(sim, country, party).get(faction.label) || partyCongressFactionLabel(faction.label);
+}
+
 function gpmFactionView(sim, country, party) {
   const state = party.gpmFactionPolitics;
   const offers = state?.offers || [];
@@ -103,8 +113,8 @@ function gpmFactionView(sim, country, party) {
     day: sim.day,
     initialized: state?.nextReviewDay != null,
     nextReviewDay: state?.nextReviewDay ?? null,
-    factions: Object.values(state?.factions || {}).map(({ id, label, seats, trust, priorities, redLines, leadership, ideology, displayLabel, organization, issuePriorities }) => ({
-      id, label, displayLabel: displayLabel || partyCongressTendencyDescription(ideology), seats, trust, priorities, redLines, leader: gpmFactionLeaderView(sim, { leadership }),
+    factions: Object.values(state?.factions || {}).map(({ id, label, seats, trust, priorities, redLines, leadership, organization, issuePriorities }) => ({
+      id, label, displayLabel: partyCongressFactionLabel(label), seats, trust, priorities, redLines, leader: gpmFactionLeaderView(sim, { leadership }),
       organization, issuePriorities,
     })),
     offers: offers.slice().reverse().filter((offer, index) => index < 30 || gpmFactionOpen(offer))
@@ -196,7 +206,7 @@ function gpmFactionClose(sim, country, party, state, offer, status, reason) {
     faction.trust = Math.max(0, faction.trust - 15);
     if (offer.cashM && party.organization) {
       party.organization.treasuryM = gpmDomesticMoney(party.organization.treasuryM + offer.cashM);
-      gpmDomesticReceipt(sim, country, party, "faction-refund", { cashM: offer.cashM, details: faction.displayLabel || faction.label });
+      gpmDomesticReceipt(sim, country, party, "faction-refund", { cashM: offer.cashM, details: gpmFactionPresentationTitle(sim, country, party, faction) });
     }
   }
   gpmFactionCloseDevelopment(state, faction, offer);
@@ -277,7 +287,7 @@ function gpmFactionAction(sim, country, party, input, actor = "player") {
   Object.assign(offer, { status: "accepted", reason: offer.cashM ? "reserved" : "accepted", acceptedDay: sim.day,
     reservedMonth: o2e(sim), acceptedBy: actor });
   gpmDomesticReceipt(sim, country, party, "faction-commitment", { cashM: -offer.cashM,
-    details: faction.displayLabel || faction.label, staffDecision: true });
+    details: gpmFactionPresentationTitle(sim, country, party, faction), staffDecision: true });
   return { ok: true, changed: true, offer: gpmFactionPublicOffer(offer) };
 }
 
@@ -325,11 +335,17 @@ function gpmFactionDaily(sim, country, party) {
 }
 
 function gpmFactionAgenda(sim, country, partyId) {
-  const state = YL(country, partyId)?.gpmFactionPolitics;
-  return (state?.offers || []).filter(offer => gpmFactionOpen(offer) && offer.deadlineDay > sim.day)
-    .map(offer => ({ id: offer.id, kind: "congress", tab: "congress",
-      title: `${state.factions[offer.factionId].displayLabel || state.factions[offer.factionId].label} · ${partyCongressProgrammes()[offer.programme].label}`,
-      day: offer.day, deadlineDay: offer.deadlineDay, status: offer.status }));
+  const party = YL(country, partyId);
+  const state = party?.gpmFactionPolitics;
+  const offers = (state?.offers || []).filter(offer => gpmFactionOpen(offer) && offer.deadlineDay > sim.day);
+  if (!offers.length) return [];
+  const titles = gpmFactionPresentationTitles(sim, country, party);
+  return offers.map(offer => {
+    const { label } = state.factions[offer.factionId];
+    const title = (titles.get(label) || partyCongressFactionLabel(label)) + " · " + partyCongressProgrammes()[offer.programme].label;
+    return { id: offer.id, kind: "congress", tab: "congress", title, day: offer.day,
+      deadlineDay: offer.deadlineDay, status: offer.status };
+  });
 }
 
 function registerPartyFactionBargaining() {
@@ -341,7 +357,7 @@ function registerPartyFactionBargaining() {
 module.exports = { workerFunctions: [
   `const gpmFactionMandateDefaults = ${JSON.stringify(defaultMandate)};`,
   gpmFactionMandate, gpmFactionId, gpmFactionAlignment, gpmFactionOpen, gpmFactionPublicOffer, gpmFactionReview, gpmFactionUpdateLeaders,
-  gpmFactionLiveLeader, gpmFactionEndorsements, gpmFactionView, gpmFactionCongressData, gpmFactionCashAvailable, gpmFactionQuote, gpmFactionClose,
+  gpmFactionLiveLeader, gpmFactionEndorsements, gpmFactionPresentationTitles, gpmFactionPresentationTitle, gpmFactionView, gpmFactionCongressData, gpmFactionCashAvailable, gpmFactionQuote, gpmFactionClose,
   gpmFactionExpire, gpmFactionSettleVote, gpmFactionAction, gpmFactionAutomate, gpmFactionDaily, gpmFactionAgenda,
   registerPartyFactionBargaining,
 ] };

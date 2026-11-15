@@ -4,38 +4,57 @@ function partyCongressSizeIsValid(size) {
   return Number.isInteger(size) && size >= 50 && size <= 200;
 }
 
-function partyCongressTendencyDescription(axes) {
-  const { econ, gov, social, nat } = axes || {};
-  const positions = [
-    econ <= -.25 ? "State-directed economy" : econ >= .25 ? "Market-oriented economy" : null,
-    gov >= .45 ? "Centralized authority" : gov <= -.35 ? "Limited government authority" : null,
-    social <= -.35 ? "Social reform" : social >= .35 ? "Social traditionalism" : null,
-    nat >= .50 ? "National sovereignty" : nat <= -.50 ? "International cooperation" : null,
-  ].filter(Boolean);
-  return positions.join(" · ") || "Mixed policy tendencies";
+const factionTitles = {
+  "Authoritarian Left Nationalism": "Authoritarian Nationalist Left",
+  "Progressive Left Nationalism": "Progressive Nationalist",
+  "Socially Conservative Left Nationalism": "Conservative Nationalist Left",
+  "Left Nationalism": "Left Nationalist",
+  "Authoritarian National Conservatism": "Hardline National Conservative",
+  "National Conservatism": "National Conservative",
+  "Authoritarian Nationalism": "Authoritarian Nationalist",
+  "Liberal Nationalism": "Liberal Nationalist",
+  "Market-Oriented Nationalism": "Market Nationalist",
+  "Nationalism": "Nationalist",
+  "Socially Conservative Authoritarian Left": "Conservative State Socialist",
+  "Authoritarian Left": "Authoritarian Socialist",
+  "Authoritarian Market Right": "Authoritarian Capitalist",
+  "Authoritarian Conservatism": "Authoritarian Conservative",
+  "Socially Progressive Authoritarianism": "Authoritarian Progressive",
+  "Authoritarian Centrism": "Authoritarian Centrist",
+  "Socially Conservative Left": "Conservative Left",
+  "Internationalist Statist Left": "Internationalist Socialist",
+  "Statist Left": "State Socialist",
+  "Social Democracy": "Social Democrat",
+  "Internationalist Left": "Internationalist Left",
+  "Progressive Left": "Progressive Left",
+  "Centre-Left": "Centre-left",
+  "Liberal Conservatism": "Liberal Conservative",
+  "Market Conservatism": "Market Conservative",
+  "Market Liberalism": "Market Liberal",
+  "Socially Progressive Market Right": "Socially Liberal Right",
+  "Market Right": "Free-market Right",
+  "Centre-Right": "Centre-right",
+  "Social Liberalism": "Social Liberal",
+  "Progressivism": "Progressive",
+  "Social Conservatism": "Social Conservative",
+  "Liberal Centrism": "Liberal Centrist",
+  "Internationalist Centrism": "Internationalist Centrist",
+  "Centrism": "Centrist",
+};
+
+function partyCongressFactionLabel(key) {
+  return Object.hasOwn(gpmCongressFactionTitles, key) ? gpmCongressFactionTitles[key] : key;
 }
 
-
-function partyCongressDistinctLabels(groups) {
-  const byDescription = new Map();
-  for (const group of groups) {
-    const matches = byDescription.get(group.displayLabel) || [];
-    matches.push(group);
-    byDescription.set(group.displayLabel, matches);
-  }
-  const scores = { econ: "Economy", gov: "Authority", social: "Social policy", nat: "International alignment" };
-  for (const matches of byDescription.values()) {
-    if (matches.length < 2) continue;
-    const score = (group, axis) => Math.round(1000 * group.axisWeights[axis] / group.weight) / 10;
-    const distinctAxis = Object.keys(scores).find(axis => new Set(matches.map(group => score(group, axis))).size === matches.length);
-    for (const group of matches) {
-      const axes = distinctAxis ? [distinctAxis] : Object.keys(scores);
-      const evidence = axes.map(axis => scores[axis] + " " + score(group, axis)).join(", ");
-      group.displayLabel += " (" + evidence + ")";
-    }
-  }
+function partyCongressPlatformTradition(data) {
+  const declared = data.identity?.declared;
+  if (!declared?.id || !Object.hasOwn(gpmPresets, declared.id)) return null;
+  const platform = data.profiles?.find(profile => profile.origin === "platform")?.ideology;
+  const preset = gpmPresets[declared.id];
+  // A declaration can name the platform bloc while the current platform still fits that tradition.
+  if (!gpmAxes.every(({ id }, index) => Math.abs(platform?.[id] - preset.values[index] / 100) <= .2)) return null;
+  return { key: estimatePartyIdeology(platform), label: preset.label };
 }
-
 
 function partyCongressFactions(data, total) {
   const byLabel = new Map();
@@ -62,20 +81,20 @@ function partyCongressFactions(data, total) {
   if (!weight) return [];
   const factors = data.factionDelegateFactors || {};
   const fullRepresentation = groups.reduce((sum, group) => sum + group.weight * (factors[group.label] || 1), 0);
+  const tradition = partyCongressPlatformTradition(data);
   let unassigned = total;
   for (const group of groups) {
     group.estimatedShare = group.weight / weight;
     const representation = group.weight * (factors[group.label] || 1);
     group.share = representation / fullRepresentation;
-    group.displayLabel = partyCongressTendencyDescription(Object.fromEntries(
-      Object.entries(group.axisWeights).map(([axis, value]) => [axis, value / group.weight])));
     for (const source of Object.keys(group.sources)) group.sources[source] /= group.weight;
+    group.displayLabel = tradition?.key === group.label && group.sources.platform >= .5
+      ? tradition.label : partyCongressFactionLabel(group.label);
     const quota = total * representation / fullRepresentation;
     group.seats = Math.floor(quota);
     group.remainder = quota - group.seats;
     unassigned -= group.seats;
   }
-  partyCongressDistinctLabels(groups);
   const byRemainder = [...groups].sort((a, b) => b.remainder - a.remainder || a.label.localeCompare(b.label));
   for (let index = 0; index < unassigned; index++) byRemainder[index].seats++;
   return groups.sort((a, b) => a.economicWeight / a.weight - b.economicWeight / b.weight || a.label.localeCompare(b.label));
@@ -329,7 +348,8 @@ function registerPartyCongressSize() {
 module.exports = {
   sharedFunctions: [
     `const gpmCongressProgrammes = ${JSON.stringify(congressProgrammes)};`,
-    partyCongressTendencyDescription, partyCongressDistinctLabels, partyCongressSizeIsValid, partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
+    `const gpmCongressFactionTitles = ${JSON.stringify(factionTitles)};`,
+    partyCongressFactionLabel, partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
     partyCongressPriorityIsValid, partyCongressPriorityCost, partyCongressPriorityVote,
     partyCongressProgrammes, partyCongressProgrammeVote, partyCongressForecastKey,
   ],
