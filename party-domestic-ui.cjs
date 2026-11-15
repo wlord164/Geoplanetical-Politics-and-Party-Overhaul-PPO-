@@ -16,10 +16,13 @@ const style = `
   .gpm-domestic-summary dd { margin: 0; font-variant-numeric: tabular-nums; }
   .gpm-domestic-fields { display: grid; gap: var(--gap-2, 8px); }
   .gpm-domestic-fields label:not(.gpm-domestic-check), .gpm-domestic-contest { display: grid; gap: .25rem; }
+  .gpm-domestic-fields label:not(.gpm-domestic-check) { grid-template-rows: 1fr auto; }
+  .gpm-domestic-contest { min-inline-size: 0; max-inline-size: 100%; }
   .gpm-domestic-fields input[type=number], .gpm-domestic-fields select, .gpm-domestic-contest select { width: 100%; min-width: 0; }
   .gpm-domestic-check { display: flex; align-items: start; gap: .4rem; }
   .gpm-domestic-check input { margin: .15em 0 0; }
   .gpm-domestic-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .gpm-domestic-forecast-controls { align-items: flex-end; }
   .gpm-domestic details > summary { cursor: pointer; margin-block-end: .35rem; }
   .gpm-domestic-list { margin: 0; padding: 0; display: grid; gap: .4rem; list-style: none; }
   .gpm-domestic-list li { display: grid; gap: .2rem; overflow-wrap: anywhere; }
@@ -50,7 +53,7 @@ function gpmRenderCampaignPlan() {
     </form>
     <section class="gpm-domestic-section" aria-labelledby="gpm-domestic-election-title">
       <h4 id="gpm-domestic-election-title">Election outlook</h4>
-      <div class="gpm-domestic-actions">
+      <div class="gpm-domestic-actions gpm-domestic-forecast-controls">
         <label class="gpm-domestic-contest">See contest
           <select class="k" data-gpm-domestic-contest data-gpm-profile-focus="domestic-contest"></select>
         </label>

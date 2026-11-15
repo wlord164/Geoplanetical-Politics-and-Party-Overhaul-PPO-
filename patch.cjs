@@ -171,12 +171,11 @@ function setupIdeology(form) {
   return readIdeology;
 }
 
-function partyDialog({ create, parties = [], selectedPartyId, countryKey, submit }) {
+function partyDialog({ create, name = "", tag = "", submit }) {
   const dialog = document.createElement("dialog");
   dialog.className = "gpm-party-dialog";
   dialog.innerHTML = `<form>
     <h2>${create ? "Create Party" : "Rename Party"}</h2>
-    ${create ? "" : '<label>Party<select name="targetParty"></select></label>'}
     <label>Party name<input name="partyName" required maxlength="100" autocomplete="off"></label>
     <label>Abbreviation<input name="partyTag" maxlength="24" autocomplete="off" placeholder="Optional"></label>
     ${create ? `<label>Ideology preset<select name="platform"></select></label><small data-ideology-estimate></small>
@@ -197,18 +196,8 @@ function partyDialog({ create, parties = [], selectedPartyId, countryKey, submit
   const tagField = form.elements.partyTag;
   const error = form.querySelector('[role="alert"]');
   const save = form.querySelector('[type="submit"]');
-  const target = form.elements.targetParty;
-  if (target) {
-    for (const party of parties) target.add(new Option(Sa(party, countryKey), party.id));
-    target.value = selectedPartyId;
-    const fillNames = () => {
-      const party = parties.find(item => item.id === target.value);
-      nameField.value = Sa(party, countryKey);
-      tagField.value = party?.nameDesc?.gpmTag ?? s0(party, parties, countryKey);
-    };
-    target.onchange = fillNames;
-    fillNames();
-  }
+  nameField.value = name;
+  tagField.value = tag;
   const cancel = dialog.querySelector("[data-cancel]");
   cancel.onclick = () => dialog.close();
   dialog.addEventListener("close", () => dialog.remove(), { once: true });
@@ -220,7 +209,7 @@ function partyDialog({ create, parties = [], selectedPartyId, countryKey, submit
     save.disabled = cancel.disabled = true;
     error.hidden = true;
     try {
-      await submit({ name: partyName, tag: tagField.value.trim(), ideology: readIdeology?.(), ideologyPreset: form.elements.platform?.value, partyId: target?.value });
+      await submit({ name: partyName, tag: tagField.value.trim(), ideology: readIdeology?.(), ideologyPreset: form.elements.platform?.value });
       dialog.close();
     } catch (failure) {
       error.textContent = failure.message || "The party could not be updated.";
@@ -268,8 +257,7 @@ function mountPartyButtons() {
     .gpm-congress-faction > span:first-of-type { display: grid; justify-items: end; text-align: right; }
     .gpm-congress-faction > span:last-of-type, .gpm-congress-faction > small { grid-column: 1 / -1; }
     .gpm-party-profile { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-2); }
-    .gpm-party-profile-tabs { display: grid; grid-template-columns: repeat(var(--gpm-profile-tabs), minmax(0, 1fr)); gap: var(--gap-1); }
-    @container party-room (max-width: 480px) { .gpm-party-profile-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .gpm-party-profile-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); gap: var(--gap-1); }
     .gpm-party-profile-tabs .k { min-width: 0; height: auto; min-height: var(--h-ctl); padding: var(--gap-1) var(--gap-2); white-space: normal; overflow-wrap: anywhere; text-align: center; }
     .gpm-party-profile-tabs [aria-selected="true"] { border-color: var(--text-2); color: var(--text); background: var(--body-2); }
     .gpm-funding-attention { color: var(--mark-late, #edc583); margin-inline-start: var(--gap-1); }
@@ -320,27 +308,32 @@ function mountPartyButtons() {
       if (ze !== session || session.playerControl?.partyId !== control.partyId ||
           session.playerControl?.countryKey !== control.countryKey || !document.querySelector('[data-gpm-rename]')) return;
       const parties = view?.player?.pol?.parties || [];
-      if (!parties.some(item => item.id === control.partyId)) throw new Error("The party list could not be loaded.");
-      partyDialog({ parties, selectedPartyId: control.partyId, countryKey: control.countryKey, submit: async draft => {
-        if (ze !== session || session.playerControl?.partyId !== control.partyId ||
-            session.playerControl?.countryKey !== control.countryKey) throw new Error("The active campaign or party changed.");
-        const result = await Te(session, "applyPlayerAction", [{
-          verb: "gpm.party.rename", countryKey: control.countryKey, targetPartyId: draft.partyId,
-          rename: { name: draft.name, tag: draft.tag },
-        }]);
-        if (!result?.ok) {
-          throw new Error(result?.reason === "name"
-            ? "Enter a name of 1–100 characters and an optional abbreviation of up to 24 characters."
-            : "The selected party could not be renamed.");
-        }
-        if (ze === session) he.refreshTab?.(session);
-      }});
+      const party = parties.find(item => item.id === control.partyId);
+      if (!party) throw new Error("Your party could not be loaded.");
+      partyDialog({
+        name: Sa(party, control.countryKey),
+        tag: party.nameDesc?.gpmTag ?? s0(party, parties, control.countryKey),
+        submit: async draft => {
+          if (ze !== session || session.playerControl?.partyId !== control.partyId ||
+              session.playerControl?.countryKey !== control.countryKey) throw new Error("The active campaign or party changed.");
+          const result = await Te(session, "applyPlayerAction", [{
+            verb: "gpm.party.rename", countryKey: control.countryKey, expectedPartyId: control.partyId,
+            rename: { name: draft.name, tag: draft.tag },
+          }]);
+          if (!result?.ok) {
+            throw new Error(result?.reason === "name"
+              ? "Enter a name of 1–100 characters and an optional abbreviation of up to 24 characters."
+              : "Your party could not be renamed. Close the dialog and try again.");
+          }
+          if (ze === session) he.refreshTab?.(session);
+        },
+      });
     } catch (error) {
       if (trigger.isConnected) {
         const message = document.createElement("small");
         message.dataset.gpmRenameError = "";
         message.setAttribute("role", "alert");
-        message.textContent = error.message || "The party list could not be loaded.";
+        message.textContent = error.message || "Your party could not be loaded.";
         trigger.after(message);
       }
     } finally {
@@ -361,10 +354,13 @@ function validatePartyName(value) {
 function renameDomesticParty(sim, country, input) {
   const identity = validatePartyName(input.rename);
   if (!identity) return { ok: false, reason: "name" };
-  if (country?.key !== input.countryKey || country !== sim.player || typeof input.targetPartyId !== "string") {
+  const control = Ho(sim);
+  if (country !== sim.player || country?.key !== input.countryKey || control.countryKey !== country.key ||
+      !control.partyId || input.expectedPartyId !== control.partyId ||
+      (input.targetPartyId != null && input.targetPartyId !== control.partyId)) {
     return { ok: false, reason: "party" };
   }
-  const party = fS(country, input.targetPartyId);
+  const party = fS(country, control.partyId);
   if (!party) return { ok: false, reason: "party" };
   const descriptor = party.nameDesc || {};
   if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag) return { ok: true, changed: false };
@@ -499,7 +495,7 @@ function renderPartyProfile(view, party, ui) {
   if (view.party.foreignFunding) tabs.push(["foreign", "Foreign Funding", gpmRenderForeignFunding()]);
   tabs.push(["laws", "Law Shortlist", gpmRenderPartyLaws()]);
   return `<div class="gpm-party-profile">
-    <div class="gpm-party-profile-tabs" role="tablist" aria-label="Party profile" style="--gpm-profile-tabs:${tabs.length}">
+    <div class="gpm-party-profile-tabs" role="tablist" aria-label="Party profile">
       ${tabs.map(([id, label], index) => `<button class="k" type="button" role="tab" id="gpm-tab-${id}"
         data-gpm-profile-focus="${id}" aria-controls="gpm-panel-${id}" aria-selected="${index === 0}"
         tabindex="${index === 0 ? 0 : -1}">${label}${id === "foreign" ? '<span class="gpm-funding-attention" hidden></span>' : ""}</button>`).join("")}</div>
