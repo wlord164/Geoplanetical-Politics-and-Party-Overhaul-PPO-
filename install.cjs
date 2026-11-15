@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Verified Domestic Politics UI follow-up.
+  archive: "6f07cec33f70b159607c0bbb12046d5f034b2c0364feafbc20dae4c33b4fcf54",
+  worker: "7c5f1ac309d671a735a2cb6f00aea170642a1f9c4c464ad2dd3e73ac3517c9c8",
+  renderer: "ed73f6046a28984d7d21120d5073be42e3b06a028668ada15625c250aa296474",
+  executable: "efbb461ae7ee1cc4ed0466dea5b4fd40e98f628dce6445e234ffcd55718d7496",
+}, {
   // Verified Domestic Politics candidate.
   archive: "ef4b96bdf3f591b4f909f9c4e0dc7ccb312bf3bbbc11e77aa363fbc1023781b3",
   worker: "a97ff534bb6959a48fd1ee771a1e3523c1644a9e6c92fefe375dcebd40ed30ca",

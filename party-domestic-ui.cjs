@@ -45,12 +45,14 @@ function gpmRenderCampaignPlan() {
     <div class="gpm-domestic-section" data-gpm-domestic-account></div>
     <form class="gpm-domestic-section" data-gpm-domestic-form>
       <h4>Party staff</h4>
+      <div class="gpm-domestic-section" data-gpm-domestic-staff></div>
       <div class="gpm-domestic-fields"></div>
       <div class="gpm-domestic-actions">
         <button class="k" type="submit" data-gpm-profile-focus="domestic-save">Save campaign plan</button>
         <small data-gpm-domestic-status role="status"></small>
       </div>
     </form>
+    <details data-gpm-domestic-ledger><summary>Party activity</summary><div data-gpm-domestic-log></div></details>
     <section class="gpm-domestic-section" aria-labelledby="gpm-domestic-election-title">
       <h4 id="gpm-domestic-election-title">Election outlook</h4>
       <div class="gpm-domestic-actions gpm-domestic-forecast-controls">
@@ -64,7 +66,6 @@ function gpmRenderCampaignPlan() {
     </section>
     <div class="gpm-domestic-section" data-gpm-domestic-agenda></div>
     <div class="gpm-domestic-section" data-gpm-domestic-projects></div>
-    <details data-gpm-domestic-ledger><summary>Party activity</summary><div data-gpm-domestic-log></div></details>
   </section>`;
 }
 
@@ -89,10 +90,6 @@ function gpmDomesticAccount(state, ui) {
   const details = (pairs, label) => `<div class="gpm-domestic-summary"><h4>${b(label)}</h4><dl>${pairs.map(([key, value]) =>
     `<div><dt>${b(key)}</dt><dd>${b(String(value))}</dd></div>`).join("")}</dl></div>`;
   const counter = new Intl.NumberFormat(cs(), { maximumFractionDigits: 0 });
-  const history = data.lastReview;
-  const review = data.plan?.enabled && Number.isFinite(history?.day) ?
-    `Last review ${ui.gameDate(history.day)}. ${history.reason === "no-eligible-priority" ?
-      "Staff found no action within the plan and available resources." : "See Party activity for the decisions."}` : "";
   return `<div class="gpm-domestic-grid">${details([
     ["Treasury", gpmDomesticMoney(data.cashM)], ["Activists available", Number.isFinite(data.activistsK) ? li(data.activistsK) : "—"],
     ["Influence", Number.isFinite(data.influence) ? counter.format(data.influence) : "—"],
@@ -106,8 +103,7 @@ function gpmDomesticAccount(state, ui) {
     ["Upkeep", gpmDomesticMoney(membership.upkeepM)],
     ["Net this month", gpmDomesticMoney(membership.netM, true)],
     ...(membership.votingWeightPct > 0 ? [["Relative voting weight", `+${gpmRegionalPercent(membership.votingWeightPct / 100)}`]] : []),
-  ], "Membership") : ""}</div>${review ? `<small>${b(review)}</small>` : ""}${data.plan?.enabled && Number.isFinite(data.nextPlannerDay) ?
-    `<small>Next monthly review ${b(ui.gameDate(data.nextPlannerDay))}.</small>` : ""}`;
+  ], "Membership") : ""}</div>`;
 }
 
 function gpmDomesticFields(state, ui) {
@@ -130,7 +126,7 @@ function gpmDomesticFields(state, ui) {
       </select></label>
       ${money("reserveCashM", "Treasury to reserve (USD)")}${money("monthlyBudgetM", "Monthly spending limit (USD)")}
     </div>
-    <small>Leave the limit blank to spend from available funds. Staff uses the same treasury, costs and cooldowns as your manual actions.</small>
+    <small>Staff can organize, campaign, and make Congress and support agreement decisions when eligible. Leave the limit blank to spend from available funds. Staff use the same treasury, costs and cooldowns as your manual actions.</small>
     <div class="gpm-domestic-grid">
       ${check("autoFundraise", "Fundraise")}${check("autoRecruit", "Recruit activists")}
       ${check("allowForeignFunding", "Seek foreign grants")}${check("allowForeignDonations", "Allow staff to answer foreign grant requests")}
@@ -206,21 +202,72 @@ function gpmDomesticProjectRows(state, ui) {
   }).join("")}</ul>`;
 }
 
-function gpmDomesticActivity(state, ui) {
-  function label(kind) {
-    return ({ fundraise: "Fundraising", recruit: "Activist recruitment", dues: "Membership dues", upkeep: "Local upkeep",
-      campaign: "Contest operation", plan: "Campaign plan", membership: "Membership and upkeep", grant: "Foreign grant",
-      transfer: "Party transfer", regional: "Regional campaigning", organizing: "Party organizing" })[kind] ||
-      (typeof kind === "string" ? kind.replace(/[_-]+/g, " ").replace(/^./, char => char.toUpperCase()) : "Party activity");
+function gpmDomesticActivityLabel(kind) {
+  return ({ fundraise: "Fundraising", recruit: "Activist recruitment", dues: "Membership dues", upkeep: "Local upkeep",
+    "membership-upkeep": "Membership upkeep", "membership-dues": "Membership dues",
+    campaign: "Contest operation", "campaign-promises": "Set campaign promises", plan: "Campaign plan",
+    membership: "Membership and upkeep", transfer: "Party transfer", regional: "Regional campaigning",
+    organizing: "Party organizing", meeting: "Public meeting", movement: "Backed peaceful mobilization",
+    outreach: "Voter outreach", rally: "Regional rally", investment: "Local investment",
+    headquarters: "Headquarters project", "congress-vote": "Congress vote",
+    "agreement-offered": "Offered support agreement", "agreement-accepted": "Accepted support agreement",
+    "agreement-declined": "Declined support agreement", "agreement-bill-tabled": "Tabled support agreement bill",
+    "foreign-funding-request": "Requested foreign grant", "foreign-funding-received": "Received foreign grant",
+    "foreign-funding-donated": "Donated foreign grant", "foreign-funding-return": "Returned foreign grant",
+    "foreign-funding-refund": "Received foreign grant refund", "foreign-funding-declined": "Declined foreign grant",
+    "foreign-funding-kept": "Kept foreign grant" })[kind] ||
+    (typeof kind === "string" ? kind.replace(/[_-]+/g, " ").replace(/^./, char => char.toUpperCase()) : "Party activity");
+}
+
+function gpmDomesticActivityTarget(state, ui, row) {
+  const target = row.details;
+  if (typeof target !== "string" || !target || typeof row.kind !== "string") return "";
+  if (row.kind === "campaign" || row.kind === "campaign-promises") {
+    const contest = state.contests.find(item => item.id === target);
+    return contest ? gpmDomesticContestLabel(contest, ui) : "";
   }
+  if (["rally", "investment", "headquarters"].includes(row.kind)) {
+    const region = state.regions.find(item => item.key === target);
+    return region ? gpmRegionalRegionName(region) : "";
+  }
+  if (row.kind === "meeting" || row.kind === "outreach") return Vr(target);
+  if (row.kind === "movement") {
+    const movement = state.view.party.organizing?.movements?.find(item => item.id === target);
+    return movement ? o("domestic.demand." + movement.demandId) : "";
+  }
+  if (row.kind.startsWith("agreement-")) return tr(target);
+  if (row.kind.startsWith("foreign-funding-")) return l0(target, target);
+  if (row.kind === "activists-returned") return gpmDomesticActivityLabel(target);
+  return target;
+}
+
+function gpmDomesticStaffStatus(state, ui) {
+  const { data } = state;
+  const enabled = data.plan?.enabled;
+  const latest = (data.ledger || []).find(row => row.staff === true);
+  const review = data.lastReview;
+  const status = enabled ? "Staff automation is on." : "Staff automation is off.";
+  const next = enabled && Number.isFinite(data.nextPlannerDay) ? `Next monthly review ${ui.gameDate(data.nextPlannerDay)}.` : "";
+  const previous = !Number.isFinite(review?.day) ? "" : Number.isInteger(review.staffActions)
+    ? `Last monthly review ${ui.gameDate(review.day)} · ${review.staffActions ?
+      `${review.staffActions} staff activity ${review.staffActions === 1 ? "entry" : "entries"}` : "No staff actions recorded"}`
+    : `Last recorded party review ${ui.gameDate(review.day)} · Actor unrecorded`;
+  const action = latest ? ["Latest staff action", Number.isFinite(latest.day) && ui.gameDate(latest.day),
+    gpmDomesticActivityLabel(latest.kind), gpmDomesticActivityTarget(state, ui, latest)].filter(Boolean).join(" · ")
+    : enabled ? "No staff actions recorded yet." : "";
+  return [status, next, previous, action].filter(Boolean).map(line => `<small>${b(line)}</small>`).join("");
+}
+
+function gpmDomesticActivity(state, ui) {
   const ledger = state.data.ledger || [];
   if (!ledger.length) return "<small>No party activity recorded yet.</small>";
-  return `<ul class="gpm-domestic-list">${ledger.slice(0, 12).map(row => {
+  return `<ul class="gpm-domestic-list">${ledger.map(row => {
     const details = [Number.isFinite(row.day) && ui.gameDate(row.day), row.cashM && gpmDomesticMoney(row.cashM, true),
       row.activistsK && `${row.activistsK > 0 ? "+" : ""}${li(row.activistsK)} activists`,
       row.influence && `${row.influence > 0 ? "+" : ""}${row.influence} influence`,
-      typeof row.details === "string" && row.details].filter(Boolean);
-    return `<li><strong>${b(label(row.kind))}</strong><small>${b(details.join(" · "))}</small></li>`;
+      gpmDomesticActivityTarget(state, ui, row)].filter(Boolean);
+    const title = (row.staff === true ? "Staff · " : "") + gpmDomesticActivityLabel(row.kind);
+    return `<li><strong>${b(title)}</strong><small>${b(details.join(" · "))}</small></li>`;
   }).join("")}</ul>`;
 }
 
@@ -295,6 +342,7 @@ function gpmPaintDomestic(state, ui) {
     }
   };
   html("account", gpmDomesticAccount(state, ui));
+  html("staff", gpmDomesticStaffStatus(state, ui));
   html("projects", gpmDomesticProjectRows(state, ui));
   html("log", gpmDomesticActivity(state, ui));
   html("agenda", gpmDomesticAgendaHtml(state, ui));
@@ -403,7 +451,7 @@ async function gpmSaveCampaignPlan(state, ui) {
     state.appliedPlan = state.draft;
     state.data = { ...state.data, plan: state.appliedPlan };
     state.dirty = false;
-    state.status = state.draft.enabled ? "Plan saved. Staff can act at its next review." : "Plan saved. You control all party actions.";
+    state.status = state.draft.enabled ? "Plan saved. Staff can act on the campaign schedule." : "Plan saved. Staff automation is off.";
     state.planSavedAt = state.view.day;
     gpmPaintDomestic(state, ui);
     try {
@@ -537,7 +585,8 @@ function patchPartyDomesticRenderer(js, replaceOnce) {
 }
 
 const rendererFunctions = [gpmRenderCampaignPlan, gpmDomesticMoney, gpmDomesticContestLabel, gpmDomesticAccount, gpmDomesticFields,
-  gpmDomesticForecastHtml, gpmDomesticRecap, gpmDomesticProjectRows, gpmDomesticActivity, gpmDomesticAgendaEntries,
+  gpmDomesticForecastHtml, gpmDomesticRecap, gpmDomesticProjectRows, gpmDomesticActivityLabel, gpmDomesticActivityTarget,
+  gpmDomesticStaffStatus, gpmDomesticActivity, gpmDomesticAgendaEntries,
   gpmDomesticAgendaHtml, gpmDomesticAgendaRoute, gpmDomesticSitroomRows, gpmDismissDomesticRecent,
   gpmOpenDomesticAgendaLink, gpmPaintDomestic, gpmReadDomesticDraft,
   gpmFillDomesticDraft, gpmRequestDomesticForecast, gpmSaveCampaignPlan, gpmBindCampaignPlan];

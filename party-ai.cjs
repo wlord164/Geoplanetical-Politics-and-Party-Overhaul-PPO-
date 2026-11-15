@@ -117,7 +117,11 @@ function gpmDomesticOutreach(sim, country, party, groups, policy, reserve, elect
 function gpmDomesticRunContest(sim, country, party, entry, policy) {
   const active = nE(country, party, sim.day, entry.contestId);
   if (!active || (active.lastActionDay != null && sim.day - active.lastActionDay < FF)) return;
-  if (!active.promises.length) Gpt(sim, country, party.id, voo(sim, country, party), entry.contestId);
+  if (!active.promises.length) {
+    const result = Gpt(sim, country, party.id, voo(sim, country, party), entry.contestId);
+    if (result?.ok && result.promiseIds?.length) gpmDomesticReceipt(sim, country, party, "campaign-promises",
+      { details: entry.contestId, staffDecision: true });
+  }
   const reserve = gpmDomesticReserve(sim, country, party, policy, entry.contestId);
   const organization = party.organization;
   const spendingCap = policy.monthlyBudgetM == null ? Infinity : policy.monthlyBudgetM - gpmDomesticSpendThisMonth(sim, party);
@@ -151,7 +155,39 @@ function gpmDomesticContestAI(sim, country, activeContests) {
     const order = scheduled.map(contest => contest.id);
     const entries = activeContests.filter(entry => !focus || entry.contestId === focus.id)
       .sort((left, right) => order.indexOf(left.contestId) - order.indexOf(right.contestId));
-    for (const entry of entries) gpmDomesticRunContest(sim, country, party, entry, policy);
+    gpmDomesticWithStaff(sim, country, party, () => {
+      for (const entry of entries) gpmDomesticRunContest(sim, country, party, entry, policy);
+    });
+  }
+}
+
+function gpmDomesticReviewAgreements(sim, country, party, staff) {
+  if (typeof advancePartyAgreementsAI !== "function") return;
+  const before = staff ? partyAgreementState(country)?.current : null;
+  const wasOffered = before?.status === "offered";
+  const result = advancePartyAgreementsAI(sim, country, party);
+  if (!staff || !result?.ok || !result.changed) return;
+  const current = partyAgreementState(country)?.current;
+  const kind = current?.status === "offered" ? "agreement-offered" :
+    current?.status === "active" ? wasOffered ? "agreement-accepted" : "agreement-bill-tabled" : "agreement-declined";
+  gpmDomesticReceipt(sim, country, party, kind,
+    { details: (current || before)?.lawId, staffDecision: true });
+}
+
+function gpmDomesticReviewFunding(sim, country, party, electionIn, policy, staff) {
+  const before = party.gpmForeignFunding;
+  const pending = before?.pending;
+  const last = before?.last;
+  advancePartyForeignFundingAI(sim, country, electionIn, party, policy);
+  if (!staff) return;
+  const after = party.gpmForeignFunding;
+  if (after?.pending && after.pending !== pending) {
+    gpmDomesticReceipt(sim, country, party, "foreign-funding-request",
+      { details: after.pending.donor?.countryKey, staffDecision: true });
+  } else if (after?.last && after.last !== last && ["declined", "kept"].includes(after.last.status)) {
+    const kind = after.last.status === "declined" ? "foreign-funding-declined" : "foreign-funding-kept";
+    gpmDomesticReceipt(sim, country, party, kind,
+      { details: after.last.donor?.countryKey, staffDecision: true });
   }
 }
 
@@ -170,21 +206,33 @@ function advancePartyModAI(sim, country) {
     const electionIn = contest ? contest.nextDay - day : Infinity;
     const reserve = gpmDomesticReserve(sim, country, party, policy);
     const before = party.gpmDomestic?.ledger?.[0];
-    gpmDomesticRenewOrganization(sim, country, party, policy, reserve, electionIn);
-    if (typeof advancePartyCongressAI === "function") advancePartyCongressAI(sim, country, party, policy);
-    if (typeof advancePartyAgreementsAI === "function") advancePartyAgreementsAI(sim, country, party);
-    advancePartyRegionalAI(sim, country, electionIn, contest, party, policy);
-    if (policy.allowForeignFunding) advancePartyForeignFundingAI(sim, country, electionIn, party, policy);
-    const action = partyModAIOrganizing(sim, country, party, groups, movements, electionIn, contest, context, policy, reserve);
-    if (action) applyPartyOrganizing(sim, country, party.id, action.kind, action.targetId);
-    if (!action || electionIn > 200) gpmDomesticOutreach(sim, country, party, groups, policy, reserve, electionIn);
-    const state = gpmDomesticState(party);
-    const updated = state.ledger?.[0] !== before;
-    state.lastReview = { day, goal: policy.goal, reason: updated ? null : "no-eligible-priority", contestId: contest?.id || null };
+    gpmDomesticWithStaff(sim, country, party, staff => {
+      gpmDomesticRenewOrganization(sim, country, party, policy, reserve, electionIn);
+      if (typeof advancePartyCongressAI === "function") {
+        const vote = advancePartyCongressAI(sim, country, party, policy);
+        if (staff && vote?.ok && vote.changed) {
+          const topic = vote.kind === "size" ? `${vote.proposed} delegates` : vote.kind === "priority"
+            ? vote.priority === "rally" ? "Regional rallies" : "Local investment"
+            : partyCongressProgrammes()[vote.programme]?.label || "Party programme";
+          gpmDomesticReceipt(sim, country, party, "congress-vote",
+            { details: topic + (vote.passed ? " · Passed" : " · Failed"), staffDecision: true });
+        }
+      }
+      gpmDomesticReviewAgreements(sim, country, party, staff);
+      advancePartyRegionalAI(sim, country, electionIn, contest, party, policy);
+      if (policy.allowForeignFunding) gpmDomesticReviewFunding(sim, country, party, electionIn, policy, staff);
+      const action = partyModAIOrganizing(sim, country, party, groups, movements, electionIn, contest, context, policy, reserve);
+      if (action) applyPartyOrganizing(sim, country, party.id, action.kind, action.targetId);
+      if (!action || electionIn > 200) gpmDomesticOutreach(sim, country, party, groups, policy, reserve, electionIn);
+      const state = gpmDomesticState(party);
+      const updated = staff ? staff.actions > 0 : state.ledger?.[0] !== before;
+      state.lastReview = { day, goal: policy.goal, reason: updated ? null : "no-eligible-priority", contestId: contest?.id || null,
+        ...(staff ? { staffActions: staff.actions } : {}) };
+    });
   }
 }
 
 module.exports = {
   workerFunctions: [partyModAIBlocFit, partyModAICampaignReserve, partyModAICanCommit, partyModAIOrganizing,
-    gpmDomesticRenewOrganization, gpmDomesticOutreach, gpmDomesticRunContest, gpmDomesticContestAI, advancePartyModAI],
+    gpmDomesticRenewOrganization, gpmDomesticOutreach, gpmDomesticRunContest, gpmDomesticContestAI, gpmDomesticReviewAgreements, gpmDomesticReviewFunding, advancePartyModAI],
 };

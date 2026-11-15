@@ -54,7 +54,7 @@ Back a live, unresolved peaceful mobilization to build support in its affected b
 
 Meetings and backing share a +50% voting-weight cap per party and bloc. Each quote scales with the room under that cap. The panel shows the organizing half-life saved for the campaign, which is 180 days under Standard rules. Bloc gains feed the game's national support calculation.
 
-In My Party, open Party Congress to see estimated ideological factions in an Assembly-style semicircle. Each dot represents one modeled delegate. Congress starts at 100 delegates.
+In My Party, open Party Congress to see estimated ideological factions in an Assembly-style semicircle. Each dot represents one modeled delegate. Congress starts at 100 delegates. The legend names each represented faction. The breakdown also lists named tendencies with no delegates.
 
 Use the slider to propose a Congress of 50 to 200 delegates. Check each faction's current and proposed representation, reasons, and expected yes and no votes. A faction can gain delegates but still oppose the motion if its share of Congress shrinks. More than half of the current delegates must vote yes. On a motion forecast to fail, you can offer one opposing faction an organizing grant to persuade some of its delegates. The preview shows the cost and extra votes. The party treasury pays the grant only if the motion passes.
 
@@ -84,7 +84,7 @@ Open Support Base beside Party Congress to see which electorate blocs contribute
 
 Open My Party > Campaign Plan to select a contest, compare the current estimate with the election-day projection, and see what work is underway. The projection uses current world conditions and expected effects of booked projects. The election recap records the most recent completed legislative result in each chamber. The Agenda links to upcoming work and decisions.
 
-You can delegate routine party work in Campaign Plan with a goal, a spending limit, and a cash reserve. A party's organization pays the same costs and observes the same requirements whether you, a delegated plan, or the AI directs it. Completed organizing and local projects can develop a dues-paying membership. Membership can shrink when a party remains inactive. The activity history shows cash flows and activist assignments and returns.
+You can delegate routine party work in Campaign Plan with a goal, a spending limit, and a cash reserve. A party's organization pays the same costs and observes the same requirements whether you, a delegated plan, or the AI directs it. Completed organizing and local projects can develop a dues-paying membership. Membership can shrink when a party remains inactive. Campaign Plan shows the review schedule and latest staff action. Expand Party activity below the plan to see decisions, cash flows and activist assignments and returns. New entries caused by staff are marked Staff.
 
 Open My Party > Regional Campaigning and select a region on the inline map or in the Region menu. Compare population share, cost, completion date, and estimated gains before starting a rally, investment, or headquarters. The panel follows project progress and activist return dates at your chosen game speed. Use Open Campaign Map for the optional globe view. A regional investment builds lasting electoral presence. Invest in Foothold in the Uprising tab prepares the region for an uprising.
 

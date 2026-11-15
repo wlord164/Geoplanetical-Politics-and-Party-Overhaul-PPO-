@@ -22,31 +22,17 @@ function partyCongressFactions(data, total) {
   const groups = [...byLabel.values()];
   const weight = groups.reduce((sum, group) => sum + group.weight, 0);
   if (!weight) return [];
-  const factions = [];
-  const other = { label: "Other factions", weight: 0, economicWeight: 0, governmentWeight: 0, labels: [], names: [] };
-  for (const group of groups) {
-    if (group.weight / weight >= .03) {
-      factions.push(group);
-      continue;
-    }
-    other.weight += group.weight;
-    other.economicWeight += group.economicWeight;
-    other.governmentWeight += group.governmentWeight;
-    other.labels.push(group.label);
-    other.names.push(...group.names);
-  }
-  if (other.labels.length) factions.push(other);
   let unassigned = total;
-  for (const group of factions) {
+  for (const group of groups) {
+    group.share = group.weight / weight;
     const quota = total * group.weight / weight;
     group.seats = Math.floor(quota);
     group.remainder = quota - group.seats;
     unassigned -= group.seats;
   }
-  const byRemainder = [...factions].sort((a, b) => b.remainder - a.remainder || a.label.localeCompare(b.label));
+  const byRemainder = [...groups].sort((a, b) => b.remainder - a.remainder || a.label.localeCompare(b.label));
   for (let index = 0; index < unassigned; index++) byRemainder[index].seats++;
-  return factions.filter(group => group.seats > 0)
-    .sort((a, b) => a.economicWeight / a.weight - b.economicWeight / b.weight || a.label.localeCompare(b.label));
+  return groups.sort((a, b) => a.economicWeight / a.weight - b.economicWeight / b.weight || a.label.localeCompare(b.label));
 }
 
 function partyCongressBallot(kind, current, factions) {
@@ -66,8 +52,8 @@ function partyCongressSizeVote(data, proposed, bargainLabel = "") {
   const currentFactions = partyCongressFactions(data, current);
   if (!currentFactions.length) return { ok: false, reason: "unavailable" };
   const proposedFactions = partyCongressFactions(data, proposed);
-  const currentSeatsByFaction = new Map(currentFactions.map(group => [group.label, group.seats]));
-  const proposedSeatsByFaction = new Map(proposedFactions.map(group => [group.label, group.seats]));
+  const currentSeatsByFaction = new Map(currentFactions.filter(group => group.seats > 0).map(group => [group.label, group.seats]));
+  const proposedSeatsByFaction = new Map(proposedFactions.filter(group => group.seats > 0).map(group => [group.label, group.seats]));
   const labels = new Set([...currentSeatsByFaction.keys(), ...proposedSeatsByFaction.keys()]);
 
   const scale = Math.min(1, Math.abs(proposed - current) / current);
@@ -141,7 +127,7 @@ function partyCongressPriorityVote(data, priority) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextPriorityVoteDay };
   }
   const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
-  const factions = partyCongressFactions(data, current).map(group => {
+  const factions = partyCongressFactions(data, current).filter(group => group.seats > 0).map(group => {
     const economicLean = group.economicWeight / group.weight;
     const preferred = economicLean < 0 ? "investment" : "rally";
     const conviction = Math.min(1, Math.abs(economicLean) / .6);
@@ -184,7 +170,7 @@ function partyCongressProgrammeVote(data, programme) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextProgrammeVoteDay };
   }
   const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
-  const factions = partyCongressFactions(data, current).map(group => {
+  const factions = partyCongressFactions(data, current).filter(group => group.seats > 0).map(group => {
     const alignment = choice.direction * group[choice.axis] / group.weight;
     const support = Math.max(0, Math.min(1, .55 + .40 * alignment));
     const reason = alignment > .12 ? "This programme fits the faction’s politics." :
