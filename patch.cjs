@@ -12,8 +12,12 @@ const { join } = require("node:path");
 const officialCountryNames = require("./party-official-country-names.cjs");
 const { workerFunctions: organizingWorker, rendererFunctions: organizingRenderer } = require("./party-organizing.cjs");
 const { workerFunctions: congressWorker } = require("./party-congress-model.cjs");
+const { workerFunctions: ideologyIdentityWorker } = require("./party-ideology-identity.cjs");
 const { rendererFunctions: congressRenderer } = require("./party-congress.cjs");
 const { sharedFunctions: congressVoting, workerFunctions: congressVoteWorker } = require("./party-congress-vote.cjs");
+const { workerFunctions: factionPeople, patchFactionPeopleWorker, patchFactionPeopleRenderer } = require("./party-faction-people.cjs");
+const { workerFunctions: factionBargaining } = require("./party-faction-bargaining.cjs");
+const { workerFunctions: factionDevelopment, patchFactionDevelopmentWorker } = require("./party-faction-development.cjs");
 const { workerFunctions: supportWorker, rendererFunctions: supportRenderer } = require("./party-support-base.cjs");
 const { workerFunctions: aiWorker } = require("./party-ai.cjs");
 const { patchLawLabels, patchLawVoteSnapshots } = require("./party-law-labels.cjs");
@@ -109,16 +113,13 @@ function estimatePartyIdeology(ideology) {
 }
 
 function partyIdeologyLabel(party) {
-  const preset = gpmPresets[party?.nameDesc?.gpmIdeologyPreset];
-  if (preset?.program && gpmAxes.every(({ id }, index) => {
-    const score = party.ideology?.[id];
-    return Number.isFinite(score) && Math.abs(score - preset.values[index] / 100) <= .2;
-  })) return preset.label;
+  const id = party?.nameDesc?.gpmDeclaredIdeology || party?.nameDesc?.gpmIdeologyPreset;
+  if (Object.hasOwn(gpmPresets, id)) return gpmPresets[id].label;
   return estimatePartyIdeology(party?.ideology) ?? o("pol.family." + ex(party));
 }
 
 function partyIdeologyBadge(party) {
-  const presetId = party.nameDesc?.gpmIdeologyPreset;
+  const presetId = party.nameDesc?.gpmDeclaredIdeology || party.nameDesc?.gpmIdeologyPreset;
   const preset = Object.hasOwn(gpmPresets, presetId) ? gpmPresets[presetId] : null;
   const label = partyIdeologyLabel(party);
   const tooltip = label !== preset?.label && estimatePartyIdeology(party.ideology) ? ' data-tip="Estimated from the party’s four current ideology scores."' : "";
@@ -420,6 +421,7 @@ function createStartingParty(sim, draft) {
   const change = R1a(politics, ideology, seedSupport, (party, parties) => {
     Vda(party, ol(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
     party.nameDesc = { ...party.nameDesc, gpmName: identity.name, gpmTag: identity.tag, gpmFounded: true };
+    if (preset) party.nameDesc.gpmDeclaredIdeology = draft.ideologyPreset;
     if (presetMatches) party.nameDesc.gpmIdeologyPreset = draft.ideologyPreset;
   });
   qMa(country, change, previous);
@@ -427,6 +429,7 @@ function createStartingParty(sim, draft) {
   sim._reconcilePolity(country);
   const party = fS(country, change.id);
   if (!party) throw new Error("The new party was not registered");
+  if (preset) gpmRecordPartyIdentity(party, draft.ideologyPreset);
   const hasSeats = (politics.chambers || []).some(chamber => (chamber.composition?.[party.id] || 0) > 0);
   if (!(party.support > 0 && party.support <= supportCap + 1e-9) || hasSeats ||
       !politics.parties.some(incumbent => incumbent.id !== party.id && incumbent.support > party.support)) {
@@ -624,6 +627,7 @@ function patchRenderer(bytes) {
   const { patchHistoricalIdentityRenderer } = require("./historical-identities.cjs");
   js = patchSudanReunificationRenderer(js, replaceOnce);
   js = patchHistoricalIdentityRenderer(js, replaceOnce);
+  js = patchFactionPeopleRenderer(js, replaceOnce);
   return Buffer.from(patchPartyDomesticRenderer(js, replaceOnce));
 }
 
@@ -642,7 +646,7 @@ function patchWorker(bytes) {
     "\nfunction Zia(e){gpmHistoricalProvinceTransport(e.world,Nle);let t={};");
   js = replaceOnce(js, "function Jia(e,t,a=null){let r=$ia(t);WPe(r);",
     "function Jia(e,t,a=null){let r=$ia(t);WPe(r);gpmHistoricalProvinceTransport(e.world,Nle,r.byProvince);");
-  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${registerPartyRename}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyRename();\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
+  js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${registerPartyRename}\n${ideologyIdentityWorker.join("\n")}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyRename();\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(qa.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Ie("advancePartyModDay",()=>advancePartyModDay(e)),t.has(qa.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:',
     'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,campaigns:');
@@ -680,7 +684,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'if((y.support||0)<.06&&(g.support||0)<.06&&om(y.ideology,g.ideology)<.35)', 'if(!isCustomParty(y)&&!isCustomParty(g)&&(y.support||0)<.06&&(g.support||0)<.06&&om(y.ideology,g.ideology)<.35)');
   js = replaceOnce(js, 'let m=i.find(f=>(f._starve||0)>=24);', 'let m=i.find(f=>!isCustomParty(f)&&(f._starve||0)>=24);');
   js = replaceOnce(js, 'this.sim=b,t.profileWorldTrade===!0', 'this.sim=b,o?retirePartyCongresses(b):t.playerControl?.partyModCreate&&createStartingParty(b,t.playerControl.partyModCreate),t.profileWorldTrade===!0');
-  js = replaceOnce(js, 'comp:e.nameDesc.comp||null}:null}function qdr', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null,gpmHistoricalIdeology:e.nameDesc.gpmHistoricalIdeology||null,gpmHistoricalIdeologyEquivalent:e.nameDesc.gpmHistoricalIdeologyEquivalent||null}:null}function qdr');
+  js = replaceOnce(js, 'comp:e.nameDesc.comp||null}:null}function qdr', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null,gpmDeclaredIdeology:e.nameDesc.gpmDeclaredIdeology||null,gpmHistoricalIdeology:e.nameDesc.gpmHistoricalIdeology||null,gpmHistoricalIdeologyEquivalent:e.nameDesc.gpmHistoricalIdeologyEquivalent||null}:null}function qdr');
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
   js = replaceOnce(js, "registerPartyCongressSize();\nasync function Hbt",
@@ -746,6 +750,22 @@ function patchWorker(bytes) {
     '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,...a})');
   worker = replaceOnce(worker, 'Adr(t.pol).map(({gpmForeignFunding,...party})=>party)',
     'Adr(t.pol).map(({gpmForeignFunding,gpmDomestic,...party})=>party)');
+  worker = replaceOnce(worker, 'registerPartyRename();',
+    `${factionPeople.join("\n")}\n${factionBargaining.join("\n")}\n${factionDevelopment.join("\n")}\nregisterPartyFactionBargaining();\nregisterPartyRename();`);
+  worker = replaceOnce(worker, 'a==="gpm.campaignRules"?',
+    'a==="gpm.partyFactionQuote"?gpmFactionQuote(r,r.player,YL(r.player,Uo(r.player)),t.params||{},"player"):a==="gpm.campaignRules"?');
+  worker = replaceOnce(worker, 'function yNo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan){',
+    'function yNo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan,gpmFactionData){');
+  worker = replaceOnce(worker, 'congress:partyCongressView(e,t,a,gpmElectorate),',
+    'congress:partyCongressView(e,t,a,gpmElectorate,undefined,gpmFactionData),');
+  worker = replaceOnce(worker, 'recentResult:gpmPartyElectionRecapView(t,r.partyId)})',
+    'recentResult:gpmPartyElectionRecapView(t,r.partyId)},gpmFactionCongressData(e,t,r.partyId))');
+  worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,...a})',
+    '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...a})');
+  worker = replaceOnce(worker, 'Adr(t.pol).map(({gpmForeignFunding,gpmDomestic,...party})=>party)',
+    'Adr(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party)');
+  worker = patchFactionPeopleWorker(worker, replaceOnce);
+  worker = patchFactionDevelopmentWorker(worker, replaceOnce);
   return Buffer.from(worker);
 }
 
@@ -755,6 +775,7 @@ function advancePartyModDay(sim) {
       if (party.gpmOrganizing) advancePartyOrganizing(sim, country, party);
       if (party.gpmRegional) advancePartyRegionalCampaign(sim, country, party);
       if (party.gpmForeignFunding) advancePartyForeignFunding(sim, country, party);
+      if (party.gpmFactionPolitics) gpmFactionDaily(sim, country, party);
     }
   }
 }
@@ -771,6 +792,9 @@ function partyOrganizationForMerger(party) {
   const reservedForOrganizing = [...(party.gpmOrganizing?.projects || []), ...(party.gpmRegional?.projects || [])]
     .reduce((sum, project) => sum + project.activistsK, 0);
   organization.activistsK = zL(Math.min(1e5, organization.activistsK + reservedForOrganizing));
+  const returnedFactionEscrow = (party.gpmFactionPolitics?.offers || []).reduce((cash, offer) =>
+    offer.status === "accepted" ? cash + offer.cashM : cash, 0);
+  if (returnedFactionEscrow) organization.treasuryM = gpmDomesticMoney(organization.treasuryM + returnedFactionEscrow);
   return organization;
 }
 
@@ -797,6 +821,7 @@ function gpmPartyForCountryBirth(party, share) {
   delete copy.gpmForeignFunding;
   delete copy.gpmUprisingPreparations;
   delete copy.gpmCongressSizeState;
+  delete copy.gpmFactionPolitics;
   if (copy.outreach) copy.outreach.project = null;
 
   if (copy.organization && share !== null) {

@@ -4,15 +4,53 @@ function partyCongressSizeIsValid(size) {
   return Number.isInteger(size) && size >= 50 && size <= 200;
 }
 
+function partyCongressTendencyDescription(axes) {
+  const { econ, gov, social, nat } = axes || {};
+  const positions = [
+    econ <= -.25 ? "State-directed economy" : econ >= .25 ? "Market-oriented economy" : null,
+    gov >= .45 ? "Centralized authority" : gov <= -.35 ? "Limited government authority" : null,
+    social <= -.35 ? "Social reform" : social >= .35 ? "Social traditionalism" : null,
+    nat >= .50 ? "National sovereignty" : nat <= -.50 ? "International cooperation" : null,
+  ].filter(Boolean);
+  return positions.join(" · ") || "Mixed policy tendencies";
+}
+
+
+function partyCongressDistinctLabels(groups) {
+  const byDescription = new Map();
+  for (const group of groups) {
+    const matches = byDescription.get(group.displayLabel) || [];
+    matches.push(group);
+    byDescription.set(group.displayLabel, matches);
+  }
+  const scores = { econ: "Economy", gov: "Authority", social: "Social policy", nat: "International alignment" };
+  for (const matches of byDescription.values()) {
+    if (matches.length < 2) continue;
+    const score = (group, axis) => Math.round(1000 * group.axisWeights[axis] / group.weight) / 10;
+    const distinctAxis = Object.keys(scores).find(axis => new Set(matches.map(group => score(group, axis))).size === matches.length);
+    for (const group of matches) {
+      const axes = distinctAxis ? [distinctAxis] : Object.keys(scores);
+      const evidence = axes.map(axis => scores[axis] + " " + score(group, axis)).join(", ");
+      group.displayLabel += " (" + evidence + ")";
+    }
+  }
+}
+
+
 function partyCongressFactions(data, total) {
   const byLabel = new Map();
   for (const profile of data.profiles || []) {
     const label = estimatePartyIdeology(profile.ideology);
     if (!label || !Number.isFinite(profile.weight) || profile.weight <= 0) continue;
-    const group = byLabel.get(label) || { label, weight: 0, economicWeight: 0, governmentWeight: 0, names: [] };
+    const group = byLabel.get(label) || { label, weight: 0, economicWeight: 0, governmentWeight: 0, names: [],
+      axisWeights: { econ: 0, gov: 0, social: 0, nat: 0 }, sources: { platform: 0, supporters: 0, people: 0 } };
     group.weight += profile.weight;
+    if (profile.origin === "platform") group.sources.platform += profile.weight;
+    if (profile.origin === "supporter-estimate") group.sources.supporters += profile.weight;
+    if (profile.origin === "person") group.sources.people += profile.weight;
     group.economicWeight += profile.weight * profile.ideology.econ;
     group.governmentWeight += profile.weight * (profile.ideology.gov || 0);
+    for (const axis of Object.keys(group.axisWeights)) group.axisWeights[axis] += profile.weight * (profile.ideology[axis] || 0);
     byLabel.set(label, group);
   }
   for (const figure of data.figures || []) {
@@ -22,14 +60,22 @@ function partyCongressFactions(data, total) {
   const groups = [...byLabel.values()];
   const weight = groups.reduce((sum, group) => sum + group.weight, 0);
   if (!weight) return [];
+  const factors = data.factionDelegateFactors || {};
+  const fullRepresentation = groups.reduce((sum, group) => sum + group.weight * (factors[group.label] || 1), 0);
   let unassigned = total;
   for (const group of groups) {
-    group.share = group.weight / weight;
-    const quota = total * group.weight / weight;
+    group.estimatedShare = group.weight / weight;
+    const representation = group.weight * (factors[group.label] || 1);
+    group.share = representation / fullRepresentation;
+    group.displayLabel = partyCongressTendencyDescription(Object.fromEntries(
+      Object.entries(group.axisWeights).map(([axis, value]) => [axis, value / group.weight])));
+    for (const source of Object.keys(group.sources)) group.sources[source] /= group.weight;
+    const quota = total * representation / fullRepresentation;
     group.seats = Math.floor(quota);
     group.remainder = quota - group.seats;
     unassigned -= group.seats;
   }
+  partyCongressDistinctLabels(groups);
   const byRemainder = [...groups].sort((a, b) => b.remainder - a.remainder || a.label.localeCompare(b.label));
   for (let index = 0; index < unassigned; index++) byRemainder[index].seats++;
   return groups.sort((a, b) => a.economicWeight / a.weight - b.economicWeight / b.weight || a.label.localeCompare(b.label));
@@ -170,13 +216,18 @@ function partyCongressProgrammeVote(data, programme) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextProgrammeVoteDay };
   }
   const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
+  const endorsements = new Map((data.factionEndorsements || []).filter(offer => offer.programme === programme)
+    .map(offer => [offer.label, offer.extraYes]));
   const factions = partyCongressFactions(data, current).filter(group => group.seats > 0).map(group => {
     const alignment = choice.direction * group[choice.axis] / group.weight;
     const support = Math.max(0, Math.min(1, .55 + .40 * alignment));
-    const reason = alignment > .12 ? "This programme fits the faction’s politics." :
+    let reason = alignment > .12 ? "This programme fits the faction’s politics." :
       alignment < -.12 ? "The faction favors different policy priorities." : "The faction is open to this programme.";
+    const baselineYes = Math.round(group.seats * support);
+    const pledgedYes = Math.min(group.seats - baselineYes, endorsements.get(group.label) || 0);
+    if (pledgedYes) reason += ` Its leader's endorsement brings ${pledgedYes} more delegates.`;
     return { label: group.label, currentSeats: group.seats, proposedSeats: group.seats,
-      yes: Math.round(group.seats * support), reason };
+      yes: baselineYes + pledgedYes, reason };
   });
   if (!factions.length) return { ok: false, reason: "unavailable" };
   return { ...partyCongressBallot("programme", current, factions), programme, untilDay: data.day + 180 };
@@ -241,6 +292,7 @@ function applyPartyCongressVote(sim, country, party, kind, input, data = null) {
     if (vote.passed) state.programme = { kind: vote.programme, untilDay: vote.untilDay };
     state.nextProgrammeVoteDay = vote.nextVoteDay;
     state.lastProgrammeVote = vote;
+    if (typeof gpmFactionSettleVote === "function") gpmFactionSettleVote(sim, country, party, vote);
   }
   return vote;
 }
@@ -248,17 +300,18 @@ function applyPartyCongressVote(sim, country, party, kind, input, data = null) {
 function partyCongressAgenda(sim, country, partyId) {
   const party = YL(country, partyId);
   const state = party?.gpmCongressSizeState;
-  if (!state) return [];
+  const bargains = typeof gpmFactionAgenda === "function" ? gpmFactionAgenda(sim, country, partyId) : [];
+  if (!state) return bargains;
   const entries = [
     [partyCongressActivePriority(party, sim.day), state.lastPriorityVote,
       state.priority?.kind === "investment" ? "Local investment priority" : "Regional rally priority"],
     [partyCongressActiveProgramme(party, sim.day), state.lastProgrammeVote,
       partyCongressProgrammes()[state.programme?.kind]?.label || "Party programme"],
   ];
-  return entries.flatMap(([current, vote, title]) => current ? [{
+  return bargains.concat(entries.flatMap(([current, vote, title]) => current ? [{
     id: `congress:${vote?.kind || current.kind}:${current.untilDay}`, kind: "congress", title,
     day: vote?.day ?? sim.day, deadlineDay: current.untilDay, status: "active", tab: "congress",
-  }] : []);
+  }] : []));
 }
 
 function registerPartyCongressSize() {
@@ -276,7 +329,7 @@ function registerPartyCongressSize() {
 module.exports = {
   sharedFunctions: [
     `const gpmCongressProgrammes = ${JSON.stringify(congressProgrammes)};`,
-    partyCongressSizeIsValid, partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
+    partyCongressTendencyDescription, partyCongressDistinctLabels, partyCongressSizeIsValid, partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
     partyCongressPriorityIsValid, partyCongressPriorityCost, partyCongressPriorityVote,
     partyCongressProgrammes, partyCongressProgrammeVote, partyCongressForecastKey,
   ],

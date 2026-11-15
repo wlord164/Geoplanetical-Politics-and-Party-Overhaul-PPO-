@@ -2,6 +2,33 @@
 
 const presets = {
   center: { label: "Centrist", values: [0, 0, 0, 0] },
+  mixedEconomyCentre: {
+    label: "Mixed-Economy Centre", values: [-20, -5, -15, -5],
+    program: "A mixed economy with broad social insurance. Its starting platform favors the livelihoods programme.",
+    positions: {
+      ownership: { label: "Ownership", value: "Public and private provision", priority: "central" },
+      redistribution: { label: "Redistribution", value: "Broad social insurance", priority: "central" },
+      competition: { label: "Democratic competition", value: "Competitive elections", priority: "secondary" },
+    },
+  },
+  marketCentre: {
+    label: "Market-Oriented Centre", values: [28, -5, -18, -5],
+    program: "Competitive markets and targeted income support. Its starting platform favors enterprise and investment.",
+    positions: {
+      ownership: { label: "Ownership", value: "Private enterprise with competition rules", priority: "central" },
+      redistribution: { label: "Redistribution", value: "Targeted social insurance", priority: "secondary" },
+      competition: { label: "Democratic competition", value: "Competitive elections", priority: "secondary" },
+    },
+  },
+  liberalCentre: {
+    label: "Liberal Centre", values: [2, -42, -55, -10],
+    program: "Civil liberties, independent institutions and limits on executive power. Its starting platform favors the civil liberties programme.",
+    positions: {
+      civilLiberties: { label: "Civil liberties", value: "Protect expression, worship and association", priority: "central" },
+      executive: { label: "Executive power", value: "Legislative and judicial checks", priority: "central" },
+      competition: { label: "Democratic competition", value: "Competitive elections and independent oversight", priority: "central" },
+    },
+  },
   socialDemocrat: { label: "Social Democrat", values: [-35, -40, -40, -20] },
   democraticSocialist: { label: "Democratic Socialist", values: [-75, -45, -55, -30] },
   councilCommunist: { label: "Council Communist", values: [-100, -65, -75, -55] },
