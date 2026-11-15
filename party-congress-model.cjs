@@ -5,7 +5,7 @@ function partyCongressIdeology(ideal) {
   return Object.fromEntries(gpmAxes.map(({ id }) => [id, ideal[id]]));
 }
 
-function partyCongressView(sim, country, partyId, electorate, people = sim.people?.values?.() || []) {
+function partyCongressView(sim, country, partyId, electorate, people = sim.people?.values?.() || [], factionData = null) {
   const party = YL(country, partyId);
   if (!party) return null;
 
@@ -20,12 +20,19 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
     lastProgrammeVote: saved?.lastProgrammeVote ?? null,
     nextProgrammeVoteDay: saved?.nextProgrammeVoteDay ?? 0,
     programme: partyCongressActiveProgramme(party, day),
+    identity: gpmPartyIdentity(party),
+    factionDelegateFactors: gpmFactionDelegateFactors(party.gpmFactionPolitics),
+    ...factionData,
+    factionEndorsements: factionData?.factionEndorsements ??
+      (typeof gpmFactionEndorsements === "function" ? gpmFactionEndorsements(sim, country, party) : []),
   };
   const figures = [];
   for (const person of people) {
-    if (person?.party !== partyId || person.alive === false || String(person.countryKey) !== String(country.key)) continue;
+    if (person?.party !== partyId || person.alive === false || person.gpmFactionGenerated || person.gpmFactionDetached ||
+      String(person.countryKey) !== String(country.key)) continue;
     figures.push({
       name: person.styledName || person.name || "",
+      id: person.id,
       ideology: partyCongressIdeology(person.ideal),
     });
   }
@@ -48,17 +55,17 @@ function partyCongressView(sim, country, partyId, electorate, people = sim.peopl
     const ideology = Object.fromEntries(gpmAxes.map(({ id }) => [
       id, platform[id] * (1 - blocInfluence) + ideal[id] * blocInfluence,
     ]));
-    evidence.push({ ideology, weight: supportPool * bloc.shareOfSupport });
+    evidence.push({ origin: "supporter-estimate", sourceId: bloc.id, ideology, weight: supportPool * bloc.shareOfSupport });
   }
   if (figures.length) {
     const weight = figurePool / figures.length;
     for (const figure of figures) {
-      if (figure.ideology) evidence.push({ ideology: figure.ideology, weight });
+      if (figure.ideology) evidence.push({ origin: "person", sourceId: figure.id, ideology: figure.ideology, weight });
     }
   }
 
   const platformWeight = 1 - evidence.reduce((sum, profile) => sum + profile.weight, 0);
-  return { ...overview, profiles: [{ ideology: platform, weight: platformWeight }, ...evidence], figures };
+  return { ...overview, profiles: [{ origin: "platform", sourceId: partyId, ideology: platform, weight: platformWeight }, ...evidence], figures };
 }
 
 function retirePartyCongress(party) {
@@ -115,11 +122,13 @@ function advancePartyCongressAI(sim, country, party, policy) {
   if (!data) return null;
 
   if (canAdoptProgramme) {
+    const endorsed = new Set(data.factionEndorsements.map(offer => offer.programme));
     const candidates = Object.entries(partyCongressProgrammes()).filter(([, choice]) =>
       choice.laws.some(id => country.laws?.[id] != null))
       .map(([id]) => partyCongressProgrammeVote(data, id))
       .filter(vote => vote.ok && vote.passed)
-      .sort((a, b) => b.yes - a.yes || a.programme.localeCompare(b.programme));
+      .sort((a, b) => Number(endorsed.has(b.programme)) - Number(endorsed.has(a.programme)) ||
+        b.yes - a.yes || a.programme.localeCompare(b.programme));
     if (candidates.length) return applyPartyCongressVote(sim, country, party, "programme",
       { programme: candidates[0].programme }, data);
   }

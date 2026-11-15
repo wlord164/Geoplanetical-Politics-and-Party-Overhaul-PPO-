@@ -46,7 +46,7 @@ To rename a party in your current country, go to My Party and click Rename Party
 
 In Politics > Electorate, use the Panel width slider and expand a voter bloc. The Vote split lists every party in the estimate with its color, abbreviation, and vote share to up to two decimal places. Hover over an abbreviation to see the full party name. The slider remembers your preferred width for Electorate.
 
-In Politics > Assembly, expand a party to see its estimated ideology and all four signed scores on a -100 to +100 scale. My Party shows the same estimate for the party you lead. If you choose an unchanged preset when founding a party, its name is recorded separately as the founding preset. Law, assent, and constitutional reform results use the party's ideology at the time of the ballot. For older records, the mod uses the saved party profile when available and falls back to the recorded label. The game uses the original party families for its rules.
+In Politics > Assembly, expand a party to see the four ideology scores on a -100 to +100 scale. My Party shows your declared tradition, founding preset, and the founding positions recorded for that preset. Choosing a preset and adjusting its scores keeps your chosen tradition. The preset picker distinguishes mixed-economy, market-oriented, and liberal centre platforms. Law, assent, and constitutional reform results retain the party profile at the time of the ballot. The four scores still feed the existing simulation rules.
 
 In My Party > Party organizing, choose a voter bloc and check the cost, assigned activists, return date, and projected national support. Public meetings run for 21 days, with 30 days between meetings and 90 days before returning to the same bloc. Legal parties without seats receive up to 50% off the cash and activist requirements at 2.5% support or below. The discount tapers out at 5%. Meetings can also build the existing Outreach network up to 32% strength in a compatible bloc.
 
@@ -62,7 +62,15 @@ Congress also votes on a campaign priority. For 90 days, the chosen project (reg
 
 Each ballot has a 14-day wait before it can be held again. An adopted campaign priority runs its full 90 days before Congress can replace it. The approved delegate count, last results, waiting periods, and active priority are stored in the campaign save. Existing campaigns keep their approved delegate count.
 
-The estimate combines your party's platform with its supporters' electorate-bloc leanings and the political figures the game tracks. Factions use the same four-axis ideology labels as Assembly. Hover over a faction to highlight its seats and see any associated figures.
+The Congress estimate combines the party platform, electorate bloc leanings, and native People. The breakdown describes the positions behind each tendency and shows where the estimate came from. Hover over a faction to highlight its seats and figures.
+
+Convene a Congress review to organize factions and fill their leadership roles. Open a leader's native People profile from the faction list. To negotiate, select a programme pledge or an organizing grant and check the expected response. The leader may accept the terms, counter, or refuse. Congress applies agreed endorsements to the actual programme vote.
+
+An accepted organizing grant reserves the agreed cash. Adopting the programme delivers the grant and recruits members. A breach releases the reserve and reduces trust. The faction history records the outcome and the reason. Bills and public offices follow their existing legislative and appointment procedures.
+
+Scheduled reviews can adjust faction representation as factions organize or lose members. When a sponsored bill advances the active programme, the next review recognizes delivery and can shift issue priorities.
+
+Staff can negotiate if you enable the bargaining mandate in Congress. Choose permitted subjects, a monthly spending limit, and a minimum treasury reserve.
 
 Open My Party > Law Shortlist to see changes that move current laws closer to your party's position. The list puts proposals forecast to pass first, followed by the closest votes. Compare the proposed change, estimated votes, and any veto or court risk. Refresh to recalculate. Review proposal opens the game’s law screen with the suggested change selected. Your party must still meet the normal rules for introducing a bill.
 

@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Verified Domestic Politics and Stability Update.
+  archive: "a6115b6d4c36b6142279be7e7d6e9c639cafd8b798de230b41852ac41a3bf056",
+  worker: "49a42d36fe20ca490f1df3403148377892e3729ac597795cfb4b6a75b694c01b",
+  renderer: "e322fc6833a7a33baa2b2e66833f10bbe2d6dc2faeb8f6a652b74803d4791727",
+  executable: "d30c6020510fbc562714add0dbe29008b3a0f6f8b331f1cde6217e29e462a987",
+}, {
   // Verified Congress and Staff Follow-up.
   archive: "d926ad407a8312e5e0aa12e642540307f2ecb6b258874e11e30c20f81a93d939",
   worker: "e0dc5af6b7d22ba833581ab503ffc8e851e26a088888ca10a980ca3fe6aff2f6",

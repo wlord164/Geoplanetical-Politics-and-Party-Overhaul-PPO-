@@ -199,6 +199,9 @@ function advancePartyModAI(sim, country) {
   const movements = (country.domestic?.movements || []).filter(peacefulPartyMovement);
   const parties = country.pol?.parties?.slice().sort((left, right) => left.id.localeCompare(right.id)) || [];
   for (const party of parties) {
+    if (typeof gpmFactionAutomate === "function") {
+      gpmDomesticWithStaff(sim, country, party, staff => gpmFactionAutomate(sim, country, party, staff ? "staff" : "ai"));
+    }
     const policy = gpmDomesticPolicy(sim, country, party);
     if (!policy) continue;
     const contests = gpmDomesticContestList(sim, country, policy);
