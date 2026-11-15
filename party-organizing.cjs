@@ -7,7 +7,7 @@ const gpmOrganizingTerms = {
 };
 
 function partyOrganizingWeight(party, groupId) {
-  return 1 + Math.min(.5, Math.max(0, party.gpmOrganizing?.groups?.[groupId] || 0));
+  return (1 + Math.min(.5, Math.max(0, party.gpmOrganizing?.groups?.[groupId] || 0))) * gpmDomesticMemberWeight(party);
 }
 
 function migratePartyOrganizing(party, day) {
@@ -58,10 +58,6 @@ function partyMovementParticipation(country, movement, groupShare, fullTurnout) 
   return population > 0 ? Math.min(1, partyMovementParticipants(movement) / (population * fullTurnout)) : 0;
 }
 
-function partyOrganizingSeatless(party, country) {
-  return !country.pol?.chambers?.some(chamber => chamber.composition?.[party.id] > 0);
-}
-
 function partyOrganizingTaper(party, start, end) {
   return Math.max(0, Math.min(1, (end - (party.support || 0)) / (end - start)));
 }
@@ -96,8 +92,7 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
   if (!groups.length) return { ok: false, reason: "group" };
   const totalShare = groups.reduce((sum, group) => sum + group.share, 0);
   const terms = gpmOrganizingTerms;
-  const seatlessMeeting = meeting && partyOrganizingSeatless(party, country);
-  const discount = seatlessMeeting ? terms.meetingDiscount *
+  const discount = meeting ? terms.meetingDiscount *
     partyOrganizingTaper(party, terms.fullDiscountAt, terms.noDiscountAt) : 0;
   const regularCash = zL(meeting ? .02 + .12 * totalShare : .012 + .025 * totalShare);
   const regularActivists = zL(meeting ? .15 + 1.4 * totalShare : .2 + .9 * totalShare);
@@ -111,7 +106,7 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
     ? Math.max((record?.lastMeeting ?? -30) + 30, lastBlocMeeting + 90)
     : (record?.lastBacking ?? -60) + 60;
   const participation = meeting ? 0 : partyMovementParticipation(country, movement, totalShare, terms.movementFullParticipation);
-  const meetingBonus = seatlessMeeting ? terms.meetingBonus * partyOrganizingTaper(party, terms.fullBonusAt, terms.noBonusAt) : 0;
+  const meetingBonus = meeting ? terms.meetingBonus * partyOrganizingTaper(party, terms.fullBonusAt, terms.noBonusAt) : 0;
   const credibility = Math.max(0, Math.min(1, party.organization.credibility ?? .5));
   const rules = gpmCampaignRulesFor(sim);
   const remaining = rules.organizingHalfLife > 0
@@ -157,7 +152,7 @@ function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
   party.organization.influence = zL(party.organization.influence - quote.influence);
   party.organization.activistsK = zL(party.organization.activistsK - quote.activistsK);
   record.projects.push({ kind, targetId, startDay: day, endDay: quote.endDay, workedThrough: day,
-    activistsK: quote.activistsK,
+    activistsK: quote.activistsK, domesticMembership: true,
     ...(kind === "movement" ? { participation: quote.participation, groupShare: quote.groupShare, fullTurnout: quote.fullTurnout } : {}),
     effects: quote.effects.map(({ id, increase, contacts, contactCap }) =>
       ({ id, increase, earned: 0, ...(contacts > 0 ? { contacts, contactCap, contactsEarned: 0 } : {}) })) });
@@ -169,6 +164,8 @@ function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
     record.backed.push(targetId);
   }
   record.lastAction = { kind, day, groups: quote.effects.map(effect => effect.id) };
+  gpmDomesticReceipt(sim, country, party, kind, { cashM: -quote.cash, activistsK: -quote.activistsK,
+    influence: -quote.influence, details: targetId });
   return { ok: true, changed: true };
 }
 
@@ -202,8 +199,13 @@ function advancePartyOrganizing(sim, country, party, groups = null) {
     record.projects = record.projects.filter(item => item !== project);
     const available = party.organization.activistsK;
     party.organization.activistsK = zL(Math.min(1e5, available + project.activistsK));
+    const returned = zL(party.organization.activistsK - available);
+    gpmDomesticReceipt(sim, country, party, "activists-returned", { activistsK: returned, details: project.kind });
+    if (project.domesticMembership && !reason && project.effects.some(effect => effect.earned > 0 || effect.contactsEarned > 0)) {
+      gpmDomesticEarnMembers(sim, country, party, project.kind, project.activistsK, finishedDay);
+    }
     (record.recent ||= []).unshift({ kind: project.kind, targetId: project.targetId, finishedDay, reason,
-      activistsK: zL(party.organization.activistsK - available), effects: project.effects.map(effect =>
+      activistsK: returned, effects: project.effects.map(effect =>
         ({ id: effect.id, earned: effect.earned || 0, contactsEarned: effect.contactsEarned || 0 })) });
     record.recent.length = Math.min(3, record.recent.length);
   };
@@ -277,18 +279,20 @@ function partyOrganizingForecast(sim, country, party, quote, through = quote.end
     (governor.traits.notoriety || 0) * .12, .5, 1.7) : 1;
   const options = { blocs, salience: country.pol.salience, charisma, growthGainPct: O1e(sim, country) };
   // Project with the shared earnings and native weekly support functions in a private simulation clock.
-  const clock = { day: sim.day, gpmCampaignRules: gpmCampaignRulesFor(sim), playerKey: null };
+  const clock = { day: sim.day, gpmCampaignRules: gpmCampaignRulesFor(sim), playerKey: null, gpmDomesticForecast: true };
   const copy = member => ({
     ...member, organization: member.organization && { ...member.organization },
     outreach: member.outreach && structuredClone(member.outreach),
     gpmOrganizing: member.gpmOrganizing && structuredClone(member.gpmOrganizing),
+    gpmDomestic: member.gpmDomestic?.membership ? { membership: { ...member.gpmDomestic.membership } } : null,
   });
   const baseline = { ...country.pol, parties: country.pol.parties.map(copy) };
   const partyIndex = baseline.parties.findIndex(member => member.id === party.id);
   const withProject = copy(party);
   const record = withProject.gpmOrganizing ??= { version: 2, groups: {}, projects: [], day: sim.day };
   record.projects.push({ kind: quote.kind, targetId: quote.targetId, startDay: sim.day, endDay: quote.endDay,
-    workedThrough: sim.day, activistsK: 0, participation: quote.participation, fullTurnout: quote.fullTurnout,
+    workedThrough: sim.day, activistsK: quote.activistsK, domesticMembership: true,
+    participation: quote.participation, fullTurnout: quote.fullTurnout,
     groupShare: quote.groupShare, effects: quote.effects.map(effect => ({ ...effect, earned: 0 })) });
   // The native model holds each party's support between weekly recalculations.
   let withSupport = withProject.support;
@@ -358,7 +362,7 @@ function partyOrganizingDetail(quote, ui) {
   const cash = rr(quote.cash * 1e6 * hA(), gA());
   const activists = Math.round(quote.activistsK * 1e3).toLocaleString(cs());
   const costs = `${cash} · ${quote.influence} influence · ${activists} activists`;
-  const discount = quote.discount ? ` · ${Math.round(quote.discount * 100)}% discount for parties without seats` : "";
+  const discount = quote.discount ? ` · ${Math.round(quote.discount * 100)}% small-party discount` : "";
   const projection = quote.forecast
     ? `Estimated national support gain of ${(quote.forecast.gain * 100).toFixed(3)} percentage points by ${ui.gameDate(quote.forecast.day)}.` : "";
   const gains = quote.effects.map(effect => {
@@ -443,7 +447,7 @@ function bindPartyOrganizing(host, view, ui) {
 module.exports = {
   workerFunctions: [`const gpmOrganizingTerms = ${JSON.stringify(gpmOrganizingTerms)};`,
     partyOrganizingWeight, migratePartyOrganizing, decayPartyOrganizing, peacefulPartyMovement,
-    partyMovementParticipants, partyMovementParticipation, partyOrganizingSeatless, partyOrganizingTaper,
+    partyMovementParticipants, partyMovementParticipation, partyOrganizingTaper,
     partyMovementDemandFit, partyOrganizingQuote, applyPartyOrganizing, partyOrganizingMovementRate,
     creditPartyOrganizingContacts, advancePartyOrganizing, registerPartyOrganizing, partyOrganizingForecast, partyOrganizingView],
   rendererFunctions: [partyOrganizingDetail, renderPartyOrganizing, bindPartyOrganizing],

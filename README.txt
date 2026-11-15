@@ -82,6 +82,10 @@ After an uprising victory, open Defense > Historical Conflicts > Decisions. Use 
 
 Open Support Base beside Party Congress to see which electorate blocs contribute the most to your party's estimated voters. The bar and large percentage show the bloc's share of your party's support. The smaller percentage shows your party's estimated support within that bloc.
 
+Open My Party > Campaign Plan to select a contest, compare the current estimate with the election-day projection, and see what work is underway. The projection uses current world conditions and expected effects of booked projects. The election recap records the most recent completed legislative result in each chamber. The Agenda links to upcoming work and decisions.
+
+You can delegate routine party work in Campaign Plan with a goal, a spending limit, and a cash reserve. A party's organization pays the same costs and observes the same requirements whether you, a delegated plan, or the AI directs it. Completed organizing and local projects can develop a dues-paying membership. Membership can shrink when a party remains inactive. The activity history shows cash flows and activist assignments and returns.
+
 Open My Party > Regional Campaigning and select a region on the inline map or in the Region menu. Compare population share, cost, completion date, and estimated gains before starting a rally, investment, or headquarters. The panel follows project progress and activist return dates at your chosen game speed. Use Open Campaign Map for the optional globe view. A regional investment builds lasting electoral presence. Invest in Foothold in the Uprising tab prepares the region for an uprising.
 
 A rally takes seven days. New rallies hold their full boost for 21 days, then halve every 60 days. A local investment takes 42 days and builds lasting party presence. The quoted odds determine whether growth is strong or modest. Established regions gain less presence from each new investment. Presence adds local voting weight and lowers future rally costs in that region.

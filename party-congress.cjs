@@ -71,7 +71,8 @@ function partyCongressVoteSummary(vote, ui, forecast = false) {
   const needed = vote.needed ?? Math.floor(vote.total / 2) + 1;
   const count = String(vote.yes) + " of " + vote.total + " yes · " + needed + " needed";
   if (forecast) return count + " · " + (vote.passed ? "Would pass" : "Would fall short");
-  const proposal = vote.kind === "priority" ? partyCongressPriorityName(vote.priority) + " priority" : vote.proposed + " delegates";
+  const proposal = vote.kind === "priority" ? partyCongressPriorityName(vote.priority) + " priority" :
+    vote.kind === "programme" ? (partyCongressProgrammes()[vote.programme]?.label || "Party programme") : vote.proposed + " delegates";
   const grant = vote.passed && vote.bargain ? " · Grant paid to " + vote.bargain.label : "";
   return "Last vote · " + proposal + (vote.passed ? " adopted · " : " rejected · ") + count + grant;
 }
@@ -122,6 +123,14 @@ function partyCongressPriorityDetail(data, priority, ui) {
     : "For 90 days if adopted. " + costs;
 }
 
+function partyCongressProgrammeDetail(data, programme, ui) {
+  const active = data.programme;
+  const label = partyCongressProgrammes()[active?.kind || programme]?.label;
+  const effect = "Related native campaign promises and feasible bills move up the party’s recommendations.";
+  return active ? label + " has priority until " + ui.gameDate(active.untilDay) + ". " + effect :
+    "For 180 days if adopted. " + effect;
+}
+
 function renderPartyCongress(view, party, ui) {
   const data = view.party?.congress;
   if (!data || !party) return "";
@@ -160,6 +169,20 @@ function renderPartyCongress(view, party, ui) {
         '<strong data-gpm-congress-priority-forecast aria-live="polite"></strong>' +
       '</div>' +
       '<small data-gpm-congress-priority-result role="status" hidden></small>' +
+    '</section>' +
+    '<section class="gpm-congress-ballot" aria-label="Party programme">' +
+      '<h4>Party programme</h4>' +
+      '<label class="gpm-congress-control">Proposed programme <select class="k" data-gpm-congress-programme>' +
+        Object.entries(partyCongressProgrammes()).map(([kind, choice]) =>
+          '<option value="' + b(kind) + '">' + b(choice.label) + '</option>').join("") +
+      '</select></label>' +
+      '<small data-gpm-congress-programme-detail></small>' +
+      '<ul class="gpm-congress-vote-rows" data-gpm-congress-programme-rows aria-label="Projected programme votes by faction"></ul>' +
+      '<div class="gpm-congress-control">' +
+        '<button class="k" type="button" data-gpm-congress-programme-vote>Hold programme vote</button>' +
+        '<strong data-gpm-congress-programme-forecast aria-live="polite"></strong>' +
+      '</div>' +
+      '<small data-gpm-congress-programme-result role="status" hidden></small>' +
     '</section></section>';
 }
 
@@ -188,8 +211,10 @@ function bindPartyCongress(host, view, party, ui) {
   const chart = get("chart");
   const bargain = get("bargain");
   const priority = get("priority");
+  const programme = get("programme");
   const sizeButton = get("vote");
   const priorityButton = get("priority-vote");
+  const programmeButton = get("programme-vote");
   const setText = (element, content) => {
     if (element.textContent !== content) element.textContent = content;
   };
@@ -220,6 +245,8 @@ function bindPartyCongress(host, view, party, ui) {
     const sizeVote = selected ? partyCongressSizeVote(currentData, proposed, selected) : baseVote;
     if (currentData.priority) priority.value = currentData.priority.kind;
     const priorityVote = partyCongressPriorityVote(currentData, priority.value);
+    if (currentData.programme) programme.value = currentData.programme.kind;
+    const programmeVote = partyCongressProgrammeVote(currentData, programme.value);
 
     get("grant").hidden = !offers.length;
     setText(get("grant-detail"), partyCongressGrantDetail(sizeVote));
@@ -228,6 +255,9 @@ function bindPartyCongress(host, view, party, ui) {
     setText(get("priority-detail"), partyCongressPriorityDetail(currentData, priority.value, ui));
     setText(get("priority-forecast"), partyCongressVoteSummary(priorityVote, ui, true));
     setHtml(get("priority-rows"), partyCongressVoteRows(priorityVote));
+    setText(get("programme-detail"), partyCongressProgrammeDetail(currentData, programme.value, ui));
+    setText(get("programme-forecast"), partyCongressVoteSummary(programmeVote, ui, true));
+    setHtml(get("programme-rows"), partyCongressVoteRows(programmeVote));
 
     const focused = chart.contains(document.activeElement) ? document.activeElement.getAttribute("data-gpm-faction") : null;
     if (setHtml(chart, renderPartyCongressChart(currentData, current, ui))) {
@@ -239,12 +269,15 @@ function bindPartyCongress(host, view, party, ui) {
     }
     setResult(get("result"), currentData.lastVote, state.sizeFeedback);
     setResult(get("priority-result"), currentData.lastPriorityVote, state.priorityFeedback);
+    setResult(get("programme-result"), currentData.lastProgrammeVote, state.programmeFeedback);
     input.disabled = busy;
     bargain.disabled = busy;
     priority.disabled = busy || Boolean(currentData.priority);
+    programme.disabled = busy || Boolean(currentData.programme);
     sizeButton.disabled = busy || !sizeVote.ok;
     priorityButton.disabled = busy || !priorityVote.ok;
-    return { sizeVote, priorityVote };
+    programmeButton.disabled = busy || !programmeVote.ok;
+    return { sizeVote, priorityVote, programmeVote };
   };
 
   const submit = async (button, kind, vote, fields) => {
@@ -252,9 +285,11 @@ function bindPartyCongress(host, view, party, ui) {
     state.busy = true;
     sizeButton.disabled = true;
     priorityButton.disabled = true;
+    programmeButton.disabled = true;
     input.disabled = true;
     bargain.disabled = true;
     priority.disabled = true;
+    programme.disabled = true;
     const feedback = kind + "Feedback";
     state[feedback] = "";
     const response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...fields, expected: partyCongressForecastKey(vote) }]);
@@ -267,9 +302,12 @@ function bindPartyCongress(host, view, party, ui) {
           size: response.passed ? response.proposed : response.current };
         if (response.passed && response.bargain) state.data.treasuryM -= response.bargain.cash;
         bargain.value = "";
-      } else {
+      } else if (kind === "priority") {
         const active = response.passed ? { kind: response.priority, untilDay: response.untilDay } : state.data.priority;
         state.data = { ...state.data, priority: active, lastPriorityVote: response, nextPriorityVoteDay: response.nextVoteDay };
+      } else {
+        const active = response.passed ? { kind: response.programme, untilDay: response.untilDay } : state.data.programme;
+        state.data = { ...state.data, programme: active, lastProgrammeVote: response, nextProgrammeVoteDay: response.nextVoteDay };
       }
     } else {
       state[feedback] = response ? partyCongressVoteSummary(response, ui, true) : "The vote could not be verified.";
@@ -287,6 +325,7 @@ function bindPartyCongress(host, view, party, ui) {
   };
   bargain.onchange = () => { state.sizeFeedback = ""; paint(); };
   priority.onchange = () => { state.priorityFeedback = ""; paint(); };
+  programme.onchange = () => { state.programmeFeedback = ""; paint(); };
   sizeButton.onclick = () => {
     const vote = paint().sizeVote;
     return submit(sizeButton, "size", vote, { verb: "gpm.party.congressSize", size: vote.proposed, bargain: bargain.value });
@@ -295,11 +334,15 @@ function bindPartyCongress(host, view, party, ui) {
     const vote = paint().priorityVote;
     return submit(priorityButton, "priority", vote, { verb: "gpm.party.congressPriority", priority: priority.value });
   };
+  programmeButton.onclick = () => {
+    const vote = paint().programmeVote;
+    return submit(programmeButton, "programme", vote, { verb: "gpm.party.congressProgramme", programme: programme.value });
+  };
   paint();
 }
 
 module.exports = {
   rendererFunctions: [partyCongressSizeDraft, renderPartyCongressChart, partyCongressPriorityName,
     partyCongressVoteSummary, partyCongressVoteRows, partyCongressGrantOptions, partyCongressGrantDetail,
-    partyCongressPriorityDetail, renderPartyCongress, bindPartyCongress],
+    partyCongressPriorityDetail, partyCongressProgrammeDetail, renderPartyCongress, bindPartyCongress],
 };

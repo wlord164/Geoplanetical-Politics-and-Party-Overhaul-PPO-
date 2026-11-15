@@ -36,14 +36,15 @@ function partyModAICanCommit(party, quote, electionIn, reserve = null) {
     (!quote.influence || influence >= quote.influence + (reserve?.influence ?? 3));
 }
 
-function partyModAIOrganizing(sim, country, party, groups, movements, electionIn, contest, context) {
+function partyModAIOrganizing(sim, country, party, groups, movements, electionIn, contest, context, policy, reserve) {
   const blocs = new Map(groups.map(group => [group.id, group.share * partyModAIBlocFit(party, group)]));
-  const reserve = partyModAICampaignReserve(sim, country, party, contest);
   const candidates = [];
   let best = null;
   function consider(kind, targetId) {
     const quote = partyOrganizingQuote(sim, country, party.id, kind, targetId, groups);
-    if (!partyModAICanCommit(party, quote, electionIn, reserve)) return;
+    if (!quote.ok || !gpmDomesticCanCommit(sim, country, party,
+      { cashM: quote.cash, activistsK: quote.activistsK, influence: quote.influence }, policy,
+      { reserve, endDay: quote.endDay })) return;
     const gain = quote.effects.reduce((sum, effect) =>
       sum + (effect.increase + (effect.contacts || 0) * .4) * (blocs.get(effect.id) || 0), 0);
     if (gain > 0) candidates.push({ kind, targetId, quote, gain });
@@ -66,9 +67,9 @@ function partyModAIOrganizing(sim, country, party, groups, movements, electionIn
     const gain = forecast?.gain || 0;
     if (gain < .000005) continue;
     let cost = 1 + quote.cash / party.organization.treasuryM + quote.activistsK / party.organization.activistsK;
-    if (reserve && electionIn <= 60) {
-      const share = quote.cash / Math.max(.00001, party.organization.treasuryM - reserve.cash + quote.cash);
-      cost += share * reserve.gain / gain;
+    if (reserve.cashM > policy.reserveCashM && electionIn <= 60) {
+      const share = quote.cash / Math.max(.00001, party.organization.treasuryM - reserve.cashM + quote.cash);
+      cost += share;
     }
     const score = gain / cost;
     if (score > (best?.score || 0)) best = { ...candidate, score };
@@ -76,25 +77,114 @@ function partyModAIOrganizing(sim, country, party, groups, movements, electionIn
   return best;
 }
 
+function gpmDomesticRenewOrganization(sim, country, party, policy, reserve, electionIn) {
+  const organization = party.organization;
+  const founding = Rrt(country, party);
+  const smallParty = (party.support || 0) < .07;
+  const targetCash = Math.max(founding.treasuryM * 2, reserve.cashM + (smallParty ? .15 : .10));
+  if (policy.autoFundraise && organization.treasuryM < targetCash) YKe(sim, country, party.id);
+  if (!policy.autoRecruit) return;
+  const campaignRecruitment = electionIn <= 220 && policy.goal !== "build";
+  const targetActivists = Math.max(founding.activistsK, smallParty ? .46 : 0,
+    campaignRecruitment ? Math.min(2.4, Math.max(.9, reserve.activistsK * 1.5, OMa(country, party) * 1.25)) : 0);
+  const missing = targetActivists - organization.activistsK;
+  if (missing <= .05) return;
+  const cost = Math.min(organization.treasuryM, Math.max(.05, Math.min(campaignRecruitment ? .105 : .075,
+    missing / (3 + organization.credibility * 4))));
+  const budgetM = Math.floor(cost * 1000) / 1000;
+  if (budgetM >= .05 && gpmDomesticCanCommit(sim, country, party, { cashM: budgetM }, policy, { reserve })) {
+    VKe(sim, country, party.id, budgetM);
+  }
+}
+
+function gpmDomesticOutreach(sim, country, party, groups, policy, reserve, electionIn) {
+  if (party.outreach?.project || electionIn <= 80) return;
+  const options = groups.map(group => ({
+    id: group.id,
+    score: group.share * partyModAIBlocFit(party, group) * (1 - (party.outreach?.networks?.[group.id] || 0)),
+  })).sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
+  for (const option of options) {
+    const quote = xnt(sim, country, party.id, option.id);
+    if (quote.ok && gpmDomesticCanCommit(sim, country, party, {
+      cashM: quote.cost.budgetM, activistsK: quote.cost.activistsK, influence: quote.cost.influence,
+    }, policy, { reserve, endDay: quote.effect.endDay })) {
+      Ont(sim, country, party.id, option.id);
+      return;
+    }
+  }
+}
+
+function gpmDomesticRunContest(sim, country, party, entry, policy) {
+  const active = nE(country, party, sim.day, entry.contestId);
+  if (!active || (active.lastActionDay != null && sim.day - active.lastActionDay < FF)) return;
+  if (!active.promises.length) Gpt(sim, country, party.id, voo(sim, country, party), entry.contestId);
+  const reserve = gpmDomesticReserve(sim, country, party, policy, entry.contestId);
+  const organization = party.organization;
+  const spendingCap = policy.monthlyBudgetM == null ? Infinity : policy.monthlyBudgetM - gpmDomesticSpendThisMonth(sim, party);
+  const days = entry.election.nextDay - sim.day;
+  const effort = boo(country, party, days, entry);
+  const bareBudget = Math.max(.05, EMa(country, party) * 1.4 * effort);
+  const bareActivists = Math.max(.05, OMa(country, party) * effort);
+  const firstSeat = policy.goal === "firstSeat" && (party.support || 0) < .08;
+  const cashM = Math.max(0, Math.floor(Math.min(organization.treasuryM - reserve.cashM,
+    spendingCap, firstSeat ? Math.max(.055, bareBudget) : bareBudget) * 1000) / 1000);
+  const availableActivists = organization.activistsK - reserve.activistsK;
+  const remainingOperations = Math.max(1, Math.ceil(days / FF));
+  const grassrootsEffort = .85 * availableActivists / remainingOperations;
+  const activistsK = Math.max(0, Math.floor(Math.min(availableActivists,
+    firstSeat ? Math.max(.225, bareActivists, grassrootsEffort) : bareActivists) * 1000) / 1000);
+  const params = { contestId: entry.contestId, budgetM: cashM, activistsK };
+  const quote = n2e(sim, country, party.id, active, params);
+  if (!quote.ok || !gpmDomesticCanCommit(sim, country, party, { cashM: quote.cost.treasuryM,
+    activistsK: quote.cost.activistsK, influence: quote.cost.influence }, policy, { reserve })) return;
+  const offset = poo(sim, country, party, active) + ((organization.credibility ?? .5) - .5) * 12;
+  if (Math.min(50, 35 - offset) <= (active.score || 0)) return;
+  Wpt(sim, country, party.id, params);
+}
+
+function gpmDomesticContestAI(sim, country, activeContests) {
+  for (const party of country.pol?.parties || []) {
+    const policy = gpmDomesticPolicy(sim, country, party);
+    if (!policy) continue;
+    const scheduled = gpmDomesticContestList(sim, country, policy);
+    const focus = gpmDomesticFocusedContest(country, policy, scheduled);
+    const order = scheduled.map(contest => contest.id);
+    const entries = activeContests.filter(entry => !focus || entry.contestId === focus.id)
+      .sort((left, right) => order.indexOf(left.contestId) - order.indexOf(right.contestId));
+    for (const entry of entries) gpmDomesticRunContest(sim, country, party, entry, policy);
+  }
+}
+
 function advancePartyModAI(sim, country) {
   const day = sim.day || 0;
-  const contest = Object.values(Xe(country)?.contests || {}).filter(item =>
-    Number.isFinite(item.nextDay) && item.nextDay >= day).sort((a, b) => a.nextDay - b.nextDay)[0];
-  const electionIn = contest ? contest.nextDay - day : Infinity;
-  advancePartyRegionalAI(sim, country, electionIn, contest);
-  advancePartyForeignFundingAI(sim, country, electionIn);
+  gpmBindCampaignPolity(sim, country.pol);
   const groups = Fwe(country);
-  if (!groups.length) return;
   const context = { blocs: sim._voterBlocs?.(country), groups: new Map(groups.map(group => [group.id, group])) };
   const movements = (country.domestic?.movements || []).filter(peacefulPartyMovement);
-  for (const party of country.pol?.parties || []) {
-    if (!party.organization || party.legal === false || party.gpmUprisingShell || party.gpmUprisingExcluded ||
-        iGr(sim, country, party.id)) continue;
-    const action = partyModAIOrganizing(sim, country, party, groups, movements, electionIn, contest, context);
+  const parties = country.pol?.parties?.slice().sort((left, right) => left.id.localeCompare(right.id)) || [];
+  for (const party of parties) {
+    const policy = gpmDomesticPolicy(sim, country, party);
+    if (!policy) continue;
+    const contests = gpmDomesticContestList(sim, country, policy);
+    const contest = gpmDomesticFocusedContest(country, policy, contests) || contests[0];
+    const electionIn = contest ? contest.nextDay - day : Infinity;
+    const reserve = gpmDomesticReserve(sim, country, party, policy);
+    const before = party.gpmDomestic?.ledger?.[0];
+    gpmDomesticRenewOrganization(sim, country, party, policy, reserve, electionIn);
+    if (typeof advancePartyCongressAI === "function") advancePartyCongressAI(sim, country, party, policy);
+    if (typeof advancePartyAgreementsAI === "function") advancePartyAgreementsAI(sim, country, party);
+    advancePartyRegionalAI(sim, country, electionIn, contest, party, policy);
+    if (policy.allowForeignFunding) advancePartyForeignFundingAI(sim, country, electionIn, party, policy);
+    const action = partyModAIOrganizing(sim, country, party, groups, movements, electionIn, contest, context, policy, reserve);
     if (action) applyPartyOrganizing(sim, country, party.id, action.kind, action.targetId);
+    if (!action || electionIn > 200) gpmDomesticOutreach(sim, country, party, groups, policy, reserve, electionIn);
+    const state = gpmDomesticState(party);
+    const updated = state.ledger?.[0] !== before;
+    state.lastReview = { day, goal: policy.goal, reason: updated ? null : "no-eligible-priority", contestId: contest?.id || null };
   }
 }
 
 module.exports = {
-  workerFunctions: [partyModAIBlocFit, partyModAICampaignReserve, partyModAICanCommit, partyModAIOrganizing, advancePartyModAI],
+  workerFunctions: [partyModAIBlocFit, partyModAICampaignReserve, partyModAICanCommit, partyModAIOrganizing,
+    gpmDomesticRenewOrganization, gpmDomesticOutreach, gpmDomesticRunContest, gpmDomesticContestAI, advancePartyModAI],
 };

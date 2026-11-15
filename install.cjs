@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Historical Conflicts Cleanup.
+  archive: "7c30fbeb494c03c1d4ac3ed5cd8504b44a5d10c1c0fca47396d4cf026b6d5e1c",
+  worker: "c20cf7ccd1e593b416992a6ffad72761409dc5a449858edbebee40d95ee928d7",
+  renderer: "7dba7ed6092b02ee1b1486c0502f6a61ad8fc8a73c39f8a729cc831274d83b5a",
+  executable: "a2fb994be34368323afa806392ed9555071f847b6e245fa831fe453d7f3d6fb5",
+}, {
   // Private War Interface test build.
   archive: "b1142453e12ec895b2632838f452c83229e645ca1218394d1b032ff5f9cc7a12",
   worker: "15db8a598e7fabb5898462c8c8f5354c6690ff8ac3664eb874cc375e71618c25",
