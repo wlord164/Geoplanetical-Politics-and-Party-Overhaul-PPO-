@@ -42,7 +42,7 @@ https://www.un.org/en/about-us/member-states/naoero
 Contains public sector information licensed under the Open Government Licence v3.0.
 https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
 
-To rename a party, load a campaign and go to My Party. Click Rename Party, choose a party in your country, and enter its name and optional abbreviation. Save the campaign to keep the change.
+To rename the party you control, load a campaign and go to My Party. Click Rename Party and enter its name and optional abbreviation. Save the campaign to keep the change.
 
 In Politics > Electorate, use the Panel width slider and expand a voter bloc. The Vote split lists every party in the estimate with its color, abbreviation, and vote share to up to two decimal places. Hover over an abbreviation to see the full party name. The slider remembers your preferred width for Electorate.
 
