@@ -143,7 +143,9 @@ function gpmDomesticReceipt(sim, country, party, kind, amount = {}) {
 
 function gpmDomesticEarnMembers(sim, country, party, kind, activistsK, day = sim.day) {
   if (!sim.gpmDomesticForecast && (sim.countries?.get(country.key) !== country || !gpmDomesticEligibleParty(country, party))) return;
-  const earned = Math.round(1000 * activistsK * (gpmDomesticMembershipTerms.projectMembers[kind] || 0));
+  const recruitment = ["meeting", "movement", "outreach", "rally"].includes(kind)
+    ? gpmPoliticalCrisisRecruitment(country, party, day) : 1;
+  const earned = Math.round(1000 * activistsK * (gpmDomesticMembershipTerms.projectMembers[kind] || 0) * recruitment);
   if (!(earned > 0)) return;
   const state = gpmDomesticState(party);
   const membership = state.membership ??= gpmDomesticMembership(party);
