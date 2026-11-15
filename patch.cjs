@@ -171,11 +171,12 @@ function setupIdeology(form) {
   return readIdeology;
 }
 
-function partyDialog({ create, name = "", tag = "", submit }) {
+function partyDialog({ create, parties = [], selectedPartyId, countryKey, submit }) {
   const dialog = document.createElement("dialog");
   dialog.className = "gpm-party-dialog";
   dialog.innerHTML = `<form>
     <h2>${create ? "Create Party" : "Rename Party"}</h2>
+    ${create ? "" : '<label>Party to rename<select name="targetParty" required></select></label>'}
     <label>Party name<input name="partyName" required maxlength="100" autocomplete="off"></label>
     <label>Abbreviation<input name="partyTag" maxlength="24" autocomplete="off" placeholder="Optional"></label>
     ${create ? `<label>Ideology preset<select name="platform"></select></label><small data-ideology-estimate></small>
@@ -196,8 +197,19 @@ function partyDialog({ create, name = "", tag = "", submit }) {
   const tagField = form.elements.partyTag;
   const error = form.querySelector('[role="alert"]');
   const save = form.querySelector('[type="submit"]');
-  nameField.value = name;
-  tagField.value = tag;
+  const target = form.elements.targetParty;
+  if (target) {
+    for (const party of parties) target.add(new Option(Sa(party, countryKey), party.id));
+    target.value = selectedPartyId;
+    const fillIdentity = () => {
+      const party = parties.find(item => item.id === target.value);
+      nameField.value = party ? Sa(party, countryKey) : "";
+      tagField.value = party ? party.nameDesc?.gpmTag ?? s0(party, parties, countryKey) : "";
+      error.hidden = true;
+    };
+    target.addEventListener("change", fillIdentity);
+    fillIdentity();
+  }
   const cancel = dialog.querySelector("[data-cancel]");
   cancel.onclick = () => dialog.close();
   dialog.addEventListener("close", () => dialog.remove(), { once: true });
@@ -207,14 +219,17 @@ function partyDialog({ create, name = "", tag = "", submit }) {
     const partyName = nameField.value.trim();
     if (!partyName) { nameField.focus(); return; }
     save.disabled = cancel.disabled = true;
+    if (target) target.disabled = true;
     error.hidden = true;
     try {
-      await submit({ name: partyName, tag: tagField.value.trim(), ideology: readIdeology?.(), ideologyPreset: form.elements.platform?.value });
+      await submit({ name: partyName, tag: tagField.value.trim(), ideology: readIdeology?.(),
+        ideologyPreset: form.elements.platform?.value, targetPartyId: target?.value });
       dialog.close();
     } catch (failure) {
       error.textContent = failure.message || "The party could not be updated.";
       error.hidden = false;
       save.disabled = cancel.disabled = false;
+      if (target) target.disabled = false;
     }
   };
   document.body.append(dialog);
@@ -299,31 +314,33 @@ function mountPartyButtons() {
     const trigger = event.target.closest?.("[data-gpm-rename]");
     if (!trigger || openingRename || document.querySelector(".gpm-party-dialog")) return;
     const session = ze;
-    const control = session?.playerControl;
-    if (!control?.partyId) return;
+    const { countryKey, partyId, campaignId, controlRevision } = session?.playerControl || {};
+    if (!partyId || !countryKey) return;
+    const isCurrent = () => {
+      const current = session.playerControl;
+      return ze === session && current?.partyId === partyId && current.countryKey === countryKey &&
+        current.campaignId === campaignId && current.controlRevision === controlRevision;
+    };
     openingRename = trigger.disabled = true;
     trigger.parentElement.querySelector("[data-gpm-rename-error]")?.remove();
     try {
       const view = await session.queryView("politics.country");
-      if (ze !== session || session.playerControl?.partyId !== control.partyId ||
-          session.playerControl?.countryKey !== control.countryKey || !document.querySelector('[data-gpm-rename]')) return;
+      if (!isCurrent() || !document.querySelector('[data-gpm-rename]')) return;
       const parties = view?.player?.pol?.parties || [];
-      const party = parties.find(item => item.id === control.partyId);
-      if (!party) throw new Error("Your party could not be loaded.");
+      if (view?.player?.key !== countryKey || !parties.some(party => party.id === partyId)) throw new Error("Your party could not be loaded.");
       partyDialog({
-        name: Sa(party, control.countryKey),
-        tag: party.nameDesc?.gpmTag ?? s0(party, parties, control.countryKey),
+        parties, selectedPartyId: partyId, countryKey,
         submit: async draft => {
-          if (ze !== session || session.playerControl?.partyId !== control.partyId ||
-              session.playerControl?.countryKey !== control.countryKey) throw new Error("The active campaign or party changed.");
+          if (!isCurrent()) throw new Error("The active campaign or party changed.");
           const result = await Te(session, "applyPlayerAction", [{
-            verb: "gpm.party.rename", countryKey: control.countryKey, expectedPartyId: control.partyId,
-            rename: { name: draft.name, tag: draft.tag },
+            verb: "gpm.party.rename", countryKey, expectedPartyId: partyId,
+            expectedCampaignId: campaignId, expectedControlRevision: controlRevision,
+            targetPartyId: draft.targetPartyId, rename: { name: draft.name, tag: draft.tag },
           }]);
           if (!result?.ok) {
             throw new Error(result?.reason === "name"
               ? "Enter a name of 1–100 characters and an optional abbreviation of up to 24 characters."
-              : "Your party could not be renamed. Close the dialog and try again.");
+              : "The selected party could not be renamed. Close the dialog and try again.");
           }
           if (ze === session) he.refreshTab?.(session);
         },
@@ -355,12 +372,15 @@ function renameDomesticParty(sim, country, input) {
   const identity = validatePartyName(input.rename);
   if (!identity) return { ok: false, reason: "name" };
   const control = Ho(sim);
-  if (country !== sim.player || country?.key !== input.countryKey || control.countryKey !== country.key ||
-      !control.partyId || input.expectedPartyId !== control.partyId ||
-      (input.targetPartyId != null && input.targetPartyId !== control.partyId)) {
+  if (!country || country !== sim.player || country.key !== input.countryKey || control.countryKey !== country.key ||
+      !control.partyId || input.expectedPartyId !== control.partyId || !fS(country, control.partyId) ||
+      (input.expectedCampaignId !== undefined && input.expectedCampaignId !== control.campaignId) ||
+      (input.expectedControlRevision !== undefined && input.expectedControlRevision !== control.controlRevision)) {
     return { ok: false, reason: "party" };
   }
-  const party = fS(country, control.partyId);
+  const targetId = input.targetPartyId === undefined ? control.partyId : input.targetPartyId;
+  if (typeof targetId !== "string" || !targetId) return { ok: false, reason: "party" };
+  const party = fS(country, targetId);
   if (!party) return { ok: false, reason: "party" };
   const descriptor = party.nameDesc || {};
   if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag) return { ok: true, changed: false };
@@ -505,7 +525,7 @@ function renderPartyProfile(view, party, ui) {
   </div>`;
 }
 
-function bindPartyProfile(host, view, ui) {
+function bindPartyProfile(host, view, party, ui) {
   const profile = host.querySelector(".gpm-party-profile");
   if (!profile) return;
   const tabs = Array.from(profile.querySelectorAll('[role="tab"]'));
@@ -524,6 +544,7 @@ function bindPartyProfile(host, view, ui) {
       button.tabIndex = selected ? 0 : -1;
       profile.querySelector("#" + button.getAttribute("aria-controls")).hidden = !selected;
     }
+    if (tab.id === "gpm-tab-congress") bindPartyCongress(profile.querySelector("#gpm-panel-congress"), view, party, ui);
     if (tab.id === "gpm-tab-regional") gpmBindRegionalOverview(profile, view, ui);
     if (tab.id === "gpm-tab-foreign") gpmBindForeignFunding(profile, view, ui);
     if (tab.id === "gpm-tab-laws") gpmBindPartyLaws(profile, view, ui);
@@ -571,10 +592,10 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, 'Xe("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmCampaignRulesUI = ${JSON.stringify({ presets: campaignRules.presets, sections: campaignRules.sections })};\nconst gpmCampaignRulesStyle = ${JSON.stringify(setupStyle)};\n${setupFunctions.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressVoting.join("\n")}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\nXe("btn-start").addEventListener("click",()=>`);
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
-  js = replaceOnce(js, 'this._mpWire(e,t),sj(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,this),bindPartyCongress(e,t,p,this),bindPartyOrganizing(e,t,this),sj(this,e,t)');
+  js = replaceOnce(js, 'this._mpWire(e,t),sj(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,p,this),bindPartyOrganizing(e,t,this),sj(this,e,t)');
   js = replaceOnce(js, '"data-bill-line","data-party-activity"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-gpm-congress-size","data-gpm-congress-bargain","data-gpm-congress-priority","data-gpm-congress-vote","data-gpm-congress-priority-vote","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
-  js = replaceOnce(js, refresh, `${refresh},bindPartyCongress(t,e,c,this),this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,this),bindPartyOrganizing(t,e,this)`);
+  js = replaceOnce(js, refresh, `${refresh},this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,c,this),bindPartyOrganizing(t,e,this)`);
   js = replaceOnce(js, 'MFe(Kk,null,"new",!1,e,void 0,a)', 'MFe(Kk,null,"new",!1,{...e,partyModRules:gpmCampaignRulesForStart(),...gpmNewParty?{partyModCreate:gpmNewParty}:{}},void 0,a)');
   js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,partyModRules:a.partyModRules,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
   js = replaceOnce(js, '_bPolElectorat(e,t){', '_bPolElectorat(e,t){bindElectorateWidth(e);');

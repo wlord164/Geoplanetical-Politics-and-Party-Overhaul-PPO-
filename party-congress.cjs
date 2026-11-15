@@ -1,11 +1,13 @@
 "use strict";
 
-function partyCongressSizeDraft(view, party, ui, current, value) {
+function partyCongressSizeDraft(view, party, ui, current, value, persist = false) {
   const key = "ppo:congress-proposed-delegates:" + JSON.stringify([view.player?.key, party.id]);
   const choices = ui._gpmCongressSizeDrafts ||= new Map();
   if (partyCongressSizeIsValid(value)) {
     choices.set(key, value);
-    try { localStorage.setItem(key, String(value)); } catch {}
+    if (persist) {
+      try { localStorage.setItem(key, String(value)); } catch {}
+    }
   }
   if (!choices.has(key)) {
     let saved;
@@ -147,7 +149,7 @@ function renderPartyCongress(view, party, ui) {
   const proposed = partyCongressSizeDraft(view, party, ui, current);
   return '<section class="mcard wide gpm-party-congress" aria-label="Party Congress">' +
     '<h3 class="mc-title">Party Congress</h3>' +
-    '<div class="gpm-congress-chart" data-gpm-congress-chart>' + renderPartyCongressChart(data, current, ui) + '</div>' +
+    '<div class="gpm-congress-chart" data-gpm-congress-chart></div>' +
     '<small>Faction estimates use the party platform, voter support, and known figures.</small>' +
     '<section class="gpm-congress-ballot" aria-label="Delegate count">' +
       '<h4>Delegate count</h4>' +
@@ -195,9 +197,7 @@ function renderPartyCongress(view, party, ui) {
     '</section></section>';
 }
 
-function bindPartyCongress(host, view, party, ui) {
-  const panel = host.querySelector('[data-mp-reading="gpm-congress"]');
-  if (!panel) return;
+function bindPartyCongress(panel, view, party, ui) {
   const data = view.party?.congress;
   if (!data || !party) {
     panel.innerHTML = "";
@@ -239,35 +239,64 @@ function bindPartyCongress(host, view, party, ui) {
     element.hidden = !text;
   };
 
-  const paint = () => {
-    const { data: currentData, busy } = state;
+  const paintSize = () => {
+    const { data: currentData } = state;
     const current = partyCongressSizeIsValid(currentData.size) ? currentData.size : 100;
     const proposed = partyCongressSizeDraft(view, party, ui, current);
     if (Number(input.value) !== proposed) input.value = String(proposed);
     setText(get("proposed"), String(proposed));
 
+    const voteKey = JSON.stringify([proposed, bargain.value, state.sizeFeedback, state.ballotKey, hA(), gA()]);
+    if (voteKey === state.sizeVoteKey) return state.sizeVote;
     const baseVote = partyCongressSizeVote(currentData, proposed);
     const offers = baseVote.ok && !baseVote.passed ? baseVote.bargains || [] : [];
     const selected = offers.some(grant => grant.label === bargain.value && grant.affordable) ? bargain.value : "";
     setHtml(bargain, partyCongressGrantOptions({ bargains: offers }));
     if (bargain.value !== selected) bargain.value = selected;
     const sizeVote = selected ? partyCongressSizeVote(currentData, proposed, selected) : baseVote;
-    if (currentData.priority) priority.value = currentData.priority.kind;
-    const priorityVote = partyCongressPriorityVote(currentData, priority.value);
-    if (currentData.programme) programme.value = currentData.programme.kind;
-    const programmeVote = partyCongressProgrammeVote(currentData, programme.value);
-
     get("grant").hidden = !offers.length;
     setText(get("grant-detail"), partyCongressGrantDetail(sizeVote));
     setText(get("forecast"), partyCongressVoteSummary(sizeVote, ui, true));
     setHtml(get("size-rows"), partyCongressVoteRows(sizeVote));
+    setResult(get("result"), currentData.lastVote, state.sizeFeedback);
+    state.sizeVoteKey = JSON.stringify([proposed, selected, state.sizeFeedback, state.ballotKey, hA(), gA()]);
+    return state.sizeVote = sizeVote;
+  };
+
+  const paintPriority = () => {
+    const { data: currentData } = state;
+    if (currentData.priority) priority.value = currentData.priority.kind;
+    const voteKey = JSON.stringify([priority.value, state.priorityFeedback, state.ballotKey]);
+    if (voteKey === state.priorityVoteKey) return state.priorityVote;
+    const priorityVote = partyCongressPriorityVote(currentData, priority.value);
     setText(get("priority-detail"), partyCongressPriorityDetail(currentData, priority.value, ui));
     setText(get("priority-forecast"), partyCongressVoteSummary(priorityVote, ui, true));
     setHtml(get("priority-rows"), partyCongressVoteRows(priorityVote));
+    setResult(get("priority-result"), currentData.lastPriorityVote, state.priorityFeedback);
+    state.priorityVoteKey = voteKey;
+    return state.priorityVote = priorityVote;
+  };
+
+  const paintProgramme = () => {
+    const { data: currentData } = state;
+    if (currentData.programme) programme.value = currentData.programme.kind;
+    const voteKey = JSON.stringify([programme.value, state.programmeFeedback, state.ballotKey]);
+    if (voteKey === state.programmeVoteKey) return state.programmeVote;
+    const programmeVote = partyCongressProgrammeVote(currentData, programme.value);
     setText(get("programme-detail"), partyCongressProgrammeDetail(currentData, programme.value, ui));
     setText(get("programme-forecast"), partyCongressVoteSummary(programmeVote, ui, true));
     setHtml(get("programme-rows"), partyCongressVoteRows(programmeVote));
+    setResult(get("programme-result"), currentData.lastProgrammeVote, state.programmeFeedback);
+    state.programmeVoteKey = voteKey;
+    return state.programmeVote = programmeVote;
+  };
 
+  const paintChart = () => {
+    const { data: currentData } = state;
+    const current = partyCongressSizeIsValid(currentData.size) ? currentData.size : 100;
+    const chartKey = JSON.stringify([current, currentData.profiles, currentData.figures, cs()]);
+    if (chartKey === state.chartKey) return;
+    state.chartKey = chartKey;
     const focused = chart.contains(document.activeElement) ? document.activeElement.getAttribute("data-gpm-faction") : null;
     if (setHtml(chart, renderPartyCongressChart(currentData, current, ui))) {
       ui._wireHemicycle(chart);
@@ -276,33 +305,43 @@ function bindPartyCongress(host, view, party, ui) {
           .find(item => item.getAttribute("data-gpm-faction") === focused)?.focus({ preventScroll: true });
       }
     }
-    setResult(get("result"), currentData.lastVote, state.sizeFeedback);
-    setResult(get("priority-result"), currentData.lastPriorityVote, state.priorityFeedback);
-    setResult(get("programme-result"), currentData.lastProgrammeVote, state.programmeFeedback);
+  };
+
+  const paintControls = () => {
+    const { data: currentData, busy } = state;
     input.disabled = busy;
     bargain.disabled = busy;
     priority.disabled = busy || Boolean(currentData.priority);
     programme.disabled = busy || Boolean(currentData.programme);
-    sizeButton.disabled = busy || !sizeVote.ok;
-    priorityButton.disabled = busy || !priorityVote.ok;
-    programmeButton.disabled = busy || !programmeVote.ok;
-    return { sizeVote, priorityVote, programmeVote };
+    sizeButton.disabled = busy || !state.sizeVote?.ok;
+    priorityButton.disabled = busy || !state.priorityVote?.ok;
+    programmeButton.disabled = busy || !state.programmeVote?.ok;
+  };
+
+  const paint = () => {
+    if (panel.hidden) return;
+    state.ballotKey = JSON.stringify([state.data, cs()]);
+    paintChart();
+    paintSize();
+    paintPriority();
+    paintProgramme();
+    paintControls();
   };
 
   const submit = async (button, kind, vote, fields) => {
     if (state.busy || button.disabled || !vote.ok) return;
     state.busy = true;
-    sizeButton.disabled = true;
-    priorityButton.disabled = true;
-    programmeButton.disabled = true;
-    input.disabled = true;
-    bargain.disabled = true;
-    priority.disabled = true;
-    programme.disabled = true;
+    paintControls();
     const feedback = kind + "Feedback";
     state[feedback] = "";
-    const response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...fields, expected: partyCongressForecastKey(vote) }]);
-    state.busy = false;
+    let response;
+    try {
+      response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...fields, expected: partyCongressForecastKey(vote) }]);
+    } catch (error) {
+      console.warn("[PPO] Could not submit Congress vote", error);
+    } finally {
+      state.busy = false;
+    }
     if (!button.isConnected || state.session !== ui._mpSession || panel._gpmCongressUi !== state) return;
     button.parentElement.querySelector(".mp-local-feedback")?.remove();
     if (response?.ok) {
@@ -326,25 +365,41 @@ function bindPartyCongress(host, view, party, ui) {
     ui.refreshTab?.(ui._mpSession);
   };
 
+  const refreshSize = () => {
+    paintSize();
+    paintControls();
+  };
+  state.refreshSize = refreshSize;
   input.oninput = () => {
     partyCongressSizeDraft(view, party, ui, state.data.size, Number(input.value));
+    setText(get("proposed"), input.value);
     bargain.value = "";
     state.sizeFeedback = "";
-    paint();
+    if (state.sizeFrame != null) return;
+    state.sizeFrame = requestAnimationFrame(() => {
+      state.sizeFrame = null;
+      if (panel.isConnected && !panel.hidden && panel._gpmCongressUi === state) state.refreshSize();
+    });
   };
-  bargain.onchange = () => { state.sizeFeedback = ""; paint(); };
-  priority.onchange = () => { state.priorityFeedback = ""; paint(); };
-  programme.onchange = () => { state.programmeFeedback = ""; paint(); };
+  input.onchange = () => {
+    partyCongressSizeDraft(view, party, ui, state.data.size, Number(input.value), true);
+    if (state.sizeFrame != null) cancelAnimationFrame(state.sizeFrame);
+    state.sizeFrame = null;
+    refreshSize();
+  };
+  bargain.onchange = () => { state.sizeFeedback = ""; refreshSize(); };
+  priority.onchange = () => { state.priorityFeedback = ""; paintPriority(); paintControls(); };
+  programme.onchange = () => { state.programmeFeedback = ""; paintProgramme(); paintControls(); };
   sizeButton.onclick = () => {
-    const vote = paint().sizeVote;
+    const vote = paintSize();
     return submit(sizeButton, "size", vote, { verb: "gpm.party.congressSize", size: vote.proposed, bargain: bargain.value });
   };
   priorityButton.onclick = () => {
-    const vote = paint().priorityVote;
+    const vote = paintPriority();
     return submit(priorityButton, "priority", vote, { verb: "gpm.party.congressPriority", priority: priority.value });
   };
   programmeButton.onclick = () => {
-    const vote = paint().programmeVote;
+    const vote = paintProgramme();
     return submit(programmeButton, "programme", vote, { verb: "gpm.party.congressProgramme", programme: programme.value });
   };
   paint();
