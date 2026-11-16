@@ -195,9 +195,32 @@ const presets = {
     label: "Fascism", values: [-30, 85, 100, 100],
     ideologyLabel: "Fascism",
     congressDoctrine: { family: "fascist", platform: "centralistFascist",
-      wings: ["centralistFascist", "corporatistFascist", "conservativeCorporatist", "authoritarianUltranationalist"] },
+      wings: ["centralistFascist", "corporatistFascist", "conservativeCorporatist", "authoritarianUltranationalist", "nationalSocialist", "clericalFascist"] },
     program: "A leader-centered one-party state with official unions and restrictions on strikes and the press.",
     laws: { union_freedom: "official", strike_right: "restricted", media_freedom: { press: "muzzled", internet: "censored" } },
+  },
+  nationalSocialist: {
+    label: "National Socialism", ideologyLabel: "National Socialism", values: [-22, 97, 100, 100],
+    congressDoctrine: { family: "nationalSocialism", platform: "nationalSocialist",
+      wings: ["nationalSocialist", "centralistFascist", "authoritarianUltranationalist"] },
+    program: "Racial exclusion and centralized one-party rule. Available laws model restrictive naturalization and censorship.",
+    positions: {
+      nationalMembership: { label: "Political citizenship", value: "Ancestry-based exclusion", priority: "central" },
+      competition: { label: "Democratic competition", value: "One-party rule", priority: "central" },
+    },
+    laws: { nationality_law: { birthright: "none", residenceYears: 15, dualCitizenship: false }, union_freedom: "official",
+      strike_right: "restricted", media_freedom: { press: "muzzled", internet: "censored" } },
+  },
+  clericalFascist: {
+    label: "Clerical Fascism", ideologyLabel: "Clerical Fascism", values: [-28, 98, 94, 82],
+    congressDoctrine: { family: "clericalFascism", platform: "clericalFascist",
+      wings: ["clericalFascist", "centralistFascist", "conservativeCorporatist"] },
+    program: "One-party rule with an officially privileged church, confessional education and state-supervised sector representation.",
+    positions: {
+      religiousAuthority: { label: "Religion and state", value: "Official church and confessional education", priority: "central" },
+      laborRepresentation: { label: "Labor representation", value: "Licensed representation by industry", priority: "secondary" },
+    },
+    laws: { religion_state: 3, religion_in_education: 5, union_freedom: "licensed", strike_right: "regulated" },
   },
   maoist: {
     label: "Maoism", values: [-100, -30, 85, 35],

@@ -77,6 +77,8 @@ const doctrineColors = {
   anarchoSyndicalist: "#ae7789",
   centralistFascist: "#8a5236",
   corporatistFascist: "#39291f",
+  nationalSocialist: "#000000",
+  clericalFascist: "#85817e",
   conservativeCorporatist: "#be8b66",
   electoralRadicalRight: "#db954f",
   socialDemocrat: namedColors["Social Democrat"],
@@ -104,6 +106,8 @@ const doctrineColors = {
 const outlinesByColor = {
   [doctrineColors.centralistFascist]: "#e4b699",
   [doctrineColors.corporatistFascist]: "#dcaa76",
+  [doctrineColors.nationalSocialist]: "#f2eee8",
+  [doctrineColors.clericalFascist]: "#dcd1bb",
   [namedColors["Authoritarian Ultranationalist"]]: "#c6ccd6",
 };
 
