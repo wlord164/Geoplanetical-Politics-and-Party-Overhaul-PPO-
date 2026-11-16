@@ -21,7 +21,7 @@ const membershipTerms = {
   inactiveRetention: .89,
   votingWeight: .36,
   fullVotingMembers: 3500,
-  projectMembers: { meeting: 2.4, movement: 1.4, outreach: 2.1, rally: 1, investment: 2.2, headquarters: 2.6 },
+  projectMembers: { meeting: 2.4, movement: 1.4, outreach: 2.1, rally: 1, investment: 2.2, headquarters: 2.6, current: 1.8 },
 };
 
 function gpmDomesticMoney(amount) {
@@ -95,12 +95,14 @@ function gpmDomesticMemberWeight(party) {
 function gpmDomesticMoveMembers(source, target, share) {
   const origin = source?.gpmDomestic?.membership;
   if (!origin || !target?.organization || source === target) return 0;
-  const moved = Math.round(origin.members * Math.max(0, Math.min(1, share)));
+  const originalMembers = origin.members;
+  const moved = Math.round(originalMembers * Math.max(0, Math.min(1, share)));
   if (!(moved > 0)) return 0;
   const state = gpmDomesticState(target);
   const destination = state.membership ??= gpmDomesticMembership(target);
   origin.members -= moved;
   destination.members += moved;
+  if (typeof gpmCongressTransferAffiliations === "function") gpmCongressTransferAffiliations(source, target, moved, originalMembers);
   for (const key of ["reconciledDay", "reconciledMonth", "lastProjectDay"]) {
     if (Number.isFinite(origin[key])) destination[key] = Math.max(destination[key] ?? origin[key], origin[key]);
   }
@@ -166,10 +168,12 @@ function gpmDomesticAssessMembership(sim, country, party) {
   gpmDomesticReceipt(sim, country, party, "membership-dues", { cashM: duesM });
   gpmDomesticReceipt(sim, country, party, "membership-upkeep", { cashM: -upkeepM });
   const retention = sim.day - (membership.lastProjectDay ?? -Infinity) <= 90 ? terms.monthlyRetention : terms.inactiveRetention;
+  const previousMembers = membership.members;
   Object.assign(membership, {
     members: Math.floor(membership.members * retention), duesM, upkeepM, netM,
     reconciledDay: sim.day, reconciledMonth: o2e(sim),
   });
+  if (typeof gpmCongressRetainMembers === "function") gpmCongressRetainMembers(party, previousMembers, membership.members);
 }
 
 function gpmDomesticCompleteOutreach(sim, country, party, project, eligible) {

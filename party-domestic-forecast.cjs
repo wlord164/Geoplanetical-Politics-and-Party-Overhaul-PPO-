@@ -29,7 +29,7 @@ function gpmProjectedRegionalParty(sim, country, party, electionDay) {
   const rules = gpmCampaignRulesFor(sim);
   const projected = { ...regional, regions: { ...regional.regions } };
   for (const project of [...regional.projects].sort((a, b) => a.endDay - b.endDay)) {
-    if (project.endDay > electionDay || !partyRegionalProvince(sim, country, project.id, project.key)) continue;
+    if (project.endDay > electionDay || !partyRegionalProjectEligible(sim, country, party, project, Boolean(regional.headquarters))) continue;
     const local = projected.regions[project.key] || {};
     if (project.kind === "headquarters") {
       projected.headquarters = { key: project.key, weight: project.gain ?? gpmRegionalRules.headquartersWeight };
@@ -52,16 +52,24 @@ function gpmProjectedRegionalParty(sim, country, party, electionDay) {
 
 function gpmProjectedOrganization(sim, country, party, through) {
   const blocs = sim._voterBlocs?.(country);
+  if (!blocs?.length || through <= sim.day) return null;
+  const canRecruit = gpmDomesticEligibleParty(country, party);
+  const last = Math.min(through, sim.day + 730);
+  const regional = party.gpmRegional;
+  const recruitment = !canRecruit ? [] : (regional?.projects || []).filter(project =>
+    project.domesticMembership && project.endDay <= last &&
+    partyRegionalProjectEligible(sim, country, party, project, Boolean(regional.headquarters)))
+    .sort((a, b) => a.endDay - b.endDay);
   const active = party.gpmOrganizing?.projects?.length || Object.keys(party.gpmOrganizing?.groups || {}).length ||
-    party.outreach?.project || Object.keys(party.outreach?.networks || {}).length;
-  if (!blocs?.length || through <= sim.day || !active) return null;
+    party.outreach?.project || Object.keys(party.outreach?.networks || {}).length || recruitment.length;
+  if (!active) return null;
   const groups = new Map(Fwe(country).map(group => [group.id, group]));
   const governor = uc(sim, country, "head_of_gov");
   const charisma = governor ? IE(1 + (governor.traits.charisma - .5) * .3 +
     (governor.traits.notoriety || 0) * .12, .5, 1.7) : 1;
   const options = { blocs, salience: country.pol.salience, charisma, growthGainPct: O1e(sim, country) };
   const rules = gpmCampaignRulesFor(sim);
-  const clock = { day: sim.day, gpmCampaignRules: rules, playerKey: null, gpmProjection: true };
+  const clock = { day: sim.day, gpmCampaignRules: rules, playerKey: null, gpmDomesticForecast: canRecruit };
   const members = country.pol.parties.map(member => ({ ...member }));
   const expected = members.find(member => member.id === party.id);
   expected.gpmOrganizing = party.gpmOrganizing && structuredClone(party.gpmOrganizing);
@@ -69,10 +77,14 @@ function gpmProjectedOrganization(sim, country, party, through) {
   expected.organization = { ...party.organization };
   expected.gpmDomestic = party.gpmDomestic?.membership ? { membership: { ...party.gpmDomestic.membership } } : null;
   const polity = { ...country.pol, parties: members };
-  const last = Math.min(through, sim.day + 730);
+  let nextRecruitment = 0;
   for (let tick = sim.day + 7 - sim.day % 7; tick <= last; tick += 7) {
     clock.day = tick;
     advancePartyOrganizing(clock, country, expected, groups);
+    while (recruitment[nextRecruitment]?.endDay <= tick) {
+      const { kind, activistsK, endDay } = recruitment[nextRecruitment++];
+      gpmDomesticEarnMembers(clock, country, expected, kind, activistsK, endDay);
+    }
     Dnt(clock, country, expected);
     Unt(polity, {}, 7, options);
   }

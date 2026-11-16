@@ -78,6 +78,7 @@ function partyCongressFactionId(key) {
 }
 
 function partyCongressProfileDoctrine(data, profile, legacyKey) {
+  if (data.membershipBacked) return profile.doctrineId ? gpmCongressDoctrine(profile.doctrineId) : null;
   const context = data.identity?.congressDoctrine;
   if (!context || data.factionLegacyProtectedLabels?.includes(legacyKey)) return null;
   const assigned = data.factionLegacyAssignments?.[legacyKey];
@@ -115,17 +116,18 @@ function partyCongressFactions(data, total) {
     const legacyKey = estimatePartyIdeology(profile.ideology);
     if (!legacyKey || !Number.isFinite(profile.weight) || profile.weight <= 0) continue;
     const doctrine = partyCongressProfileDoctrine(data, profile, legacyKey);
-    const label = doctrine ? "doctrine:" + doctrine.id : legacyKey;
+    const label = profile.legacyLabel || (doctrine ? "doctrine:" + doctrine.id : legacyKey);
     const group = byLabel.get(label) || { label, id: partyCongressFactionId(label),
       doctrineId: doctrine?.id ?? null, positions: doctrine?.positions || null, description: doctrine?.description || "",
       weight: 0, economicWeight: 0, governmentWeight: 0, names: [], legacyWeights: {},
-      axisWeights: { econ: 0, gov: 0, social: 0, nat: 0 }, sources: { platform: 0, supporters: 0, members: 0, people: 0 } };
+      axisWeights: { econ: 0, gov: 0, social: 0, nat: 0 }, sources: { platform: 0, supporters: 0, members: 0, people: 0, legacy: 0 } };
     group.legacyWeights[legacyKey] = (group.legacyWeights[legacyKey] || 0) + profile.weight;
     group.weight += profile.weight;
     if (profile.origin === "platform") group.sources.platform += profile.weight;
     if (profile.origin === "supporter-estimate") group.sources.supporters += profile.weight;
     if (profile.origin === "membership") group.sources.members += profile.weight;
     if (profile.origin === "person") group.sources.people += profile.weight;
+    if (profile.origin === "legacy") group.sources.legacy += profile.weight;
     group.economicWeight += profile.weight * profile.ideology.econ;
     group.governmentWeight += profile.weight * (profile.ideology.gov || 0);
     for (const axis of Object.keys(group.axisWeights)) group.axisWeights[axis] += profile.weight * (profile.ideology[axis] || 0);
@@ -134,7 +136,8 @@ function partyCongressFactions(data, total) {
   for (const figure of data.figures || []) {
     const legacyKey = estimatePartyIdeology(figure.ideology);
     if (!legacyKey || !figure.name) continue;
-    const doctrine = partyCongressProfileDoctrine(data, { origin: "person", ideology: figure.ideology }, legacyKey);
+    if (data.membershipBacked && !figure.doctrineId) continue;
+    const doctrine = partyCongressProfileDoctrine(data, { origin: "person", ideology: figure.ideology, doctrineId: figure.doctrineId }, legacyKey);
     const group = byLabel.get(doctrine ? "doctrine:" + doctrine.id : legacyKey);
     if (group) group.names.push(figure.name);
   }
@@ -305,9 +308,16 @@ function partyCongressProgrammes() {
 }
 
 function partyCongressAvailableProgrammes(data) {
-  const family = data?.identity?.congressDoctrine?.family;
+  const families = new Set([data?.identity?.congressDoctrine?.family]);
+  if (data?.membershipBacked && data.profiles?.length && partyCongressSizeIsValid(data.size)) {
+    for (const group of partyCongressFactions(data, data.size)) {
+      if (group.seats <= 0 || !group.doctrineId) continue;
+      const family = gpmCongressDoctrine(group.doctrineId)?.family;
+      if (family) families.add(family);
+    }
+  }
   return Object.fromEntries(Object.entries(partyCongressProgrammes()).filter(([, choice]) =>
-    !choice.family || choice.family === family));
+    !choice.family || families.has(choice.family)));
 }
 
 function partyCongressIssueAffinity(positions, choice) {

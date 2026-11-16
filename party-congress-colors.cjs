@@ -3,22 +3,6 @@
 const { doctrines } = require("./party-congress-doctrines.cjs");
 const presets = require("./party-ideology-presets.cjs");
 
-const doctrineColors = {
-  centrist: "#ed9f55",
-  mixedEconomyCentrist: "#aba1dd",
-  marketCentrist: "#aed0e7",
-  liberalCentrist: "#c4a5eb",
-  orthodoxMarxistLeninist: "#dc4955",
-  reformistMarxistLeninist: "#f07f5d",
-  councilCommunist: "#e26b80",
-  maoist: "#bf5366",
-  anarchoSyndicalist: "#ae7789",
-  centralistFascist: "#8a5236",
-  corporatistFascist: "#39291f",
-  conservativeCorporatist: "#be8b66",
-  electoralRadicalRight: "#db954f",
-};
-
 const namedColors = {
   "Left Nationalism": "#e27d75",
   "Civic Nationalism": "#a2b5d4",
@@ -63,6 +47,7 @@ const namedColors = {
   Conservative: "#7197c7",
   "Paternalist Conservative": "#81aea7",
   "Religious Traditionalist": "#a6a6ad",
+  "Christian Democrat": "#c4b1c1",
   "Authoritarian Ultranationalist": "#1d2024",
   "Islamic Democracy": "#4ed7af",
   "Islamic Republicanism": "#57aa79",
@@ -80,6 +65,42 @@ const namedColors = {
   Ecosocialism: "#b2c771",
 };
 
+const doctrineColors = {
+  centrist: "#ed9f55",
+  mixedEconomyCentrist: "#aba1dd",
+  marketCentrist: "#aed0e7",
+  liberalCentrist: "#c4a5eb",
+  orthodoxMarxistLeninist: "#dc4955",
+  reformistMarxistLeninist: "#f07f5d",
+  councilCommunist: "#e26b80",
+  maoist: "#bf5366",
+  anarchoSyndicalist: "#ae7789",
+  centralistFascist: "#8a5236",
+  corporatistFascist: "#39291f",
+  conservativeCorporatist: "#be8b66",
+  electoralRadicalRight: "#db954f",
+  socialDemocrat: namedColors["Social Democrat"],
+  democraticSocialist: namedColors["Democratic Socialist"],
+  anarchoCommunist: namedColors["Anarcho-Communist"],
+  hardlineStateSocialist: namedColors["Hardline State Socialist"],
+  leftNationalist: namedColors["Left Nationalist"],
+  green: namedColors.Green,
+  classicalLiberal: namedColors["Classical Liberal"],
+  anarchoCapitalist: namedColors["Anarcho-Capitalist"],
+  liberalConservative: namedColors["Liberal Conservative"],
+  conservative: namedColors.Conservative,
+  paternalistConservative: namedColors["Paternalist Conservative"],
+  nationalConservative: namedColors["National Conservative"],
+  religiousTraditionalist: namedColors["Religious Traditionalist"],
+  christianDemocrat: namedColors["Christian Democrat"],
+  authoritarianUltranationalist: namedColors["Authoritarian Ultranationalist"],
+  islamicDemocracy: namedColors["Islamic Democracy"],
+  islamicRepublican: namedColors["Islamic Republicanism"],
+  islamicFundamentalist: namedColors["Islamic Fundamentalism"],
+  democraticConfederalist: namedColors["Democratic Confederalism"],
+  ecosocialist: namedColors.Ecosocialism,
+};
+
 const outlinesByColor = {
   [doctrineColors.centralistFascist]: "#e4b699",
   [doctrineColors.corporatistFascist]: "#dcaa76",
@@ -95,9 +116,10 @@ for (const [id, color] of Object.entries(doctrineColors)) {
   if (doctrines[id]) colorsByDisplayName[doctrines[id].label] = color;
 }
 for (const preset of Object.values(presets)) {
-  const platform = preset.congressDoctrine?.platform;
-  if (Object.hasOwn(doctrineColors, platform) && !Object.hasOwn(colorsByDisplayName, preset.label)) {
-    colorsByDisplayName[preset.label] = doctrineColors[platform];
+  const color = doctrineColors[preset.congressDoctrine?.platform];
+  if (!color) continue;
+  for (const name of [preset.label, preset.ideologyLabel]) {
+    if (name && !Object.hasOwn(colorsByDisplayName, name)) colorsByDisplayName[name] = color;
   }
 }
 const colorsByName = Object.fromEntries(Object.entries(colorsByDisplayName).map(([name, color]) => [partyCongressColorName(name), color]));

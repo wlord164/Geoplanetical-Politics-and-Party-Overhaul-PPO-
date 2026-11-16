@@ -12,6 +12,8 @@ const { join } = require("node:path");
 const officialCountryNames = require("./party-official-country-names.cjs");
 const { workerFunctions: organizingWorker, rendererFunctions: organizingRenderer } = require("./party-organizing.cjs");
 const { workerFunctions: congressWorker } = require("./party-congress-model.cjs");
+const { workerFunctions: congressCurrents } = require("./party-congress-currents.cjs");
+const { workerFunctions: congressCharter } = require("./party-congress-charter.cjs");
 const { workerFunctions: ideologyIdentityWorker } = require("./party-ideology-identity.cjs");
 const { rendererFunctions: congressRenderer } = require("./party-congress.cjs");
 const { sharedFunctions: congressDoctrines } = require("./party-congress-doctrines.cjs");
@@ -675,7 +677,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'async function Hbt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${registerPartyRename}\n${ideologyIdentityWorker.join("\n")}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressDoctrines.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyRename();\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function Hbt(e,t,a=[]){`);
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(qa.WEEKLY_POLITICS)', 'yield"domestic.weekly"),Ie("advancePartyModDay",()=>advancePartyModDay(e)),t.has(qa.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:',
-    'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,campaigns:');
+    'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,currents:t.gpmCongressCurrents?structuredClone(t.gpmCongressCurrents):null,campaigns:');
   js = replaceOnce(js, 'qMa(t,n,s),s1a(t,n,s),',
     'qMa(t,n,s),s1a(t,n,s),gpmTransferPartyLifecycle(e,t,n,s),');
   js = replaceOnce(js, 'I.pol.parties=(i.pol.parties||[]).map(K=>({...JSON.parse(JSON.stringify(K)),campaigns:{},parliament:{lastProposalDay:null,lastConfidenceDay:null}}))',
@@ -714,7 +716,7 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
   js = replaceOnce(js, "registerPartyCongressSize();\nasync function Hbt",
-    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\n${fundingWorker.join("\n")}\n${lawShortlistWorker.join("\n")}\nregisterPartyRegionalCampaign();\nregisterPartyForeignFunding();\nasync function Hbt`);
+    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\n${fundingWorker.join("\n")}\n${lawShortlistWorker.join("\n")}\nregisterPartyRegionalCampaign();\nregisterPartyForeignFunding();\n${congressCurrents.join("\n")}\n${congressCharter.join("\n")}\nregisterPartyCongressCurrents();\nregisterPartyCongressCharter();\nasync function Hbt`);
   js = replaceOnce(js, 'id:r.__provId,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,partyPerf:',
     'id:r.__provId,key:r.__provKey,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,day:e.day||0,partyPerf:');
   js = replaceOnce(js, 'function Ywe(e,t,a=null){', 'function Ywe(e,t,a=null,gpmApplyRegions=true){');
@@ -752,7 +754,7 @@ function patchWorker(bytes) {
   const { patchHistoricalNameWorker } = require("./historical-identities.cjs");
   let historical = replaceOnce(patchHistoricalConflictsWorker(patchUprisingWorker(js, replaceOnce), replaceOnce),
     'this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)',
-    'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),gpmMigrateDomesticCampaign(b),o&&gpmMigrateFactionDoctrines(b),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
+    'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),gpmMigrateDomesticCampaign(b),o&&(gpmMigrateFactionDoctrines(b),gpmCongressMigrateCurrents(b)),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
   historical = replaceOnce(historical, '(a==="gpm.historicalMap"?',
     '(a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:a==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(r,r.player,Uo(r.player),t.params?.contestId):a==="gpm.historicalMap"?');
   const { patchWorkingCapital } = require("./working-capital.cjs");
@@ -838,7 +840,7 @@ function gpmTransferPartyLifecycle(sim, country, event, snapshots) {
   if (!survivor?.organization) return;
   const old = snapshots.get(event.gone);
   partyForeignFundingMerge(sim, country, survivor, event.gone, old?.funding);
-  if (old?.domestic) gpmDomesticMoveMembers({ gpmDomestic: old.domestic }, survivor, 1);
+  if (old?.domestic) gpmDomesticMoveMembers({ gpmDomestic: old.domestic, gpmCongressCurrents: old.currents }, survivor, 1);
 }
 
 function gpmPartyForCountryBirth(party, share) {
@@ -850,6 +852,8 @@ function gpmPartyForCountryBirth(party, share) {
   delete copy.gpmForeignFunding;
   delete copy.gpmUprisingPreparations;
   delete copy.gpmCongressSizeState;
+  delete copy.gpmCongressCurrents;
+  delete copy.gpmCongressCharter;
   delete copy.gpmFactionPolitics;
   if (copy.outreach) copy.outreach.project = null;
 

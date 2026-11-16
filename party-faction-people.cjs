@@ -2,7 +2,7 @@
 
 const { gpmResolveRoleEligibility, workerFunctions: roleRules } = require("./party-role-rules.cjs");
 
-function gpmFactionLeadershipCharter(sim, party) {
+function gpmFactionLeadershipCharter(sim, party, faction = null) {
   const date = sim.date?.toISOString?.().slice(0, 10);
   const records = party.gpmCharter?.factionLeadership;
   const active = (Array.isArray(records) ? records : [records]).filter(record => record && gpmRoleDateInEffect(record, date))
@@ -11,7 +11,7 @@ function gpmFactionLeadershipCharter(sim, party) {
   const termDays = Number.isSafeInteger(active?.termDays) && active.termDays > 0 ? active.termDays : 365;
   const electionDelayDays = Number.isSafeInteger(active?.electionDelayDays) && active.electionDelayDays >= 0 ?
     active.electionDelayDays : 14;
-  return {
+  const charter = {
     key: `${active?.id || "ordinary"}:${active?.effectiveFrom || ""}:${active?.revision ?? 0}`,
     method, termDays, electionDelayDays,
     allowGenerated: active?.allowGenerated !== false,
@@ -19,6 +19,16 @@ function gpmFactionLeadershipCharter(sim, party) {
     allowReappointment: active?.allowReappointment !== false,
     authorityId: active?.authorityId || null,
   };
+  const vote = party.gpmCongressCharter?.memberAuthority;
+  if (method === "none" || !["appointment", "election"].includes(vote?.value)) return charter;
+  const prefix = `${charter.key}:congress:`;
+  const term = faction?.leadership;
+  if (term?.personId && term.termEndDay > sim.day &&
+      (term.charterKey === charter.key || term.charterKey?.startsWith(prefix))) {
+    // A Congress motion sets the rules for new terms without displacing sitting representatives.
+    return { ...charter, key: term.charterKey, method: term.status === "appointed" ? "appointment" : "election" };
+  }
+  return { ...charter, key: prefix + vote.revision, method: vote.value };
 }
 
 function gpmPersonRoleFacts(sim, person, organizationId) {
@@ -123,14 +133,15 @@ function gpmFactionLeadershipClose(person, country, party, faction, day, year, r
 function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(), people = sim.people?.values?.() || [], canAppoint = true) {
   const day = sim.day || 0;
   const year = sim.date?.getUTCFullYear?.() ?? sim._simYear ?? 2026;
-  const charter = gpmFactionLeadershipCharter(sim, party);
+  let charter = gpmFactionLeadershipCharter(sim, party, faction);
   const prior = faction.leadership;
   const incumbent = prior?.personId && sim.people?.get?.(prior.personId);
-  const charterChanged = !!prior && prior.charterKey !== charter.key;
   const eligible = person => gpmFactionLeaderEligibility(sim, country, party, charter, person, usedLeaderIds).eligible;
-  if ((canAppoint || faction.seats > 0) && charter.method !== "none" && !charterChanged &&
+  if ((canAppoint || faction.seats > 0) && charter.method !== "none" && prior?.charterKey === charter.key &&
       incumbent && day < prior.termEndDay && eligible(incumbent)) return incumbent;
   if (!canAppoint && !prior?.personId) return null;
+  charter = gpmFactionLeadershipCharter(sim, party);
+  const charterChanged = !!prior && prior.charterKey !== charter.key;
   if (charter.method !== "none" && !charterChanged && prior?.status === "vacant" && day < prior.retryDay) return null;
 
   const earlyVacancy = prior?.personId && day < prior.termEndDay && !eligible(incumbent);
@@ -143,7 +154,8 @@ function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(
   const acting = waitingForElection && charter.allowActing;
   const canSelect = canAppoint && charter.method !== "none" && (!waitingForElection || acting);
   const exclude = !charter.allowReappointment && prior?.status !== "acting" ? prior?.personId : null;
-  const ideology = faction.ideology || party.ideology;
+  const partyAppoints = charter.method === "appointment" && party.gpmCongressCharter?.memberAuthority?.value === "appointment";
+  const ideology = partyAppoints ? party.ideology : faction.ideology || party.ideology;
   let leader = null;
   let generation = prior?.generation || 0;
   if (canSelect) {
