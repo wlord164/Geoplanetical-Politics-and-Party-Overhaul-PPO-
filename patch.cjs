@@ -267,9 +267,12 @@ function mountPartyButtons() {
     .gpm-congress-evidence ul { display: grid; gap: var(--gap-2); padding-left: var(--gap-3); }
     .gpm-congress-evidence li small { display: block; color: var(--text-2); }
     .gpm-congress-control { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }
-    .gpm-congress-size-label { display: block; }
-    .gpm-congress-size-range { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--gap-2); }
-    .gpm-congress-size { width: 100%; min-width: 0; margin: 0; accent-color: var(--text-2); }
+    .gpm-congress-size { box-sizing: border-box; inline-size: 8rem; max-inline-size: 100%; margin: 0; }
+    .gpm-congress-size-picks { display: flex; flex-wrap: wrap; gap: var(--gap-1); min-width: 0; }
+    .gpm-congress-size-picks .k { flex: 0 0 auto; }
+    .gpm-congress-size-summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-1) var(--gap-2); }
+    .gpm-party-congress .gpm-congress-segments { width: 100%; display: block; min-width: 0; height: 1.6rem; margin-block: var(--gap-1); }
+    .gpm-congress-segment-total { display: block; font-variant-numeric: tabular-nums; margin-block: var(--gap-1); }
     .gpm-party-congress button { justify-self: start; }
     .gpm-congress-ballot { min-width: 0; display: grid; gap: var(--gap-2); padding-block-start: var(--gap-2); border-top: 1px solid var(--line, #474950); }
     .gpm-congress-ballot h4 { margin: 0; }
@@ -280,7 +283,7 @@ function mountPartyButtons() {
     .gpm-congress-faction { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--gap-1); padding: var(--gap-2); border: 1px solid var(--line, #474950); }
     .gpm-congress-faction strong { overflow-wrap: anywhere; }
     .gpm-congress-faction > span:first-of-type { display: grid; justify-items: end; text-align: right; }
-    .gpm-congress-faction > span:last-of-type, .gpm-congress-faction > small { grid-column: 1 / -1; }
+    .gpm-congress-faction > span:not(.num), .gpm-congress-faction > small { grid-column: 1 / -1; }
     .gpm-congress-roster { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap-1); margin: 0; padding: 0; list-style: none; }
     .gpm-congress-representative { display: grid; min-width: 0; gap: var(--gap-1); padding: var(--gap-2); border: 1px solid var(--line, #474950); overflow-wrap: anywhere; }
     @supports (grid-template-rows: subgrid) {
@@ -803,7 +806,7 @@ function advancePartyModDay(sim) {
       if (party.gpmOrganizing) advancePartyOrganizing(sim, country, party);
       if (party.gpmRegional) advancePartyRegionalCampaign(sim, country, party);
       if (party.gpmForeignFunding) advancePartyForeignFunding(sim, country, party);
-      if (party.gpmFactionPolitics) gpmFactionDaily(sim, country, party);
+      if (party.gpmFactionPolitics || party.gpmCongressSizeState?.pendingResize) gpmFactionDaily(sim, country, party, true);
     }
   }
 }
