@@ -211,6 +211,12 @@ function partyRegionalStart(sim, country, party, kind, region, relocateHeadquart
   return { ok: true, endDay: quote.endDay };
 }
 
+function partyRegionalProjectEligible(sim, country, party, project, hadHeadquarters) {
+  const province = partyRegionalProvince(sim, country, project.id, project.key);
+  const relocation = project.uprisingHeadquarters ?? (project.kind === "headquarters" && hadHeadquarters);
+  return Boolean(province && party.legal !== false && (!relocation || partyUprisingProvinceEligible(sim, country, province)));
+}
+
 function advancePartyRegionalCampaign(sim, country, party) {
   const record = party.gpmRegional;
   if (!record || !party.organization) return;
@@ -221,14 +227,10 @@ function advancePartyRegionalCampaign(sim, country, party) {
     record.headquarters = null;
   }
   for (const project of [...record.projects]) {
-    const province = partyRegionalProvince(sim, country, project.id, project.key);
     // Before the origin was saved, an outstanding relocation is the only
     // headquarters project that could coexist with an existing headquarters.
-    const uprisingHeadquarters = project.uprisingHeadquarters ??
-      (project.kind === "headquarters" && hadHeadquarters);
-    if (project.kind === "headquarters") project.uprisingHeadquarters = uprisingHeadquarters;
-    const eligible = province && party.legal !== false &&
-      (!uprisingHeadquarters || partyUprisingProvinceEligible(sim, country, province));
+    if (project.kind === "headquarters") project.uprisingHeadquarters ??= hadHeadquarters;
+    const eligible = partyRegionalProjectEligible(sim, country, party, project, hadHeadquarters);
     if (eligible && day < project.endDay) continue;
     record.projects.splice(record.projects.indexOf(project), 1);
     const previousActivists = party.organization.activistsK;
@@ -639,7 +641,7 @@ module.exports = {
     partyRegionalRallyWeight, partyRegionalPresence, partyCampaignSmallPartyFactor,
     partyRegionalPermanentWeight, partyRegionalHeadquartersWeight, partyRegionalWeight,
     partyRegionalShares, partyRegionalNationalTotals, partyRegionalNormalize, partyRegionalNationalShares,
-    partyRegionalQuote, partyRegionalQuoteToken, partyRegionalStart, advancePartyRegionalCampaign, partyRegionalReceipt, registerPartyRegionalCampaign,
+    partyRegionalQuote, partyRegionalQuoteToken, partyRegionalStart, partyRegionalProjectEligible, advancePartyRegionalCampaign, partyRegionalReceipt, registerPartyRegionalCampaign,
     partyCampaignChamberRules, partyCampaignForecast, partyCampaignSpendPreview, partyAssignedActivists,
     partyRegionalNationalForecast, partyRegionalProjectProjection, partyRegionalBreakdown, partyRegionalCampaignView, advancePartyRegionalAI],
 };

@@ -57,7 +57,7 @@ function gpmFactionMigratePartyDoctrines(sim, country, party) {
   const previous = Object.values(state.factions || {});
   if (!previous.length) { state.version = 2; return; }
   const planning = partyCongressPlanningData(sim, country);
-  const data = partyCongressView(sim, country, party.id, planning.electorate, planning.people);
+  const data = partyCongressView(sim, country, party.id, planning.electorate, planning.people, null, true);
   const groups = partyCongressFactions(data, data.size).filter(group => group.doctrineId && group.seats > 0);
   const committed = new Set((state.offers || []).filter(gpmFactionOpen).map(offer => offer.factionId));
   const platform = data.profiles.find(profile => profile.origin === "platform");
@@ -254,7 +254,7 @@ function gpmFactionLiveLeader(sim, country, party, faction) {
   if (!faction?.seats || !partyCongressEligible(party)) return null;
   const person = sim.people?.get(faction.leadership?.personId);
   if (!person || faction.leadership.termEndDay <= sim.day) return null;
-  const charter = gpmFactionLeadershipCharter(sim, party);
+  const charter = gpmFactionLeadershipCharter(sim, party, faction);
   if (charter.method === "none" || faction.leadership.charterKey !== charter.key) return null;
   return gpmFactionLeaderEligibility(sim, country, party, charter, person, new Set()).eligible ? person : null;
 }
@@ -306,9 +306,12 @@ function gpmFactionView(sim, country, party) {
 function gpmFactionCongressData(sim, country, partyId) {
   const party = YL(country, partyId);
   if (!party || Uo(country) !== partyId) return null;
-  return partyCongressView(sim, country, partyId, undefined, undefined, {
+  const congress = partyCongressView(sim, country, partyId, undefined, undefined, {
     bargaining: gpmFactionView(sim, country, party),
   });
+  congress.bargaining.programmes = Object.entries(partyCongressAvailableProgrammes(congress))
+    .map(([id, choice]) => ({ id, label: choice.label }));
+  return congress;
 }
 
 function gpmFactionCashAvailable(sim, party, cashM, actor, subject) {
@@ -522,11 +525,11 @@ function gpmFactionDaily(sim, country, party, reviewResize = false) {
     }
   }
   if (state?.nextReviewDay == null) return;
-  const charter = gpmFactionLeadershipCharter(sim, party);
   const minimum = partyCongressRecognitionSeats(party.gpmCongressSizeState?.size ?? gpmCongressDefaultSize);
   const due = Object.values(state.factions).some(faction => {
     if (!faction.seats) return false;
     const leadership = faction.leadership;
+    const charter = gpmFactionLeadershipCharter(sim, party, faction);
     if (faction.seats < minimum && !leadership?.personId) return false;
     if (!leadership || leadership.charterKey !== charter.key) return true;
     if (charter.method === "none") return false;
