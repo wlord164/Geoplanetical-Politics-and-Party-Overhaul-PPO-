@@ -197,7 +197,7 @@ function partyCampaignPlanForecast(sim, country, partyId, contestId) {
     projectedPolity, local: true,
   });
   return {
-    contestId, kind: current.kind, electionDay: contest.nextDay, totalSeats: current.totalSeats,
+    contestId, day: sim.day, kind: current.kind, electionDay: contest.nextDay, totalSeats: current.totalSeats,
     chamberName: chamber?.name || chamber?.id || contest.targetOrganId,
     chamberNameKey: chamber?._nameKey || null, mode: current.mode, formula: current.formula,
     threshold: current.threshold, legalThreshold: current.legalThreshold, current: current.before,

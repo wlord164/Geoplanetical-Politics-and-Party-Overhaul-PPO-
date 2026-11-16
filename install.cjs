@@ -323,6 +323,12 @@ const previousPatches = [{
   worker: "804e1b063436751c2024070fe142371f28b9bc6314c598430828835463bc9047",
   renderer: "2242ae52a3bdc2ed80c22aed5771d77855bd5e54e8a4f99f193565cc661d3853",
   executable: "44e4cfa836b4a9f0691efd68ff0c9a4891e5ebe307fac444500d408fd4ab043a",
+}, {
+  // Party Ideology Overhaul (262ae3a).
+  archive: "c9777671de1b10266f3a028325f293b0abdfcfdcf05018fe7518573c4825c184",
+  worker: "68e4a1bd649631cd4ed77807d2f0fd037957df5e52093ba9bd639d276be52525",
+  renderer: "c51fb033f44075802ec35eafe78bcce2d69941aadfa3a5cf0b9391ab9ab2bc02",
+  executable: "77bb377ded8e922c1fb74430872ebb38d06a92b50ee681d4d8e99bdb217e8a9f",
 }];
 
 function steamGamePath() {
@@ -523,6 +529,14 @@ function isCurrentStock(files) {
   });
 }
 
+function verifiedDuplicateBackups(files, backups) {
+  const expected = { [files.archive]: archiveHash, [files.worker]: workerHash, [files.executable]: executableHash };
+  return backups.every(([active, backup]) => {
+    const hash = active === files.archive ? verifiedArchiveHash(backup) : sha256(fs.readFileSync(backup));
+    return hash === expected[active];
+  });
+}
+
 function isKnownRenderer(renderer, patch) {
   if (!fs.existsSync(renderer)) return true;
   const hash = sha256(fs.readFileSync(renderer));
@@ -536,11 +550,14 @@ function install(files) {
 function installPatch(files, staged, commit) {
   const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
   const backups = [[archive, backupArchive], [worker, backupWorker], [executable, backupExecutable]];
-  const hasBackups = backups.some(([, backup]) => fs.existsSync(backup));
-  if (hasBackups && !backups.every(([, backup]) => fs.existsSync(backup))) throw new Error("Some original game backups are missing. Restore the Steam files before updating.");
+  const existingBackups = backups.filter(([, backup]) => fs.existsSync(backup));
+  const hasBackups = existingBackups.length > 0;
   const activeStock = hasBackups && isCurrentStock(files);
-  const steamUpdated = activeStock && hasStockFiles(backupArchive, backupWorker, backupExecutable, previousStock);
-  const upgrading = hasBackups && !steamUpdated;
+  const incompleteBackups = hasBackups && existingBackups.length < backups.length;
+  const replaceBackups = incompleteBackups && activeStock && verifiedDuplicateBackups(files, existingBackups);
+  if (incompleteBackups && !replaceBackups) throw new Error("Some original game backups are missing. Restore the Steam files before updating.");
+  const steamUpdated = activeStock && !incompleteBackups && hasStockFiles(backupArchive, backupWorker, backupExecutable, previousStock);
+  const upgrading = hasBackups && !steamUpdated && !replaceBackups;
   if (steamUpdated) verifyArchivePayload(backupArchive, openArchive(backupArchive), previousStock.payload);
   const detachedRenderer = fs.existsSync(renderer);
   const originalArchive = upgrading ? backupArchive : archive;
@@ -576,6 +593,10 @@ function installPatch(files, staged, commit) {
     if (detachedRenderer) legacyFiles.push(renderer);
     for (const file of legacyFiles) moves.push([file, path.join(legacyDirectory, path.basename(file))]);
   }
+  if (replaceBackups) {
+    for (const [, backup] of existingBackups) moves.push([backup, path.join(staged, path.basename(backup))]);
+    if (detachedRenderer) moves.push([renderer, path.join(staged, "previous-app.bundle.js")]);
+  }
   const replacements = upgrading ? [archive, worker, renderer, executable].filter(file => fs.existsSync(file))
     .map(file => [file, path.join(staged, "previous-" + path.basename(file))]) : backups;
   moves.push(...replacements, [newRenderer, renderer], [newWorker, worker], [newArchive, archive], [newExecutable, executable]);
@@ -588,12 +609,30 @@ function restore(files) {
 
 function restorePatch(files, staged, commit) {
   const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
-  const backups = [backupArchive, backupWorker, backupExecutable];
-  if (backups.every(file => !fs.existsSync(file)) && !fs.existsSync(renderer) && isCurrentStock(files)) {
+  const backups = [[archive, backupArchive], [worker, backupWorker], [executable, backupExecutable]];
+  const existingBackups = backups.filter(([, backup]) => fs.existsSync(backup));
+  if (!existingBackups.length && !fs.existsSync(renderer) && isCurrentStock(files)) {
     verifyArchivePayload(archive, openArchive(archive));
     return;
   }
-  if (!backups.every(file => fs.existsSync(file))) throw new Error("The three original backup files are required for a restore.");
+  if (existingBackups.length < backups.length) {
+    if (!existingBackups.length || !isCurrentStock(files) || !verifiedDuplicateBackups(files, existingBackups)) {
+      throw new Error("The three original backup files are required for a restore.");
+    }
+    const detached = fs.existsSync(renderer);
+    if (detached) {
+      if (!isKnownRenderer(renderer, buildPatch(archive, worker, executable))) {
+        throw new Error("The active game files changed since installation. Keep the updated files and use Steam Verify Integrity if needed.");
+      }
+    } else {
+      verifyArchivePayload(archive, openArchive(archive));
+    }
+    fs.mkdirSync(staged);
+    const moves = existingBackups.map(([, backup]) => [backup, path.join(staged, path.basename(backup))]);
+    if (detached) moves.push([renderer, path.join(staged, path.basename(renderer))]);
+    commit(moves);
+    return;
+  }
   const patch = buildPatch(backupArchive, backupWorker, backupExecutable);
   const current = installedHashes(files, true);
   const repairedBySteam = current.archive === archiveHash && current.worker === workerHash &&

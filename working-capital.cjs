@@ -139,9 +139,35 @@ function gpmRecoverCurrencyWorkingCapital(sim) {
   });
 }
 
+function gpmRelinkFxDepositHolder(finance, account, previousHolder) {
+  const claim = account.depositClaim;
+  const holder = account.ownerId;
+  if (account.kind !== "central_bank_fx_deposit" || account.ownerType !== "central_bank" ||
+      !claim || claim.holderId !== previousHolder || holder === previousHolder ||
+      !finance.centralBanks?.[holder]) return false;
+  const positions = finance.positions?.[claim.instrumentId];
+  const position = positions?.[holder];
+  if (positions?.[previousHolder] || position?.holderId !== holder ||
+      position.assetAccountId !== account.id || position.cashAccountId !== account.id ||
+      position.quantity !== account.balanceBn || position.bookValueBn !== account.balanceBn) return false;
+  claim.holderId = holder;
+  return true;
+}
+
+function gpmRecoverFxDepositHolders(finance) {
+  for (const account of Object.values(finance.accounts)) {
+    const before = account?.depositClaim?.holderId;
+    if (before && gpmRelinkFxDepositHolder(finance, account, before)) {
+      le({ section: "sat.finance", path: `accounts.${account.id}.depositClaim.holderId`,
+        rule: "ppo-fx-deposit-holder-relink", before, after: account.ownerId });
+    }
+  }
+}
+
 function patchWorkingCapital(source, replaceOnce) {
   const helpers = [gpmWorkingCapitalAccount, gpmWorkingCapitalTransfer, gpmTransferCurrencyWorkingCapital,
-    gpmWorkingCapitalGaps, gpmCurrencyWorkingCapitalOrigins, gpmRecoverCurrencyWorkingCapital].join("\n");
+    gpmWorkingCapitalGaps, gpmCurrencyWorkingCapitalOrigins, gpmRecoverCurrencyWorkingCapital,
+    gpmRelinkFxDepositHolder, gpmRecoverFxDepositHolders].join("\n");
   const relink = "function LKe(e,t,{oldCentralBank:a,centralBank:r,newCode:o,receivingBank:n}){";
   source = replaceOnce(source, relink,
     helpers + "\n" + "function LKe(e,t,{oldCentralBank:a,centralBank:r,newCode:o,receivingBank:n,day:gpmDay}){" +
@@ -150,10 +176,18 @@ function patchWorkingCapital(source, replaceOnce) {
     "newCode:u,receivingBank:f||a.homeBank,day:d});");
   source = replaceOnce(source, "newCode:a.code,receivingBank:m||r.homeBank});",
     "newCode:a.code,receivingBank:m||r.homeBank,day:u});");
+  // The native rename moves the position first. A foreign deposit stays in
+  // the issuing bank's currency when only its holder's currency changes.
+  source = replaceOnce(source, "!f&&!y&&!g||(m.currencyCode=r,y&&(m.ownerId=s,Jj(e)),d++)",
+    "!f&&!y&&!g||((m.kind!==\"central_bank_fx_deposit\"||m.currencyCode===a)&&(m.currencyCode=r)," +
+    "y&&(m.ownerId=s,gpmRelinkFxDepositHolder(e,m,i),Jj(e)),d++)");
+  source = replaceOnce(source, "RCa(a),PCa(a);let r;try{return g7t(a,t),m7t(a,t)}",
+    "RCa(a),PCa(a),gpmRecoverFxDepositHolders(a);let r;try{return g7t(a,t),m7t(a,t)}");
   const restoreBoundary = "gpmHistoricalRestoreOpeningCapitals(b)";
   // Run against the restored, registered ledger before the player can advance.
   return replaceOnce(source, restoreBoundary, restoreBoundary + ",gpmRecoverCurrencyWorkingCapital(b)");
 }
 
-module.exports = { patchWorkingCapital, gpmTransferCurrencyWorkingCapital, gpmRecoverCurrencyWorkingCapital };
+module.exports = { patchWorkingCapital, gpmTransferCurrencyWorkingCapital, gpmRecoverCurrencyWorkingCapital,
+  gpmRelinkFxDepositHolder };
 
