@@ -104,7 +104,7 @@ const doctrineColors = {
   trotskyist: "#e6539e",
   federalRepublican: "#548ce1",
   nasserist: "#4f9e83",
-  baathist: "#b76c60",
+  baathist: "#17563b",
   secularRepublican: "#70bdc6",
   constitutionalMonarchist: namedColors["Constitutional Monarchism"],
   agrarianPopulist: "#aba255",
@@ -116,6 +116,7 @@ const outlinesByColor = {
   [doctrineColors.corporatistFascist]: "#dcaa76",
   [doctrineColors.nationalSocialist]: "#f2eee8",
   [doctrineColors.clericalFascist]: "#dcd1bb",
+  [doctrineColors.baathist]: "#8dcc9f",
   [namedColors["Authoritarian Ultranationalist"]]: "#c6ccd6",
 };
 
