@@ -271,8 +271,6 @@ function mountPartyButtons() {
     .gpm-congress-size-picks { display: flex; flex-wrap: wrap; gap: var(--gap-1); min-width: 0; }
     .gpm-congress-size-picks .k { flex: 0 0 auto; }
     .gpm-congress-size-summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-1) var(--gap-2); }
-    .gpm-party-congress .gpm-congress-segments { width: 100%; display: block; min-width: 0; height: 1.6rem; margin-block: var(--gap-1); }
-    .gpm-congress-segment-total { display: block; font-variant-numeric: tabular-nums; margin-block: var(--gap-1); }
     .gpm-party-congress button { justify-self: start; }
     .gpm-congress-ballot { min-width: 0; display: grid; gap: var(--gap-2); padding-block-start: var(--gap-2); border-top: 1px solid var(--line, #474950); }
     .gpm-congress-ballot h4 { margin: 0; }
