@@ -33,6 +33,8 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
     islamicRepublican: "islamic_republic",
     islamicFundamentalist: "islamic_emirate",
     fascist: "fascist_party_state",
+    nationalSocialist: "national_socialist_party_state",
+    clericalFascist: "clerical_fascist_party_state",
     maoist: "maoist_party_state",
     democraticConfederalist: "democratic_confederation",
     anarchoSyndicalist: "syndicalist_federation",
@@ -40,7 +42,8 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
   };
   let regime = Object.hasOwn(newRegimes, preset) ? newRegimes[preset] : null;
   if (regime) {
-    const singleParty = ["fascist_party_state", "maoist_party_state"].includes(regime);
+    const fascistPartyState = ["fascist", "nationalSocialist", "clericalFascist"].includes(preset);
+    const singleParty = fascistPartyState || regime === "maoist_party_state";
     const clerical = ["islamic_emirate", "islamic_republic"].includes(regime);
     const emirate = regime === "islamic_emirate";
     const confederal = ["democratic_confederation", "syndicalist_federation"].includes(regime);
@@ -49,6 +52,8 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
       islamic_republic: "Islamic republic",
       islamic_emirate: "Islamic emirate",
       fascist_party_state: "Fascist one-party state",
+      national_socialist_party_state: "National Socialist one-party state",
+      clerical_fascist_party_state: "Clerical Fascist one-party state",
       maoist_party_state: "Maoist revolutionary state",
       democratic_confederation: "Democratic confederation",
       syndicalist_federation: "Federation of worker councils",
@@ -62,7 +67,7 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
       ...(!singleParty && !clerical ? { headBallot: "parliament" } : {}),
       ...(!singleParty && !emirate ? { headGovSelection: "parliament" } : {}),
       cabinetAccountability: singleParty || emirate ? "head" : "parliament",
-      parliamentPower: emirate || preset === "fascist" ? "advisory" : "sovereign",
+      parliamentPower: emirate || fascistPartyState ? "advisory" : "sovereign",
       partyLegality: singleParty ? .1 : emirate ? .15 : clerical ? .55 : .95,
       execConstraints: singleParty || emirate ? .15 : clerical ? .5 : .85,
       commissionIndep: singleParty || emirate ? .2 : clerical ? .55 : .9,

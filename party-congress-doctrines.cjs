@@ -68,6 +68,20 @@ const doctrines = {
     axes: { econ: .05, social: .79, gov: .75, nat: .88 },
     positions: { economicControl: .7, independentLabor: -1, laborRepresentation: -.5, competition: -1, memberAuthority: -1, branchAutonomy: -1 },
   },
+  nationalSocialist: {
+    family: "nationalSocialism", label: "National Socialism", explicitOrganization: true,
+    description: "A racial-nationalist doctrine that favors absolute party leadership, ancestry-based political exclusion, and suppression of independent media.",
+    axes: { econ: -.22, social: .97, gov: 1, nat: 1 },
+    positions: { competition: -1, independentLabor: -1, civilLiberties: -1, nationalMembership: -1,
+      racializedCitizenship: 1, religiousAuthority: -.85, memberAuthority: -1, branchAutonomy: -1 },
+  },
+  clericalFascist: {
+    family: "clericalFascism", label: "Clerical Fascism", explicitOrganization: true,
+    description: "Favors a one-party state allied with an established church, confessional education, and state-supervised representation by industry.",
+    axes: { econ: -.28, social: .98, gov: .94, nat: .82 },
+    positions: { competition: -.95, independentLabor: -.75, laborRepresentation: 1, racializedCitizenship: -.2,
+      religiousAuthority: 1, worshipFreedom: -.65, memberAuthority: -.8, branchAutonomy: -.65 },
+  },
   conservativeCorporatist: {
     family: "conservativeCorporatism", label: "Conservative Corporatist",
     description: "Favors bargaining by industry through licensed employer and worker organizations under state oversight.",
@@ -259,6 +273,25 @@ const proposals = {
     family: "fascist", label: "Party-approved unions", issue: "laborRepresentation", issueLabel: "Labor representation", value: -1,
     laws: ["union_freedom", "strike_right"],
     lawTargets: { union_freedom: "official", strike_right: "restricted" },
+  },
+  nationalSocialistCitizenshipAndPress: {
+    family: "nationalSocialism", label: "Restrict naturalization and the press",
+    issue: "racializedCitizenship", issueLabel: "Citizenship and political exclusion", value: 1,
+    laws: ["nationality_law", "media_freedom"],
+    lawTargets: { nationality_law: { birthright: "none", residenceYears: 15, dualCitizenship: false },
+      media_freedom: { press: "muzzled", internet: "censored" } },
+  },
+  clericalFascistConfessionalInstitutions: {
+    family: "clericalFascism", label: "Confessional state and education",
+    issue: "religiousAuthority", issueLabel: "Religious authority in public institutions", value: 1,
+    laws: ["religion_state", "religion_in_education"],
+    lawTargets: { religion_state: 3, religion_in_education: 5 },
+  },
+  clericalFascistLicensedSectors: {
+    family: "clericalFascism", label: "Licensed sector representation",
+    issue: "laborRepresentation", issueLabel: "Labor representation", value: 1,
+    laws: ["union_freedom", "strike_right"],
+    lawTargets: { union_freedom: "licensed", strike_right: "regulated" },
   },
   corporatistSectorBargaining: {
     family: "conservativeCorporatism", label: "Licensed sector bargaining", issue: "laborRepresentation", issueLabel: "Labor representation", value: 1,

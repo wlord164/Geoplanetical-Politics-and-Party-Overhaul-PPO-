@@ -5,6 +5,8 @@ const issues = {
   redistribution: { label: "Redistribution", laws: ["land_tenure", "minimum_wage", "unemployment_insurance", "family_allowance", "paid_parental_leave"] },
   labor: { label: "Labor autonomy", laws: ["union_freedom", "strike_right"] },
   civilLiberties: { label: "Civil liberties", laws: ["media_freedom", "freedom_of_worship"] },
+  citizenship: { label: "Citizenship and naturalization", laws: ["nationality_law"] },
+  stateReligion: { label: "Religion in public institutions", laws: ["religion_state", "religion_in_education"] },
   executive: { label: "Executive power", laws: [] },
   competition: { label: "Democratic competition", laws: [] },
 };

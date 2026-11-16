@@ -175,6 +175,7 @@ function gpmCongressOrganizeCurrentAI(sim, country, party, data, policy) {
   const options = gpmCongressCurrentOptions(sim, country, party, data.identity, data.sizeRecommendation);
   const ranked = options.filter(option => option.eligible).map(option => {
     const doctrine = gpmCongressDoctrine(option.id);
+    if (doctrine.explicitOrganization && !option.members) return { option, fit: 0 };
     const fit = matching.reduce((sum, group) => {
       const contacts = Math.max(party.gpmOrganizing?.groups?.[group.id] || 0, party.outreach?.networks?.[group.id] || 0);
       if (!(contacts > 0) || !group.ideal) return sum;
