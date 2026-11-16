@@ -19,26 +19,15 @@ function partyCongressSizeDraft(view, party, ui, current, value, persist = false
   return choices.get(key) ?? current;
 }
 
-function partyCongressArcPath(startSeat, endSeat, total, innerRadius, outerRadius) {
-  const point = (seat, radius) => {
-    const angle = Math.PI * seat / total;
-    const x = 170 - radius * Math.cos(angle);
-    const y = 168 - radius * Math.sin(angle);
-    return `${x.toFixed(3)} ${y.toFixed(3)}`;
-  };
-  return `M ${point(startSeat, outerRadius)} A ${outerRadius} ${outerRadius} 0 0 1 ${point(endSeat, outerRadius)}
-    L ${point(endSeat, innerRadius)} A ${innerRadius} ${innerRadius} 0 0 0 ${point(startSeat, innerRadius)} Z`;
-}
-
 function renderPartyCongressChart(factions, total, ui) {
   if (!factions.length) return '<p class="empty-note">Faction estimate unavailable.</p>';
 
-  const segmented = total > 200;
   const rows = Math.max(3, Math.round(Math.sqrt(total / 2.6)));
   const outerRadius = 162;
   const innerRadius = outerRadius * .52;
-  const points = segmented ? [] : ui._seatLayout(total, rows, innerRadius, outerRadius);
+  const points = ui._seatLayout(total, rows, innerRadius, outerRadius);
   const dotRadius = Math.max(1.6, Math.min(6.2, (outerRadius - innerRadius) / (rows - 1) * .42));
+  const outlineWidth = Math.min(.8, dotRadius * .26);
   const marks = [];
   const legend = [];
   const evidence = [];
@@ -66,17 +55,12 @@ function renderPartyCongressChart(factions, total, ui) {
     const id = "gpm-faction-" + index;
     const color = partyCongressIdeologyColor(group);
     const outline = gpmCongressColorOutlines[color];
-    const keyline = outline ? ` style="stroke:${outline};stroke-width:.8px" vector-effect="non-scaling-stroke"` : "";
-    if (segmented) {
-      const arc = partyCongressArcPath(pointIndex, pointIndex + group.seats, total, innerRadius, outerRadius);
-      marks.push(`<path class="seat" data-pty="${id}" data-gpm-congress-segment="${b(group.label)}" data-delegates="${group.seats}"
-        d="${arc}" fill="${color}"${keyline}><title>${b(label + ", " + count)}</title></path>`);
-      pointIndex += group.seats;
-    } else {
-      for (let seat = 0; seat < group.seats; seat++) {
-        const point = points[pointIndex++];
-        marks.push(`<circle class="seat" data-pty="${id}" cx="${(170 + point.x).toFixed(1)}" cy="${(168 + point.y).toFixed(1)}" r="${dotRadius.toFixed(1)}" fill="${color}"${keyline}/>`);
-      }
+    const keyline = outline ? ` style="stroke:${outline};stroke-width:${outlineWidth.toFixed(2)}px" vector-effect="non-scaling-stroke"` : "";
+    const factionKey = b(group.label);
+    for (let seat = 0; seat < group.seats; seat++) {
+      const point = points[pointIndex++];
+      marks.push(`<circle class="seat" data-pty="${id}" data-gpm-congress-seat-faction="${factionKey}" data-delegates="1"
+        cx="${(170 + point.x).toFixed(1)}" cy="${(168 + point.y).toFixed(1)}" r="${dotRadius.toFixed(1)}" fill="${color}"${keyline}/>`);
     }
     const swatch = "background:" + color + (outline ? ";box-shadow:inset 0 0 0 1px " + outline : "");
     legend.push({ group, html: `<span class="hc-leg-item" tabindex="0" data-pty="${id}" data-gpm-faction="${b(group.label)}" data-delegates="${group.seats}" aria-label="${b(label + ", " + count)}"><i style="${swatch}"></i>${b(label)} <b>${group.seats}</b></span>` });
@@ -86,7 +70,7 @@ function renderPartyCongressChart(factions, total, ui) {
   evidence.sort(bySeats);
   const top = legend.filter(item => item.group.seats === legend[0]?.group.seats);
   const chartLabel = total + " estimated Congress delegates by faction";
-  const chart = `<svg viewBox="0 0 340 178" class="hc-svg" ${segmented ? "data-gpm-congress-seat-segments" : "data-gpm-congress-seat-dots"}
+  const chart = `<svg viewBox="0 0 340 178" class="hc-svg" data-gpm-congress-seat-dots
       role="img" aria-label="${b(chartLabel)}">
       <text x="170" y="161" class="hc-total" text-anchor="middle">${b(new Intl.NumberFormat(cs()).format(total))}</text>
       <text x="170" y="175" class="hc-total-sub" text-anchor="middle">delegates</text>
@@ -1010,7 +994,7 @@ function bindPartyCongress(panel, view, party, ui) {
 }
 
 module.exports = {
-  rendererFunctions: [...congressColorFunctions, partyCongressSizeDraft, partyCongressArcPath, renderPartyCongressChart, partyCongressPriorityName,
+  rendererFunctions: [...congressColorFunctions, partyCongressSizeDraft, renderPartyCongressChart, partyCongressPriorityName,
     partyCongressVoteSummary, partyCongressVoteRows, partyCongressPendingRows, partyCongressPendingText,
     partyCongressGrantOptions, partyCongressGrantDetail,
     partyCongressPriorityDetail, partyCongressProgrammeDetail, partyCongressBargainReason,
