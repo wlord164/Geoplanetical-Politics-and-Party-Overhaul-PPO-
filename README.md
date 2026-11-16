@@ -2,8 +2,6 @@
 
 A Geoplanetical mod that expands party politics, elections, uprisings, and historical conflicts.
 
-**[Download PPO](https://github.com/wlord164/Geoplanetical-Politics-and-Party-Overhaul-PPO-/releases/download/simulation-stability-update/PPO-Simulation-Stability.zip)** · [All-in-one patch notes](https://github.com/wlord164/Geoplanetical-Politics-and-Party-Overhaul-PPO-/releases/tag/simulation-stability-update)
-
 ## Install or update
 
 Requires **Geoplanetical 1.1.3 on Windows Steam**, [Node.js LTS](https://nodejs.org/en/download), and about 4 GB free on the Steam library drive.
