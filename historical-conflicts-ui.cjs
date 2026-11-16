@@ -1090,7 +1090,8 @@ function gpmHistoricalConflictsView(host, ui, session) {
       paint();
       try {
         const result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.warDecision", id: historyDecisionId,
-          choice: historyDecision, ...(historyPeaceToken ? { token: historyPeaceToken } : {}) }]);
+          choice: historyDecision, ...(historyPeaceToken ? { token: historyPeaceToken } : {}),
+          ...gpmExpectedActor(state.data?.playerKey, state.data?.partyId, state.data) }]);
         const feedback = { offer: "Peace offer sent.", accept: "Peace agreement signed.",
           decline: "Peace terms declined. Your country is still in the war.", stay: "Your country stayed in the war.", endAid: "Voluntary support ended." };
         if (current()) state.status = result?.ok ? feedback[historyDecision] : result?.message || "That decision is no longer available. Review the latest terms.";
@@ -1128,7 +1129,8 @@ function gpmHistoricalConflictsView(host, ui, session) {
       state.status = ["concede-victory", "claim-victory"].includes(term.id) ? "Implementing settlement…" : "Submitting proposal…";
       paint();
       try {
-        const result = await Le(session, "applyPlayerAction", [{ verb: "gpm.historicalConflicts.negotiate", id: conflict.id, term: term.id }]);
+        const result = await Le(session, "applyPlayerAction", [{ verb: "gpm.historicalConflicts.negotiate", id: conflict.id, term: term.id,
+          ...gpmExpectedActor(state.data.playerKey, state.data.partyId, state.data) }]);
         if (result?.ok) state.status = result.message || "Proposal recorded.";
         else state.status = result?.message || `Proposal unavailable${result?.reason ? ` · ${gpmHistoricalLabel(result.reason)}` : ""}.`;
       } catch (error) {

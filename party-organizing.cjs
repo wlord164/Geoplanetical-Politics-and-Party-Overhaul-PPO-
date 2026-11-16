@@ -427,8 +427,9 @@ function bindPartyOrganizing(host, view, ui) {
   if (!panel || !data) return;
   const select = panel.querySelector("[data-gpm-meeting-bloc]");
   const meeting = panel.querySelector("[data-gpm-meeting]");
+  const actor = gpmExpectedActor(view.player?.key, view.party.campaignPlan?.partyId, ui._mpSession?.playerControl);
   const submit = async (button, verb, targetId) => {
-    await ui._mpSubmit(button, "applyPlayerAction", [{ verb, targetId }]);
+    await ui._mpSubmit(button, "applyPlayerAction", [{ ...actor, verb, targetId }]);
   };
   if (select && meeting) {
     select.onchange = () => {

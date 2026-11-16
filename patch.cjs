@@ -51,6 +51,25 @@ const axes = [
 ];
 const presets = require("./party-ideology-presets.cjs");
 
+function gpmExpectedActor(countryKey, partyId, control = null) {
+  const expected = {};
+  if (countryKey !== undefined) expected.expectedCountryKey = countryKey;
+  if (partyId !== undefined) expected.expectedPartyId = partyId;
+  if (control?.campaignId !== undefined) expected.expectedCampaignId = control.campaignId;
+  if (control?.controlRevision !== undefined) expected.expectedControlRevision = control.controlRevision;
+  return expected;
+}
+
+function gpmActionMatchesActor(action, control) {
+  const verb = action.verb;
+  if (typeof verb !== "string" || !verb.startsWith("gpm.")) return true;
+  if (verb.startsWith("gpm.party.") && action.partyId != null && action.partyId !== control.partyId) return false;
+  return (action.expectedCountryKey === undefined || action.expectedCountryKey === control.countryKey) &&
+    (action.expectedPartyId === undefined || action.expectedPartyId === control.partyId) &&
+    (action.expectedCampaignId === undefined || action.expectedCampaignId === control.campaignId) &&
+    (action.expectedControlRevision === undefined || action.expectedControlRevision === control.controlRevision);
+}
+
 function replaceOnce(source, before, after) {
   const offset = source.indexOf(before);
   if (offset < 0 || source.indexOf(before, offset + before.length) >= 0) {
@@ -602,7 +621,7 @@ function patchRenderer(bytes) {
   js = patchHistoricalOpeningTopology(js, replaceOnce, "renderer");
   // Patch display lookups, leaving country IDs, native search aliases, and save data intact.
   js = replaceOnce(js, 'const __geoWorker = typeof document ===',
-    `const gpmOfficialCountryNames = ${JSON.stringify(officialCountryNames)};\nconst __geoWorker = typeof document ===`);
+    `${gpmExpectedActor}\nconst gpmOfficialCountryNames = ${JSON.stringify(officialCountryNames)};\nconst __geoWorker = typeof document ===`);
   const countryName = 'function Ohe(e){let t=Uu[J6];';
   js = replaceOnce(js, countryName, `function gpmOfficialCountryName(key) {
     return J6 === "en" && Object.hasOwn(gpmOfficialCountryNames, key) ? gpmOfficialCountryNames[key] : null;
@@ -801,6 +820,14 @@ function patchWorker(bytes) {
   worker = replaceOnce(worker, 'jpe(this,this.player),a.changed&&(eDe(this),mNe(this))',
     'jpe(this,this.player),gpmFactionSeparatePartyLeader(this,this.player,pW(this.player,cn(this.player))),a.changed&&(eDe(this),mNe(this))');
   worker = require("./party-radicalization.cjs").patchPoliticalCrisisWorker(worker, replaceOnce);
+  worker = replaceOnce(worker, 'const __geoWorker = typeof document ===',
+    `${gpmActionMatchesActor}\nconst __geoWorker = typeof document ===`);
+  const playerActionActor = 'let c=un(e);return Ne(e,e.player,{...s,speakerId:c.representativeId,partyId:c.partyId,roleId:c.parliamentaryRole})';
+  // The host stamps the currently controlled actor, so validate the captured actor first.
+  worker = replaceOnce(worker, playerActionActor,
+    `let c=un(e);
+    if(!gpmActionMatchesActor(s,c))return{ok:false,reason:"stale_actor",message:"Player control changed. Refresh this view and try again."};
+    return Ne(e,e.player,{...s,speakerId:c.representativeId,partyId:c.partyId,roleId:c.parliamentaryRole})`);
   return Buffer.from(worker);
 }
 

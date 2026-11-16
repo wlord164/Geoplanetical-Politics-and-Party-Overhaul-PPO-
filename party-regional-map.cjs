@@ -331,6 +331,7 @@ function gpmBindRegionalOverview(profile, view, ui) {
   if (!state.data || state.view.day <= view.day) {
     state.view = view;
     state.data = data;
+    state.actor = gpmExpectedActor(data.countryKey, data.partyId, session?.playerControl);
     gpmRegionalClearPending(state);
   }
   const active = panel.contains(document.activeElement) ? document.activeElement : null;
@@ -538,6 +539,7 @@ function gpmRefreshRegionalMap(ui, snapshot = null) {
   if (data !== state.data) {
     state.view = view;
     state.data = data;
+    state.actor = gpmExpectedActor(data.countryKey, data.partyId, state.session.playerControl);
     gpmRegionalClearPending(state);
     gpmRenderRegionalMap(ui, state);
   }
@@ -585,7 +587,7 @@ async function gpmSubmitRegionalAction(ui, kind, state = ui.gpmRegionalActive) {
   let snapshot = null;
   try {
     const result = await Le(state.session, "applyPlayerAction", [{
-      verb: "gpm.party.regional." + kind, partyId: state.data.partyId, provinceId: region.id,
+      ...state.actor, verb: "gpm.party.regional." + kind, partyId: state.data.partyId, provinceId: region.id,
       provinceKey: region.key, quoteToken: quote.token,
     }]);
     state.status = result?.ok ? "Project scheduled for " + ui.gameDate(result.endDay) + "."
@@ -610,6 +612,7 @@ async function gpmSubmitRegionalAction(ui, kind, state = ui.gpmRegionalActive) {
       if (view?.day >= state.view.day && data?.partyId === state.data.partyId && data.countryKey === state.data.countryKey) {
         state.view = view;
         state.data = data;
+        state.actor = gpmExpectedActor(data.countryKey, data.partyId, state.session.playerControl);
         gpmRegionalClearPending(state);
       }
       state.paint();
@@ -641,7 +644,8 @@ async function gpmOpenRegionalMap(ui, button, provinceKey) {
       '<div class="gpm-region-detail" data-gpm-region-content></div><small role="status" data-gpm-region-status></small>';
     const globe = ui.globe;
     const selected = data.regions.find(region => region.key === provinceKey)?.id ?? null;
-    const state = { session, view, data, globe, panel, selected, busy: false, status: "", pending: new Map(),
+    const actor = gpmExpectedActor(data.countryKey, data.partyId, session.playerControl);
+    const state = { session, view, data, actor, globe, panel, selected, busy: false, status: "", pending: new Map(),
       previousStrategic: globe._forceStrategic, previousMap: globe._choroNextKey };
     state.paint = () => gpmRenderRegionalMap(ui, state);
     ui.gpmRegionalActive = state;

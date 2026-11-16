@@ -29,9 +29,19 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
+// Verified private 1.1.4 compatibility build. The archive's header and
+// unchanged payload are verified independently.
+const previousPatchedRuntime = {
+  archive: "91a7f00efa90df2b0e093751eff5275308f95bfc46bf934344e9e2a172061b2e",
+  renderer: "76c3ae3345a4887eebc2c22069cad73e448a18a72f1a15432072e55ada7774c7",
+  worker: "514978645ca604523eeb384026909303a26e95dacd50a9a74da1d4777c16eb21",
+  executable: "ca268a6d0476a75cd720dfc048990a4eb63fc3148e6241dd0d14fbfe2fd843a7",
+};
+
 // Steam can leave a verified PPO renderer on disk after replacing the three
 // stock files. The stock ASAR uses its own packed renderer.
 const previousRenderers = new Set([
+  previousPatchedRuntime.renderer,
   "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
   "e7730587c368f404b33ae83ea748103226b34c9283c520b6345b7816887f8f63", // Private Congress spacing candidate
   "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6", // Verified Far-Right Currents release
@@ -274,10 +284,13 @@ function verifyPatchedRuntime(files, state) {
     throw new Error(`The active files are not verified Geoplanetical ${version}, Steam build 26709373. Run Steam Verify Integrity before retrying.`);
   }
   const patch = buildPatch(files.backupArchive, files.backupWorker, files.backupExecutable);
-  if (!Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes))) {
+  const current = Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes));
+  const previous = Object.entries(previousPatchedRuntime).every(([key, hash]) => state.hashes[key] === hash);
+  if (!current && !previous) {
     throw new Error("The active game files are mixed or differ from this PPO build. Run Steam Verify Integrity before retrying.");
   }
   verifyArchivePayload(files.archive, state.headers.archive);
+  return { patch, current };
 }
 
 function preserveStockLeftovers(files, staged, backupState, detachedRenderer) {
@@ -310,9 +323,31 @@ function install(files, checkRunning) {
   return runTransaction(files, installPatch, checkRunning);
 }
 
+function stagePatch(files, originalArchive, staged, patch) {
+  const replacements = {
+    renderer: path.join(staged, "app.bundle.js"),
+    worker: path.join(staged, "simulation-worker.bundle.js"),
+    archive: path.join(staged, "app.asar"),
+    executable: path.join(staged, "Geoplanetical.exe"),
+  };
+  writePatchedArchive(originalArchive, replacements.archive, patch.archive);
+  const header = openArchive(replacements.archive);
+  if (header.hash !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
+  verifyArchivePayload(replacements.archive, header);
+  for (const key of ["renderer", "worker", "executable"]) {
+    fs.writeFileSync(replacements[key], patch[key], { flag: "wx", flush: true });
+  }
+  return Object.entries(replacements).map(([key, stagedFile]) => [stagedFile, files[key]]);
+}
+
 function installPatch(files, state, staged, commit) {
   if (!stockRuntime(state.hashes)) {
-    verifyPatchedRuntime(files, state);
+    const { patch, current } = verifyPatchedRuntime(files, state);
+    if (current) return;
+    fs.mkdirSync(staged);
+    const replacements = stagePatch(files, files.backupArchive, staged, patch);
+    const previous = replacements.map(([, file]) => [file, path.join(staged, "previous-" + path.basename(file))]);
+    commit([...previous, ...replacements]);
     return;
   }
 
@@ -322,22 +357,8 @@ function installPatch(files, state, staged, commit) {
 
   fs.mkdirSync(staged);
   const { moves, legacy } = preserveStockLeftovers(files, staged, prior, state.hashes.renderer !== null);
-  const replacements = {
-    renderer: path.join(staged, "app.bundle.js"),
-    worker: path.join(staged, "simulation-worker.bundle.js"),
-    archive: path.join(staged, "app.asar"),
-    executable: path.join(staged, "Geoplanetical.exe"),
-  };
-  writePatchedArchive(files.archive, replacements.archive, patch.archive);
-  const header = openArchive(replacements.archive);
-  if (header.hash !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
-  verifyArchivePayload(replacements.archive, header);
-  for (const key of ["renderer", "worker", "executable"]) {
-    fs.writeFileSync(replacements[key], patch[key], { flag: "wx", flush: true });
-  }
   for (const [key, backupKey] of Object.entries(backups)) moves.push([files[key], files[backupKey]]);
-  for (const [key, stagedFile] of Object.entries(replacements)) moves.push([stagedFile, files[key]]);
-  commit(moves, legacy);
+  commit([...moves, ...stagePatch(files, files.archive, staged, patch)], legacy);
 }
 
 function restore(files, checkRunning) {

@@ -736,6 +736,7 @@ function gpmUprisingProposal(sim, parent, founder) {
 }
 
 function gpmUprisingView(sim) {
+  const control = un(sim);
   const { parent, state } = gpmUprisingCase(sim);
   const child = state && sim.countries.get(state.childKey);
   const founder = ES(child || parent, state?.founderId || cn(parent));
@@ -752,7 +753,8 @@ function gpmUprisingView(sim) {
     integratedDivisions: state?.integratedDivisions || 0,
     defectingRegions: state?.defectingRegions || [],
     vacatedSeats: state?.vacatedSeats ?? proposal.vacatedSeats ?? 0,
-    countryKey: sim.playerKey, partyId: cn(sim.player), founderId: founder?.id,
+    countryKey: sim.playerKey, partyId: control.partyId, campaignId: control.campaignId,
+    controlRevision: control.controlRevision, founderId: founder?.id,
     partyName: founder?.nameDesc?.gpmName || null, parentKey: parent?.key,
     parentName: state?.parentName || proposal.parentName || gpmUprisingOfficialNames[parent?.key] || parent?.name,
     breakawayName: state?.breakawayName || child?.name || proposal.names?.[0] ||

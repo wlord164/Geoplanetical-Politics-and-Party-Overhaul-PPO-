@@ -929,7 +929,9 @@ function gpmHistoricalFlags(sim) {
 
 function gpmHistoricalView(sim, { id } = {}) {
   const state = sim.gpmHistoricalState || {};
-  const header = { asOf: gpmHistoricalCatalog.asOf, day: sim.day, playerKey: sim.playerKey };
+  const control = un(sim);
+  const header = { asOf: gpmHistoricalCatalog.asOf, day: sim.day, playerKey: sim.playerKey,
+    partyId: control.partyId, campaignId: control.campaignId, controlRevision: control.controlRevision };
   const conflicts = [];
   let selected;
   const entries = gpmHistoricalConflictEntries(sim);

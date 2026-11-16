@@ -389,6 +389,7 @@ function bindPartyAgreement(host, view, party, ui) {
   const data = view.party?.agreement;
   const session = ui._mpSession;
   if (!panel || !data || !party || !session) return;
+  const actor = gpmExpectedActor(view.player?.key, party.id, session.playerControl);
   let state = ui._gpmPartyAgreement;
   if (!state || state.session !== session || state.countryKey !== view.player?.key || state.partyId !== party.id) {
     state = ui._gpmPartyAgreement = { session, countryKey: view.player?.key, partyId: party.id, busy: false };
@@ -421,7 +422,7 @@ function bindPartyAgreement(host, view, party, ui) {
     try {
       if (action !== "refresh") {
         const fields = action === "offer" ? { supportId: term?.supportId, token: term?.token } : { id: record?.id };
-        const response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...fields, verb: "gpm.party.agreement." + action }]);
+        const response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...actor, ...fields, verb: "gpm.party.agreement." + action }]);
         if (!isCurrent()) return;
         if (!response?.ok) state.message = partyAgreementReason(response?.reason);
         else state.message = ({

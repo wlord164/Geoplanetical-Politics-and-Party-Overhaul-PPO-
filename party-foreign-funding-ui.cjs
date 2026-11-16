@@ -239,7 +239,7 @@ async function gpmSubmitForeignFunding(panel, state, ui, action) {
   state.status = "";
   gpmPaintForeignFunding(panel, state, ui);
   try {
-    const result = await Le(state.session, "applyPlayerAction", [{ ...input, verb: "gpm.party.funding." + action }]);
+    const result = await Le(state.session, "applyPlayerAction", [{ ...state.actor, ...input, verb: "gpm.party.funding." + action }]);
     state.status = result?.ok ? "" : gpmForeignFundingReason(result?.reason);
     const snapshot = await Je(state.session, G.POLITICS);
     if (state.session !== ui._mpSession) return;
@@ -272,6 +272,7 @@ function gpmBindForeignFunding(profile, view, ui) {
     state.data = data;
     if (!amounts.includes(state.amountM)) state.amountM = amounts[Math.floor(amounts.length / 2)];
   }
+  state.actor = gpmExpectedActor(country, data.partyId, session?.playerControl);
   panel.onclick = event => {
     const action = event.target.closest("[data-gpm-funding-action]")?.dataset.gpmFundingAction;
     if (action) void gpmSubmitForeignFunding(panel, state, ui, action);

@@ -457,7 +457,7 @@ async function gpmSaveCampaignPlan(state, ui) {
   gpmPaintDomesticForm(state);
   try {
     const plan = state.draft;
-    const result = await Le(state.session, "applyPlayerAction", [{ verb: "gpm.party.domestic.plan", partyId: state.partyId, plan }]);
+    const result = await Le(state.session, "applyPlayerAction", [{ ...state.actor, verb: "gpm.party.domestic.plan", partyId: state.partyId, plan }]);
     if (ui._gpmCampaignPlanUi !== state || ui._mpSession !== state.session) return;
     if (!result?.ok) {
       state.status = ({ contest: "The target contest has changed. Choose another contest.",
@@ -503,6 +503,7 @@ function gpmBindCampaignPlan(profile, view, ui, refreshForecast = true) {
       contestId: null, dirty: false, saving: false, status: "", forecastRequest: null, forecastAttemptDay: -Infinity };
   }
   state.view = view;
+  state.actor = gpmExpectedActor(countryKey, data.partyId, session?.playerControl);
   if (state.appliedPlan && view.day > state.planSavedAt) state.appliedPlan = null;
   const planStale = state.appliedPlan && Object.keys(state.appliedPlan).some(key => data.plan?.[key] !== state.appliedPlan[key]);
   state.data = planStale ? { ...data, plan: state.appliedPlan,

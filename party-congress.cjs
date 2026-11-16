@@ -411,6 +411,7 @@ function bindPartyCongressBargaining(panel, congress, ui, view) {
   const contents = host.querySelector("[data-gpm-bargain-contents]");
   const status = host.querySelector("[data-gpm-bargain-status]");
   const { session, partyId, country } = congress;
+  const actor = gpmExpectedActor(country, partyId, session?.playerControl);
   let state = ui._gpmFactionBargaining;
   if (!state || state.session !== session || state.partyId !== partyId || state.country !== country) {
     state = ui._gpmFactionBargaining = { session, partyId, country, subject: "programme", cashUsd: "0" };
@@ -472,7 +473,7 @@ function bindPartyCongressBargaining(panel, congress, ui, view) {
     try {
       const response = action === "quote"
         ? await Je(session, "gpm.partyFactionQuote", input)
-        : await ui._mpSubmit(button, "applyPlayerAction", [{ verb: "gpm.party.factionBargain", partyId: congress.partyId, action, ...input }]);
+        : await ui._mpSubmit(button, "applyPlayerAction", [{ ...actor, verb: "gpm.party.factionBargain", partyId: congress.partyId, action, ...input }]);
       if (!sameSession()) return;
       if (action === "quote") {
         state.quote = response;
@@ -856,6 +857,7 @@ function bindPartyCongress(panel, view, party, ui) {
   }
   const session = ui._mpSession;
   const country = view.player?.key;
+  const actor = gpmExpectedActor(country, party.id, session?.playerControl);
   let state = panel._gpmCongressUi;
   let input = panel.querySelector("[data-gpm-congress-size]");
   if (!state || state.session !== session || state.partyId !== party.id || state.country !== country ||
@@ -1069,7 +1071,7 @@ function bindPartyCongress(panel, view, party, ui) {
     state[feedback] = "";
     let response;
     try {
-      response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...fields, expected: partyCongressForecastKey(vote) }]);
+      response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...actor, ...fields, expected: partyCongressForecastKey(vote) }]);
     } catch (error) {
       console.warn("[PPO] Could not submit Congress vote", error);
     } finally {
@@ -1108,7 +1110,7 @@ function bindPartyCongress(panel, view, party, ui) {
     paintControls();
     let response;
     try {
-      response = await ui._mpSubmit(button, "applyPlayerAction", [{ partyId: state.partyId, ...fields }]);
+      response = await ui._mpSubmit(button, "applyPlayerAction", [{ ...actor, partyId: state.partyId, ...fields }]);
     } catch (error) {
       console.warn("[PPO] Could not submit a Party Congress action", error);
     } finally {

@@ -61,6 +61,7 @@ function gpmUprisingReason(reason) {
     flag: "Choose a supported flag image.",
     case_exists: "An uprising has already taken place in this campaign.",
     founder_control: "Switch to the legal founding party to review an uprising.",
+    stale_actor: "Player control changed. Refresh the uprising details and try again.",
     incumbent_required: "An incumbent party must be in government before an uprising can begin.",
     unsupported_party_roles: "Your party must be outside the government and its formal support agreements.",
     war_authority: "The government that won the uprising makes this decision.",
@@ -601,7 +602,8 @@ function gpmBindUprising(profile, view, ui) {
     state.paint();
     let result;
     try {
-      result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag }]);
+      result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag,
+        ...gpmExpectedActor(state.data.countryKey, state.data.partyId, state.data) }]);
       if (result?.ok) {
         if (Ge === session) {
           await gpmSyncUprisingControl(session);
@@ -632,7 +634,8 @@ function gpmBindUprising(profile, view, ui) {
   const prepare = async action => {
     const prep = state.data?.preparations;
     if (!prep || state.confirm || state.loading || state.busy || !isCurrent()) return;
-    const payload = { verb: "gpm.party.uprising." + action, partyId: state.data.partyId };
+    const payload = { verb: "gpm.party.uprising." + action, partyId: state.data.partyId,
+      ...gpmExpectedActor(state.data.countryKey, state.data.partyId, state.data) };
     if (action === "invest" || action === "headquarters") {
       const region = gpmUprisingSelectedRegion(prep, state.selectedRegion);
       const quote = action === "invest" ? region?.invest : region?.hq;
