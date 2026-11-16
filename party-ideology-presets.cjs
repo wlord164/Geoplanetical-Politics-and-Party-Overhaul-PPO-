@@ -1,7 +1,7 @@
 "use strict";
 
-const centreWings = ["centrist", "mixedEconomyCentrist", "marketCentrist", "liberalCentrist"];
-const conservativeWings = ["conservative", "liberalConservative", "paternalistConservative", "nationalConservative", "christianDemocrat"];
+const centreWings = ["centrist", "mixedEconomyCentrist", "marketCentrist", "liberalCentrist", "federalRepublican", "secularRepublican"];
+const conservativeWings = ["conservative", "liberalConservative", "paternalistConservative", "nationalConservative", "christianDemocrat", "constitutionalMonarchist"];
 
 const presets = {
   center: {
@@ -55,13 +55,13 @@ const presets = {
     label: "Democratic Socialist", values: [-75, -45, -55, -30],
     ideologyLabel: "Democratic Socialism",
     congressDoctrine: { family: "democraticSocialism", platform: "democraticSocialist",
-      wings: ["democraticSocialist", "socialDemocrat", "ecosocialist"] },
+      wings: ["democraticSocialist", "socialDemocrat", "ecosocialist", "trotskyist"] },
   },
   councilCommunist: {
     label: "Council Communist", values: [-100, -65, -75, -55],
     ideologyLabel: "Council Communism",
     congressDoctrine: { family: "councilCommunism", platform: "councilCommunist",
-      wings: ["councilCommunist", "anarchoSyndicalist", "democraticConfederalist"] },
+      wings: ["councilCommunist", "anarchoSyndicalist", "democraticConfederalist", "trotskyist"] },
     program: "Worker councils hold political authority, with civil protections for independent organization and public debate.",
   },
   anarchoCommunist: {
@@ -74,7 +74,7 @@ const presets = {
     label: "Marxist–Leninist", values: [-95, -25, 80, -45],
     ideologyLabel: "Marxism–Leninism",
     congressDoctrine: { family: "marxistLeninist", platform: "orthodoxMarxistLeninist",
-      wings: ["orthodoxMarxistLeninist", "reformistMarxistLeninist", "maoist"] },
+      wings: ["orthodoxMarxistLeninist", "reformistMarxistLeninist", "maoist", "trotskyist"] },
     program: "Party leadership with public ownership. Orthodox and reformist wings disagree over branch elections, central appointments, and enterprise autonomy.",
     positions: {
       economicControl: { label: "Economic organization", value: "State production planning", priority: "central" },
@@ -91,7 +91,7 @@ const presets = {
     label: "Left Nationalist", values: [-65, 0, 40, 75],
     ideologyLabel: "Left Nationalism",
     congressDoctrine: { family: "leftNationalism", platform: "leftNationalist",
-      wings: ["leftNationalist", "socialDemocrat", "democraticSocialist"] },
+      wings: ["leftNationalist", "socialDemocrat", "democraticSocialist", "nasserist", "baathist", "agrarianPopulist"] },
   },
   green: {
     label: "Green", values: [-35, -80, -55, -60],
@@ -142,7 +142,7 @@ const presets = {
     label: "Corporatist Nationalist", values: [-35, 85, 85, 90],
     ideologyLabel: "Corporatist Nationalism",
     congressDoctrine: { family: "conservativeCorporatism", platform: "conservativeCorporatist",
-      wings: ["conservativeCorporatist", "authoritarianUltranationalist"] },
+      wings: ["conservativeCorporatist", "authoritarianUltranationalist", "socialCorporatist"] },
     program: "State supervision of licensed employer and worker organizations, with bargaining organized by industry.",
     positions: {
       laborRepresentation: { label: "Labor representation", value: "Licensed sector bargaining", priority: "central" },
@@ -195,7 +195,8 @@ const presets = {
     label: "Fascism", values: [-30, 85, 100, 100],
     ideologyLabel: "Fascism",
     congressDoctrine: { family: "fascist", platform: "centralistFascist",
-      wings: ["centralistFascist", "corporatistFascist", "conservativeCorporatist", "authoritarianUltranationalist", "nationalSocialist", "clericalFascist"] },
+      wings: ["centralistFascist", "corporatistFascist", "conservativeCorporatist", "authoritarianUltranationalist",
+        "nationalSocialist", "clericalFascist", "socialCorporatist"] },
     program: "A leader-centered one-party state with official unions and restrictions on strikes and the press.",
     laws: { union_freedom: "official", strike_right: "restricted", media_freedom: { press: "muzzled", internet: "censored" } },
   },
@@ -253,6 +254,96 @@ const presets = {
       wings: ["ecosocialist", "green", "democraticSocialist"] },
     program: "Pluralist government, public or cooperative ownership and an accelerated coal phase-out.",
     laws: { electricity_market: "state_monopoly", coal_phaseout_deadline: 2040 },
+  },
+  trotskyist: {
+    label: "Trotskyism", ideologyLabel: "Trotskyism", values: [-95, -55, -20, -90],
+    congressDoctrine: { family: "trotskyism", platform: "trotskyist",
+      wings: ["trotskyist", "councilCommunist", "reformistMarxistLeninist", "democraticSocialist"] },
+    program: "International socialist revolution and elected workers’ councils with room for political opposition within the council system.",
+    positions: {
+      competition: { label: "Political authority", value: "Elected workers’ councils with competing currents", priority: "central" },
+      independentLabor: { label: "Organization", value: "Protect unions and the right to strike", priority: "central" },
+    },
+    laws: { union_freedom: "free", strike_right: "protected" },
+  },
+  federalRepublican: {
+    label: "Federal Republicanism", ideologyLabel: "Federal Republicanism", values: [15, -30, -65, 5],
+    congressDoctrine: { family: "federalRepublicanism", platform: "federalRepublican",
+      wings: ["federalRepublican", "secularRepublican", "liberalCentrist", "agrarianPopulist"] },
+    program: "An elected republic with constitutional protections for regional authority and common citizenship.",
+    positions: {
+      regionalAutonomy: { label: "Distribution of authority", value: "Protected national and regional powers", priority: "central" },
+      competition: { label: "Political authority", value: "Elected national and regional institutions", priority: "central" },
+    },
+    laws: { nationality_law: { birthright: "conditional", residenceYears: 5, dualCitizenship: true } },
+  },
+  nasserist: {
+    label: "Nasserism", ideologyLabel: "Nasserism", values: [-65, 5, 70, 75],
+    congressDoctrine: { family: "nasserism", platform: "nasserist",
+      wings: ["nasserist", "leftNationalist", "agrarianPopulist"] },
+    program: "Arab unity, state-led development, and worker and farmer participation in a political front under a strong executive.",
+    positions: {
+      laborRepresentation: { label: "Political organization", value: "Worker and farmer representation in a broad front", priority: "central" },
+      economicControl: { label: "Development", value: "State-led industry and land reform", priority: "central" },
+    },
+    laws: { electricity_market: "state_monopoly", land_tenure: "redistribution", union_freedom: "licensed", strike_right: "regulated" },
+  },
+  baathist: {
+    label: "Ba'athism", ideologyLabel: "Ba'athism", values: [-55, -5, 90, 85],
+    congressDoctrine: { family: "baathism", platform: "baathist", wings: ["baathist", "leftNationalist"] },
+    program: "Arab unity and socialism under a leading party that directs the state, its political front and official organizations.",
+    positions: {
+      competition: { label: "Political authority", value: "Leading-party control over the state and its political front", priority: "central" },
+      laborRepresentation: { label: "Labor representation", value: "Official organizations under party supervision", priority: "central" },
+    },
+    laws: { union_freedom: "official", strike_right: "restricted", media_freedom: { press: "muzzled", internet: "censored" } },
+  },
+  secularRepublican: {
+    label: "Secular Republicanism", ideologyLabel: "Secular Republicanism", values: [-5, -65, -65, 5],
+    congressDoctrine: { family: "secularRepublicanism", platform: "secularRepublican",
+      wings: ["secularRepublican", "federalRepublican", "liberalCentrist", "mixedEconomyCentrist"] },
+    program: "Elected civil institutions, freedom of worship, and separation of religion and state.",
+    positions: {
+      competition: { label: "Political authority", value: "Elected republican institutions", priority: "central" },
+      religiousAuthority: { label: "Religion and state", value: "Civil law and protected freedom of worship", priority: "central" },
+    },
+    laws: { religion_state: 0, freedom_of_worship: 4 },
+  },
+  constitutionalMonarchist: {
+    label: "Constitutional Monarchism", ideologyLabel: "Constitutional Monarchism", values: [15, 40, -45, 35],
+    congressDoctrine: { family: "constitutionalMonarchism", platform: "constitutionalMonarchist",
+      wings: ["constitutionalMonarchist", "conservative", "liberalConservative", "paternalistConservative"] },
+    program: "A hereditary head of state with limited powers and a government accountable to an elected parliament.",
+    positions: {
+      hereditaryHeadOfState: { label: "Head of state", value: "Hereditary crown with constitutionally limited powers", priority: "central" },
+      competition: { label: "Governing authority", value: "Elected parliament and accountable ministers", priority: "central" },
+    },
+    laws: { media_freedom: { press: "free", internet: "open" } },
+  },
+  agrarianPopulist: {
+    label: "Agrarian Populism", ideologyLabel: "Agrarian Populism", values: [-45, 15, -35, 40],
+    congressDoctrine: { family: "agrarianPopulism", platform: "agrarianPopulist",
+      wings: ["agrarianPopulist", "federalRepublican", "leftNationalist"] },
+    program: "Rural political organization, elected representatives independent of the cabinet, and wider access to farmland.",
+    positions: {
+      representativeIndependence: { label: "Representation", value: "Independent representation for organized rural communities", priority: "central" },
+      agrarianRedistribution: { label: "Land tenure", value: "Broaden access to farmland", priority: "central" },
+    },
+    laws: { land_tenure: "redistribution" },
+  },
+  socialCorporatist: {
+    label: "Social Corporatism", ideologyLabel: "Social Corporatism", values: [-65, 40, 90, 95],
+    congressDoctrine: { family: "socialCorporatism", platform: "socialCorporatist",
+      wings: ["socialCorporatist", "centralistFascist", "corporatistFascist", "conservativeCorporatist"] },
+    program: "An ultranationalist one-party state with equal civic membership, broad social insurance and licensed worker and employer representation.",
+    positions: {
+      nationalMembership: { label: "Political citizenship", value: "Equal civic membership without racial exclusion", priority: "central" },
+      competition: { label: "Political authority", value: "One-party rule", priority: "central" },
+      laborRepresentation: { label: "Labor representation", value: "Licensed worker and employer organizations", priority: "central" },
+      socialInsurance: { label: "Social insurance", value: "Broad public coverage", priority: "secondary" },
+    },
+    laws: { nationality_law: { birthright: "conditional", residenceYears: 5, dualCitizenship: true },
+      union_freedom: "licensed", strike_right: "regulated" },
   },
 };
 

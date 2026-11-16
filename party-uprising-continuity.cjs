@@ -1,19 +1,20 @@
 "use strict";
 
-function gpmUprisingSystemFromBlueprint(blueprint) {
+function gpmUprisingSystemFromBlueprint(blueprint, stateStructure) {
   const systems = {
     "parliamentary-republic": "democracy",
     "presidential-republic": "democracy",
     "semi-presidential": "democracy",
     "one-party-state": "one-party",
     theocracy: "clerical",
-    "constitutional-monarchy": "democracy",
+    "constitutional-monarchy": "constitutional-monarchy",
     "executive-monarchy": "executive-monarchy",
     "absolute-monarchy": "absolute-monarchy",
     "military-junta": "military",
     "dominant-party": "dominant-party",
   };
-  return Object.hasOwn(systems, blueprint) ? systems[blueprint] : null;
+  const system = Object.hasOwn(systems, blueprint) ? systems[blueprint] : null;
+  return system === "democracy" && stateStructure === "federal" ? "federal-republic" : system;
 }
 
 function gpmUprisingSystemFromProfile(profile) {
@@ -29,10 +30,20 @@ function gpmUprisingSystemFromProfile(profile) {
     islamic_republic: "islamic-republic",
     islamic_emirate: "islamic-emirate",
     fascist_party_state: "fascist-party-state",
+    national_socialist_party_state: "fascist-party-state",
+    clerical_fascist_party_state: "fascist-party-state",
     maoist_party_state: "maoist-party-state",
     democratic_confederation: "democratic-confederation",
     syndicalist_federation: "syndicalist-federation",
     ecosocialist_republic: "democracy",
+    trotskyist_workers_republic: "democracy",
+    federal_republic: "federal-republic",
+    nasserist_presidential_republic: "dominant-party",
+    baathist_party_republic: "one-party",
+    secular_republic: "democracy",
+    constitutional_monarchy: "constitutional-monarchy",
+    agrarian_republic: "democracy",
+    social_corporatist_party_state: "fascist-party-state",
   };
   return Object.hasOwn(systems, profile?.regime) ? systems[profile.regime] : null;
 }
