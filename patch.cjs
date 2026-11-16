@@ -37,6 +37,7 @@ const { workerFunctions: domesticForecast } = require("./party-domestic-forecast
 const { patchDomesticWorker } = require("./party-domestic-worker.cjs");
 const { patchAgreementWorker } = require("./party-agreements.cjs");
 const { patchPartyDomesticRenderer } = require("./party-domestic-ui.cjs");
+const { patchSimulationViewTimeout } = require("./simulation-view-timeout.cjs");
 
 const version = "1.1.3";
 const rendererHash = "2679c9f8f13e9628b5908f0e11ea4d5627d0612f261f2312690eae21006095ee";
@@ -596,7 +597,7 @@ function bindPartyProfile(host, view, party, ui) {
 
 function patchRenderer(bytes) {
   if (sha256(bytes) !== rendererHash) throw new Error(`Unsupported Geoplanetical renderer. This mod targets ${version}.`);
-  let js = bytes.toString("utf8");
+  let js = patchSimulationViewTimeout(bytes.toString("utf8"), replaceOnce);
   js = patchHistoricalOpeningTopology(js, replaceOnce, "renderer");
   // Patch display lookups, leaving country IDs, native search aliases, and save data intact.
   js = replaceOnce(js, 'const __geoWorker = typeof document ===',
@@ -758,7 +759,9 @@ function patchWorker(bytes) {
   historical = replaceOnce(historical, '(a==="gpm.historicalMap"?',
     '(a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:a==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(r,r.player,Uo(r.player),t.params?.contestId):a==="gpm.historicalMap"?');
   const { patchWorkingCapital } = require("./working-capital.cjs");
+  const { patchTerritorialPayroll } = require("./territorial-payroll.cjs");
   historical = patchWorkingCapital(historical, replaceOnce);
+  historical = patchTerritorialPayroll(historical, replaceOnce);
   let worker = patchHistoricalNameWorker(patchSudanReunificationWorker(historical, replaceOnce), replaceOnce);
   worker = patchDomesticWorker(worker, replaceOnce);
   worker = patchAgreementWorker(worker, replaceOnce);

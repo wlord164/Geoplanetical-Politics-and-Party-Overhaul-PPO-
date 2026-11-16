@@ -95,16 +95,17 @@ function gpmForeignFundingQuoteDetail(donor, state, ui, percent) {
       return names[axis] + " " + (score > 0 ? "+" : "") + score;
     }).join(" · "))} relative to your platform</small>
     ${breakdown}</details>
-    ${date ? `<small>Quote as of ${b(date)}.${stale ? " Refresh quotes to update." : ""}</small>` : ""}
+    ${date ? `<small>Quote as of ${b(date)}.${stale ? " Refresh the directory to update." : ""}</small>` : ""}
   </div>`;
 }
 
 function gpmForeignFundingRequestFields(state, ui) {
+  const refresh = `<button class="k" type="button" data-gpm-funding-action="retry"${state.loading || state.busy ? " disabled" : ""}>Refresh directory</button>`;
   if (!state.countries) {
     return state.loading ? "<p>Loading foreign parties…</p>"
       : '<button class="k" type="button" data-gpm-funding-action="retry">Load foreign parties</button>';
   }
-  if (!state.countries.length) return "<p>No foreign parties are available.</p>";
+  if (!state.countries.length) return `<p>No foreign parties are available.</p>${refresh}`;
   const countryOptions = state.countries.map(country =>
     `<option value="${b(country.key)}"${state.countryKey === country.key ? " selected" : ""}>${b(U(country))}</option>`).join("");
   const donorOptions = (state.donors || []).map(donor => `<option value="${b(donor.partyId)}"${state.donorId === donor.partyId ? " selected" : ""}>
@@ -125,7 +126,7 @@ function gpmForeignFundingRequestFields(state, ui) {
     </div>${detail}
     <div class="gpm-funding-actions">
       <button class="k" type="button" data-gpm-funding-action="request"${donor?.chance > 0 && !state.busy && !state.loading ? "" : " disabled"}>Request Funding</button>
-      ${state.countryKey ? `<button class="k" type="button" data-gpm-funding-action="retry"${state.loading || state.busy ? " disabled" : ""}>${state.donors ? "Refresh quotes" : "Reload Parties"}</button>` : ""}
+      ${refresh}
     </div>`;
 }
 
@@ -185,7 +186,7 @@ function gpmPaintForeignFunding(panel, state, ui) {
   panel.querySelector("[data-gpm-funding-status]").textContent = state.status;
 }
 
-async function gpmLoadForeignFunding(panel, state, ui) {
+async function gpmLoadForeignFunding(panel, state, ui, refresh = false) {
   const request = ++state.query;
   const isCurrent = () => request === state.query && state.session === ui._mpSession && panel._gpmForeignFundingUi === state;
   const countryKey = state.countryKey;
@@ -193,10 +194,17 @@ async function gpmLoadForeignFunding(panel, state, ui) {
   state.status = "";
   gpmPaintForeignFunding(panel, state, ui);
   try {
-    if (!state.countries) {
+    if (refresh || !state.countries) {
       const result = await at(state.session, "gpm.foreignFunding");
       if (!isCurrent()) return;
       state.countries = [...(result?.countries || [])].sort((a, b) => U(a).localeCompare(U(b), cs()));
+      if (countryKey && !state.countries.some(country => country.key === countryKey)) {
+        state.countryKey = "";
+        state.donorId = "";
+        state.donors = null;
+        state.quotesDay = null;
+        return;
+      }
     }
     if (countryKey) {
       const result = await at(state.session, "gpm.foreignFunding", { countryKey });
@@ -221,7 +229,7 @@ async function gpmSubmitForeignFunding(panel, state, ui, action) {
   const data = state.data;
   if (state.busy || state.session !== ui._mpSession) return;
   if (action === "retry") {
-    if (!state.loading) return gpmLoadForeignFunding(panel, state, ui);
+    if (!state.loading) return gpmLoadForeignFunding(panel, state, ui, true);
     return;
   }
   const input = action === "request" ? {

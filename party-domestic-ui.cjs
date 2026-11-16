@@ -347,7 +347,7 @@ function gpmPaintDomestic(state, ui) {
   html("log", gpmDomesticActivity(state, ui));
   html("agenda", gpmDomesticAgendaHtml(state, ui));
   html("forecast", state.forecast ? gpmDomesticForecastHtml(state.forecast, ui) +
-    (Number.isFinite(state.forecastDay) ? `<small>Estimate as of ${b(ui.gameDate(state.forecastDay))}.</small>` : "") +
+    (Number.isFinite(state.forecast.day) ? `<small>Estimate as of ${b(ui.gameDate(state.forecast.day))}.</small>` : "") +
     (state.forecastError ? `<small>${b(state.forecastError)}</small>` : "") :
     `<small>${b(state.forecastPending ? "Checking the election outlook…" : state.forecastError || "No scheduled contest available.")}</small>`);
   const latest = state.data.recentResult;
@@ -407,11 +407,12 @@ function gpmRequestDomesticForecast(state, ui, force = false) {
     state.forecastPending = false;
     state.forecastError = "";
     state.forecastRequest = null;
+    state.forecastContestId = null;
     gpmPaintDomestic(state, ui);
     return;
   }
   const day = state.view.day || 0;
-  const recent = state.forecastContestId === id && day - state.forecastDay < 7;
+  const recent = state.forecastContestId === id && day - state.forecastAttemptDay < 7;
   if (state.forecastRequest?.id !== id && (force || !recent)) {
     state.forecastRequest = { id, day };
     state.forecastContestId = id;
@@ -439,7 +440,7 @@ async function gpmRunDomesticForecast(state, ui) {
       if (!isCurrent() || request !== state.forecastRequest) continue;
       state.forecastRequest = null;
       state.forecastPending = false;
-      state.forecastDay = request.day;
+      state.forecastAttemptDay = !error && Number.isFinite(result.day) ? result.day : request.day;
       state.forecastError = error || "";
       if (!error) state.forecast = result;
       gpmPaintDomestic(state, ui);
@@ -499,7 +500,7 @@ function gpmBindCampaignPlan(profile, view, ui, refreshForecast = true) {
   let state = ui._gpmCampaignPlanUi;
   if (!state || state.session !== session || state.partyId !== data.partyId || state.countryKey !== countryKey) {
     state = ui._gpmCampaignPlanUi = { session, partyId: data.partyId, countryKey, draft: data.plan,
-      contestId: null, dirty: false, saving: false, status: "", forecastRequest: null, forecastDay: -Infinity };
+      contestId: null, dirty: false, saving: false, status: "", forecastRequest: null, forecastAttemptDay: -Infinity };
   }
   state.view = view;
   if (state.appliedPlan && view.day > state.planSavedAt) state.appliedPlan = null;
