@@ -55,7 +55,7 @@ function renderPartyCongressChart(factions, total, ui) {
     const id = "gpm-faction-" + index;
     const color = partyCongressIdeologyColor(group);
     const outline = gpmCongressColorOutlines[color];
-    const keyline = outline ? ` stroke="${outline}" stroke-width=".8" vector-effect="non-scaling-stroke"` : "";
+    const keyline = outline ? ` style="stroke:${outline};stroke-width:.8px" vector-effect="non-scaling-stroke"` : "";
     if (segmented) {
       marks.push(`<rect class="seat" data-pty="${id}" data-gpm-congress-segment="${b(group.label)}" data-delegates="${group.seats}"
         x="${pointIndex}" y="0" width="${group.seats}" height="24" fill="${color}"${keyline}><title>${b(label + ", " + count)}</title></rect>`);
