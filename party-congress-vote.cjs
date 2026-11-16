@@ -1,7 +1,27 @@
 "use strict";
 
+const gpmCongressSizeMin = 50;
+const gpmCongressSizeMax = 1000;
+const gpmCongressDefaultSize = 100;
+
 function partyCongressSizeIsValid(size) {
-  return Number.isInteger(size) && size >= 50 && size <= 200;
+  return Number.isInteger(size) && size >= gpmCongressSizeMin && size <= gpmCongressSizeMax;
+}
+
+function partyCongressSizeRecommendation(members = 0, regions = 0, totalRegions = 0) {
+  const nationwide = Math.min(totalRegions, Math.max(3, Math.ceil(totalRegions * .35)));
+  const mass = Math.min(totalRegions, Math.max(4, Math.ceil(totalRegions * .65)));
+  const evidence = { members, regions, totalRegions };
+  if (members >= 35000 && mass > 0 && regions >= mass) {
+    return { ...evidence, label: "Mass party", min: 750, max: gpmCongressSizeMax, size: 850 };
+  }
+  if (members >= 10000 && nationwide > 0 && regions >= nationwide) {
+    return { ...evidence, label: "Nationwide party", min: 400, max: 600, size: 500 };
+  }
+  if (members >= 1000 && regions >= 2) {
+    return { ...evidence, label: "Multi-region party", min: 150, max: 300, size: 250 };
+  }
+  return { ...evidence, label: "New or local party", min: gpmCongressSizeMin, max: gpmCongressDefaultSize, size: gpmCongressDefaultSize };
 }
 
 const gpmCongressRecognitionPercent = 5;
@@ -156,7 +176,8 @@ function partyCongressBallot(kind, current, factions) {
 function partyCongressSizeVote(data, proposed, bargainLabel = "") {
   if (!partyCongressSizeIsValid(proposed)) return { ok: false, reason: "size" };
   if (!data) return { ok: false, reason: "unavailable" };
-  const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
+  if (data.pendingResize) return { ok: false, reason: "pending", pendingResize: data.pendingResize };
+  const current = partyCongressSizeIsValid(data.size) ? data.size : gpmCongressDefaultSize;
   if (proposed === current) return { ok: false, reason: "unchanged" };
   if (data.day < data.nextSizeVoteDay) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextSizeVoteDay };
@@ -169,8 +190,14 @@ function partyCongressSizeVote(data, proposed, bargainLabel = "") {
   const proposedSeatsByFaction = new Map(proposedFactions.filter(group => group.seats > 0).map(group => [group.label, group.seats]));
   const labels = new Set([...currentSeatsByFaction.keys(), ...proposedSeatsByFaction.keys()]);
 
-  const scale = Math.min(1, Math.abs(proposed - current) / current);
-  const baseline = .66 - .42 * scale;
+  const recommendation = data.sizeRecommendation ?? partyCongressSizeRecommendation();
+  const forecastDay = data.day ?? 0;
+  const effectiveDay = Math.max(forecastDay, data.nextReviewDay ?? forecastDay + 1);
+  const supported = (proposed >= recommendation.min && proposed <= recommendation.max) ||
+    (proposed < recommendation.min && proposed > current) ||
+    (proposed > recommendation.max && proposed < current);
+  const scale = Math.abs(proposed - current) / Math.max(current, proposed);
+  const baseline = supported ? .68 - .10 * scale : .62 - .48 * scale;
   const factions = [...labels].map(label => {
     const currentSeats = currentSeatsByFaction.get(label) || 0;
     const proposedSeats = proposedSeatsByFaction.get(label) || 0;
@@ -178,18 +205,19 @@ function partyCongressSizeVote(data, proposed, bargainLabel = "") {
     const proposedShare = proposedSeats / proposed;
     const shift = (proposedShare - currentShare) / Math.max(.03, currentShare);
     let support = baseline;
-    let reason = scale >= .35 ? "Resists the scale of the change." : "Accepts a smaller change to Congress.";
+    let reason = supported ? "Party membership and regional organization support this change."
+      : scale >= .35 ? "Party organization does not support a change this large." : "Open to a smaller change to Congress.";
     if (!currentSeats) {
       reason = "Would gain representation and has no vote in this Congress.";
     } else if (!proposedSeats) {
       support = 0;
       reason = "Would lose all representation.";
     } else if (shift < -1e-8) {
-      support -= .08 + .45 * Math.min(1, -shift);
+      support -= .53 * Math.min(1, -shift);
       reason = "Would lose a share of Congress and resists losing influence.";
     } else if (shift > 1e-8) {
-      support += .08 + .45 * Math.min(1, shift);
-      reason = scale >= .35
+      support += .53 * Math.min(1, shift);
+      reason = !supported && scale >= .35
         ? "Gains a share of Congress, but some delegates resist a large change."
         : "Favors the gain in its share of Congress.";
     }
@@ -203,11 +231,12 @@ function partyCongressSizeVote(data, proposed, bargainLabel = "") {
     for (const group of factions) {
       if (!group.proposedSeats || !group.currentSeats || group.yes > group.currentSeats / 2) continue;
       const extraYes = Math.ceil((group.currentSeats - group.yes) / 2);
-      const cash = (15 + 2 * extraYes) / 1000;
+      const cash = Math.round((15000 + 2000 * extraYes * gpmCongressDefaultSize / current)) / 1e6;
       bargains.push({ label: group.label, cash, extraYes, affordable: data.treasuryM >= cash });
     }
   }
-  if (!bargainLabel) return { ...base, proposed, bargains };
+  const details = { proposed, bargains, recommendation, forecastDay, effectiveDay };
+  if (!bargainLabel) return { ...base, ...details };
   const offer = bargains.find(group => group.label === bargainLabel);
   if (!offer) return { ok: false, reason: "bargain" };
   if (!offer.affordable) return { ok: false, reason: "budget" };
@@ -215,7 +244,7 @@ function partyCongressSizeVote(data, proposed, bargainLabel = "") {
   const negotiated = factions.map(group => group.label === label
     ? { ...group, yes: group.yes + extraYes, reason: group.reason + " An organizing grant brings some delegates over." }
     : group);
-  return { ...partyCongressBallot("size", current, negotiated), proposed, bargains, bargain: { label, cash, extraYes } };
+  return { ...partyCongressBallot("size", current, negotiated), ...details, bargain: { label, cash, extraYes } };
 }
 
 function partyCongressPriorityIsValid(kind) {
@@ -239,7 +268,7 @@ function partyCongressPriorityVote(data, priority) {
   if (data.day < data.nextPriorityVoteDay) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextPriorityVoteDay };
   }
-  const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
+  const current = partyCongressSizeIsValid(data.size) ? data.size : gpmCongressDefaultSize;
   const factions = partyCongressFactions(data, current).filter(group => group.seats > 0)
     .sort((a, b) => a.forecastOrder - b.forecastOrder).map(group => {
     const economicLean = group.economicWeight / group.weight;
@@ -294,7 +323,7 @@ function partyCongressProgrammeVote(data, programme) {
   if (data.day < data.nextProgrammeVoteDay) {
     return { ok: false, reason: "cooldown", nextVoteDay: data.nextProgrammeVoteDay };
   }
-  const current = partyCongressSizeIsValid(data.size) ? data.size : 100;
+  const current = partyCongressSizeIsValid(data.size) ? data.size : gpmCongressDefaultSize;
   const endorsements = new Map((data.factionEndorsements || []).filter(offer => offer.programme === programme)
     .map(offer => [offer.label, offer.extraYes]));
   const factions = partyCongressFactions(data, current).filter(group => group.seats > 0)
@@ -326,6 +355,7 @@ function partyCongressForecastKey(vote) {
     vote.kind, vote.current, vote.proposed, vote.priority, vote.programme, vote.untilDay, vote.bargain ?? null,
     [...vote.factions].sort((a, b) => (a.forecastOrder ?? 0) - (b.forecastOrder ?? 0))
       .map(({ label, currentSeats, proposedSeats, yes }) => [label, currentSeats, proposedSeats, yes]),
+    ...(vote.kind === "size" ? [vote.forecastDay, vote.effectiveDay] : []),
   ]);
 }
 
@@ -353,13 +383,21 @@ function applyPartyCongressVote(sim, country, party, kind, input, data = null) {
   if (kind === "size" && input.bargain != null && typeof input.bargain !== "string") {
     return { ok: false, reason: "bargain" };
   }
+  const saved = party.gpmCongressSizeState;
+  const pending = saved?.pendingResize;
+  const previous = saved?.lastVote;
+  if (kind === "size" && input.expected != null && previous?.forecastKey === input.expected &&
+      previous.proposed === input.size && (previous.bargain?.label || "") === (input.bargain || "")) {
+    const { forecastKey, ...vote } = previous;
+    return { ...vote, changed: false, pendingResize: pending ?? null, size: saved.size };
+  }
   data ??= partyCongressView(sim, country, party.id);
   const forecast = kind === "size" ? partyCongressSizeVote(data, input.size, input.bargain)
     : kind === "priority" ? partyCongressPriorityVote(data, input.priority)
       : kind === "programme" ? partyCongressProgrammeVote(data, input.programme) : { ok: false, reason: "unavailable" };
-  if (input.expected != null && input.expected !== partyCongressForecastKey(forecast)) {
-    return { ok: false, reason: "stale" };
-  }
+  if (!forecast.ok && forecast.reason === "pending") return forecast;
+  const forecastKey = input.expected != null ? partyCongressForecastKey(forecast) : null;
+  if (input.expected != null && input.expected !== forecastKey) return { ok: false, reason: "stale" };
   if (!forecast.ok) return forecast;
   const { bargains, ...ballot } = forecast;
   const vote = { ...ballot, day: data.day, nextVoteDay: data.day + 14, changed: true };
@@ -372,9 +410,12 @@ function applyPartyCongressVote(sim, country, party, kind, input, data = null) {
         gpmDomesticReceipt(sim, country, party, "congress-grant", { cashM: -vote.bargain.cash, details: vote.bargain.label });
       }
     }
-    if (vote.passed) state.size = vote.proposed;
+    if (vote.passed) {
+      state.pendingResize = { size: vote.proposed, approvedDay: data.day, effectiveDay: vote.effectiveDay, deferred: null };
+    }
     state.nextSizeVoteDay = vote.nextVoteDay;
-    state.lastVote = vote;
+    state.lastVote = { ...vote, forecastKey };
+    return { ...vote, pendingResize: state.pendingResize ?? null, size: state.size };
   } else if (kind === "priority") {
     if (vote.passed) state.priority = { kind: vote.priority, untilDay: vote.untilDay };
     state.nextPriorityVoteDay = vote.nextVoteDay;
@@ -422,8 +463,9 @@ module.exports = {
     `const gpmCongressProgrammes = {...${JSON.stringify(congressProgrammes)}, ...gpmCongressDoctrineProposals};`,
     `const gpmCongressFactionTitles = ${JSON.stringify(factionTitles)};`,
     `const gpmCongressRecognitionPercent = ${gpmCongressRecognitionPercent};`,
+    `const gpmCongressSizeMin = ${gpmCongressSizeMin}, gpmCongressSizeMax = ${gpmCongressSizeMax}, gpmCongressDefaultSize = ${gpmCongressDefaultSize};`,
     partyCongressFactionLabel, partyCongressFactionId, partyCongressProfileDoctrine,
-    partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressRecognitionSeats,
+    partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressSizeRecommendation, partyCongressRecognitionSeats,
     partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
     partyCongressPriorityIsValid, partyCongressPriorityCost, partyCongressPriorityVote,
     partyCongressProgrammes, partyCongressAvailableProgrammes, partyCongressIssueAffinity, partyCongressProgrammeVote, partyCongressForecastKey,

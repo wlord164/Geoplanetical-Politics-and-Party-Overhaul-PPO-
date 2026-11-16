@@ -120,7 +120,7 @@ function gpmFactionLeadershipClose(person, country, party, faction, day, year, r
   if (term) Object.assign(term, { untilDay: day, untilYear: year, reason });
 }
 
-function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(), people = sim.people?.values?.() || []) {
+function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(), people = sim.people?.values?.() || [], canAppoint = true) {
   const day = sim.day || 0;
   const year = sim.date?.getUTCFullYear?.() ?? sim._simYear ?? 2026;
   const charter = gpmFactionLeadershipCharter(sim, party);
@@ -128,7 +128,9 @@ function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(
   const incumbent = prior?.personId && sim.people?.get?.(prior.personId);
   const charterChanged = !!prior && prior.charterKey !== charter.key;
   const eligible = person => gpmFactionLeaderEligibility(sim, country, party, charter, person, usedLeaderIds).eligible;
-  if (charter.method !== "none" && !charterChanged && incumbent && day < prior.termEndDay && eligible(incumbent)) return incumbent;
+  if ((canAppoint || faction.seats > 0) && charter.method !== "none" && !charterChanged &&
+      incumbent && day < prior.termEndDay && eligible(incumbent)) return incumbent;
+  if (!canAppoint && !prior?.personId) return null;
   if (charter.method !== "none" && !charterChanged && prior?.status === "vacant" && day < prior.retryDay) return null;
 
   const earlyVacancy = prior?.personId && day < prior.termEndDay && !eligible(incumbent);
@@ -139,7 +141,7 @@ function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(
   }
   const waitingForElection = electionDay != null;
   const acting = waitingForElection && charter.allowActing;
-  const canSelect = charter.method !== "none" && (!waitingForElection || acting);
+  const canSelect = canAppoint && charter.method !== "none" && (!waitingForElection || acting);
   const exclude = !charter.allowReappointment && prior?.status !== "acting" ? prior?.personId : null;
   const ideology = faction.ideology || party.ideology;
   let leader = null;
@@ -154,7 +156,7 @@ function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(
     }
   }
   const status = leader ? (acting ? "acting" : charter.method === "election" ? "elected" : "appointed") : "vacant";
-  const reason = charter.method === "none" ? "charter_prohibits_selection" :
+  const reason = !canAppoint ? "delegate_threshold" : charter.method === "none" ? "charter_prohibits_selection" :
     charterChanged ? "charter_changed" : earlyVacancy ? "leader_ineligible" :
       prior?.personId ? "term_ended" : leader ? "eligible_leader_selected" : "no_eligible_person";
   if (prior?.status === "vacant" && status === "vacant" && !charterChanged) {
@@ -172,8 +174,8 @@ function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(
   faction.leadership = {
     charterKey: charter.key, personId: leader?.id || null, personName: leader?.styledName || leader?.name || null, status,
     sinceDay: day, termEndDay: leader ? (acting ? electionDay : day + charter.termDays) : null,
-    retryDay: leader || charter.method === "none" ? null : electionDay ?? day + 30,
-    electionDay, generation, reason, history,
+    retryDay: leader || !canAppoint || charter.method === "none" ? null : electionDay ?? day + 30,
+    electionDay: canAppoint ? electionDay : null, generation, reason, history,
   };
   return leader;
 }

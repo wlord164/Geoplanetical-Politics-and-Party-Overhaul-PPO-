@@ -5,15 +5,34 @@ function partyCongressIdeology(ideal) {
   return Object.fromEntries(gpmAxes.map(({ id }) => [id, ideal[id]]));
 }
 
+function partyCongressOrganizationSize(sim, country, party) {
+  const members = gpmDomesticMembership(party).members;
+  const record = party.gpmRegional;
+  const rules = gpmCampaignRulesFor(sim);
+  let regions = 0;
+  let totalRegions = 0;
+  for (const province of Q6(sim, country.key)) {
+    const { __provId: id, __provKey: key } = province;
+    if (!partyRegionalProvince(sim, country, id, key)) continue;
+    totalRegions++;
+    if (partyRegionalPresence(record?.regions?.[key], sim.day, rules) >= .10 ||
+        partyRegionalHeadquartersWeight(record, key) > 0) regions++;
+  }
+  return partyCongressSizeRecommendation(members, regions, totalRegions);
+}
+
 function partyCongressView(sim, country, partyId, electorate, people = sim.people?.values?.() || [], factionData = null) {
   const party = YL(country, partyId);
   if (!party) return null;
 
   const saved = party.gpmCongressSizeState;
-  const size = partyCongressSizeIsValid(saved?.size) ? saved.size : 100;
+  const size = partyCongressSizeIsValid(saved?.size) ? saved.size : gpmCongressDefaultSize;
   const day = sim.day || 0;
+  const pendingResize = saved?.pendingResize ?? null;
   const overview = {
     size, day, treasuryM: party.organization?.treasuryM ?? 0,
+    pendingResize, nextReviewDay: pendingResize?.effectiveDay ?? party.gpmFactionPolitics?.nextReviewDay ?? null,
+    sizeRecommendation: partyCongressOrganizationSize(sim, country, party),
     lastVote: saved?.lastVote ?? null, lastPriorityVote: saved?.lastPriorityVote ?? null,
     nextSizeVoteDay: saved?.nextSizeVoteDay ?? 0, nextPriorityVoteDay: saved?.nextPriorityVoteDay ?? 0,
     priority: partyCongressActivePriority(party, day),
@@ -136,10 +155,8 @@ function advancePartyCongressAI(sim, country, party, policy) {
   if (!partyCongressEligible(party)) return null;
   const day = sim.day || 0;
   const state = party.gpmCongressSizeState;
-  const size = partyCongressSizeIsValid(state?.size) ? state.size : 100;
-  const desiredSize = Math.max(50, Math.min(200, 10 * Math.round((75 + 35 * Math.sqrt(party.organization.activistsK || 0)) / 10)));
-  const canResize = day >= (state?.nextSizeVoteDay || 0) && day - (state?.lastVote?.day ?? -365) >= 365 &&
-    Math.abs(desiredSize - size) >= 10;
+  const canResize = !state?.pendingResize && day >= (state?.nextSizeVoteDay || 0) &&
+    day - (state?.lastVote?.day ?? -365) >= 365;
   const canPrioritize = !partyCongressActivePriority(party, day) && day >= (state?.nextPriorityVoteDay || 0);
   const canAdoptProgramme = !partyCongressActiveProgramme(party, day) && day >= (state?.nextProgrammeVoteDay || 0);
   if (!canResize && !canPrioritize && !canAdoptProgramme) return null;
@@ -165,7 +182,9 @@ function advancePartyCongressAI(sim, country, party, policy) {
     const priority = order.find(kind => partyCongressPriorityVote(data, kind).passed);
     if (priority) return applyPartyCongressVote(sim, country, party, "priority", { priority }, data);
   }
-  if (!canResize) return null;
+  const recommendation = data.sizeRecommendation;
+  if (!canResize || (data.size >= recommendation.min && data.size <= recommendation.max)) return null;
+  const desiredSize = recommendation.size;
   const vote = partyCongressSizeVote(data, desiredSize);
   if (!vote.ok) return null;
   if (vote.passed) return applyPartyCongressVote(sim, country, party, "size", { size: desiredSize }, data);
@@ -177,6 +196,6 @@ function advancePartyCongressAI(sim, country, party, policy) {
 }
 
 module.exports = { workerFunctions: [
-  "const gpmCongressPlanningCache = new WeakMap();", partyCongressIdeology, partyCongressView, retirePartyCongress,
+  "const gpmCongressPlanningCache = new WeakMap();", partyCongressIdeology, partyCongressOrganizationSize, partyCongressView, retirePartyCongress,
   partyCongressPlanningData, advancePartyCongressAI,
 ] };

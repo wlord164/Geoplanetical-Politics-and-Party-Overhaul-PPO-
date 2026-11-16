@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Verified Party Leadership and Ideology update.
+  archive: "4c2ebfca480f2f9f57c7d3e40ce2fbe95e9147683c939798e9de060f1880593a",
+  worker: "e9282eee85384ce519818f4705eccc19c339e0e0c54db9f47bc884cb31ef4a5d",
+  renderer: "05d674a36921246a72a33c3694d3b9f0b7193f54b007110a4dc24dac968f2487",
+  executable: "c49a75bda4714794e001af313236e5dcf5ed18c4828b779f4b8e5bff6fb30370",
+}, {
   // Verified Congress Layout candidate.
   archive: "47ab85f5f44b3ef1f8ec891990621127abf627058342869685ccb1e5470539e5",
   worker: "67faacc21d82e5a6bd915f6d2d4ad3cff3aaa55f46c9008cf18446e7340e1940",

@@ -133,35 +133,58 @@ function gpmFactionReview(sim, country, party) {
   if (!partyCongressEligible(party)) return { ok: false, reason: "party" };
   gpmFactionMigratePartyDoctrines(sim, country, party);
   const old = party.gpmFactionPolitics;
-  if (old && sim.day < old.nextReviewDay) return { ok: false, reason: "review", nextReviewDay: old.nextReviewDay };
+  const sizeState = party.gpmCongressSizeState;
+  const pendingResize = sizeState?.pendingResize;
+  const nextReviewDay = pendingResize?.effectiveDay ?? old?.nextReviewDay;
+  if (sim.day < nextReviewDay) return { ok: false, reason: "review", nextReviewDay };
   const planning = partyCongressPlanningData(sim, country);
   const data = partyCongressView(sim, country, party.id, planning.electorate, planning.people);
-  const baseline = partyCongressFactions({ ...data, factionDelegateFactors: {} }, data.size);
+  const size = pendingResize?.size ?? data.size;
+  const baseline = partyCongressFactions({ ...data, factionDelegateFactors: {} }, size);
   if (!baseline.length) return { ok: false, reason: "review" };
 
   const version = data.identity.congressDoctrine ? 2 : 1;
-  const state = party.gpmFactionPolitics ??= { version, factions: {}, offers: [], nextId: 1 };
+  const state = old ?? { version, factions: {}, offers: [], nextId: 1 };
+  // Test a resize against the roster with the new review's organization factors.
+  const reviewed = pendingResize ? { ...state, factions: Object.fromEntries(Object.entries(state.factions)
+    .map(([id, faction]) => [id, { ...faction, organization: faction.organization && { ...faction.organization } }])) }
+    : state;
   const baselineByLabel = new Map(baseline.map(group => [group.label, group]));
   const refresh = (faction, group) => {
     gpmFactionSetDoctrine(faction, group);
     faction.ideology = Object.fromEntries(gpmAxes.map(({ id }) => [id, group.axisWeights[id] / group.weight]));
-    gpmFactionDevelopmentReview(sim.day, state, faction);
+    gpmFactionDevelopmentReview(sim.day, reviewed, faction);
   };
-  for (const faction of Object.values(state.factions)) {
+  for (const faction of Object.values(reviewed.factions)) {
     const group = baselineByLabel.get(faction.label);
     faction.seats = group?.seats || 0;
     if (group) refresh(faction, group);
   }
 
-  const represented = partyCongressFactions({ ...data, factionDelegateFactors: gpmFactionDelegateFactors(state) }, data.size);
-  represented.sort((a, b) => b.seats - a.seats || a.label.localeCompare(b.label));
-  const minimum = partyCongressRecognitionSeats(data.size);
+  const represented = partyCongressFactions({ ...data, factionDelegateFactors: gpmFactionDelegateFactors(reviewed) }, size);
+  if (pendingResize) {
+    const seated = new Set(represented.filter(group => group.seats > 0).map(group => group.label));
+    const blocking = state.offers.filter(offer => offer.status === "accepted" && offer.deadlineDay > sim.day &&
+      state.factions[offer.factionId] && !seated.has(state.factions[offer.factionId].label));
+    if (blocking.length) {
+      const titles = new Map(represented.map(group => [group.label, group.displayLabel]));
+      const factionLabels = [...new Set(blocking.map(offer => {
+        const label = state.factions[offer.factionId].label;
+        return titles.get(label) || partyCongressFactionLabel(label);
+      }))].sort();
+      const untilDay = Math.min(...blocking.map(offer => offer.deadlineDay));
+      pendingResize.effectiveDay = untilDay;
+      pendingResize.deferred = { reason: "commitment", factionLabels, untilDay, offerIds: blocking.map(offer => offer.id) };
+      return { ok: true, changed: true, size: data.size, pendingResize, nextReviewDay: untilDay };
+    }
+  }
+  const minimum = partyCongressRecognitionSeats(size);
   for (const group of represented) {
     const id = gpmFactionId(group.label);
-    let faction = state.factions[id];
+    let faction = reviewed.factions[id];
     if (!faction) {
       if (group.seats < minimum) continue;
-      faction = state.factions[id] = { id, label: group.label, trust: 50, organizedDay: sim.day };
+      faction = reviewed.factions[id] = { id, label: group.label, trust: 50, organizedDay: sim.day };
       refresh(faction, group);
       // A newly recognized faction starts with neutral representation at this review.
       faction.organization.factor = 1;
@@ -170,10 +193,22 @@ function gpmFactionReview(sim, country, party) {
     faction.seats = group.seats;
   }
 
+  party.gpmFactionPolitics = state;
+  state.factions = reviewed.factions;
   gpmRecordPartyIdentity(party);
   state.nextReviewDay = sim.day + 90;
+  if (pendingResize) {
+    sizeState.size = size;
+    delete sizeState.pendingResize;
+    for (const faction of Object.values(state.factions)) {
+      if (!faction.seats && faction.leadership?.personId) {
+        gpmFactionLeader(sim, country, party, faction, new Set(), planning.people, false);
+      }
+    }
+  }
   gpmFactionUpdateLeaders(sim, country, party, planning.people);
-  return { ok: true, changed: true, nextReviewDay: state.nextReviewDay };
+  return { ok: true, changed: true, size, nextReviewDay: state.nextReviewDay, pendingResize: null,
+    ...(pendingResize ? { appliedResize: { ...pendingResize, appliedDay: sim.day } } : {}) };
 }
 
 function gpmFactionPartyLeader(sim, country, party) {
@@ -194,10 +229,11 @@ function gpmFactionUpdateLeaders(sim, country, party, people, partyLeaderId = gp
   const state = party.gpmFactionPolitics;
   const factions = Object.values(state?.factions || {}).filter(faction => faction.seats > 0);
   const used = new Set(partyLeaderId ? [partyLeaderId] : []);
+  const minimum = partyCongressRecognitionSeats(party.gpmCongressSizeState?.size ?? gpmCongressDefaultSize);
   for (const faction of factions) {
     const outgoingId = faction.leadership?.personId;
     const others = new Set(factions.filter(other => other !== faction).map(other => other.leadership?.personId).filter(Boolean));
-    const leader = gpmFactionLeader(sim, country, party, faction, new Set([...used, ...others]), people);
+    const leader = gpmFactionLeader(sim, country, party, faction, new Set([...used, ...others]), people, faction.seats >= minimum);
     if (leader) used.add(leader.id);
     const separating = outgoingId && outgoingId === partyLeaderId;
     if (!separating && !leader) continue;
@@ -253,7 +289,7 @@ function gpmFactionView(sim, country, party) {
   return {
     day: sim.day,
     initialized: state?.nextReviewDay != null,
-    nextReviewDay: state?.nextReviewDay ?? null,
+    nextReviewDay: party.gpmCongressSizeState?.pendingResize?.effectiveDay ?? state?.nextReviewDay ?? null,
     partyLeader: partyLeader ? { id: partyLeader.id, name: uAe(partyLeader) } : null,
     factions: Object.values(state?.factions || {}).map(({ id, label, seats, trust, priorities, redLines, leadership, organization, issuePriorities, doctrineId, positions }) => ({
       id, label, displayLabel: partyCongressFactionLabel(label), seats, trust, priorities, redLines, doctrineId, positions, leader: gpmFactionLeaderView(sim, { leadership }),
@@ -359,10 +395,12 @@ function gpmFactionClose(sim, country, party, state, offer, status, reason) {
 
 function gpmFactionExpire(sim, country, party) {
   const state = party.gpmFactionPolitics;
+  const threshold = partyCongressRecognitionSeats(party.gpmCongressSizeState?.size ?? gpmCongressDefaultSize);
   for (const offer of state?.offers || []) {
     if (!gpmFactionOpen(offer)) continue;
-    if (offer.status === "accepted" && offer.leaderId === null && offer.deadlineDay > sim.day) continue;
     const faction = state.factions[offer.factionId];
+    if (offer.status === "accepted" && offer.deadlineDay > sim.day &&
+        (offer.leaderId === null || (faction?.seats > 0 && faction.seats < threshold))) continue;
     const leader = gpmFactionLiveLeader(sim, country, party, faction);
     if (offer.deadlineDay > sim.day && leader?.id === offer.leaderId) continue;
     const reason = offer.deadlineDay <= sim.day ? "deadline" : "leader";
@@ -465,16 +503,31 @@ function gpmFactionAutomate(sim, country, party, actor) {
   if (result.offer) gpmFactionAction(sim, country, party, { action: "accept", offerId: result.offer.id }, actor);
 }
 
-function gpmFactionDaily(sim, country, party) {
-  const state = party.gpmFactionPolitics;
-  if (state?.nextReviewDay == null) return;
-  gpmFactionSeparatePartyLeader(sim, country, party);
-  gpmFactionExpire(sim, country, party);
+function gpmFactionDaily(sim, country, party, reviewResize = false) {
+  let state = party.gpmFactionPolitics;
+  if (state?.nextReviewDay != null) {
+    gpmFactionSeparatePartyLeader(sim, country, party);
+    gpmFactionExpire(sim, country, party);
+  }
   if (!partyCongressEligible(party)) return;
+  const pendingResize = reviewResize && party.gpmCongressSizeState?.pendingResize;
+  if (pendingResize) {
+    const clearedBlocker = pendingResize.deferred?.offerIds?.some(id => !state?.offers.some(offer =>
+      offer.id === id && offer.status === "accepted" && offer.deadlineDay > sim.day));
+    if (clearedBlocker) pendingResize.effectiveDay = Math.min(pendingResize.effectiveDay, sim.day);
+    if (pendingResize.effectiveDay <= sim.day) {
+      const resize = gpmFactionReview(sim, country, party);
+      if (resize.appliedResize) return;
+      state = party.gpmFactionPolitics;
+    }
+  }
+  if (state?.nextReviewDay == null) return;
   const charter = gpmFactionLeadershipCharter(sim, party);
+  const minimum = partyCongressRecognitionSeats(party.gpmCongressSizeState?.size ?? gpmCongressDefaultSize);
   const due = Object.values(state.factions).some(faction => {
     if (!faction.seats) return false;
     const leadership = faction.leadership;
+    if (faction.seats < minimum && !leadership?.personId) return false;
     if (!leadership || leadership.charterKey !== charter.key) return true;
     if (charter.method === "none") return false;
     if (leadership.retryDay > sim.day) return false;
