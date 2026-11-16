@@ -28,8 +28,7 @@ function gpmFactionLeadershipCharter(sim, party, faction = null) {
   if (term?.personId && term.termEndDay > sim.day &&
       (term.charterKey === charter.key || term.charterKey?.startsWith(prefix))) {
     // A Congress motion sets the rules for new terms without displacing sitting representatives.
-    return { ...charter, key: term.charterKey, method: term.status === "appointed" ? "appointment" : "election",
-      excludeOfficeholders: term.excludeOfficeholders === true };
+    return { ...charter, key: term.charterKey, method: term.status === "appointed" ? "appointment" : "election" };
   }
   const officeRevision = publicOfficeRule ? `:office:${publicOfficeRule.revision}` : "";
   return { ...charter, key: prefix + (electionRule?.revision ?? 0) + officeRevision, method: electionRule?.value ?? method,
@@ -193,7 +192,6 @@ function gpmFactionLeader(sim, country, party, faction, usedLeaderIds = new Set(
   if (leader) gpmFactionLeadershipRecord(leader, country, party, faction, day, year, status);
   faction.leadership = {
     charterKey: charter.key, personId: leader?.id || null, personName: leader?.styledName || leader?.name || null, status,
-    ...(charter.excludeOfficeholders ? { excludeOfficeholders: true } : {}),
     sinceDay: day, termEndDay: leader ? (acting ? electionDay : day + charter.termDays) : null,
     retryDay: leader || !canAppoint || charter.method === "none" ? null : electionDay ?? day + 30,
     electionDay: canAppoint ? electionDay : null, generation, reason, history,
