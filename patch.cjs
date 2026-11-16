@@ -782,7 +782,7 @@ function patchWorker(bytes) {
   worker = replaceOnce(worker, 'function yNo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan){',
     'function yNo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan,gpmFactionData){');
   worker = replaceOnce(worker, 'congress:partyCongressView(e,t,a,gpmElectorate),',
-    'congress:partyCongressView(e,t,a,gpmElectorate,undefined,gpmFactionData),');
+    'congress:gpmFactionData,');
   worker = replaceOnce(worker, 'recentResult:gpmPartyElectionRecapView(t,r.partyId)})',
     'recentResult:gpmPartyElectionRecapView(t,r.partyId)},gpmFactionCongressData(e,t,r.partyId))');
   worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,...a})',
@@ -791,6 +791,8 @@ function patchWorker(bytes) {
     'Adr(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party)');
   worker = patchFactionPeopleWorker(worker, replaceOnce);
   worker = patchFactionDevelopmentWorker(worker, replaceOnce);
+  worker = replaceOnce(worker, 'j2e(this,this.player),a.changed&&(hEe(this),_Be(this))',
+    'j2e(this,this.player),gpmFactionSeparatePartyLeader(this,this.player,YL(this.player,Uo(this.player))),a.changed&&(hEe(this),_Be(this))');
   worker = require("./party-radicalization.cjs").patchPoliticalCrisisWorker(worker, replaceOnce);
   return Buffer.from(worker);
 }

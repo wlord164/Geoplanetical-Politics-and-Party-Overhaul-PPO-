@@ -171,6 +171,7 @@ function partyCongressBargainReason(reason) {
   return {
     party: "This party cannot negotiate in Congress.",
     review: "Faction leaders are selected at a Congress review.",
+    "party-leader": "Your party leader cannot negotiate as a faction representative.",
     terms: "Choose an eligible programme and a valid organizing budget.",
     leader: "The faction has no eligible leader, or its leader has changed.",
     "red-line": "This programme crosses the faction’s red line.",
@@ -233,6 +234,7 @@ function partyCongressBargainingHtml(state, ui, view) {
     '<button class="k" type="button" data-gpm-bargain-action="' + action + '"' + attributes + '>' + b(label) + '</button>';
   const focus = id => ' data-gpm-profile-focus="faction-' + b(id) + '"';
   const review = Number.isFinite(data.nextReviewDay) ? ui.gameDate(data.nextReviewDay) : "";
+  const partyLeader = data.partyLeader?.name ? '<small data-gpm-congress-party-leader>Party leader · ' + b(data.partyLeader.name) + '</small>' : "";
   const currentSize = view?.party?.congress?.size;
   const size = partyCongressSizeIsValid(currentSize) ? currentSize : 100;
   const required = partyCongressRecognitionSeats(size);
@@ -271,7 +273,7 @@ function partyCongressBargainingHtml(state, ui, view) {
       const representation = delegateChange > 0 ? `+${delegateChange} delegates from organizing and delivery` : "";
       const currentIssues = (faction.issuePriorities || []).filter(issue => issue.onAgenda).map(issue => issue.label);
       const completedIssues = (faction.issuePriorities || []).filter(issue => issue.lastDeliveredDay != null).map(issue => issue.label);
-      const select = leaderId ? button("select", "Negotiate", ' data-gpm-faction-id="' + b(faction.id) + '" aria-pressed="' +
+      const select = leaderId && leaderId !== data.partyLeader?.id ? button("select", "Negotiate", ' data-gpm-faction-id="' + b(faction.id) + '" aria-pressed="' +
         (selectedId === faction.id) + '"' + focus(faction.id + "-negotiate")) : "";
       return '<li class="gpm-congress-representative" data-gpm-congress-faction-id="' + b(faction.label) +
         '" data-delegates="' + faction.seats + '">' +
@@ -287,7 +289,8 @@ function partyCongressBargainingHtml(state, ui, view) {
         (completedIssues.length ? '<small>' + b("Delivered · " + completedIssues.join(", ")) + '</small>' : "") +
         (redLines ? '<small>' + b("Red lines · " + redLines) + '</small>' : "") + '</div></li>';
     }).join("") + '</ul>' : "";
-  const faction = selectedId && factions.find(item => item.id === selectedId);
+  const faction = selectedId && factions.find(item => item.id === selectedId &&
+    (item.leader?.personId || item.leader?.id) !== data.partyLeader?.id);
   let negotiation = "";
   if (faction) {
     const records = (data.offers || []).filter(record => record.factionId === faction.id);
@@ -334,7 +337,7 @@ function partyCongressBargainingHtml(state, ui, view) {
       '<input class="k" type="number" name="reserveM" min="0" max="1000000000" step="1" value="' + dollars(mandate.reserveM) + '"' +
       focus("staff-reserve") + '></label></div>' +
     '<button class="k" type="submit"' + focus("staff-save") + '>Save mandate</button></form></details>';
-  return recognition + intro + roster + negotiation + permissions;
+  return partyLeader + recognition + intro + roster + negotiation + permissions;
 }
 
 function bindPartyCongressBargaining(panel, congress, ui, view) {
