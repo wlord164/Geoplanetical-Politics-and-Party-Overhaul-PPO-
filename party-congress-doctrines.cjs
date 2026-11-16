@@ -214,6 +214,62 @@ const doctrines = {
     axes: { econ: -.8, social: -.8, gov: -.6, nat: -.45 },
     positions: { competition: 1, independentLabor: .9, economicControl: -.8, memberAuthority: .9, branchAutonomy: .85 },
   },
+  trotskyist: {
+    family: "trotskyism", label: "Trotskyism", explicitOrganization: true,
+    description: "Favors international socialist revolution, elected workers’ councils, and political competition among currents within those councils.",
+    axes: { econ: -.95, social: -.55, gov: -.2, nat: -.9 },
+    positions: { competition: .6, independentLabor: 1, councilAutonomy: .9, economicControl: -.85,
+      memberAuthority: 1, branchAutonomy: .7 },
+  },
+  federalRepublican: {
+    family: "federalRepublicanism", label: "Federal Republicanism", explicitOrganization: true,
+    description: "Supports an elected republic in which a constitution protects the powers of both the national government and its regions.",
+    axes: { econ: .15, social: -.3, gov: -.65, nat: .05 },
+    positions: { competition: 1, civilLiberties: .9, nationalMembership: .8, regionalAutonomy: 1,
+      memberAuthority: .9, branchAutonomy: 1 },
+  },
+  nasserist: {
+    family: "nasserism", label: "Nasserism", explicitOrganization: true,
+    description: "Combines Arab unity, a strong developmental executive, and organized worker and farmer representation in a broad political front.",
+    axes: { econ: -.65, social: .05, gov: .7, nat: .75 },
+    positions: { competition: -.6, economicControl: -.9, independentLabor: -.55, laborRepresentation: .85,
+      agrarianRedistribution: .85, memberAuthority: .65, branchAutonomy: -.7 },
+  },
+  baathist: {
+    family: "baathism", label: "Ba'athism", explicitOrganization: true,
+    description: "Pursues Arab unity and socialism through a leading party that directs the state and its organized political front.",
+    axes: { econ: -.55, social: -.05, gov: .9, nat: .85 },
+    positions: { competition: -.95, economicControl: -.65, independentLabor: -.85, laborRepresentation: -.9,
+      civilLiberties: -.85, memberAuthority: -.9, branchAutonomy: -1 },
+  },
+  secularRepublican: {
+    family: "secularRepublicanism", label: "Secular Republicanism", explicitOrganization: true,
+    description: "Locates political authority in elected civil institutions and separates public law from religious authority while protecting worship.",
+    axes: { econ: -.05, social: -.65, gov: -.65, nat: .05 },
+    positions: { competition: 1, civilLiberties: .95, religiousAuthority: -1, worshipFreedom: 1,
+      memberAuthority: 1, branchAutonomy: .55 },
+  },
+  constitutionalMonarchist: {
+    family: "constitutionalMonarchism", label: "Constitutional Monarchism", explicitOrganization: true,
+    description: "Retains a hereditary head of state under a constitution, with ministers accountable to an elected parliament and public debate protected.",
+    axes: { econ: .15, social: .4, gov: -.45, nat: .35 },
+    positions: { competition: 1, civilLiberties: .85, worshipFreedom: .65, hereditaryHeadOfState: 1,
+      memberAuthority: .8, branchAutonomy: .55 },
+  },
+  agrarianPopulist: {
+    family: "agrarianPopulism", label: "Agrarian Populism", explicitOrganization: true,
+    description: "Organizes farmers and rural communities, favors elected delegates independent of the cabinet, and pursues wider access to land.",
+    axes: { econ: -.45, social: .15, gov: -.35, nat: .4 },
+    positions: { competition: .9, agrarianRedistribution: 1, independentLabor: .7, representativeIndependence: 1,
+      memberAuthority: 1, branchAutonomy: .95 },
+  },
+  socialCorporatist: {
+    family: "socialCorporatism", label: "Social Corporatism", explicitOrganization: true,
+    description: "Combines ultranationalist one-party rule with equal civic membership, broad social insurance, and licensed employer and worker representation.",
+    axes: { econ: -.65, social: .4, gov: .9, nat: .95 },
+    positions: { competition: -1, economicControl: -.7, nationalMembership: 1, racializedCitizenship: -1,
+      laborRepresentation: 1, socialInsurance: 1, memberAuthority: -.85, branchAutonomy: -.8 },
+  },
 };
 
 const proposals = {
@@ -332,6 +388,66 @@ const proposals = {
     family: "islamicFundamentalism", label: "Expand the official role of religion", issue: "religiousAuthority", issueLabel: "Public religious authority", value: 1,
     laws: ["religion_state"],
     lawTargets: { religion_state: 4 },
+  },
+  trotskyistWorkerOrganization: {
+    family: "trotskyism", label: "Protect unions and the right to strike", issue: "independentLabor", issueLabel: "Workers’ political organization", value: 1,
+    laws: ["union_freedom", "strike_right"],
+    lawTargets: { union_freedom: "free", strike_right: "protected" },
+  },
+  federalRepublicanCivicRights: {
+    family: "federalRepublicanism", label: "Broaden access to citizenship", issue: "nationalMembership", issueLabel: "Common citizenship", value: 1,
+    laws: ["nationality_law"],
+    lawTargets: { nationality_law: { birthright: "conditional", residenceYears: 5, dualCitizenship: true } },
+  },
+  nasseristLicensedRepresentation: {
+    family: "nasserism", label: "Recognize licensed sector organizations", issue: "laborRepresentation", issueLabel: "Labor representation", value: 1,
+    laws: ["union_freedom", "strike_right"],
+    lawTargets: { union_freedom: "licensed", strike_right: "regulated" },
+  },
+  nasseristPublicDevelopment: {
+    family: "nasserism", label: "Public electricity and land reform", issue: "economicControl", issueLabel: "State-led development", value: -1,
+    laws: ["electricity_market", "land_tenure"],
+    lawTargets: { electricity_market: "state_monopoly", land_tenure: "redistribution" },
+  },
+  baathistOfficialUnions: {
+    family: "baathism", label: "Place unions under official supervision", issue: "laborRepresentation", issueLabel: "Labor representation", value: -1,
+    laws: ["union_freedom", "strike_right"],
+    lawTargets: { union_freedom: "official", strike_right: "restricted" },
+  },
+  baathistPressControl: {
+    family: "baathism", label: "Restrict the press and internet", issue: "civilLiberties", issueLabel: "Freedom of publication", value: -1,
+    laws: ["media_freedom"],
+    lawTargets: { media_freedom: { press: "muzzled", internet: "censored" } },
+  },
+  secularRepublicanNeutrality: {
+    family: "secularRepublicanism", label: "Separate religion and state", issue: "religiousAuthority", issueLabel: "Religion and the civil state", value: -1,
+    laws: ["religion_state", "freedom_of_worship"],
+    lawTargets: { religion_state: 0, freedom_of_worship: 4 },
+  },
+  constitutionalMonarchistPressFreedom: {
+    family: "constitutionalMonarchism", label: "Protect an independent press", issue: "civilLiberties", issueLabel: "Freedom of publication", value: 1,
+    laws: ["media_freedom"],
+    lawTargets: { media_freedom: { press: "free", internet: "open" } },
+  },
+  agrarianPopulistLandReform: {
+    family: "agrarianPopulism", label: "Broaden access to farmland", issue: "agrarianRedistribution", issueLabel: "Access to agricultural land", value: 1,
+    laws: ["land_tenure"],
+    lawTargets: { land_tenure: "redistribution" },
+  },
+  socialCorporatistCivicMembership: {
+    family: "socialCorporatism", label: "Expand access to civic citizenship", issue: "nationalMembership", issueLabel: "Civic citizenship", value: 1,
+    laws: ["nationality_law"],
+    lawTargets: { nationality_law: { birthright: "conditional", residenceYears: 5, dualCitizenship: true } },
+  },
+  socialCorporatistSectorRepresentation: {
+    family: "socialCorporatism", label: "Recognize licensed worker and employer organizations",
+    issue: "laborRepresentation", issueLabel: "Labor representation", value: 1,
+    laws: ["union_freedom", "strike_right"],
+    lawTargets: { union_freedom: "licensed", strike_right: "regulated" },
+  },
+  socialCorporatistBroadInsurance: {
+    family: "socialCorporatism", label: "Expand social insurance", issue: "socialInsurance", issueLabel: "Social insurance", value: 1,
+    laws: ["unemployment_insurance", "family_allowance", "paid_parental_leave"],
   },
 };
 

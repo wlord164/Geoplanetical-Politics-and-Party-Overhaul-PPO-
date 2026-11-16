@@ -17,18 +17,36 @@ const motions = {
       autonomous: { label: "Branch autonomy", direction: 1 },
     },
   },
+  representativeIndependence: {
+    label: "Representative independence",
+    description: "Decide whether executive and cabinet officeholders can begin new terms as faction representatives.",
+    requiresPosition: true,
+    choices: {
+      officeholdersPermitted: { label: "Public officeholders are eligible", direction: -1 },
+      separateFromGovernment: { label: "Keep representatives separate from government", direction: 1 },
+    },
+  },
 };
 
 function partyCongressCharterRule(sim, party, motionId) {
   if (motionId === "memberAuthority") return gpmFactionLeadershipCharter(sim, party).method;
+  if (motionId === "representativeIndependence") {
+    return party.gpmCongressCharter?.representativeIndependence?.value === "separateFromGovernment"
+      ? "separateFromGovernment" : "officeholdersPermitted";
+  }
   return party.gpmCongressCharter?.branchAutonomy?.value === "autonomous" ? "autonomous" : "central";
+}
+
+function partyCongressCharterAvailable(party, motionId, motion, factions) {
+  return !motion.requiresPosition || !!party.gpmCongressCharter?.[motionId] ||
+    factions.some(group => group.seats > 0 && Number.isFinite(group.positions?.[motionId]));
 }
 
 function partyCongressCharterForecast(sim, party, data, motionId, value, factions) {
   if (!partyCongressEligible(party)) return { ok: false, reason: "party" };
   const motion = Object.hasOwn(gpmCongressCharterMotions, motionId) ? gpmCongressCharterMotions[motionId] : null;
   const choice = motion && Object.hasOwn(motion.choices, value) ? motion.choices[value] : null;
-  if (!choice) return { ok: false, reason: "unavailable" };
+  if (!choice || !partyCongressCharterAvailable(party, motionId, motion, factions)) return { ok: false, reason: "unavailable" };
   const current = partyCongressCharterRule(sim, party, motionId);
   if (current === "none") return { ok: false, reason: "charter-closed" };
   if (current === value) return { ok: false, reason: "unchanged" };
@@ -61,7 +79,8 @@ function partyCongressCharterForecast(sim, party, data, motionId, value, faction
 
 function partyCongressCharterView(sim, country, party, data) {
   const factions = partyCongressFactions(data, data.size);
-  return { motions: Object.entries(gpmCongressCharterMotions).map(([id, motion]) => ({
+  return { motions: Object.entries(gpmCongressCharterMotions).filter(([id, motion]) =>
+    partyCongressCharterAvailable(party, id, motion, factions)).map(([id, motion]) => ({
     id, label: motion.label, description: motion.description,
     current: partyCongressCharterRule(sim, party, id), lastVote: party.gpmCongressCharter?.ballots?.[id] ?? null,
     choices: Object.entries(motion.choices).map(([value, choice]) => ({
@@ -112,6 +131,6 @@ function registerPartyCongressCharter() {
 }
 
 module.exports = { workerFunctions: [
-  `const gpmCongressCharterMotions = ${JSON.stringify(motions)};`, partyCongressCharterRule, partyCongressCharterForecast,
+  `const gpmCongressCharterMotions = ${JSON.stringify(motions)};`, partyCongressCharterRule, partyCongressCharterAvailable, partyCongressCharterForecast,
   partyCongressCharterView, applyPartyCongressCharter, advancePartyCongressCharterAI, registerPartyCongressCharter,
 ] };

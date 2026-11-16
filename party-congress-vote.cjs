@@ -85,7 +85,7 @@ function partyCongressProfileDoctrine(data, profile, legacyKey) {
   if (assigned) return gpmCongressDoctrine(assigned);
   const platform = gpmCongressDoctrine(context.platform);
   if (!platform || profile.origin === "platform") return platform;
-  const wings = (context.wings || []).map(gpmCongressDoctrine).filter(Boolean);
+  const wings = (context.wings || []).map(gpmCongressDoctrine).filter(wing => wing && !wing.explicitOrganization);
   const distance = candidate => gpmAxes.reduce((sum, { id }) =>
     sum + (profile.ideology[id] - candidate.axes[id]) ** 2, 0);
   if (!wings.length) return legacyKey === estimatePartyIdeology(platform.axes) && distance(platform) <= .64 ? platform : null;

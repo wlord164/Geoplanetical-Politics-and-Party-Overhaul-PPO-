@@ -1,5 +1,37 @@
 "use strict";
 
+const parliamentaryReform = {
+  singleParty: false, ceremonial: true, headSelection: "elected", headBallot: "parliament",
+  headGovExists: 1, headGovSelection: "parliament", cabinetAccountability: "parliament",
+  parliamentPower: "sovereign", partyLegality: .95, execConstraints: .85, commissionIndep: .90,
+  suffrage: .95, emergencyPowers: "limited", dissolutionPower: "constructive", judicialReview: true,
+};
+
+const advisoryOnePartyReform = {
+  singleParty: true, ceremonial: false, headSelection: "party", headGovExists: 0,
+  cabinetAccountability: "head", parliamentPower: "advisory", partyLegality: .15, execConstraints: .2,
+  commissionIndep: .25, suffrage: .60, emergencyPowers: "broad", dissolutionPower: "none", judicialReview: false,
+};
+
+const gpmUprisingPresetReforms = {
+  trotskyist: { ...parliamentaryReform, regime: "trotskyist_workers_republic", label: "Decentralized workers’ republic",
+    stateStructure: "decentralized", partyLegality: .80, execConstraints: .8 },
+  federalRepublican: { ...parliamentaryReform, regime: "federal_republic", label: "Federal parliamentary republic",
+    stateStructure: "federal", upperChamber: 1, bicameralRelation: "symmetric" },
+  nasserist: { ...parliamentaryReform, regime: "nasserist_presidential_republic", label: "Arab socialist presidential republic",
+    ceremonial: false, headBallot: "two-round", headGovExists: 0, headGovSelection: null,
+    cabinetAccountability: "head", partyLegality: .45, execConstraints: .55, commissionIndep: .55,
+    emergencyPowers: "broad", dissolutionPower: "none" },
+  baathist: { ...advisoryOnePartyReform, regime: "baathist_party_republic", label: "Ba’athist party-led republic" },
+  secularRepublican: { ...parliamentaryReform, regime: "secular_republic", label: "Secular parliamentary republic" },
+  constitutionalMonarchist: { ...parliamentaryReform, regime: "constitutional_monarchy", label: "Parliamentary constitutional monarchy",
+    headSelection: "hereditary", headBallot: null, crownPower: "ceremonial", vacancyHoS: "heir", vacancyHoG: "party",
+    successionOrder: "primogeniture_absolute", deputyOffice: "crown_prince", dissolutionPower: "none", veto: false },
+  agrarianPopulist: { ...parliamentaryReform, regime: "agrarian_republic", label: "Agrarian parliamentary republic",
+    stateStructure: "decentralized" },
+  socialCorporatist: { ...advisoryOnePartyReform, regime: "social_corporatist_party_state", label: "Social Corporatist one-party state" },
+};
+
 function gpmActiveIdeologyPreset(party, presets = gpmPresets) {
   const id = party?.nameDesc?.gpmIdeologyPreset;
   const values = Object.hasOwn(presets, id) ? presets[id].values : null;
@@ -28,6 +60,9 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
   // The founding preset helps distinguish ideologies with similar scores, while
   // a materially changed party uses its current positions.
   const preset = gpmActiveIdeologyPreset(party, presets);
+  if (Object.hasOwn(gpmUprisingPresetReforms, preset)) {
+    return { preset, econ, gov, nat, social, ...gpmUprisingPresetReforms[preset] };
+  }
   const newRegimes = {
     islamicDemocracy: "islamic_democracy",
     islamicRepublican: "islamic_republic",
@@ -132,6 +167,7 @@ function gpmUprisingProfile(party, presets = gpmPresets) {
 }
 
 module.exports = {
-  workerFunctions: [gpmActiveIdeologyPreset, gpmIdeologyLawTarget, gpmUprisingProfile],
+  workerFunctions: [`const gpmUprisingPresetReforms = ${JSON.stringify(gpmUprisingPresetReforms)};`,
+    gpmActiveIdeologyPreset, gpmIdeologyLawTarget, gpmUprisingProfile],
   gpmActiveIdeologyPreset, gpmIdeologyLawTarget, gpmUprisingProfile,
 };

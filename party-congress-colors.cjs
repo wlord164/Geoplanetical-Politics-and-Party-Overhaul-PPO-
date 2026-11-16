@@ -101,6 +101,14 @@ const doctrineColors = {
   islamicFundamentalist: namedColors["Islamic Fundamentalism"],
   democraticConfederalist: namedColors["Democratic Confederalism"],
   ecosocialist: namedColors.Ecosocialism,
+  trotskyist: "#e6539e",
+  federalRepublican: "#548ce1",
+  nasserist: "#4f9e83",
+  baathist: "#b76c60",
+  secularRepublican: "#70bdc6",
+  constitutionalMonarchist: namedColors["Constitutional Monarchism"],
+  agrarianPopulist: "#aba255",
+  socialCorporatist: "#ac5471",
 };
 
 const outlinesByColor = {

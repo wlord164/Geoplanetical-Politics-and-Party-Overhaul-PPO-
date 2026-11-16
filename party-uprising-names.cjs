@@ -59,10 +59,20 @@ function gpmUprisingIdentity(countryKey, countryName, profile, seed) {
     islamic_republic: ["Islamic Republic", "Islamic Constitutional Republic"],
     islamic_emirate: ["Islamic Emirate", "Islamic State"],
     fascist_party_state: ["National State", "National Republic"],
+    national_socialist_party_state: ["National State", "National Republic"],
+    clerical_fascist_party_state: ["Confessional State", "National Commonwealth"],
     maoist_party_state: ["People’s Democratic Republic", "People’s Republic"],
     democratic_confederation: ["Democratic Confederation", "Confederation"],
     syndicalist_federation: ["Federation of Workers’ Councils", "Workers’ Federation"],
     ecosocialist_republic: ["Democratic Socialist Republic", "Social Republic"],
+    trotskyist_workers_republic: ["Workers’ Republic", "Socialist Republic"],
+    federal_republic: ["Federal Republic", "Federation"],
+    nasserist_presidential_republic: ["Social Republic", "Popular Republic"],
+    baathist_party_republic: ["Socialist Republic", "United Republic"],
+    secular_republic: ["Secular Republic", "Constitutional Republic"],
+    constitutional_monarchy: ["Kingdom", "Constitutional Kingdom"],
+    agrarian_republic: ["Popular Republic", "Co-operative Republic"],
+    social_corporatist_party_state: ["National Commonwealth", "Social Republic"],
   };
   const newForm = Object.hasOwn(newForms, regime) ? newForms[regime] : null;
   let name;
@@ -185,7 +195,8 @@ function gpmUprisingIdentity(countryKey, countryName, profile, seed) {
       const next = part ? part + " " + word : word;
       return next.length <= 27 ? next : part;
     }, "");
-    options.push(shortName ? "Republic of " + shortName : "Provisional Republic");
+    const form = regime === "constitutional_monarchy" ? "Kingdom" : "Republic";
+    options.push(shortName ? form + " of " + shortName : "Provisional " + form);
   }
   const seeded = Number.isFinite(seed) && !isChinaDemocratic;
   const index = seeded ? (Math.trunc(seed) >>> 0) % options.length : 0;

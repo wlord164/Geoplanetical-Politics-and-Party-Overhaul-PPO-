@@ -232,9 +232,12 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
   const status = transitional || profile.singleParty || !profile.ceremonial ? "installed" : "minority";
   gpmUprisingInstallGovernment(sim, country, partyId, status);
   const head = ut(country, "head_of_gov");
-  const president = !profile.headGovExists ? head :
-    Vc(sim, { countryKey: country.key, party: partyId, role: draft.constitution.organs.head_of_state.role,
-      born: sim._simYear - 45, since: sim._simYear }).id;
+  const hereditary = profile.headSelection === "hereditary";
+  const reigning = hereditary ? sim.people.get(country.monarchId) : null;
+  const sovereign = hereditary && reigning?.alive && reigning.countryKey === country.key ? reigning : null;
+  const headOfState = !profile.headGovExists ? head : (sovereign ||
+    Vc(sim, { countryKey: country.key, party: hereditary ? null : partyId, role: draft.constitution.organs.head_of_state.role,
+      born: sim._simYear - 45, since: sim._simYear })).id;
   const officeholder = personId => ({ personId, partyId, controllerRef: { kind: "party", id: partyId } });
   // Unfolding needs distinct, explicit officeholders even in a one-party parent.
   const institution = Xe(country);
@@ -245,11 +248,16 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
     day: sim.day, sourceProcedureId: "gpm.uprising.charter",
     constitution: draft.constitution, chambers: draft.draftChambers,
     government: { coalitionPartyIds: [partyId], supportPartyIds: [], status },
-    replaceHeadOfState: officeholder(president),
+    replaceHeadOfState: hereditary ? { personId: headOfState, partyId: null, controllerRef: { kind: "person", id: headOfState } }
+      : officeholder(headOfState),
     ...(folded && profile.headGovExists ? { unfoldHead: officeholder(head) } : {}),
   });
   if (!transition.ok || Xr(country) !== partyId)
     throw new Error("Uprising constitution failed: " + JSON.stringify(transition));
+  if (hereditary) {
+    const monarch = sim.people.get(headOfState);
+    if (!sim.dynasties.has(monarch.dynastyId)) Qq(sim, country, monarch);
+  }
   wMa(country);
   Object.assign(country.pol.regime, draft.polity.regime);
   if (profile.singleParty) {
@@ -268,7 +276,8 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
 }
 
 function gpmUprisingStartingIdentity(country, customName = null) {
-  const system = gpmUprisingSystemFromBlueprint(country.pol?.constitution?.blueprint);
+  const constitution = country.pol?.constitution;
+  const system = gpmUprisingSystemFromBlueprint(constitution?.blueprint, constitution?.territory?.level);
   const name = customName || gpmUprisingOfficialNames[country.key] || country.name;
   return system && name ? { system, name, custom: !!customName } : null;
 }

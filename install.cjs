@@ -17,6 +17,12 @@ const previousStock = {
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 };
 const previousPatches = [{
+  // Verified Far-Right Currents release.
+  archive: "b18dbb38b4e15ac6ebcbed42490430b3666e01a8c088daa476b22584b169855e",
+  worker: "d6d24029116785c0e14bc67028835ae56337fb478ccc5bf967e9b31eeb9047ff",
+  renderer: "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6",
+  executable: "29414e30a81e943ddf5e6ae487b88d3f05f79b70d164dee1cf75f9b2760b0842",
+}, {
   // Verified membership-backed Ideology Overhaul release.
   archive: "f367c3ab90f8ba2aebad59def49aa660865e2a5bcee37789a8cea3e5485de3dc",
   worker: "7104c076fe8702e46abb158c962c0f7680440efe383d34e1a828fd4b0e9df9dc",
