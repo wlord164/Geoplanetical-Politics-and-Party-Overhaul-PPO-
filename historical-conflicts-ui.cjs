@@ -175,21 +175,21 @@ function gpmHistoricalPlayerRole(role, status) {
 
 function gpmHistoricalWarParticipant(participant, scopeId, { actor, focused, page } = {}) {
   const { id, countryKey, name, flagUrl, flagCode, associatedFlagCode, associatedFlagLabel, role, strength, deaths } = participant;
-  const fallbackFlag = flagUrl || (flagCode ? Cs(flagCode) : null);
+  const fallbackFlag = flagUrl || (flagCode ? yi(flagCode) : null);
   const participantFlag = countryKey ? gpmHistoricalNativeMapFlag(countryKey, fallbackFlag) : fallbackFlag;
-  const associatedFlag = !participantFlag && associatedFlagCode && associatedFlagLabel ? B9(associatedFlagCode)?.url : null;
+  const associatedFlag = !participantFlag && associatedFlagCode && associatedFlagLabel ? Zw(associatedFlagCode)?.url : null;
   const flag = participantFlag || associatedFlag;
   const involvement = role === "support" ? "Supporter" : ["access", "territorial_access"].includes(role) ? "Grants access" : "";
   const key = `war-${scopeId}-${id}`;
   const estimate = strength?.label || "Unknown";
-  return `<details class="gpm-war-participant" data-history-panel="${b(key)}"${focused ? " open data-history-focused-actor" : ""}>
-    <summary data-focus-key="${b(key)}" data-authority-safe>
-      ${flag ? `<img class="gpm-war-flag" src="${b(flag)}" alt="${associatedFlag ? b(associatedFlagLabel) : ""}"${associatedFlag ? ` title="${b(associatedFlagLabel)}"` : ""} loading="lazy">` : ""}
-      <span><b>${b(name)}</b>${involvement ? `<small>${involvement}</small>` : ""}</span>
+  return `<details class="gpm-war-participant" data-history-panel="${v(key)}"${focused ? " open data-history-focused-actor" : ""}>
+    <summary data-focus-key="${v(key)}" data-authority-safe>
+      ${flag ? `<img class="gpm-war-flag" src="${v(flag)}" alt="${associatedFlag ? v(associatedFlagLabel) : ""}"${associatedFlag ? ` title="${v(associatedFlagLabel)}"` : ""} loading="lazy">` : ""}
+      <span><b>${v(name)}</b>${involvement ? `<small>${involvement}</small>` : ""}</span>
     </summary>
     <dl class="gpm-war-stat">
-      <div><dt>Estimated strength</dt><dd>${b(estimate)}</dd>${strength?.scope ? `<small>${b(strength.scope)}</small>` : ""}</div>
-      ${Number.isFinite(deaths) || !page ? `<div><dt>Military deaths in this war</dt><dd>${Number.isFinite(deaths) ? b(deaths.toLocaleString(cs())) : "Unknown"}</dd></div>` : ""}
+      <div><dt>Estimated strength</dt><dd>${v(estimate)}</dd>${strength?.scope ? `<small>${v(strength.scope)}</small>` : ""}</div>
+      ${Number.isFinite(deaths) || !page ? `<div><dt>Military deaths in this war</dt><dd>${Number.isFinite(deaths) ? v(deaths.toLocaleString(ks())) : "Unknown"}</dd></div>` : ""}
     </dl>
     ${actor ? gpmHistoricalWarPortrait(actor) : ""}
   </details>`;
@@ -201,12 +201,12 @@ function gpmHistoricalWarPortrait(actor) {
     .find(official => official?.portrait?.image);
   const representative = actor.identity?.representative;
   const illustration = gpmHistoricalDossierIllustrations[actor.id];
-  const portrait = leader ? Ts(leader, actor.leadership.year) : opening?.portrait?.image;
+  const portrait = leader ? Hs(leader, actor.leadership.year) : opening?.portrait?.image;
   const canUseIllustration = !leader || !!leader.gpmHistoricalPerson;
   const image = portrait || (canUseIllustration && (representative?.portrait?.image || illustration?.image));
   if (!image) return "";
-  const label = portrait ? (leader ? zt(leader) : opening?.name) : representative?.portrait?.image ? representative.name : "Illustrative portrait";
-  return `<div class="gpm-war-portrait"><img src="${b(image)}" alt="" loading="lazy"><small>${b(label || "Portrait")}</small></div>`;
+  const label = portrait ? (leader ? Lt(leader) : opening?.name) : representative?.portrait?.image ? representative.name : "Illustrative portrait";
+  return `<div class="gpm-war-portrait"><img src="${v(image)}" alt="" loading="lazy"><small>${v(label || "Portrait")}</small></div>`;
 }
 
 function gpmHistoricalWarCard(card, variant, { actors, actorId } = {}) {
@@ -217,8 +217,8 @@ function gpmHistoricalWarCard(card, variant, { actors, actorId } = {}) {
     variant === "detail" && status === "ceasefire" ? "Ceasefire · Fighting paused" : gpmHistoricalLabel(status);
   const sides = card.sides || [];
   const heading = compact
-    ? `<button type="button" class="k gpm-war-title" data-authority-safe data-history-select="${b(id)}" data-focus-key="history-select-${b(id)}" aria-label="View war: ${b(name)}">${b(name)}</button>`
-    : `<h3 class="gpm-war-title"${variant === "alert" ? ' id="gpm-war-alert-title"' : ""}>${b(name)}</h3>`;
+    ? `<button type="button" class="k gpm-war-title" data-authority-safe data-history-select="${v(id)}" data-focus-key="history-select-${v(id)}" aria-label="View war: ${v(name)}">${v(name)}</button>`
+    : `<h3 class="gpm-war-title"${variant === "alert" ? ' id="gpm-war-alert-title"' : ""}>${v(name)}</h3>`;
   const side = ({ goals = [], goalBasis, participants = [] }, index) => {
     const label = index === 0 ? "DEF" : "ATK";
     const sideClass = `gpm-war-side--${label.toLowerCase()}`;
@@ -231,21 +231,21 @@ function gpmHistoricalWarCard(card, variant, { actors, actorId } = {}) {
     const member = participant => gpmHistoricalWarParticipant(participant, `${id}-${index}`,
       { actor: actors?.get(participant.id), focused: participant.id === actorId, page: variant !== "alert" });
     const supportersOpen = actorId && supportingMembers.some(participant => participant.id === actorId);
-    const supporters = supportingMembers.length ? `<details class="gpm-war-supporters" data-history-panel="supporters-${b(id)}-${index}"${supportersOpen ? " open" : ""}>
-      <summary data-focus-key="supporters-${b(id)}-${index}">${b(supportingMembers.length)} supporting or granting access</summary>
+    const supporters = supportingMembers.length ? `<details class="gpm-war-supporters" data-history-panel="supporters-${v(id)}-${index}"${supportersOpen ? " open" : ""}>
+      <summary data-focus-key="supporters-${v(id)}-${index}">${v(supportingMembers.length)} supporting or granting access</summary>
       ${supportingMembers.map(member).join("")}</details>` : "";
     return `<section class="gpm-war-side ${sideClass}"><h4>${label}</h4>
       <div class="gpm-war-roster">${visible.map(member).join("")}
-        ${remaining ? `<small class="gpm-war-more">${b(remaining)} more in war details</small>` : ""}${supporters}</div>
-      <div class="gpm-war-goals"><b>War goals</b>${goalBasis ? `<small>${b(goalBasis)}</small>` : ""}
-        ${visibleGoals.length ? `<ul>${visibleGoals.map(goal => `<li>${b(goal)}</li>`).join("")}</ul>` : ""}
-        ${goals.length > visibleGoals.length ? `<small>${b(goals.length - visibleGoals.length)} more in war details</small>` : ""}</div>
+        ${remaining ? `<small class="gpm-war-more">${v(remaining)} more in war details</small>` : ""}${supporters}</div>
+      <div class="gpm-war-goals"><b>War goals</b>${goalBasis ? `<small>${v(goalBasis)}</small>` : ""}
+        ${visibleGoals.length ? `<ul>${visibleGoals.map(goal => `<li>${v(goal)}</li>`).join("")}</ul>` : ""}
+        ${goals.length > visibleGoals.length ? `<small>${v(goals.length - visibleGoals.length)} more in war details</small>` : ""}</div>
     </section>`;
   };
-  return `<article class="gpm-war-card gpm-war-card--${variant}"${compact ? ` data-history-card="${b(id)}"` : ""}${role ? " data-involved" : ""}>
+  return `<article class="gpm-war-card gpm-war-card--${variant}"${compact ? ` data-history-card="${v(id)}"` : ""}${role ? " data-involved" : ""}>
     ${heading}<section class="gpm-war-status" aria-label="War status"><small><b>War status</b>
-      <span>${b(statusLabel)}${role ? ` · <strong>${b(role)}</strong>` : ""}${variant === "detail" && modeledSides ? " · Scenario roles" : ""}</span></small>
-      ${context ? `<p>${b(context)}</p>` : ""}${entryReason && !compact ? `<p>${b(entryReason)}</p>` : ""}</section>
+      <span>${v(statusLabel)}${role ? ` · <strong>${v(role)}</strong>` : ""}${variant === "detail" && modeledSides ? " · Scenario roles" : ""}</span></small>
+      ${context ? `<p>${v(context)}</p>` : ""}${entryReason && !compact ? `<p>${v(entryReason)}</p>` : ""}</section>
     ${sides.length ? `<div class="gpm-war-sides">${sides.map(side).join("")}</div>` : ""}
   </article>`;
 }
@@ -257,18 +257,18 @@ function gpmHistoricalWarFallback(conflict, actors) {
       goals: incident ? ["Maintain influence in the affected area"] : ["Protect positions on this front"], goalBasis: "Scenario objectives",
       participants: ids.map(id => {
         const actor = actors?.get(id);
-        return { id, name: actor?.shortName || actor?.name || U(id), flagUrl: actor?.identity?.flag?.image,
+        return { id, name: actor?.shortName || actor?.name || j(id), flagUrl: actor?.identity?.flag?.image,
           strength: actor?.strength?.range ? { label: actor.strength.range, scope: "Historical estimate" } : null };
       }) })) };
 }
 
 function gpmShowNextWarAlert(presenter) {
   const alerts = presenter._gpmWarAlerts;
-  if (alerts.showing || !alerts.queue.length || presenter.sim !== ze) return;
+  if (alerts.showing || !alerts.queue.length || presenter.sim !== Ge) return;
   const { id, warCard } = alerts.queue.shift();
   alerts.showing = true;
   const render = card => {
-    if (presenter.sim !== ze) return;
+    if (presenter.sim !== Ge) return;
     const priorFocus = document.activeElement;
     let viewing = false;
     const dialog = document.createElement("dialog");
@@ -290,7 +290,7 @@ function gpmShowNextWarAlert(presenter) {
       dialog.remove();
       alerts.dialog = null;
       alerts.showing = false;
-      if (alerts.queue.length && presenter.sim === ze) {
+      if (alerts.queue.length && presenter.sim === Ge) {
         gpmShowNextWarAlert(presenter);
       } else {
         alerts.release?.();
@@ -303,7 +303,7 @@ function gpmShowNextWarAlert(presenter) {
     continueButton.focus();
   };
   if (warCard) return render(warCard);
-  at(presenter.sim, "gpm.historicalConflicts", { id }).then(result => {
+  Je(presenter.sim, "gpm.historicalConflicts", { id }).then(result => {
     const selected = result?.selected;
     render(selected?.warCard || (selected ? gpmHistoricalWarFallback(selected, new Map(selected.actors?.map(actor => [actor.id, actor]))) :
       { id, name: "War entry", status: "active" }));
@@ -314,7 +314,7 @@ function gpmShowNextWarAlert(presenter) {
 }
 
 function gpmQueueWarAlert(presenter, { id, warCard } = {}, eventId) {
-  if (!id || presenter.sim !== ze) return;
+  if (!id || presenter.sim !== Ge) return;
   const alerts = presenter._gpmWarAlerts ||= { seen: new Set(), queue: [], showing: false };
   const key = eventId ?? id;
   if (alerts.seen.has(key)) return;
@@ -343,10 +343,10 @@ function gpmHistoricalFactionHeading(actor) {
   const ratio = Number.isFinite(flag?.ratio) && flag.ratio > 0 ? flag.ratio : 1.5;
   return `<div class="insp-head">
     ${flag?.image ? `<img class="flag fl-xl" data-gpm-faction-flag style="--flag-ratio:${ratio}"
-      src="${b(flag.image)}" alt="${b(flag.name || actor.name)}">` : ""}
+      src="${v(flag.image)}" alt="${v(flag.name || actor.name)}">` : ""}
     <div class="insp-id">
-      <div class="insp-name">${b(actor.mapName || actor.wartimeMapName || actor.shortName || actor.name)}</div>
-      <div class="insp-regime">${b(gpmHistoricalLabel(actor.kind))}</div>
+      <div class="insp-name">${v(actor.mapName || actor.wartimeMapName || actor.shortName || actor.name)}</div>
+      <div class="insp-regime">${v(gpmHistoricalLabel(actor.kind))}</div>
     </div>
   </div>`;
 }
@@ -357,15 +357,15 @@ function gpmHistoricalFactionProfile(actor, front) {
   const leader = actor.leadership?.leader;
   const representative = identity?.representative;
   const illustration = gpmHistoricalDossierIllustrations[actor.id];
-  const currentName = leader ? zt(leader) : opening?.name;
+  const currentName = leader ? Lt(leader) : opening?.name;
   const documented = !leader || !!leader.gpmHistoricalPerson;
-  const portrait = leader ? Ts(leader, actor.leadership.year) : opening?.portrait?.image;
+  const portrait = leader ? Hs(leader, actor.leadership.year) : opening?.portrait?.image;
   const representativeImage = documented && !portrait && representative?.portrait?.image;
   const illustrativeImage = documented && !portrait && !representativeImage && illustration?.image;
   const photo = portrait || representativeImage || illustrativeImage;
   const leaderName = currentName || (representativeImage && representative.name) ||
     (illustrativeImage && illustration.fictionalName) || "Leadership not documented";
-  const leaderRole = (leader && !documented ? Bp(leader.role, leader.g) : opening?.role) ||
+  const leaderRole = (leader && !documented ? ed(leader.role, leader.g) : opening?.role) ||
     (representativeImage ? "Faction representative" : illustrativeImage && illustration.fictionalName ? "Fictional scenario character" : null);
   const photoCredit = representativeImage ? "Photo: " + representative.name + " (faction representative)" :
     illustrativeImage ? "Illustrative portrait" : null;
@@ -374,7 +374,7 @@ function gpmHistoricalFactionProfile(actor, front) {
     (actor.ideology?.length <= 80 ? actor.ideology.replace(/\.$/, "") : null) ||
     (ideology?.territorial ? gpmHistoricalLabel(ideology.territorial) : null);
   const badges = front.status === "active" ? `<span class="badge alert">${o("inspector.badge.atWar")}</span>` :
-    front.status ? `<span class="badge">${b(gpmHistoricalLabel(front.status))}</span>` : "";
+    front.status ? `<span class="badge">${v(gpmHistoricalLabel(front.status))}</span>` : "";
   const stats = [
     ["Active forces", actor.nativeForces?.active],
     ["Reserve forces", actor.nativeForces?.reserve],
@@ -386,20 +386,20 @@ function gpmHistoricalFactionProfile(actor, front) {
   const policy = law => {
     const statuses = { in_force: "In force", in_practice: "In practice", charter: "Charter" };
     const status = law.status && (statuses[law.status] || gpmHistoricalLabel(law.status));
-    return `<li>${b(law.name)}${status ? ` <small class="regime-class">${b(status)}</small>` : ""}</li>`;
+    return `<li>${v(law.name)}${status ? ` <small class="regime-class">${v(status)}</small>` : ""}</li>`;
   };
   return `${gpmHistoricalFactionHeading(actor)}
     ${badges ? `<div class="badges insp-badges">${badges}</div>` : ""}
     <div class="k insp-leader" data-gpm-faction-leader>
-      <span class="insp-ic il-ic">${photo ? `<img class="il-av" src="${b(photo)}" alt="${b(photoCredit || leaderName)}">` : Q.user}</span>
-      <span class="il-txt"><span class="il-role">${b(leaderName)}</span>
-        ${leaderRole || photoCredit ? `<span class="il-sub">${b([leaderRole, photoCredit].filter(Boolean).join(" · "))}</span>` : ""}
+      <span class="insp-ic il-ic">${photo ? `<img class="il-av" src="${v(photo)}" alt="${v(photoCredit || leaderName)}">` : Y.user}</span>
+      <span class="il-txt"><span class="il-role">${v(leaderName)}</span>
+        ${leaderRole || photoCredit ? `<span class="il-sub">${v([leaderRole, photoCredit].filter(Boolean).join(" · "))}</span>` : ""}
       </span>
     </div>
     ${stats.length ? `<div class="insp-econ">${stats.map(([label, value]) =>
-      `<div class="stat" data-gpm-faction-stat><label>${b(label)}</label><span class="v">${b(value.toLocaleString(cs()))}</span></div>`).join("")}</div>` : ""}
+      `<div class="stat" data-gpm-faction-stat><label>${v(label)}</label><span class="v">${v(value.toLocaleString(ks()))}</span></div>`).join("")}</div>` : ""}
     ${details.length ? `<div class="insp-rel">${details.map(([label, value]) =>
-      `<div class="ir-cell"><label>${b(label)}</label><span>${b(value)}</span></div>`).join("")}</div>` : ""}
+      `<div class="ir-cell"><label>${v(label)}</label><span>${v(value)}</span></div>`).join("")}</div>` : ""}
     ${laws.length ? `<div data-gpm-faction-policies><div class="insp-tier">Policies</div>
       <ul class="gpm-faction-laws">${laws.slice(0, 3).map(policy).join("")}</ul>
       ${laws.length > 3 ? `<details><summary>More policies</summary><ul class="gpm-faction-laws">${laws.slice(3).map(policy).join("")}</ul></details>` : ""}</div>` : ""}`;
@@ -415,7 +415,7 @@ async function gpmOpenHistoricalFactionInspector(ui, session, item, front, facti
   const selection = { session, factionId: faction.id, provinceKey: item.provinceKey };
   ui._gpmFactionInspector = selection;
   try {
-    const result = await at(session, "gpm.historicalConflicts", { id: front.id });
+    const result = await Je(session, "gpm.historicalConflicts", { id: front.id });
     if (ui._gpmFactionInspector !== selection || ui.sim !== session || !shell.isConnected) return;
     const conflict = result?.selected;
     const actor = conflict?.actors?.find(candidate => candidate.id === faction.id);
@@ -434,12 +434,12 @@ function gpmHistoricalControlSummary(region, authority, compact = false, chart =
   if (!rows?.length && military?.totalCells > 0 && military.sides?.length === 2) {
     const first = Math.round(1000 * military.sides[0].cells / military.totalCells) / 10;
     rows = military.sides.map((side, index) => ({
-      name: side.actorId ? authority(side.actorId) : U(side.countryKey),
+      name: side.actorId ? authority(side.actorId) : j(side.countryKey),
       percent: index ? 100 - first : first,
     }));
   }
   if (rows?.length) {
-    const percentage = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 });
+    const percentage = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 1 });
     if (chart) {
       const palette = ["#648aa4", "#b48a60", "#a18ab5", "#77a18d"];
       const visual = rows.map((side, index) => ({
@@ -449,15 +449,15 @@ function gpmHistoricalControlSummary(region, authority, compact = false, chart =
       return `<div class="gpm-history-control-bar" aria-hidden="true" data-gpm-control-chart>
         ${visual.filter(side => side.share > 0).map(side => `<span style="flex:${side.share};background:${side.color}"></span>`).join("")}</div>
         <ul class="gpm-history-control-list">${visual.map(side => `<li data-gpm-control-row><i aria-hidden="true" style="background:${side.color}"></i>
-          <span>${b(side.name)}</span><b>${b(percentage.format(side.share / 100))}</b></li>`).join("")}</ul>`;
+          <span>${v(side.name)}</span><b>${v(percentage.format(side.share / 100))}</b></li>`).join("")}</ul>`;
     }
     return `${compact ? "" : "<small>Modeled share of regional control.</small>"}
-      <ul>${rows.map(side => `<li data-gpm-control-row><span>${b(side.name)}</span>
-        <b>${b(percentage.format(side.percent / 100))}</b></li>`).join("")}</ul>`;
+      <ul>${rows.map(side => `<li data-gpm-control-row><span>${v(side.name)}</span>
+        <b>${v(percentage.format(side.percent / 100))}</b></li>`).join("")}</ul>`;
   }
   if (compact) return "<p>Exact control unknown</p>";
   const dominant = region.dominantActorId || (region.contested && region.controller);
-  return `<p>Exact control unknown</p>${dominant ? `<p>${b(authority(dominant))} is reported to hold more of this area.</p>` : ""}`;
+  return `<p>Exact control unknown</p>${dominant ? `<p>${v(authority(dominant))} is reported to hold more of this area.</p>` : ""}`;
 }
 
 function gpmHistoricalControlStatus({ contested, captured, controlled, modeledContact, reportedRegion }) {
@@ -475,7 +475,7 @@ function gpmHistoricalFrontSummary(front, actors) {
   const reported = sideName(front.reportedDominantId);
   const status = front.status === "ceasefire" ? "Ceasefire · Fighting paused" :
     front.status === "occupation" && !front.captured ? "Reported occupation" : gpmHistoricalControlStatus(front) || gpmHistoricalLabel(front.status);
-  const name = controller || (front.occupationKey && U(front.occupationKey));
+  const name = controller || (front.occupationKey && j(front.occupationKey));
   const clue = front.contested ? reported && (reported + " reported dominant") :
     (front.captured || front.controlled) && name;
   return { sides: sides.length ? sides.join(" vs ") : (front.actorIds || []).map(sideName).filter(Boolean).join(" / "), status, clue };
@@ -485,18 +485,18 @@ function gpmHistoricalOverlayFront(front, map, globe, primary = false) {
   const summary = gpmHistoricalFrontSummary(front, map.actors);
   const actors = [...new Set([front.reportedDominantId, ...(front.sides || []).flat(), ...(front.actorIds || [])].filter(Boolean))];
   const actions = actors.map(id => gpmHistoricalFactionActions(globe, map, id)).filter(Boolean);
-  const button = (id, action, label) => label ? `<button type="button" class="k k-sm" data-history-faction="${b(id)}"
-    data-history-faction-action="${action}" data-focus-key="${b(front.id + id + action)}">${b(label)}</button>` : "";
+  const button = (id, action, label) => label ? `<button type="button" class="k k-sm" data-history-faction="${v(id)}"
+    data-history-faction-action="${action}" data-focus-key="${v(front.id + id + action)}">${v(label)}</button>` : "";
   const title = front.shortTitle || front.name;
-  return `<section data-history-overlay-front="${b(front.id)}">
-    ${primary ? `<b>${b(title)}</b>` : `<b>${b(title)} · ${b(summary.status)}</b>`}
-    ${summary.sides && summary.sides !== title ? `<p>${b(summary.sides)}</p>` : ""}
-    ${summary.clue ? `<p>${b(summary.clue)}</p>` : ""}
+  return `<section data-history-overlay-front="${v(front.id)}">
+    ${primary ? `<b>${v(title)}</b>` : `<b>${v(title)} · ${v(summary.status)}</b>`}
+    ${summary.sides && summary.sides !== title ? `<p>${v(summary.sides)}</p>` : ""}
+    ${summary.clue ? `<p>${v(summary.clue)}</p>` : ""}
     ${front.contested || front.control?.length ? gpmHistoricalControlSummary(front, null, true) : ""}
     ${actions.length ? `<div data-history-overlay-actions>${actions.map(row =>
       button(row.id, "open", row.openLabel) + button(row.id, "zoom", row.zoomLabel)).join("")}</div>` : ""}
-    ${!primary ? `<button type="button" class="k k-sm" data-history-overlay-details="${b(front.id)}"
-      data-focus-key="${b(front.id)}">View conflict</button>` : ""}
+    ${!primary ? `<button type="button" class="k k-sm" data-history-overlay-details="${v(front.id)}"
+      data-focus-key="${v(front.id)}">View conflict</button>` : ""}
   </section>`;
 }
 
@@ -508,7 +508,7 @@ function gpmCloseRegionalControlBox(ui) {
   selection.shell.remove();
 }
 
-function gpmOpenRegionalControlBox(ui, session, { region, mode, map, opener, x = g1[0], y = g1[1] }) {
+function gpmOpenRegionalControlBox(ui, session, { region, mode, map, opener, x = X1[0], y = X1[1] }) {
   if (ui.sim !== session || !map || !region.fronts[0] || !(region.fronts[0].contested || region.fronts[0].captured)) return;
   gpmCloseRegionalControlBox(ui);
   ui.tooltip(null);
@@ -532,7 +532,7 @@ function gpmOpenRegionalControlBox(ui, session, { region, mode, map, opener, x =
   function render(currentRegion) {
     region = currentRegion;
     const [primary, ...overlapping] = region.fronts;
-    const next = `<strong>${b(region.name)} · ${primary.contested ? "Contested" : "Captured"}</strong>
+    const next = `<strong>${v(region.name)} · ${primary.contested ? "Contested" : "Captured"}</strong>
       <div data-history-military-control>${gpmHistoricalOverlayFront(primary, map, ui.globe, true)}</div>
       ${overlapping.length ? `<details data-history-overlay-overlap>
         <summary>${overlapping.length} other ${overlapping.length === 1 ? "conflict" : "conflicts"}</summary>
@@ -588,7 +588,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
     conflict.regions.find(region => (region.currentContested ?? region.contested) && (region.control?.length || region.militaryControl)) ||
     conflict.regions.find(region => region.currentContested ?? region.contested) || conflict.regions[0];
   const name = region => Ut(region.key, region.name);
-  const authority = id => actors.get(id)?.shortName || actors.get(id)?.name || U(id);
+  const authority = id => actors.get(id)?.shortName || actors.get(id)?.name || j(id);
   const describeControl = region => gpmHistoricalControlStatus({ ...region,
     contested: region.currentContested ?? region.contested,
     captured: !!region.occupationKey && !region.currentContested });
@@ -607,7 +607,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
   const signature = JSON.stringify([...byKey.keys()]);
   if (state.geometry?.world !== world || state.geometry?.signature !== signature) {
     const features = world?.provinces?.filter(feature => feature.geometry && byKey.has(feature.__provKey)) || [];
-    state.geometry = { world, signature, layout: features.length ? ok(features, 620, 420, { pad: 12, maxInsets: 8 }) : null,
+    state.geometry = { world, signature, layout: features.length ? I_(features, 620, 420, { pad: 12, maxInsets: 8 }) : null,
       keys: new Map(features.map(feature => [feature.__provId, feature.__provKey])) };
   }
   const { layout, keys } = state.geometry;
@@ -615,10 +615,10 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
     ${items.map(item => {
       const region = byKey.get(keys.get(item.provId));
       if (!region) return "";
-      return `<path d="${b(item.d)}" fill="${colors[category(region)]}" tabindex="0" role="button"
-        aria-label="${b(name(region))} · ${b(regionStatus(region))}" aria-pressed="${region === selected}" data-focus-key="history-map-${b(region.key)}"
-        data-history-region="${b(region.key)}" ${region === selected ? "data-selected" : ""}>
-        <title>${b(name(region))} · ${b(regionStatus(region))}</title></path>`;
+      return `<path d="${v(item.d)}" fill="${colors[category(region)]}" tabindex="0" role="button"
+        aria-label="${v(name(region))} · ${v(regionStatus(region))}" aria-pressed="${region === selected}" data-focus-key="history-map-${v(region.key)}"
+        data-history-region="${v(region.key)}" ${region === selected ? "data-selected" : ""}>
+        <title>${v(name(region))} · ${v(regionStatus(region))}</title></path>`;
     }).join("")}</svg>`;
   const labels = {
     contested: "Contested", captured: "Captured", first: authority(conflict.sides?.[0]?.[0]), second: authority(conflict.sides?.[1]?.[0]),
@@ -632,7 +632,7 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
   const contested = selected.currentContested ?? selected.contested;
   const controllerId = selected.currentController || selected.controller;
   const controller = !contested && (selected.occupationKey || selected.controlled) &&
-    (controllerId ? authority(controllerId) : selected.occupationKey && U(selected.occupationKey));
+    (controllerId ? authority(controllerId) : selected.occupationKey && j(selected.occupationKey));
   const showLegalOwner = controller && selected.legalOwner &&
     (selected.occupationKey ? selected.occupationKey !== selected.legalOwner : selected.legalControllerId !== controllerId);
   const militaryControl = contested
@@ -646,25 +646,25 @@ function gpmHistoricalRegions(conflict, actors, state, ui) {
     <h4>Regional control</h4>
     <label class="gpm-history-region-select">Region
       <select class="k" data-authority-safe data-history-region-picker data-focus-key="history-region-picker">${conflict.regions.map(region =>
-        `<option value="${b(region.key)}"${region === selected ? " selected" : ""}>${b(name(region))}</option>`).join("")}</select></label>
+        `<option value="${v(region.key)}"${region === selected ? " selected" : ""}>${v(name(region))}</option>`).join("")}</select></label>
     <div class="sh-inset gpm-history-region">${militaryControl || (controller
-      ? `<p><b>Controlled by ${b(controller)}</b>${selected.occupationKey ? " · Wartime occupation" : ""}${showLegalOwner ? ` · Legal owner ${b(U(selected.legalOwner))}` : ""}</p>`
+      ? `<p><b>Controlled by ${v(controller)}</b>${selected.occupationKey ? " · Wartime occupation" : ""}${showLegalOwner ? ` · Legal owner ${v(j(selected.legalOwner))}` : ""}</p>`
       : `<p><b>${conflict.status === "occupation" ? "Reported occupation · " : ""}Exact control unknown</b></p>`)}
-    ${selected.localOutcomes?.length ? `<p>${b([...new Set(selected.localOutcomes.map(local => local.administration || local.title).filter(Boolean))].join(", "))}</p>` : ""}
+    ${selected.localOutcomes?.length ? `<p>${v([...new Set(selected.localOutcomes.map(local => local.administration || local.title).filter(Boolean))].join(", "))}</p>` : ""}
     ${overlaps.length ? `<p><b>Other conflicts here</b></p><div class="gpm-history-actions">${overlaps.map(other => other.id
-      ? `<button type="button" class="k" data-authority-safe data-history-select="${b(other.id)}" data-history-keep-region data-focus-key="overlap-${b(other.id)}">${b(other.name)}${other.status ? ` · ${b(gpmHistoricalLabel(other.status))}` : ""}</button>`
-      : `<span>${b(other.name)}</span>`).join("")}</div>` : ""}</div>
+      ? `<button type="button" class="k" data-authority-safe data-history-select="${v(other.id)}" data-history-keep-region data-focus-key="overlap-${v(other.id)}">${v(other.name)}${other.status ? ` · ${v(gpmHistoricalLabel(other.status))}` : ""}</button>`
+      : `<span>${v(other.name)}</span>`).join("")}</div>` : ""}</div>
     ${layout ? `<div class="gpm-history-map">${paths(layout.paths, layout.W, layout.H)}${layout.insets.map(inset => paths(inset.paths, layout.box, layout.box)).join("")}
       <div class="gpm-history-map-key">${[...categories].map(key =>
-        `<small><i aria-hidden="true" style="background:${colors[key]}"></i>${b(labels[key])}</small>`).join("")}</div></div>` : ""}
+        `<small><i aria-hidden="true" style="background:${colors[key]}"></i>${v(labels[key])}</small>`).join("")}</div></div>` : ""}
   </section>`;
 }
 
 function gpmHistoricalPetitionAssessment(assessment, conflictId) {
   if (!assessment) return "";
   const { support, seats, willingness, alignment, governmentChance, counterpartyChance } = assessment;
-  const number = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 });
-  const odds = value => b(number.format(value));
+  const number = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 1 });
+  const odds = value => v(number.format(value));
   const partyReach = `Public support ${odds(support)} · Highest seat share ${odds(seats)}`;
   const influence = Math.max(support, seats);
   const panel = `petition-odds-${conflictId}`;
@@ -673,8 +673,8 @@ function gpmHistoricalPetitionAssessment(assessment, conflictId) {
       <div><small>Your government forwards it</small><b>${odds(governmentChance)}</b></div>
       <div><small>Other government agrees if asked</small><b>${odds(counterpartyChance)}</b></div>
     </div>
-    <details class="gpm-petition-explanation" data-history-panel="${b(panel)}">
-      <summary data-focus-key="${b(panel)}" data-authority-safe>What affects the odds?</summary>
+    <details class="gpm-petition-explanation" data-history-panel="${v(panel)}">
+      <summary data-focus-key="${v(panel)}" data-authority-safe>What affects the odds?</summary>
       <div class="gpm-petition-factors">
         <div><b class="gpm-petition-for">Helps approval</b><ul>
           ${willingness >= .5 ? "<li>The scenario favors withdrawal talks</li>" : ""}
@@ -703,7 +703,7 @@ function gpmHistoricalOtherGroups(conflict, card, actors, focusedId) {
     const actor = actors.get(id);
     const estimate = actor.strength;
     const label = Number.isFinite(estimate?.gamePersonnel)
-      ? `${estimate.gamePersonnel.toLocaleString(cs())} personnel` : estimate?.range;
+      ? `${estimate.gamePersonnel.toLocaleString(ks())} personnel` : estimate?.range;
     const participant = { id, name: actor.shortName || actor.name, flagUrl: actor.identity?.flag?.image,
       strength: label ? { label, scope: "Scenario estimate" } : null };
     return gpmHistoricalWarParticipant(participant, `related-${conflict.id}`, { actor, focused: id === focusedId, page: true });
@@ -728,15 +728,15 @@ function gpmHistoricalDetail(conflict, state, ui) {
     const term = entry.term && gpmHistoricalLabel(entry.term);
     const change = [...new Set([term, outcome, gains].filter(Boolean))].join(" · ");
     return change ? `${ui.gameDate(entry.day)} · ${change}` : "";
-  }).filter(Boolean))].slice(0, 3).map(change => `<li>${b(change)}</li>`).join("");
-  const proposals = conflict.canNegotiate && conflict.options?.length ? (pendingTerm ? `<p><b>${b(pendingTerm.label)}</b></p>
-    ${pendingTerm.description ? `<p>${b(pendingTerm.description)}</p>` : ""}${gpmHistoricalPetitionAssessment(pendingTerm.assessment, conflict.id)}
+  }).filter(Boolean))].slice(0, 3).map(change => `<li>${v(change)}</li>`).join("");
+  const proposals = conflict.canNegotiate && conflict.options?.length ? (pendingTerm ? `<p><b>${v(pendingTerm.label)}</b></p>
+    ${pendingTerm.description ? `<p>${v(pendingTerm.description)}</p>` : ""}${gpmHistoricalPetitionAssessment(pendingTerm.assessment, conflict.id)}
     <div class="gpm-history-actions">
     ${action("confirm", pendingTerm.id === "petition-withdrawal" ? "Submit petition" : "Submit proposal", `${pendingTerm.id === "petition-withdrawal" ? "data-authority-safe" : "data-authority-command"} ${state.busy ? "disabled" : ""}`)}
-    ${action("cancel", "Cancel", `data-authority-safe data-history-cancel-term="${b(pendingTerm.id)}"`)}</div>`
-    : `${petitionOption ? `<p>${b(petitionOption.description)}</p>${gpmHistoricalPetitionAssessment(petitionOption.assessment, conflict.id)}
-    <p>Government review due ${b(ui.gameDate(petitionOption.reviewDay))} if you submit today.</p>` : ""}
-    <div class="gpm-history-actions">${conflict.options.map(option => `<button type="button" class="k" ${option.id === "petition-withdrawal" ? "data-authority-safe" : "data-authority-command"} data-history-term="${b(option.id)}" data-focus-key="history-term-${b(option.id)}">${b(option.label)}</button>`).join("")}</div>`) : "";
+    ${action("cancel", "Cancel", `data-authority-safe data-history-cancel-term="${v(pendingTerm.id)}"`)}</div>`
+    : `${petitionOption ? `<p>${v(petitionOption.description)}</p>${gpmHistoricalPetitionAssessment(petitionOption.assessment, conflict.id)}
+    <p>Government review due ${v(ui.gameDate(petitionOption.reviewDay))} if you submit today.</p>` : ""}
+    <div class="gpm-history-actions">${conflict.options.map(option => `<button type="button" class="k" ${option.id === "petition-withdrawal" ? "data-authority-safe" : "data-authority-command"} data-history-term="${v(option.id)}" data-focus-key="history-term-${v(option.id)}">${v(option.label)}</button>`).join("")}</div>`) : "";
   const outcome = conflict.victoryOutcome;
   const winner = outcome && actors.get(outcome.actorId);
   const victoryFlag = winner && ["national", "independence", "autonomy"].includes(outcome.scope)
@@ -747,29 +747,29 @@ function gpmHistoricalDetail(conflict, state, ui) {
   const policyNames = (outcome?.regionalLaws || []).map(law => law.name).filter(Boolean);
   const postwar = settlement || administration || winner || outcome?.note
     ? `<section class="gpm-history-detail" aria-label="Outcome"><h4>Outcome</h4>
-    ${settlement ? `<p><b>${b(settlement)}</b></p>` : ""}
-    ${winner && (!outcome.negotiated || victoryFlag) ? `<div class="gpm-history-actor-heading">${victoryFlag ? `<img class="gpm-history-flag" src="${b(victoryFlag.image)}" alt="${b(victoryFlag.name)}">` : ""}
-      <span>${b(administration || winner.shortName || winner.name)}${administration || outcome.negotiated ? "" : " won"}</span></div>` : administration ? `<p>${b(administration)}</p>` : ""}
-    ${outcome?.note && conflict.petition?.status !== "accepted" ? `<p>${b(outcome.note)}</p>` : ""}
-    ${policyNames.length ? `<p><b>Policies adopted</b> · ${b(policyNames.join(", "))}</p>` : ""}</section>` : "";
+    ${settlement ? `<p><b>${v(settlement)}</b></p>` : ""}
+    ${winner && (!outcome.negotiated || victoryFlag) ? `<div class="gpm-history-actor-heading">${victoryFlag ? `<img class="gpm-history-flag" src="${v(victoryFlag.image)}" alt="${v(victoryFlag.name)}">` : ""}
+      <span>${v(administration || winner.shortName || winner.name)}${administration || outcome.negotiated ? "" : " won"}</span></div>` : administration ? `<p>${v(administration)}</p>` : ""}
+    ${outcome?.note && conflict.petition?.status !== "accepted" ? `<p>${v(outcome.note)}</p>` : ""}
+    ${policyNames.length ? `<p><b>Policies adopted</b> · ${v(policyNames.join(", "))}</p>` : ""}</section>` : "";
   const inheritedDecision = state.data?.inheritedWars?.wars?.some(war => war.conflictId === conflict.id && !war.choice);
   const nextAction = proposals || conflict.pending || conflict.actionReason || conflict.petition || conflict.theatreKey || inheritedDecision || conflict.victoryBlocked
     ? `<section class="gpm-history-detail" aria-label="What you can do"><h4>What you can do</h4>
-    ${conflict.pending && conflict.petition?.status !== "forwarded" ? `<p>${b(conflict.pending.label)} proposed by ${b(U(conflict.pending.offeredBy))}. Review due ${b(ui.gameDate(conflict.pending.reviewDay))}.</p>` : ""}
-    ${conflict.petition?.message ? `<p>${b(conflict.petition.message)}${Number.isFinite(conflict.decision?.reviewDay) && conflict.decision.pending ? ` Response due ${b(ui.gameDate(conflict.decision.reviewDay))}.` : ""}</p>` : ""}
-    ${conflict.actionReason && !conflict.pending && !conflict.petition && !conflict.theatreKey && !inheritedDecision ? `<p>${b(conflict.actionReason)}</p>` : ""}
-    ${conflict.victoryBlocked ? `<p>${b(conflict.victoryBlocked)}</p>` : ""}
+    ${conflict.pending && conflict.petition?.status !== "forwarded" ? `<p>${v(conflict.pending.label)} proposed by ${v(j(conflict.pending.offeredBy))}. Review due ${v(ui.gameDate(conflict.pending.reviewDay))}.</p>` : ""}
+    ${conflict.petition?.message ? `<p>${v(conflict.petition.message)}${Number.isFinite(conflict.decision?.reviewDay) && conflict.decision.pending ? ` Response due ${v(ui.gameDate(conflict.decision.reviewDay))}.` : ""}</p>` : ""}
+    ${conflict.actionReason && !conflict.pending && !conflict.petition && !conflict.theatreKey && !inheritedDecision ? `<p>${v(conflict.actionReason)}</p>` : ""}
+    ${conflict.victoryBlocked ? `<p>${v(conflict.victoryBlocked)}</p>` : ""}
     ${conflict.theatreKey || inheritedDecision ? `<div class="gpm-history-actions">
       ${inheritedDecision ? action("decisions", "Open decisions", "data-authority-safe") : ""}
       ${conflict.theatreKey ? action("theatre", "Open War Theatre", "data-authority-safe") : ""}</div>` : ""}
     ${proposals}</section>` : "";
   const ceasefireReview = conflict.status === "ceasefire" && Number.isInteger(conflict.ceasefireUntil) && conflict.ceasefireUntil > state.data?.day;
-  return `<article class="gpm-history-detail" aria-label="${b(conflict.name)}">
+  return `<article class="gpm-history-detail" aria-label="${v(conflict.name)}">
     ${gpmHistoricalWarCard(card, "detail", { actors, actorId: state.actorId })}
     ${nextAction}${postwar}
-    ${ceasefireReview ? `<p>Ceasefire review due ${b(ui.gameDate(conflict.ceasefireUntil))}.</p>` : ""}
+    ${ceasefireReview ? `<p>Ceasefire review due ${v(ui.gameDate(conflict.ceasefireUntil))}.</p>` : ""}
     ${conflict.transitionReview ? "<p>The new government is reviewing this ceasefire.</p>" : ""}
-    ${Number.isInteger(conflict.aidUntil) && conflict.aidUntil > state.data?.day ? `<p>Humanitarian access until ${b(ui.gameDate(conflict.aidUntil))}.</p>` : ""}
+    ${Number.isInteger(conflict.aidUntil) && conflict.aidUntil > state.data?.day ? `<p>Humanitarian access until ${v(ui.gameDate(conflict.aidUntil))}.</p>` : ""}
     ${gpmHistoricalRegions(conflict, actors, state, ui)}
     ${gpmHistoricalOtherGroups(conflict, card, actors, state.actorId)}
     ${history ? `<details class="gpm-history-section" data-history-panel="negotiations"><summary data-focus-key="history-negotiations">Recent changes</summary><ul>${history}</ul></details>` : ""}
@@ -779,35 +779,35 @@ function gpmHistoricalDetail(conflict, state, ui) {
 function gpmHistoricalDecisions(state, ui) {
   if (!state.data) return `<p>${state.pending ? "Loading decisions…" : "No decisions are available."}</p>`;
   const inherited = state.data.inheritedWars || { wars: [], voluntaryAid: [] };
-  const button = (id, action, label, token) => `<button class="k" type="button" data-history-decision="${b(action)}"
-    data-history-decision-id="${b(id)}" data-focus-key="decision-${b(id)}-${b(action)}"
-    ${token ? `data-history-peace-token="${b(token)}"` : ""}
-    data-authority-command${state.busy || state.pending ? " disabled" : ""}>${b(label)}</button>`;
+  const button = (id, action, label, token) => `<button class="k" type="button" data-history-decision="${v(action)}"
+    data-history-decision-id="${v(id)}" data-focus-key="decision-${v(id)}-${v(action)}"
+    ${token ? `data-history-peace-token="${v(token)}"` : ""}
+    data-authority-command${state.busy || state.pending ? " disabled" : ""}>${v(label)}</button>`;
   const details = (conflictId, key, label = "View war details") => conflictId ? `<button class="k" type="button" data-authority-safe
-    data-history-select="${b(conflictId)}" data-focus-key="decision-${b(key)}-details">${b(label)}</button>` : "";
+    data-history-select="${v(conflictId)}" data-focus-key="decision-${v(key)}-details">${v(label)}</button>` : "";
   const warRows = inherited.wars.map(war => {
-    const title = `<strong>${b(war.name)}</strong>`;
+    const title = `<strong>${v(war.name)}</strong>`;
     const { peace } = war;
     const offer = peace?.offer;
     const warDetails = details(war.conflictId, war.key);
     const terms = offer ? `<div class="gpm-peace-terms" aria-label="Peace terms">
-      <b>${b(offer.heading)}</b>
-      ${offer.counterparties?.length ? `<p>Other parties · ${b(offer.counterparties.join(", "))}</p>` : ""}
-      <ul>${offer.consequences.map(consequence => `<li>${b(consequence)}</li>`).join("")}</ul>
+      <b>${v(offer.heading)}</b>
+      ${offer.counterparties?.length ? `<p>Other parties · ${v(offer.counterparties.join(", "))}</p>` : ""}
+      <ul>${offer.consequences.map(consequence => `<li>${v(consequence)}</li>`).join("")}</ul>
     </div>` : "";
     const message = peace?.message;
     let body = "";
     let controls = "";
     if (war.choice) {
       const result = { leave: "Departed", stay: "Stayed in the war", peace: "Peace agreement signed" }[war.choice] || "No longer involved";
-      body = `<p>${b(result)}</p>${war.choice === "peace" ? terms : ""}`;
+      body = `<p>${v(result)}</p>${war.choice === "peace" ? terms : ""}`;
     } else if (peace?.status === "pending") {
-      const date = Number.isInteger(peace.reviewDay) ? ` Response due ${b(ui.gameDate(peace.reviewDay))}.` : "";
-      body = `<p>${b(message || "The other side is reviewing your offer. The war continues.")}${date}</p>${terms}`;
+      const date = Number.isInteger(peace.reviewDay) ? ` Response due ${v(ui.gameDate(peace.reviewDay))}.` : "";
+      body = `<p>${v(message || "The other side is reviewing your offer. The war continues.")}${date}</p>${terms}`;
       controls = warDetails;
     } else if (peace?.status === "ready" && offer) {
-      const expiry = Number.isInteger(peace.expiresDay) ? `<p>Accept by ${b(ui.gameDate(peace.expiresDay))}.</p>` : "";
-      body = `<p>${b(message || "The other side has agreed to these terms. Sign to put the agreement into effect.")}</p>${terms}${expiry}`;
+      const expiry = Number.isInteger(peace.expiresDay) ? `<p>Accept by ${v(ui.gameDate(peace.expiresDay))}.</p>` : "";
+      body = `<p>${v(message || "The other side has agreed to these terms. Sign to put the agreement into effect.")}</p>${terms}${expiry}`;
       controls = button(war.key, "accept", "Accept peace terms", offer.token) +
         button(war.key, "decline", "Decline terms") + warDetails;
     } else {
@@ -816,28 +816,28 @@ function gpmHistoricalDecisions(state, ui) {
       const reviewing = review === "offer" && canOffer;
       const confirmingStay = review === "stay";
       const retry = Number.isInteger(peace?.retryDay) && peace.retryDay > state.data.day
-        ? `<p>New offers available ${b(ui.gameDate(peace.retryDay))}.</p>` : "";
+        ? `<p>New offers available ${v(ui.gameDate(peace.retryDay))}.</p>` : "";
       const back = button(war.key, "cancel", "Back");
       if (confirmingStay) {
         body = "<p>Your country will stay in the war and close this post-uprising peace decision.</p>";
         controls = button(war.key, "stay", "Confirm keep fighting") + back;
       } else if (reviewing) {
-        body = `${terms}${offer.likelihood ? `<p>${b(offer.likelihood)}</p>` : ""}<p>Your country remains in the war while the other side reviews the offer.</p>`;
+        body = `${terms}${offer.likelihood ? `<p>${v(offer.likelihood)}</p>` : ""}<p>Your country remains in the war while the other side reviews the offer.</p>`;
         controls = button(war.key, "offer", "Send peace offer", offer.token) + back;
       } else {
-        body = `${message ? `<p>${b(message)}</p>` : canOffer ? "<p>Review what ending this war would require.</p>" : ""}${retry}`;
+        body = `${message ? `<p>${v(message)}</p>` : canOffer ? "<p>Review what ending this war would require.</p>" : ""}${retry}`;
         controls = (canOffer ? button(war.key, "review", "Seek peace") : "") + button(war.key, "reviewStay", "Keep fighting") + warDetails;
       }
     }
     return `<article class="sh-inset">${title}${body}${controls ? `<div class="gpm-history-actions">${controls}</div>` : ""}</article>`;
   });
-  const aidRows = inherited.voluntaryAid.map(aid => `<article class="sh-inset"><strong>Aid to ${b(aid.recipient)}</strong>
-    ${aid.warName ? `<p>${b(aid.warName)}</p>` : ""}<div class="gpm-history-actions">${button(aid.id, "endAid", "End voluntary support")}</div></article>`);
+  const aidRows = inherited.voluntaryAid.map(aid => `<article class="sh-inset"><strong>Aid to ${v(aid.recipient)}</strong>
+    ${aid.warName ? `<p>${v(aid.warName)}</p>` : ""}<div class="gpm-history-actions">${button(aid.id, "endAid", "End voluntary support")}</div></article>`);
   const diplomacyRows = state.data.conflicts.filter(conflict => conflict.decision).map(conflict => {
     const { label, description, pending, message, reviewDay, assessment } = conflict.decision;
-    return `<article class="sh-inset"><strong>${b(conflict.shortTitle || conflict.name)}</strong>
-      ${message ? `<p>${b(message)}${pending && Number.isFinite(reviewDay) ? ` Response due ${b(ui.gameDate(reviewDay))}.` : ""}</p>` : ""}
-      ${description ? `<p>${b(description)}</p>` : ""}${gpmHistoricalPetitionAssessment(assessment, conflict.id)}
+    return `<article class="sh-inset"><strong>${v(conflict.shortTitle || conflict.name)}</strong>
+      ${message ? `<p>${v(message)}${pending && Number.isFinite(reviewDay) ? ` Response due ${v(ui.gameDate(reviewDay))}.` : ""}</p>` : ""}
+      ${description ? `<p>${v(description)}</p>` : ""}${gpmHistoricalPetitionAssessment(assessment, conflict.id)}
       <div class="gpm-history-actions">${details(conflict.id, conflict.id, label)}</div></article>`;
   });
   const sections = (title, rows) => rows.length ? `<section><h4>${title}</h4>${rows.join("")}</section>` : "";
@@ -846,7 +846,7 @@ function gpmHistoricalDecisions(state, ui) {
 }
 
 function gpmOpenHistoricalDecisions(ui, session) {
-  if (ze !== session || ui.sim !== session) return;
+  if (Ge !== session || ui.sim !== session) return;
   ui._gpmHistoryDecisionsSelection = { session, countryKey: session.playerKey };
   if (ui.globe?._gpmHistoricalMap) ui.globe._gpmHistoricalMap.selectedWar = null;
   const host = K("content-body")?.querySelector("[data-gpm-history]");
@@ -961,19 +961,19 @@ function gpmHistoricalConflictsView(host, ui, session) {
     }
     const statuses = [...new Set(wars.map(conflict => conflict.status).filter(Boolean))].sort();
     if (state.filter && !statuses.includes(state.filter)) state.filter = "";
-    setHtml(filter, `<option value="">All statuses</option>${statuses.map(status => `<option value="${b(status)}"${state.filter === status ? " selected" : ""}>${b(gpmHistoricalLabel(status))}</option>`).join("")}`);
+    setHtml(filter, `<option value="">All statuses</option>${statuses.map(status => `<option value="${v(status)}"${state.filter === status ? " selected" : ""}>${v(gpmHistoricalLabel(status))}</option>`).join("")}`);
     const query = kt(state.query.trim());
     const matches = conflict => !query || kt([
       conflict.name, conflict.shortTitle, ...(conflict.participantNames || []),
-      gpmHistoricalLabel(conflict.kind), ...(conflict.countryKeys || []).map(key => U(key)),
+      gpmHistoricalLabel(conflict.kind), ...(conflict.countryKeys || []).map(key => j(key)),
     ].join(" ")).includes(query);
     const statusOrder = ["active", "occupation", "ceasefire", "suspended", "settled"];
     const order = status => statusOrder.includes(status) ? statusOrder.indexOf(status) : statusOrder.length;
-    const byStatus = (a, b) => order(a.status) - order(b.status) || (a.shortTitle || a.name).localeCompare(b.shortTitle || b.name, cs());
+    const byStatus = (a, b) => order(a.status) - order(b.status) || (a.shortTitle || a.name).localeCompare(b.shortTitle || b.name, ks());
     const rows = wars.filter(conflict => (!state.filter || conflict.status === state.filter) && matches(conflict)).sort(byStatus);
     const incidentRows = incidentReports.filter(matches).sort(byStatus);
-    const buttons = conflicts => conflicts.map(conflict => `<button type="button" class="k" data-authority-safe data-history-select="${b(conflict.id)}" data-focus-key="history-select-${b(conflict.id)}">
-      <b title="${b(conflict.name)}">${b(conflict.shortTitle || conflict.name)}</b><small>${b(gpmHistoricalLabel(conflict.status))}</small></button>`).join("");
+    const buttons = conflicts => conflicts.map(conflict => `<button type="button" class="k" data-authority-safe data-history-select="${v(conflict.id)}" data-focus-key="history-select-${v(conflict.id)}">
+      <b title="${v(conflict.name)}">${v(conflict.shortTitle || conflict.name)}</b><small>${v(gpmHistoricalLabel(conflict.status))}</small></button>`).join("");
     const selected = data?.selected;
     if (showingDetail) {
       setHtml(detail, gpmHistoricalDetail(selected?.id && selected.id === state.selectedId ? selected : null, state, ui));
@@ -1014,7 +1014,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
     state.lastRequest = performance.now();
     paint();
     try {
-      const result = await at(session, "gpm.historicalConflicts", id ? { id } : {});
+      const result = await Je(session, "gpm.historicalConflicts", id ? { id } : {});
       if (!current() || state.request !== request) return;
       if (!Array.isArray(result?.conflicts)) throw new Error("Unexpected conflict data");
       state.data = result;
@@ -1089,7 +1089,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
       state.status = "Applying decision…";
       paint();
       try {
-        const result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.warDecision", id: historyDecisionId,
+        const result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.warDecision", id: historyDecisionId,
           choice: historyDecision, ...(historyPeaceToken ? { token: historyPeaceToken } : {}) }]);
         const feedback = { offer: "Peace offer sent.", accept: "Peace agreement signed.",
           decline: "Peace terms declined. Your country is still in the war.", stay: "Your country stayed in the war.", endAid: "Voluntary support ended." };
@@ -1128,7 +1128,7 @@ function gpmHistoricalConflictsView(host, ui, session) {
       state.status = ["concede-victory", "claim-victory"].includes(term.id) ? "Implementing settlement…" : "Submitting proposal…";
       paint();
       try {
-        const result = await Te(session, "applyPlayerAction", [{ verb: "gpm.historicalConflicts.negotiate", id: conflict.id, term: term.id }]);
+        const result = await Le(session, "applyPlayerAction", [{ verb: "gpm.historicalConflicts.negotiate", id: conflict.id, term: term.id }]);
         if (result?.ok) state.status = result.message || "Proposal recorded.";
         else state.status = result?.message || `Proposal unavailable${result?.reason ? ` · ${gpmHistoricalLabel(result.reason)}` : ""}.`;
       } catch (error) {
@@ -1186,8 +1186,8 @@ function patchHistoricalConflictsRenderer(source, replaceOnce) {
     + rendererFunctions.join("\n") + initialize);
   const mountStyle = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle + gpmUprisingStyle;";
   js = replaceOnce(js, mountStyle, mountStyle.replace(";", " + gpmHistoricalConflictsStyle;"));
-  const translate = 'function F1e(e){\n    const officialName';
-  js = replaceOnce(js, translate, 'function F1e(e){\n    if(e==="gpm.historicalConflicts.title")return "Historical Conflicts";\n    const officialName');
+  const translate = 'function Ohe(e){\n    const officialName';
+  js = replaceOnce(js, translate, 'function Ohe(e){\n    if(e==="gpm.historicalConflicts.title")return "Historical Conflicts";\n    const officialName');
   const views = 'if(e==="military"){let a=G.BUDGET;';
   js = replaceOnce(js, views, 'if(e==="military"){if(t==="historical-conflicts")return [];let a=G.BUDGET;');
   const foot = 'foot:n=>this._subSel.military==="oob"?this._budgetReformFoot(n,!0):this._budgetReformFoot(n)';
@@ -1200,12 +1200,12 @@ function patchHistoricalConflictsRenderer(source, replaceOnce) {
     'closeInspector(){this._gpmFactionInspector=null;this.inspectedKey=null,');
   js = replaceOnce(js, '_resetInspectorTransient(){this._inspSig=null,',
     '_resetInspectorTransient(){this._gpmFactionInspector=null;this._inspSig=null,');
-  const drain = 'drain(){this._releaseHeld();for(let t of this.sim.drainNotifications())this._confined(t?.event||t,()=>this._presentEnvelope(t))}';
-  js = replaceOnce(js, drain, 'drain(){this._releaseHeld();const batch=this.sim.drainNotifications();this._gpmDirectBatch=new Set(batch.map(t=>t?.event||t).filter(e=>e.type==="gpm.war_entered"&&(!Array.isArray(e.audience?.countryKeys)||e.audience.countryKeys.map(String).includes(String(this.sim.playerKey)))).map(e=>e.payload?.warId||e.payload?.id));for(const t of batch)this._confined(t?.event||t,()=>this._presentEnvelope(t));this._gpmDirectBatch=null}');
-  const event = 'if(Array.isArray(r)&&!r.some(u=>i.has(String(u))))return;let s=gB(a,{sim:this.sim,presentation:n}),l=';
-  js = replaceOnce(js, event, 'if(Array.isArray(r)&&!r.some(u=>i.has(String(u))))return;if(a.type==="gpm.war_entered"){gpmQueueWarAlert(this,a.payload,a.id);return}if(a.type==="gpm.war_choices_available"){const session=this.sim;void gpmSyncUprisingControl(session).then(()=>{if(session.playerKey===a.payload?.countryKey)gpmOpenHistoricalDecisions(this.ui,session)}).catch(error=>console.warn("[PPO] Could not open war decisions",error));return}let s=gB(a,{sim:this.sim,presentation:n});if((a.type==="war.player_attacked"||a.type==="war.player_attacked_news")&&this._gpmDirectBatch?.has(a.payload?.warId)){if(a.type==="war.player_attacked")this.ui.recordPassiveEvent?.(s,n);return}let l=');
-  const news = 'OBt=Object.freeze({"war.ai_started"';
-  js = replaceOnce(js, news, 'OBt=Object.freeze({"military.support_activated":yp("war",["supportId","conflictId","donorKey","recipientKey","shippedUnits","promisedUnits","shippedAmmunitionLots","promisedAmmunitionLots"],["donorKey","recipientKey"]),"military.support_refused":yp("war",["supportId","conflictId","donorKey","recipientKey","modeId"],["donorKey","recipientKey"]),"war.ai_started"');
+  const drain = 'drain(){this._releaseHeld();let t=this.sim.drainNotifications();this.advisor.beginBatch(t);for(let a of t)this._confined(a?.event||a,()=>this._presentEnvelope(a));this.advisor.pump()}';
+  js = replaceOnce(js, drain, 'drain(){this._releaseHeld();const batch=this.sim.drainNotifications();this._gpmDirectBatch=new Set(batch.map(t=>t?.event||t).filter(e=>e.type==="gpm.war_entered"&&(!Array.isArray(e.audience?.countryKeys)||e.audience.countryKeys.map(String).includes(String(this.sim.playerKey)))).map(e=>e.payload?.warId||e.payload?.id));this.advisor.beginBatch(batch);try{for(const t of batch)this._confined(t?.event||t,()=>this._presentEnvelope(t));this.advisor.pump()}finally{this._gpmDirectBatch=null}}');
+  const event = 'if(Array.isArray(r)&&!r.some(d=>i.has(String(d))))return;let s=r$(a,{sim:this.sim,presentation:n}),l=';
+  js = replaceOnce(js, event, 'if(Array.isArray(r)&&!r.some(d=>i.has(String(d))))return;if(a.type==="gpm.war_entered"){gpmQueueWarAlert(this,a.payload,a.id);return}if(a.type==="gpm.war_choices_available"){const session=this.sim;void gpmSyncUprisingControl(session).then(()=>{if(session.playerKey===a.payload?.countryKey)gpmOpenHistoricalDecisions(this.ui,session)}).catch(error=>console.warn("[PPO] Could not open war decisions",error));return}let s=r$(a,{sim:this.sim,presentation:n});if((a.type==="war.player_attacked"||a.type==="war.player_attacked_news")&&this._gpmDirectBatch?.has(a.payload?.warId)){if(a.type==="war.player_attacked")this.ui.recordPassiveEvent?.(s,n);return}let l=');
+  const news = 'dGt=Object.freeze({"war.ai_started"';
+  js = replaceOnce(js, news, 'dGt=Object.freeze({"military.support_activated":Zp("war",["supportId","conflictId","donorKey","recipientKey","shippedUnits","promisedUnits","shippedAmmunitionLots","promisedAmmunitionLots"],["donorKey","recipientKey"]),"military.support_refused":Zp("war",["supportId","conflictId","donorKey","recipientKey","modeId"],["donorKey","recipientKey"]),"war.ai_started"');
   const newsHeadline = 'case"war.player_declared":return o("news.war.head",{a:a(t.playerKey),b:a(t.enemyKey)});';
   js = replaceOnce(js, newsHeadline, 'case"military.support_activated":return `${a(t.donorKey)} agreed to support ${a(t.recipientKey)}`;case"military.support_refused":return t.modeId==="offer"?`${a(t.recipientKey)} declined support from ${a(t.donorKey)}`:`${a(t.donorKey)} declined a support request from ${a(t.recipientKey)}`;' + newsHeadline);
   const refresh = '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);';

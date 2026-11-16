@@ -122,10 +122,10 @@ function advancePartyCongressCharterAI(sim, country, party, data) {
 }
 
 function registerPartyCongressCharter() {
-  n5t("gpm.party.congressCharter", {
+  Xgt("gpm.party.congressCharter", {
     apply(sim, country, input) {
-      if (country.key !== sim.playerKey || Uo(country) !== input.partyId) return { ok: false, reason: "party" };
-      return applyPartyCongressCharter(sim, country, YL(country, input.partyId), input.motionId, input.value, input.expected);
+      if (country.key !== sim.playerKey || cn(country) !== input.partyId) return { ok: false, reason: "party" };
+      return applyPartyCongressCharter(sim, country, pW(country, input.partyId), input.motionId, input.value, input.expected);
     },
   });
 }

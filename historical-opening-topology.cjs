@@ -2,8 +2,7 @@
 
 const topologyDelta = require("./historical-opening-topology.json");
 
-function applyHistoricalOpeningTopology(stock) {
-  const delta = gpmHistoricalOpeningTopology;
+function applyHistoricalOpeningTopology(stock, delta) {
   const object = stock.objects.provinces;
   if (stock.arcs.length !== delta.baseArcCount || object.geometries.length !== delta.baseProvinceCount) {
     throw new Error("PPO opening provinces require the supported stock province map.");
@@ -53,7 +52,9 @@ function gpmMigrateHistoricalOpeningOccupation(war, children) {
     for (const field of ["occupied", "lost"]) {
       if (war[field]?.includes(key)) {
         replacementLists[field] ??= [...war[field]];
-        replacementLists[field].push(...childKeys);
+        for (const childKey of childKeys) {
+          if (!replacementLists[field].includes(childKey)) replacementLists[field].push(childKey);
+        }
       }
     }
   }
@@ -63,45 +64,108 @@ function gpmMigrateHistoricalOpeningOccupation(war, children) {
 function gpmMigrateHistoricalOpeningTerritory(world, save) {
   const territory = save.sat?.territory;
   if (!Array.isArray(territory?.provs)) return;
-  const children = new Map();
-  const known = new Set(territory.provs.map(province => province?.k));
-  for (const country of Object.values(save.countries || {})) {
-    if (Array.isArray(country?.provOrder)) {
-      for (const key of country.provOrder) known.add(key);
+  const subdivisions = new Map();
+  for (const province of world.provinces) {
+    const parent = province.properties?.gpmOpeningSourceProvince;
+    if (!parent) continue;
+    const related = subdivisions.get(parent) || [];
+    related.push(province);
+    subdivisions.set(parent, related);
+  }
+  const openingKeys = new Set([...subdivisions.values()].flat().map(province => province.__provKey));
+  const records = new Map();
+  for (const [index, record] of territory.provs.entries()) {
+    const key = record?.k;
+    if (!key) continue;
+    if (typeof key === "string" && key.startsWith("PPO-") && !openingKeys.has(key)) {
+      throw new Error(`PPO save territory row ${index} refers to an unknown province ${key}`);
+    }
+    if ((openingKeys.has(key) || subdivisions.has(key)) && records.has(key)) {
+      throw new Error(`PPO save territory has multiple rows for ${key}`);
+    }
+    records.set(key, record);
+  }
+  const orders = new Map();
+  for (const [countryKey, country] of Object.entries(save.countries || {})) {
+    if (!Array.isArray(country?.provOrder)) continue;
+    for (const key of country.provOrder) {
+      if (typeof key === "string" && key.startsWith("PPO-") && !openingKeys.has(key)) {
+        throw new Error(`PPO save country ${countryKey} refers to an unknown province ${key}`);
+      }
+      if (!openingKeys.has(key) && !subdivisions.has(key)) continue;
+      if (orders.has(key)) throw new Error(`PPO save has multiple province order entries for ${key}`);
+      orders.set(key, countryKey);
     }
   }
-  for (const province of world.provinces) {
-    const key = province.properties?.gpmOpeningSourceProvince;
-    if (!key) continue;
-    if (known.has(province.__provKey)) return;
-    const related = children.get(key) || [];
-    related.push(province);
-    children.set(key, related);
+  for (const childKey of openingKeys) {
+    if (!records.has(childKey) && orders.has(childKey)) {
+      const province = world.provByKey.get(childKey);
+      if (orders.get(childKey) !== String(province.__polityKey || province.__countryKey)) {
+        throw new Error(`PPO save province ${childKey} has a country order entry without its territory row`);
+      }
+    }
   }
-  if (!children.size) return;
-  const records = new Map(territory.provs.filter(record => record?.k).map(record => [record.k, record]));
-  for (const [key, related] of children) {
+  const wars = save.sat.wars;
+  const aiWars = save.aiWars?.wars;
+  const activeWars = [...(Array.isArray(wars?.wars) ? wars.wars : []),
+    ...(Array.isArray(aiWars) ? aiWars.map(entry => entry?.[1]) : [])]
+    .filter(war => war?.status === "active" || war?.status === "suspended");
+  for (const war of activeWars) {
+    const ids = [...Object.keys(war.occupationCredit || {}),
+      ...(Array.isArray(war.occupied) ? war.occupied : []), ...(Array.isArray(war.lost) ? war.lost : [])];
+    for (const key of ids) {
+      if (typeof key === "string" && key.startsWith("PPO-") && !openingKeys.has(key)) {
+        throw new Error(`PPO save war ${war.id ?? "(unknown)"} refers to an unknown province ${key}`);
+      }
+      if (openingKeys.has(key) && !records.has(key) && !orders.has(key)) {
+        throw new Error(`PPO save war ${war.id ?? "(unknown)"} refers to province ${key} without a territory row or country order`);
+      }
+    }
+  }
+  const children = new Map();
+  const newRows = [];
+  const replacements = new Map();
+  for (const [key, related] of subdivisions) {
+    const missing = related.filter(province => !records.has(province.__provKey) && !orders.has(province.__provKey));
+    if (!missing.length) continue;
     const before = records.get(key);
-    if (!before) continue;
     const source = world.provByKey.get(key);
-    const total = [source, ...related].reduce((sum, province) => sum + (province.__pop || 0), 0);
+    if (!before && orders.has(key) && orders.get(key) !== String(source.__polityKey || source.__countryKey)) {
+      throw new Error(`PPO save parent province ${key} has a country order entry without its territory row`);
+    }
+    children.set(key, missing);
+    const carriesOccupation = activeWars.some(war => war.occupationCredit?.[key]);
+    if (!before) {
+      if (carriesOccupation) {
+        for (const child of missing) newRows.push({ k: child.__provKey });
+      }
+      continue;
+    }
+    // Existing children have already received their share. Split the saved
+    // remainder between the parent and the newly introduced children only.
+    const total = [source, ...missing].reduce((sum, province) => sum + (province.__pop || 0), 0);
+    const landShare = 1 - related.filter(province => records.has(province.__provKey) || orders.has(province.__provKey))
+      .reduce((sum, province) => sum + province.properties.gpmOpeningLandShare, 0);
     const inherited = Object.fromEntries(["sov", "pol", "dead", "claimants"]
       .filter(field => Object.hasOwn(before, field)).map(field => [field, before[field]]));
     const parent = { ...before };
-    for (const child of related) {
+    for (const child of missing) {
       const split = { k: child.__provKey, ...inherited };
-      const share = total > 0 ? (child.__pop || 0) / total : child.properties.gpmOpeningLandShare;
+      const share = total > 0 ? (child.__pop || 0) / total : child.properties.gpmOpeningLandShare / landShare;
       for (const field of ["pop", "gdp"]) {
         if (!Number.isFinite(before[field]) || before[field] < 0) continue;
         split[field] = before[field] * share;
-        parent[field] -= split[field];
+        parent[field] = Math.max(0, parent[field] - split[field]);
       }
-      if (Object.keys(split).length > 1) records.set(split.k, split);
+      if (Object.keys(split).length > 1 || carriesOccupation) newRows.push(split);
     }
-    records.set(key, parent);
+    replacements.set(key, parent);
   }
-  const wars = save.sat.wars;
-  save.sat = { ...save.sat, territory: { ...territory, provs: [...records.values()] } };
+  if (!children.size) return;
+  if (newRows.length) {
+    const rows = territory.provs.map(record => replacements.get(record?.k) || record);
+    save.sat = { ...save.sat, territory: { ...territory, provs: [...rows, ...newRows] } };
+  }
   if (Array.isArray(wars?.wars)) {
     save.sat.wars = { ...wars, wars: wars.wars.map(war => gpmMigrateHistoricalOpeningOccupation(war, children)) };
   }
@@ -115,28 +179,28 @@ const declaration = `const gpmHistoricalOpeningTopology = ${JSON.stringify(topol
 
 function patchHistoricalOpeningTopology(source, replaceOnce, target) {
   const renderer = target === "renderer";
-  const stock = renderer ? "t_" : "aae";
-  const world = renderer ? "function d0e(){let e=o3(Zm,Zm.objects.countries)," :
-    "function vPt(){let e=lye(dFe,dFe.objects.countries),";
+  const stock = renderer ? "RM" : "Dae";
+  const world = renderer ? "function ime(){let e=n4(z2,z2.objects.countries)," :
+    "function H_t(){let e=P4e(pFe,pFe.objects.countries),";
   const stockCopy = `t={...${stock},objects:{...${stock}.objects,provinces:{...${stock}.objects.provinces,geometries:${stock}.objects.provinces.geometries.map(`;
   const openingCopy = stockCopy.replaceAll(stock, "openingTopology");
   let result = replaceOnce(source, world + stockCopy, declaration + world +
-    `openingTopology=applyHistoricalOpeningTopology(${stock}),` + openingCopy);
+    `openingTopology=applyHistoricalOpeningTopology(${stock},gpmHistoricalOpeningTopology),` + openingCopy);
   if (renderer) {
     // Fill and borders must use the same vertices on both sides of a subdivided province.
-    result = replaceOnce(result, "p=(_,R=0)=>{let P=_;if(R)",
-      "p=(_,R=0,keepVertices=false)=>{let P=_;if(R)");
-    result = replaceOnce(result, "N*N+O*O<a||(M.push([A,T]),x=A,C=T)",
-      "(!keepVertices&&N*N+O*O<a)||(M.push([A,T]),x=A,C=T)");
-    result = replaceOnce(result, "T=[],N=[],O=[];m(p(L[0],A),A,T,N);for(let $=1;$<L.length;$++)L[$].length<4||(O.push(T.length/2),m(p(L[$],A),A,T,N))",
-      "T=[],N=[],O=[],keepVertices=!!(_.properties?.gpmOpeningSubdivision||_.properties?.gpmOpeningSourceProvince);m(p(L[0],A,keepVertices),A,T,N);for(let $=1;$<L.length;$++)L[$].length<4||(O.push(T.length/2),m(p(L[$],A,keepVertices),A,T,N))");
+    result = replaceOnce(result, "p=(_,A=0)=>{let R=_;if(A)",
+      "p=(_,A=0,keepVertices=false)=>{let R=_;if(A)");
+    result = replaceOnce(result, "L*L+O*O<a||(M.push([P,N]),x=P,C=N)",
+      "(!keepVertices&&L*L+O*O<a)||(M.push([P,N]),x=P,C=N)");
+    result = replaceOnce(result, "N=[],L=[],O=[];m(p(T[0],P),P,N,L);for(let q=1;q<T.length;q++)T[q].length<4||(O.push(N.length/2),m(p(T[q],P),P,N,L))",
+      "N=[],L=[],O=[],keepVertices=!!(_.properties?.gpmOpeningSubdivision||_.properties?.gpmOpeningSourceProvince);m(p(T[0],P,keepVertices),P,N,L);for(let q=1;q<T.length;q++)T[q].length<4||(O.push(N.length/2),m(p(T[q],P,keepVertices),P,N,L))");
   } else {
-    const validator = "function Yvt(e,t){let a=t.sat?.territory";
+    const validator = "function bwt(e,t){let a=t.sat?.territory";
     result = replaceOnce(result, validator, gpmMigrateHistoricalOpeningOccupation.toString() + "\n" +
       gpmMigrateHistoricalOpeningTerritory.toString() +
-      "\nfunction Yvt(e,t){gpmMigrateHistoricalOpeningTerritory(e.world,t);let a=t.sat?.territory");
+      "\nfunction bwt(e,t){gpmMigrateHistoricalOpeningTerritory(e.world,t);let a=t.sat?.territory");
   }
   return result;
 }
 
-module.exports = { patchHistoricalOpeningTopology };
+module.exports = { applyHistoricalOpeningTopology, gpmMigrateHistoricalOpeningTerritory, patchHistoricalOpeningTopology };

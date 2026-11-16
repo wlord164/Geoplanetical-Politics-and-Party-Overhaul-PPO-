@@ -9,7 +9,7 @@ function gpmPoliticalCrisisSignals(sim, country) {
   const unemployment = country.unemployment;
   const inflation = country.inflation;
   const normalInflation = Math.max(4, (country.inflationObserved0 || 0) + 2);
-  const health = ni(sim, country.key)?.status;
+  const health = mi(sim, country.key)?.status;
   return {
     jobs: Math.max(unit((unemployment - 9) / 14), unit((unemployment - country.unemployment0 - 2) / 8),
       unit((-country.growth - .7) / 8)),
@@ -59,7 +59,7 @@ function gpmPoliticalCrisisAppeal(party, pressure) {
 
 function gpmPoliticalCrisisUpdate(sim, country, day = sim.day) {
   const polity = country.pol;
-  const groups = Fwe(country);
+  const groups = vCe(country);
   if (!polity?.parties?.length || !groups.length || !Number.isFinite(day)) return null;
   const current = gpmPoliticalCrisisSignals(sim, country);
   const { failure, ...issues } = current;
@@ -67,8 +67,8 @@ function gpmPoliticalCrisisUpdate(sim, country, day = sim.day) {
   const prior = polity.gpmPoliticalCrisis;
   if (prior?.lastDay >= day) return prior.weights || null;
   if (!prior && (acute <= .22 || failure <= .24)) return null;
-  const ruling = cGr(polity);
-  const government = _t(country);
+  const ruling = PYr(polity);
+  const government = kt(country);
   const handover = prior && prior.government !== government;
   const weeks = Math.min(2, Math.max(1, Math.round((day - (prior?.lastDay ?? day)) / 7)));
   const smooth = (before, now) => now + ((before || 0) - now) * (now > before ? .79 : .72) ** weeks;
@@ -119,16 +119,16 @@ function patchPoliticalCrisisWorker(source, replaceOnce) {
     gpmPoliticalCrisisAppeal, gpmPoliticalCrisisUpdate, gpmPoliticalCrisisRecruitment, gpmPoliticalCrisisView].join("\n");
   const changes = [
     ['registerPartyOrganizing();', declarations + '\nregisterPartyOrganizing();'],
-    ['pKa(e,t),Bnt(e,t);let r={approval:', 'pKa(e,t),Bnt(e,t);let gpmCrisisWeights=gpmPoliticalCrisisUpdate(e,t),r={approval:'],
-    ['growthGainPct:O1e(e,t)})}else Unt', 'growthGainPct:O1e(e,t),crisisWeights:gpmCrisisWeights})}else Unt'],
+    ['$Da(e,t),Slt(e,t);let r={approval:', '$Da(e,t),Slt(e,t);let gpmCrisisWeights=gpmPoliticalCrisisUpdate(e,t),r={approval:'],
+    ['growthGainPct:T2e(e,t)})}else Rlt', 'growthGainPct:T2e(e,t),crisisWeights:gpmCrisisWeights})}else Rlt'],
     ['growthGainPct:r.growthGainPct})', 'growthGainPct:r.growthGainPct,crisisWeights:r.crisisWeights})'],
-    ['w*=Knt(b,p.id)*partyOrganizingWeight(b,p.id)',
-      'w*=Knt(b,p.id)*partyOrganizingWeight(b,p.id)*(a.crisisWeights?.[b.id]??1)'],
-    ['_electorateBreakdown(t){return lKa(this,t)}', '_electorateBreakdown(t,gpmIncludeCrisis=true){return lKa(this,t,gpmIncludeCrisis)}'],
-    ['function lKa(e,t){', 'function lKa(e,t,gpmIncludeCrisis=true){'],
-    ['let u=iKa(a,c,n),d=Object.entries(u)', 'let u=iKa(a,c,n,gpmIncludeCrisis?a.gpmPoliticalCrisis?.weights:null),d=Object.entries(u)'],
-    ['function iKa(e,t,a){return zwe', 'function iKa(e,t,a,gpmCrisisWeights=null){return zwe'],
-    ['charisma:1,growthGainPct:a})}function sKa', 'charisma:1,growthGainPct:a,crisisWeights:gpmCrisisWeights})}function sKa'],
+    ['I*=ylt(b,p.id)*partyOrganizingWeight(b,p.id)',
+      'I*=ylt(b,p.id)*partyOrganizingWeight(b,p.id)*(a.crisisWeights?.[b.id]??1)'],
+    ['_electorateBreakdown(t){return HDa(this,t)}', '_electorateBreakdown(t,gpmIncludeCrisis=true){return HDa(this,t,gpmIncludeCrisis)}'],
+    ['function HDa(e,t){', 'function HDa(e,t,gpmIncludeCrisis=true){'],
+    ['let u=FDa(a,c,n),d=Object.entries(u)', 'let u=FDa(a,c,n,gpmIncludeCrisis?a.gpmPoliticalCrisis?.weights:null),d=Object.entries(u)'],
+    ['function FDa(e,t,a){return _Ce', 'function FDa(e,t,a,gpmCrisisWeights=null){return _Ce'],
+    ['charisma:1,growthGainPct:a})}function UDa', 'charisma:1,growthGainPct:a,crisisWeights:gpmCrisisWeights})}function UDa'],
   ];
   return changes.reduce((bundle, [before, after]) => replaceOnce(bundle, before, after), source);
 }

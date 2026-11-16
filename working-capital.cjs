@@ -18,7 +18,7 @@ function gpmWorkingCapitalTransfer(finance, from, to, amountBn, day, reason) {
   const kind = "ppo_working_capital_creditor_transfer";
   // Recognize the mandated assignment in both banks' books at carrying value.
   // No company debt, deposits, reserves, or total bank loan principal change.
-  FCa(kind, entries, id => finance.accounts[id].currencyCode);
+  SEa(kind, entries, id => finance.accounts[id].currencyCode);
   return { kind, day, refs: { fromBankId: from.id, toBankId: to.id, amountBn, reason }, entries };
 }
 
@@ -36,7 +36,7 @@ function gpmTransferCurrencyWorkingCapital(finance, moves, receivingBank, day) {
   }
   const transfers = Array.from(byLender, ([bank, amountBn]) =>
     gpmWorkingCapitalTransfer(finance, bank, receivingBank, amountBn, day, "currency-transition"));
-  if (transfers.length) oU(finance, transfers);
+  if (transfers.length) kj(finance, transfers);
 }
 
 function gpmWorkingCapitalGaps(finance) {
@@ -47,14 +47,14 @@ function gpmWorkingCapitalGaps(finance) {
     let claimed = 0;
     for (const id of bank.loanInstrumentIds) {
       const loan = finance.instruments[id];
-      if (loan?.active) claimed += ie(loan.quantityIssued);
+      if (loan?.active) claimed += oe(loan.quantityIssued);
     }
-    gaps.set(bank.id, ie(asset.balanceBn) - claimed);
+    gaps.set(bank.id, oe(asset.balanceBn) - claimed);
   }
   for (const company of Object.values(finance.companies)) {
     if (!gaps.has(company.bankId)) continue;
     const credit = gpmWorkingCapitalAccount(finance, company);
-    if (credit && !credit.closed) gaps.set(company.bankId, gaps.get(company.bankId) - ie(credit.balanceBn));
+    if (credit && !credit.closed) gaps.set(company.bankId, gaps.get(company.bankId) - oe(credit.balanceBn));
   }
   return gaps;
 }
@@ -62,7 +62,7 @@ function gpmWorkingCapitalGaps(finance) {
 function gpmCurrencyWorkingCapitalOrigins(finance) {
   const lenderByCashAccount = new Map();
   const kinds = new Set(["currency_exit_close", "currency_union_entry_close"]);
-  for (const transaction of wd(finance, { kinds })) {
+  for (const transaction of k1(finance, { kinds })) {
     const entries = transaction.entries;
     for (let index = 1; index < entries.length; index++) {
       const sourceDeposit = finance.accounts[entries[index - 1].accountId];
@@ -104,7 +104,7 @@ function gpmRecoverCurrencyWorkingCapital(sim) {
       const lender = lenderByCashAccount.get(company.cashAccountId);
       if (lender?.day !== transition.day || !(gaps.get(lender.bankId) > 0)) continue;
       const credit = gpmWorkingCapitalAccount(finance, company);
-      origins.set(lender.bankId, (origins.get(lender.bankId) || 0) + ie(credit.balanceBn));
+      origins.set(lender.bankId, (origins.get(lender.bankId) || 0) + oe(credit.balanceBn));
     }
     // A compacted journal can omit individual deposit transfers. The
     // central bank retains a native FX deposit claim against each old bank.
@@ -124,13 +124,13 @@ function gpmRecoverCurrencyWorkingCapital(sim) {
     if (amounts.reduce((total, [, units]) => total + units, 0) !== missing) continue;
     for (const [id, units] of amounts) {
       transfers.push(gpmWorkingCapitalTransfer(finance, finance.banks[id], receiver,
-        qe(units), sim.day, "legacy-save-repair"));
+        ze(units), sim.day, "legacy-save-repair"));
       gaps.set(id, gaps.get(id) - units);
     }
     gaps.set(bankId, 0);
   }
   if (!transfers.length) return;
-  oU(finance, transfers);
+  kj(finance, transfers);
   for (const { refs } of transfers) sim.reportRuntimeRecovery?.({
     code: "finance.working_capital_creditor",
     domain: "finance",
@@ -158,7 +158,7 @@ function gpmRecoverFxDepositHolders(finance) {
   for (const account of Object.values(finance.accounts)) {
     const before = account?.depositClaim?.holderId;
     if (before && gpmRelinkFxDepositHolder(finance, account, before)) {
-      le({ section: "sat.finance", path: `accounts.${account.id}.depositClaim.holderId`,
+      ce({ section: "sat.finance", path: `accounts.${account.id}.depositClaim.holderId`,
         rule: "ppo-fx-deposit-holder-relink", before, after: account.ownerId });
     }
   }
@@ -168,9 +168,9 @@ function patchWorkingCapital(source, replaceOnce) {
   const helpers = [gpmWorkingCapitalAccount, gpmWorkingCapitalTransfer, gpmTransferCurrencyWorkingCapital,
     gpmWorkingCapitalGaps, gpmCurrencyWorkingCapitalOrigins, gpmRecoverCurrencyWorkingCapital,
     gpmRelinkFxDepositHolder, gpmRecoverFxDepositHolders].join("\n");
-  const relink = "function LKe(e,t,{oldCentralBank:a,centralBank:r,newCode:o,receivingBank:n}){";
+  const relink = "function bxe(e,t,{oldCentralBank:a,centralBank:r,newCode:o,receivingBank:n}){";
   source = replaceOnce(source, relink,
-    helpers + "\n" + "function LKe(e,t,{oldCentralBank:a,centralBank:r,newCode:o,receivingBank:n,day:gpmDay}){" +
+    helpers + "\n" + "function bxe(e,t,{oldCentralBank:a,centralBank:r,newCode:o,receivingBank:n,day:gpmDay}){" +
     "gpmTransferCurrencyWorkingCapital(e,t.moves,n,gpmDay);");
   source = replaceOnce(source, "newCode:u,receivingBank:f||a.homeBank});",
     "newCode:u,receivingBank:f||a.homeBank,day:d});");
@@ -178,11 +178,11 @@ function patchWorkingCapital(source, replaceOnce) {
     "newCode:a.code,receivingBank:m||r.homeBank,day:u});");
   // The native rename moves the position first. A foreign deposit stays in
   // the issuing bank's currency when only its holder's currency changes.
-  source = replaceOnce(source, "!f&&!y&&!g||(m.currencyCode=r,y&&(m.ownerId=s,Jj(e)),d++)",
-    "!f&&!y&&!g||((m.kind!==\"central_bank_fx_deposit\"||m.currencyCode===a)&&(m.currencyCode=r)," +
-    "y&&(m.ownerId=s,gpmRelinkFxDepositHolder(e,m,i),Jj(e)),d++)");
-  source = replaceOnce(source, "RCa(a),PCa(a);let r;try{return g7t(a,t),m7t(a,t)}",
-    "RCa(a),PCa(a),gpmRecoverFxDepositHolders(a);let r;try{return g7t(a,t),m7t(a,t)}");
+  source = replaceOnce(source, "!f&&!y&&!h||(m.currencyCode=r,y&&(m.ownerId=s,wj(e)),d++)",
+    "!f&&!y&&!h||((m.kind!==\"central_bank_fx_deposit\"||m.currencyCode===a)&&(m.currencyCode=r)," +
+    "y&&(m.ownerId=s,gpmRelinkFxDepositHolder(e,m,i),wj(e)),d++)");
+  source = replaceOnce(source, "uEa(a),aEa(a);let r;try{return Pbt(a,t),vbt(a,t)}",
+    "uEa(a),aEa(a),gpmRecoverFxDepositHolders(a);let r;try{return Pbt(a,t),vbt(a,t)}");
   const restoreBoundary = "gpmHistoricalRestoreOpeningCapitals(b)";
   // Run against the restored, registered ledger before the player can advance.
   return replaceOnce(source, restoreBoundary, restoreBoundary + ",gpmRecoverCurrencyWorkingCapital(b)");

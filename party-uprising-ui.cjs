@@ -149,7 +149,7 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
     .filter(feature => feature?.geometry && byId.get(feature.__provId)?.key === feature.__provKey);
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (state.geometry?.world !== world || state.geometry?.signature !== signature) {
-    state.geometry = { world, signature, layout: features.length ? ok(features, 620, 510, { pad: 12 }) : null };
+    state.geometry = { world, signature, layout: features.length ? I_(features, 620, 510, { pad: 12 }) : null };
   }
   const layout = state.geometry?.layout;
   const svg = (paths, width, height) => '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="'
@@ -158,13 +158,13 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
       .map(({ provId, d }) => {
       const region = byId.get(provId);
       if (!region) return "";
-      return '<path d="' + b(d) + '" data-gpm-uprising-region="' + b(String(provId)) + '" '
+      return '<path d="' + v(d) + '" data-gpm-uprising-region="' + v(String(provId)) + '" '
         + (region === selected ? "data-selected " : "") + (region.headquarters ? "data-gpm-uprising-hq " : "")
-        + 'fill="' + gpmUprisingPreparationColor(region, layer) + '"><title>' + b(name(region))
-        + ' · ' + b(percent.format(region.foothold)) + ' foothold · ' + b(control(region)) + '</title></path>';
+        + 'fill="' + gpmUprisingPreparationColor(region, layer) + '"><title>' + v(name(region))
+        + ' · ' + v(percent.format(region.foothold)) + ' foothold · ' + v(control(region)) + '</title></path>';
     }).join("") + '</svg>';
   const swatch = (color, label) => '<span><i class="gpm-uprising-swatch" style="background:' + color + '" aria-hidden="true"></i>'
-    + b(label) + "</span>";
+    + v(label) + "</span>";
   const legend = layer === "control"
     ? swatch(gpmUprisingPreparationColor({}, "control"), "Government")
       + swatch(gpmUprisingPreparationColor({ defects: true }, "control"), "Breakaway")
@@ -174,7 +174,7 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
     + '<option value="control"' + (layer === "control" ? " selected" : "") + '>Projected control</option></select></label>';
   const geometry = layout ? svg(layout.paths, layout.W, layout.H)
     + (layout.insets.length ? '<div class="gpm-support-insets">' + layout.insets.map(inset =>
-      '<div>' + svg(inset.paths, layout.box, layout.box) + '<small>' + b(inset.label) + '</small></div>').join("") + '</div>' : "")
+      '<div>' + svg(inset.paths, layout.box, layout.box) + '<small>' + v(inset.label) + '</small></div>').join("") + '</div>' : "")
     : "<small>Map geometry is unavailable. Use the region list.</small>";
   return '<div class="gpm-support-map">' + controlSelect + geometry
     + '<div class="gpm-uprising-map-key">' + legend
@@ -201,11 +201,11 @@ function gpmUprisingRoster(roster) {
     grouped.set(label, (grouped.get(label) || 0) + 1);
   }
   return '<ul class="gpm-uprising-roster">' + [...grouped].map(([label, count]) =>
-    "<li>" + b(String(count)) + " × " + b(label) + "</li>").join("") + "</ul>";
+    "<li>" + v(String(count)) + " × " + v(label) + "</li>").join("") + "</ul>";
 }
 
 function gpmUprisingPersonnel(amountK) {
-  return new Intl.NumberFormat(cs(), { maximumFractionDigits: 0 }).format(amountK * 1000);
+  return new Intl.NumberFormat(ks(), { maximumFractionDigits: 0 }).format(amountK * 1000);
 }
 
 function gpmUprisingEquipmentLabel(item) {
@@ -224,41 +224,41 @@ function gpmUprisingDivisionPanel(division, state, prep, button, date, money, cr
       + " · " + gpmUprisingPersonnel(quote.activistsK) + " activists leave the party pool permanently."
     : "";
   const opts = (choices, selected) => choices.map(choice =>
-    '<option value="' + b(choice.id) + '"' + (selected === choice ? " selected" : "") + ">" + b(choice.label) + "</option>").join("");
+    '<option value="' + v(choice.id) + '"' + (selected === choice ? " selected" : "") + ">" + v(choice.label) + "</option>").join("");
   const equipmentList = items => (items || []).filter(item => item.units > 0).map(item =>
-    Number(item.units).toLocaleString(cs()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
+    Number(item.units).toLocaleString(ks()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
   const equipment = equipmentList(kit?.equipment);
   const stock = equipmentList(division.stockpile);
   const headquarters = prep.headquarters;
   const destination = headquarters?.eligible && headquarters.name || "party headquarters";
   const stockpile = stock || headquarters?.eligible
-    ? "<p><strong>HQ stockpile</strong> · " + b(stock ? stock + " reserved for divisions" : "Empty") + "</p>"
+    ? "<p><strong>HQ stockpile</strong> · " + v(stock ? stock + " reserved for divisions" : "Empty") + "</p>"
     : "";
   const schedule = quote?.ok && Number.isFinite(quote.deliveryDay) && Number.isFinite(quote.endDay)
-    ? "<small>Equipment arrives at " + b(destination) + " on " + b(date(quote.deliveryDay)) + ". Division ready on "
-      + b(date(quote.endDay)) + ".</small>" : "";
+    ? "<small>Equipment arrives at " + v(destination) + " on " + v(date(quote.deliveryDay)) + ". Division ready on "
+      + v(date(quote.endDay)) + ".</small>" : "";
   const project = division.project;
   const delivery = project?.delivered ? "Equipment reserved at headquarters."
     : project?.deliveryPaused ? "Equipment delivery is waiting for an eligible headquarters."
     : Number.isFinite(project?.deliveryDay) ? "Equipment due " + date(project.deliveryDay) + "." : "";
   const controls = project
-    ? "<p>" + b(project.label || "Division") + (project.kitLabel ? " · " + b(project.kitLabel) : "")
-      + "</p>" + (delivery ? "<small>" + b(delivery) + "</small>" : "")
-      + "<small>" + (project.deliveryPaused ? "Training scheduled to finish " : "Ready ") + b(date(project.endDay)) + (project.activistsK
-        ? " · " + b(gpmUprisingPersonnel(project.activistsK)) + " activists recruited" : "") + ".</small>"
+    ? "<p>" + v(project.label || "Division") + (project.kitLabel ? " · " + v(project.kitLabel) : "")
+      + "</p>" + (delivery ? "<small>" + v(delivery) + "</small>" : "")
+      + "<small>" + (project.deliveryPaused ? "Training scheduled to finish " : "Ready ") + v(date(project.endDay)) + (project.activistsK
+        ? " · " + v(gpmUprisingPersonnel(project.activistsK)) + " activists recruited" : "") + ".</small>"
     : kit
       ? '<label class="gpm-uprising-prep-item">Division type<select class="k" data-gpm-uprising-field="division-type">'
         + opts(options, type) + '</select></label>'
         + '<label class="gpm-uprising-prep-item">Equipment kit<select class="k" data-gpm-uprising-field="equipment-kit">'
         + opts(type.kits, kit) + '</select></label>'
-        + (equipment ? "<small>" + b(equipment) + "</small>" : "")
-        + "<small>" + b(cost + reason(quote)) + "</small>" + schedule + button("recruit", "Prepare Division", !quote?.ok)
+        + (equipment ? "<small>" + v(equipment) + "</small>" : "")
+        + "<small>" + v(cost + reason(quote)) + "</small>" + schedule + button("recruit", "Prepare Division", !quote?.ok)
       : "<small>Division preparation is unavailable.</small>";
   const capacity = "Capacity grows by one for each eligible region at " + percent.format(prep.capacityThreshold)
     + " foothold, plus one when the headquarters reaches " + percent.format(prep.threshold) + ".";
-  return '<div class="sh-inset"><strong>Prepared divisions</strong><p>' + b(String(division.count)) + " of "
-    + b(String(division.limit)) + " prepared · " + b(credits(division.credits)) + " available</p>"
-    + stockpile + gpmUprisingRoster(division.roster) + "<small>" + b(capacity)
+  return '<div class="sh-inset"><strong>Prepared divisions</strong><p>' + v(String(division.count)) + " of "
+    + v(String(division.limit)) + " prepared · " + v(credits(division.credits)) + " available</p>"
+    + stockpile + gpmUprisingRoster(division.roster) + "<small>" + v(capacity)
     + " Prepared divisions use the joining regions’ available personnel and deploy at headquarters.</small>" + controls + "</div>";
 }
 
@@ -267,8 +267,8 @@ function gpmUprisingPreparations(state, ui, button) {
   const prep = state.data.preparations;
   if (!prep || state.confirm) return "";
   const { regions, wing, division, foreignAid, threshold } = prep;
-  const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 });
-  const number = new Intl.NumberFormat(cs(), { maximumFractionDigits: 1 });
+  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 1 });
+  const number = new Intl.NumberFormat(ks(), { maximumFractionDigits: 1 });
   const points = value => number.format(value * 100) + " pp";
   const date = day => ui.gameDate?.(day) || "Day " + day;
   const money = amount => gpmForeignFundingMoney(amount);
@@ -279,13 +279,13 @@ function gpmUprisingPreparations(state, ui, button) {
   const hqProject = prep.headquarters?.project;
   const map = gpmUprisingMap(state, ui, prep, selected, percent);
   const regionList = '<ul class="gpm-uprising-region-list" aria-label="Regional footholds">'
-    + [...regions].sort((a, b) => name(a).localeCompare(name(b), cs())).map(region => {
+    + [...regions].sort((a, b) => name(a).localeCompare(name(b), ks())).map(region => {
       const color = gpmUprisingPreparationColor(region, state.mapLayer || "foothold");
-      return '<li><button class="k" type="button" data-gpm-uprising-region-row="' + b(String(region.id))
+      return '<li><button class="k" type="button" data-gpm-uprising-region-row="' + v(String(region.id))
         + '" aria-pressed="' + (region === selected) + '"><i class="gpm-uprising-swatch" style="background:' + color
-        + '" aria-hidden="true"></i><span><strong>' + b(name(region)) + '</strong><small>'
-        + b(gpmUprisingRegionalStatus(region, threshold)) + '</small></span><strong>'
-        + b(percent.format(region.foothold)) + '</strong></button></li>';
+        + '" aria-hidden="true"></i><span><strong>' + v(name(region)) + '</strong><small>'
+        + v(gpmUprisingRegionalStatus(region, threshold)) + '</small></span><strong>'
+        + v(percent.format(region.foothold)) + '</strong></button></li>';
     }).join("") + '</ul>';
   let investment = "";
   if (selected) {
@@ -304,26 +304,26 @@ function gpmUprisingPreparations(state, ui, button) {
         + " activists · " + hqQuote.days + " days."
       : "";
     const hqControls = hqProject
-      ? "<p>Headquarters project" + (activeHQProject ? " in " + b(name(activeHQProject)) : "")
-        + " completes " + b(date(hqProject.endDay)) + "." + (prep.headquarters.key ? " Your current headquarters stays open until then." : "") + "</p>"
-      : selected.headquarters ? "" : '<small>' + b(hqTerms + reason(hqQuote)) + '</small>'
+      ? "<p>Headquarters project" + (activeHQProject ? " in " + v(name(activeHQProject)) : "")
+        + " completes " + v(date(hqProject.endDay)) + "." + (prep.headquarters.key ? " Your current headquarters stays open until then." : "") + "</p>"
+      : selected.headquarters ? "" : '<small>' + v(hqTerms + reason(hqQuote)) + '</small>'
         + button("headquarters", hqQuote?.relocate ? "Relocate Headquarters Here" : "Establish Headquarters Here", !hqQuote?.ok);
 
     investment = `<div class="sh-inset gpm-uprising-prep-item">
-      <h4>${b(name(selected))}</h4>
-      <p><strong class="gpm-uprising-foothold">${b(percent.format(selected.foothold))} foothold</strong> · ${b(gpmUprisingRegionalStatus(selected, threshold))}</p>
-      ${contributors.length ? "<small>" + b(contributors.join(" · ")) + "</small>" : ""}
+      <h4>${v(name(selected))}</h4>
+      <p><strong class="gpm-uprising-foothold">${v(percent.format(selected.foothold))} foothold</strong> · ${v(gpmUprisingRegionalStatus(selected, threshold))}</p>
+      ${contributors.length ? "<small>" + v(contributors.join(" · ")) + "</small>" : ""}
       <small>Invest in Foothold builds uprising readiness. For electoral projects, open Regional Campaigning.</small>
       ${button("regional", "Open Regional Campaigning")}
       ${hqControls}
-      ${project ? `<small>Investment completes ${b(date(project.endDay))} · +${b(points(project.gain))} foothold.</small>`
-        : `<small>${b(terms + reason(quote))}</small>${button("invest", "Invest in Foothold", !quote?.ok)}`}</div>`;
+      ${project ? `<small>Investment completes ${v(date(project.endDay))} · +${v(points(project.gain))} foothold.</small>`
+        : `<small>${v(terms + reason(quote))}</small>${button("invest", "Invest in Foothold", !quote?.ok)}`}</div>`;
   }
   const wingQuote = wing.quote;
   const wingTerms = Number.isFinite(wingQuote?.cash) ? money(wingQuote.cash) + " from the party treasury." : "";
   const wingPanel = `<div class="sh-inset"><strong>Party wing</strong>
     ${wing.formed ? "<p>Formed. You can invest in footholds, prepare divisions, and request foreign aid.</p>"
-      : `<p>Forming the wing unlocks foothold investments, division preparation, and foreign aid.</p><small>${b(wingTerms + reason(wingQuote))}</small>
+      : `<p>Forming the wing unlocks foothold investments, division preparation, and foreign aid.</p><small>${v(wingTerms + reason(wingQuote))}</small>
         ${button("form", "Form Party Wing", !wingQuote?.ok)}`}</div>`;
   const divisionPanel = gpmUprisingDivisionPanel(division, state, prep, button, date, money, credits, reason, percent);
   const donors = foreignAid.donors;
@@ -341,24 +341,24 @@ function gpmUprisingPreparations(state, ui, button) {
   })[last.status];
   let aid = "<p>Form the party wing to request aid.</p>";
   if (offer) {
-    aid = `<p>${b(donorName(offer.donor))} offered ${b(credits(offer.credits))}. Expires ${b(date(offer.expiresDay))}.</p>
+    aid = `<p>${v(donorName(offer.donor))} offered ${v(credits(offer.credits))}. Expires ${v(date(offer.expiresDay))}.</p>
       <div class="gpm-uprising-actions">${button("aidAccept", "Accept Offer")}${button("aidDecline", "Decline Offer")}</div>`;
   } else if (pending) {
-    aid = `<p>Waiting for ${b(donorName(pending.donor))}. Response due ${b(date(pending.responseDay))}.</p>`;
+    aid = `<p>Waiting for ${v(donorName(pending.donor))}. Response due ${v(date(pending.responseDay))}.</p>`;
   } else if (wing.formed) {
     const cooldown = foreignAid.nextRequestDay > state.data.day;
-    const options = donors.map(entry => `<option value="${b(donorKey(entry))}" ${entry === donor ? "selected" : ""}>${b(donorName(entry))}</option>`).join("");
-    aid = cooldown ? "<p>Next request available " + b(date(foreignAid.nextRequestDay)) + ".</p>" : donor ? `<label class="gpm-uprising-prep-item">Donor<select class="k" data-gpm-uprising-donor data-gpm-uprising-field="donor">${options}</select></label>
-      <p>${b(percent.format(donor.chance))} chance of an offer · ${b(credits(donor.credits))} if approved</p>
+    const options = donors.map(entry => `<option value="${v(donorKey(entry))}" ${entry === donor ? "selected" : ""}>${v(donorName(entry))}</option>`).join("");
+    aid = cooldown ? "<p>Next request available " + v(date(foreignAid.nextRequestDay)) + ".</p>" : donor ? `<label class="gpm-uprising-prep-item">Donor<select class="k" data-gpm-uprising-donor data-gpm-uprising-field="donor">${options}</select></label>
+      <p>${v(percent.format(donor.chance))} chance of an offer · ${v(credits(donor.credits))} if approved</p>
         ${button("aidRequest", "Request Aid", donor.chance <= 0)}`
       : "<p>No foreign party is currently available to offer aid.</p>";
   }
   const aidPanel = `<div class="sh-inset"><strong>Foreign aid</strong>
     <small>Aid credits reduce the treasury cost of preparing divisions.</small>${aid}
-    ${lastResult ? `<small>${b(date(last.day))} · ${last.donor ? b(donorName(last.donor)) + " · " : ""}${b(lastResult)}</small>` : ""}</div>`;
+    ${lastResult ? `<small>${v(date(last.day))} · ${last.donor ? v(donorName(last.donor)) + " · " : ""}${v(lastResult)}</small>` : ""}</div>`;
   const regional = selected ? `<div class="gpm-uprising-map-layout${state.mapOpen ? " gpm-uprising-map-expanded" : ""}">
     ${map}<div class="gpm-uprising-prep-item">${regionList}${investment}
-      <small>Additional regions need ${b(percent.format(threshold))} foothold and a connection to the starting region.
+      <small>Additional regions need ${v(percent.format(threshold))} foothold and a connection to the starting region.
       The government keeps its capital and at least 20% of the population.</small></div></div>`
     : "<p>No regions are available for preparation.</p>";
   const mapControl = state.mapOpen ? button("closeMap", "Back to Uprising")
@@ -380,7 +380,7 @@ function gpmUprisingReadiness(prep, percent) {
   if (headquarters?.key && !headquarters.eligible) items[0].text = "Relocate headquarters to an eligible region";
   return '<ul class="gpm-uprising-readiness" aria-label="Declaration requirements">' + items.map(({ ready, text }) =>
     '<li><strong class="' + (ready ? "gpm-uprising-ready" : "") + '">' + (ready ? "Ready" : "Required")
-    + "</strong><span>" + b(text) + "</span></li>").join("") + "</ul>";
+    + "</strong><span>" + v(text) + "</span></li>").join("") + "</ul>";
 }
 
 
@@ -394,7 +394,7 @@ function gpmUprisingPanel(state, ui) {
   const party = data.partyName || state.partyName || "Your party";
   const region = data.provinceKey ? Ut(data.provinceKey, data.regionName) : data.regionName;
   const seatOutcome = data.singleParty ? " and holds every seat in the assembly" : " under the new constitution";
-  const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 });
+  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 2 });
   const before = Number.isFinite(data.nationalSupport) ? percent.format(data.nationalSupport) : "—";
   const after = Number.isFinite(data.victorySupport) ? percent.format(data.victorySupport) : "—";
   const lawChanges = Array.isArray(data.charterLaws) ? data.charterLaws : [];
@@ -402,25 +402,25 @@ function gpmUprisingPanel(state, ui) {
     ? '<details data-gpm-uprising-charter><summary>' + lawChanges.length
       + (lawChanges.length === 1 ? " law change" : " law changes")
       + '</summary><ul class="gpm-uprising-charter">' + lawChanges.map(law =>
-        "<li>" + b(law.name || tr(law.lawId)) + " · " + b(law.option || (dl(law.lawId) ? yo(dl(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
+        "<li>" + v(law.name || Un(law.lawId)) + " · " + v(law.option || (Ds(law.lawId) ? xi(Ds(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
     : "<small>The policy review found no law changes.</small>";
   if (data.phase === "active") {
     const note = data.warStatus === "suspended"
       ? "Hostilities are suspended. The uprising remains unresolved."
       : "The decisive result will determine which side governs the reunited country.";
     const summary = data.warStatus === "suspended"
-      ? b(data.breakawayName) + " and " + b(data.parentName)
-      : b(data.breakawayName) + " is at war with " + b(data.parentName);
+      ? v(data.breakawayName) + " and " + v(data.parentName)
+      : v(data.breakawayName) + " is at war with " + v(data.parentName);
     const restoration = data.restoresOriginalName ? "<p>Breakaway victory restores <strong>"
-      + b(data.victoryName) + "</strong>.</p>" : "";
+      + v(data.victoryName) + "</strong>.</p>" : "";
     const startingRegions = (data.defectingRegions || []).map(key => {
       const province = ui.globe?.world?.provByKey?.get?.(key);
-      return b(Ut(key, province?.__name || key));
+      return v(Ut(key, province?.__name || key));
     });
     const preparations = startingRegions.length
       ? "<p>Regions at declaration: " + startingRegions.join(", ")
-        + ". Prepared divisions deployed: " + b(String(data.deployedCount || 0)) + " of "
-        + b(String(data.preparedDivisionCount || 0)) + ".</p>" + gpmUprisingRoster(data.deployedRoster)
+        + ". Prepared divisions deployed: " + v(String(data.deployedCount || 0)) + " of "
+        + v(String(data.preparedDivisionCount || 0)) + ".</p>" + gpmUprisingRoster(data.deployedRoster)
       : "";
     return "<p><strong>" + summary + "</strong></p><p>" + note + "</p>" + restoration + preparations
       + actions(button("war", "Open War Theatre"));
@@ -429,13 +429,13 @@ function gpmUprisingPanel(state, ui) {
     const victory = data.result === "breakaway";
     if (data.result === "breakaway" || data.result === "government") {
       return victory
-        ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.victoryName || data.breakawayName)
+        ? "<p><strong>Breakaway victory.</strong> " + v(party) + " governs the reunited " + v(data.victoryName || data.breakawayName)
           + seatOutcome + ".</p>"
-          + "<p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
+          + "<p>" + v(data.government) + ". The founding laws are in effect.</p>" + charter
           + (data.integratedDivisions ? "<p>Breakaway divisions transferred to the national military: "
-            + b(String(data.integratedDivisions)) + ".</p>" : "")
-          + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")
-        : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(party) + " is banned.</p>";
+            + v(String(data.integratedDivisions)) + ".</p>" : "")
+          + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + v(after) + ".</p>" : "")
+        : "<p><strong>Government victory.</strong> " + v(data.parentName) + " is reunited. " + v(party) + " is banned.</p>";
     }
     return "<p><strong>Conflict ended without a decisive result.</strong> The two governments remain separate.</p>";
   }
@@ -443,37 +443,37 @@ function gpmUprisingPanel(state, ui) {
   const readiness = data.preparations && !state.confirm ? gpmUprisingReadiness(data.preparations, percent) : "";
   if (state.mapOpen && preparations) return preparations;
   if (!data.available || data.phase !== "ready" || typeof data.quoteId !== "string") {
-    return readiness + preparations + "<p>" + b(gpmUprisingReason(data.reason)) + "</p>" + actions(button("refresh", "Refresh", state.loading));
+    return readiness + preparations + "<p>" + v(gpmUprisingReason(data.reason)) + "</p>" + actions(button("refresh", "Refresh", state.loading));
   }
   const otherRegions = data.preparations?.regions.filter(entry => entry.defects && !entry.starting) || [];
   const deployment = data.preparations?.deploymentCount;
   const manpower = data.preparations?.manpower;
   const preparationSummary = data.preparations
     ? "<dt>Other regions joining</dt><dd>"
-      + (otherRegions.length ? otherRegions.map(entry => b(Ut(entry.key, entry.name))).join(", ") : "None")
-      + "</dd><dt>Prepared divisions</dt><dd>" + b(String(deployment ?? 0)) + gpmUprisingRoster(data.preparations.division.roster) + "</dd>"
-      + (manpower ? "<dt>Estimated deployment personnel</dt><dd>" + b(gpmUprisingPersonnel(manpower.availableK))
-        + " / " + b(gpmUprisingPersonnel(manpower.requiredK)) + (manpower.availableK < manpower.requiredK
+      + (otherRegions.length ? otherRegions.map(entry => v(Ut(entry.key, entry.name))).join(", ") : "None")
+      + "</dd><dt>Prepared divisions</dt><dd>" + v(String(deployment ?? 0)) + gpmUprisingRoster(data.preparations.division.roster) + "</dd>"
+      + (manpower ? "<dt>Estimated deployment personnel</dt><dd>" + v(gpmUprisingPersonnel(manpower.availableK))
+        + " / " + v(gpmUprisingPersonnel(manpower.requiredK)) + (manpower.availableK < manpower.requiredK
           ? ". Understrength formations need reinforcements." : "") + "</dd>" : "")
     : "";
   const name = data.restoresOriginalName ? data.breakawayName : state.selectedName || data.breakawayName;
   const options = (data.names || []).map(option => '<option' + (option === name ? " selected" : "")
-    + ">" + b(option) + "</option>").join("");
+    + ">" + v(option) + "</option>").join("");
   const nameField = !data.restoresOriginalName && !state.confirm && data.names?.length > 1
     ? '<select aria-label="Breakaway name" data-gpm-uprising-name data-gpm-uprising-field="name">' + options + "</select>"
-    : b(name);
+    : v(name);
   const flagField = '<div class="gpm-uprising-flag">' + (state.flag
-    ? '<img src="' + b(state.flag.src) + '" alt="Selected breakaway flag">'
+    ? '<img src="' + v(state.flag.src) + '" alt="Selected breakaway flag">'
       + (state.confirm ? "Selected flag" : button("removeFlag", "Use parent flag"))
     : "Parent country’s flag") +
     (state.confirm ? "" : '<label>Choose flag image <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-gpm-uprising-flag></label>') + "</div>";
   const victorySeats = data.singleParty ? " and holds every seat in its single-party assembly."
     : " under the new constitution. The reunited assembly keeps its sitting members until an election.";
-  const nameOutcome = data.restoresOriginalName ? "Victory restores <strong>" + b(data.victoryName) + "</strong>."
+  const nameOutcome = data.restoresOriginalName ? "Victory restores <strong>" + v(data.victoryName) + "</strong>."
     : "The reunited country keeps the breakaway name.";
   const heading = state.confirm ? "Confirm declaration" : "Declaration preview";
   const vacatedSeats = data.vacatedSeats > 0
-    ? "<p>Your party gives up " + b(String(data.vacatedSeats))
+    ? "<p>Your party gives up " + v(String(data.vacatedSeats))
       + (data.vacatedSeats === 1 ? " seat" : " seats")
       + " in the original legislature when you declare. Larger parties receive priority in the redistribution.</p>"
     : "";
@@ -481,33 +481,33 @@ function gpmUprisingPanel(state, ui) {
     ? actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading))
     : actions(button("review", "Review Declaration", state.loading), button("refresh", "Refresh", state.loading));
   return readiness + preparations + "<p><strong>" + heading + "</strong></p>"
-    + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + b(party)
+    + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + v(party)
     + "</dd><dt>" + (data.restoresOriginalName ? "Wartime name" : "Breakaway") + "</dt><dd>" + nameField
     + "</dd><dt>Breakaway flag</dt><dd>" + flagField
-    + "</dd><dt>Government</dt><dd>" + b(data.government)
-    + (data.ideologyProgram ? "</dd><dt>Founding program</dt><dd>" + b(data.ideologyProgram) : "")
-    + "</dd><dt>Starting region</dt><dd>" + b(region)
-    + "</dd>" + preparationSummary + "<dt>Current base national support</dt><dd>" + b(before) + "</dd></dl>"
-    + "<p>Declaring transfers your control to the breakaway government based in " + b(region)
-    + " and starts a civil war with " + b(data.parentName) + ".</p>"
+    + "</dd><dt>Government</dt><dd>" + v(data.government)
+    + (data.ideologyProgram ? "</dd><dt>Founding program</dt><dd>" + v(data.ideologyProgram) : "")
+    + "</dd><dt>Starting region</dt><dd>" + v(region)
+    + "</dd>" + preparationSummary + "<dt>Current base national support</dt><dd>" + v(before) + "</dd></dl>"
+    + "<p>Declaring transfers your control to the breakaway government based in " + v(region)
+    + " and starts a civil war with " + v(data.parentName) + ".</p>"
     + vacatedSeats
     + (state.confirm && data.preparations ? "<p>Any unfinished projects and outstanding aid requests end at declaration.</p>" : "")
     + '<div class="gpm-uprising-outcomes">'
     + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country'
     + victorySeats + "</p><p>" + nameOutcome + " The founding charter takes effect nationwide.</p>"
-    + charter + "<p>Base national support rises from " + b(before) + " to " + b(after) + " at reunification.</p></div>"
+    + charter + "<p>Base national support rises from " + v(before) + " to " + v(after) + " at reunification.</p></div>"
     + '<div class="sh-inset"><strong>Government victory</strong><p>The incumbent reunites the country and bans your party. '
     + "The campaign continues with the incumbent.</p></div></div>"
     + controls;
 }
 
 async function gpmSyncUprisingControl(session) {
-  if (ze !== session || !session.playerKey) return;
+  if (Ge !== session || !session.playerKey) return;
   const key = session.playerKey;
   if (session._gpmUprisingPresentedKey === key) return;
   session._gpmUprisingPresentedKey = key;
   try {
-    await SCt({ current: { countryKey: key } });
+    await YLt({ current: { countryKey: key } });
   } catch (error) {
     console.warn("[PPO] Uprising player control presentation failed", error);
   }
@@ -570,7 +570,7 @@ function gpmBindUprising(profile, view, ui) {
     state.requestDay = view.day;
     state.paint();
     try {
-      const data = await at(session, "gpm.uprising", {});
+      const data = await Je(session, "gpm.uprising", {});
       if (!isCurrent()) return;
       if (!data || data.countryKey !== countryKey || (partyId != null && data.partyId !== partyId)) {
         state.data = null;
@@ -601,11 +601,11 @@ function gpmBindUprising(profile, view, ui) {
     state.paint();
     let result;
     try {
-      result = await Te(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag }]);
+      result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag }]);
       if (result?.ok) {
-        if (ze === session) {
+        if (Ge === session) {
           await gpmSyncUprisingControl(session);
-          if (ze === session) await ui.openMilitaryMode?.();
+          if (Ge === session) await ui.openMilitaryMode?.();
         }
         return;
       }
@@ -667,7 +667,7 @@ function gpmBindUprising(profile, view, ui) {
     state.status = "Applying the preparation…";
     state.paint();
     try {
-      const result = await Te(session, "applyPlayerAction", [payload]);
+      const result = await Le(session, "applyPlayerAction", [payload]);
       if (isCurrent()) state.status = result?.ok ? success[action] : gpmUprisingPreparationReason(result?.reason);
     } catch (error) {
       console.warn("[PPO] Uprising preparation failed", error);
@@ -703,7 +703,7 @@ function gpmBindUprising(profile, view, ui) {
     state.status = "Reading flag image…";
     state.paint();
     let image;
-    try { image = await Z$(file); } catch {}
+    try { image = await WF(file); } catch {}
     if (!isCurrent() || request !== state.flagRequest) return;
     state.flagRequest = null;
     if (image) state.flag = { src: image.src, ratio: image.ratio };
@@ -780,28 +780,28 @@ function patchUprisingRenderer(source) {
   replaceOnce(bind, bind + '\n    if (tab.id === "gpm-tab-uprising") gpmBindUprising(profile, view, ui);');
   const styleMount = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;";
   replaceOnce(styleMount, styleMount.replace(";", " + gpmUprisingStyle;"));
-  const flagLookup = "function m4(e){return n8(),e=Vc(e),e?NA.get(e)||nB.get(e)||B9(e):null}";
+  const flagLookup = "function d5(e){return n8(),e=du(e),e?rR.get(e)||Hq.get(e)||Zw(e):null}";
   const { dynamicFlagKey } = require("./party-uprising.cjs");
-  replaceOnce("l7e=e=>Emt.test(a8(e))||vX(a8(e))!==null",
-    `l7e=e=>Emt.test(a8(e))||vX(a8(e))!==null||${dynamicFlagKey}.test(a8(e))`);
-  replaceOnce(flagLookup, `function m4(e){
-    const data=n8(),key=Vc(e);
+  replaceOnce("pwe=e=>u3t.test(a8(e))||zte(a8(e))!==null",
+    `pwe=e=>u3t.test(a8(e))||zte(a8(e))!==null||${dynamicFlagKey}.test(a8(e))`);
+  replaceOnce(flagLookup, `function d5(e){
+    const data=n8(),key=du(e);
     if(!key)return null;
     const choice=data?.gpmUprisingFlags?.[key],parent=choice?.parentFlag;
-    return NA.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||nB.get(key)||B9(key)||
-      (parent&&(NA.get(parent)||nB.get(parent)||B9(parent)))||null;
+    return rR.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||Hq.get(key)||Zw(key)||
+      (parent&&(rR.get(parent)||Hq.get(parent)||Zw(parent)))||null;
   }`);
-  replaceOnce("function h4(e){return m7e(n8(),e)}",
-    'function h4(e){const data=n8(), mode=m7e(data,e), legacy=data?.gpmUprisingFlags?.[Vc(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
-  replaceOnce("function $9(e){let t=n8();return t?.images?.[t?.image?.[Vc(e)]]||null}",
-    'function $9(e){const data=n8(),key=Vc(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
-  replaceOnce("function w7e(e){return n8(),e=Vc(e),e?nB.get(e)||B9(e):null}",
-    'function w7e(e){const data=n8(),key=Vc(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(nB.get(key)||B9(key)||(parent&&(NA.get(parent)||nB.get(parent)||B9(parent)))||null):null}');
+  replaceOnce("function p5(e){return ywe(n8(),e)}",
+    'function p5(e){const data=n8(), mode=ywe(data,e), legacy=data?.gpmUprisingFlags?.[du(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
+  replaceOnce("function Jw(e){let t=n8();return t?.images?.[t?.image?.[du(e)]]||null}",
+    'function Jw(e){const data=n8(),key=du(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
+  replaceOnce("function Mwe(e){return n8(),e=du(e),e?Hq.get(e)||Zw(e):null}",
+    'function Mwe(e){const data=n8(),key=du(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(Hq.get(key)||Zw(key)||(parent&&(rR.get(parent)||Hq.get(parent)||Zw(parent)))||null):null}');
   const initialize = "\nmountPartyButtons();\n";
   replaceOnce(initialize, "\nconst gpmUprisingStyle = " + JSON.stringify(style) + ";\n"
     + rendererFunctions.join("\n") + initialize);
-  const frame = "function DFe(){let e=ze.consumeViewDelta";
-  replaceOnce(frame, "function DFe(){gpmWatchUprisingControl(ze);let e=ze.consumeViewDelta");
+  const frame = "function tKe(){let e=Ge.consumeViewDelta";
+  replaceOnce(frame, "function tKe(){gpmWatchUprisingControl(Ge);let e=Ge.consumeViewDelta");
   return asBuffer ? Buffer.from(js) : js;
 }
 

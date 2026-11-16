@@ -109,7 +109,7 @@ function gpmHistoricalUpdateFront(sim, definition, row, strength) {
   const sum = strength[0] + strength[1];
   const relative = sum ? (strength[1] - strength[0]) / sum : 0;
   const week = Math.floor(sim.day / 7);
-  const noise = (va(definition.id + ":" + week + ":" + sim.rngSeed0) >>> 0) % 17 - 8;
+  const noise = (ka(definition.id + ":" + week + ":" + sim.rngSeed0) >>> 0) % 17 - 8;
   const movement = Math.round(relative * 7) + noise;
   row.advantage = Math.max(-100, Math.min(100, (row.advantage || 0) + movement));
   if (row.weeksActive < 12 || Math.abs(row.advantage) < gpmHistoricalVictoryThreshold) return;
@@ -191,10 +191,10 @@ function gpmHistoricalWithdrawalAction(sim, definition, row) {
     return { reason: "Only a government involved in this occupation can negotiate its withdrawal." };
   }
   const counterparty = gpmHistoricalWithdrawalCounterparty(plan, country);
-  if (!Ge(country, "diplomacy")) {
+  if (!He(country, "diplomacy")) {
     return { reason: "This country's government lacks authority to negotiate the withdrawal." };
   }
-  if (!Ge(counterparty, "diplomacy")) {
+  if (!He(counterparty, "diplomacy")) {
     return { reason: "The other government cannot negotiate this withdrawal." };
   }
   if (row.pending || row.withdrawalPetition?.status === "pending") {
@@ -203,8 +203,8 @@ function gpmHistoricalWithdrawalAction(sim, definition, row) {
   if (sim.playerControlsGovernment()) {
     return { option: { id: "propose-withdrawal", label: "Propose withdrawal", description: plan.terms.note } };
   }
-  const party = fS(country, Uo(country));
-  if (!party?.organization || party.legal === false || p1a(country.pol).has(party.id)) {
+  const party = ES(country, cn(country));
+  if (!party?.organization || party.legal === false || Rfa(country.pol).has(party.id)) {
     return { reason: "A government can propose terms, and a legal opposition party can petition it to negotiate." };
   }
   return { option: { id: "petition-withdrawal", label: "Petition for withdrawal",
@@ -215,7 +215,7 @@ function gpmHistoricalWithdrawalAction(sim, definition, row) {
 
 function gpmHistoricalWithdrawalAssessment(sim, plan, country, counterparty, party) {
   const willingness = plan.terms.withdrawal.willingness;
-  const alignment = _3t(sim, counterparty, country);
+  const alignment = I5t(sim, counterparty, country);
   const support = party ? Math.max(0, party.support || 0) : 0;
   const seats = party ? partyForeignFundingSeatShare(country, party) : 0;
   return { support, seats, willingness, alignment,
@@ -249,14 +249,14 @@ function gpmHistoricalReviewWithdrawalPetition(sim, definition, row) {
   if (petition?.status !== "pending" || petition.reviewDay > sim.day) return;
   const plan = gpmHistoricalWithdrawalPlan(sim, definition, row);
   const country = sim.countries.get(petition.countryKey);
-  const party = fS(country, petition.partyId);
+  const party = ES(country, petition.partyId);
   const counterparty = gpmHistoricalWithdrawalCounterparty(plan, country);
   if (country?.key === sim.playerKey && sim.playerControlsGovernment()) {
     gpmHistoricalRecordWithdrawalPetition(sim, row, petition, "unavailable",
       "You now control the government and can propose the withdrawal yourself.");
     return;
   }
-  if (!Ge(country, "diplomacy") || !Ge(counterparty, "diplomacy") || !party?.organization || party.legal === false) {
+  if (!He(country, "diplomacy") || !He(counterparty, "diplomacy") || !party?.organization || party.legal === false) {
     gpmHistoricalRecordWithdrawalPetition(sim, row, petition, "unavailable",
       "The petition closed because the party or government can no longer act on it.");
     return;
@@ -279,7 +279,7 @@ function gpmHistoricalReviewWithdrawalOffer(sim, definition, row) {
   const proposer = sim.countries.get(offer.offeredBy);
   const respondent = gpmHistoricalWithdrawalCounterparty(plan, proposer);
   const petition = row.withdrawalPetition;
-  const canNegotiate = plan && Ge(proposer, "diplomacy") && Ge(respondent, "diplomacy");
+  const canNegotiate = plan && He(proposer, "diplomacy") && He(respondent, "diplomacy");
   const chance = canNegotiate ? gpmHistoricalWithdrawalAssessment(sim, plan, proposer, respondent).counterpartyChance : 0;
   const roll = partyForeignFundingRoll(sim, [definition.id, offer.offeredBy, offer.reviewDay], "occupation-withdrawal");
   const accepted = roll < chance;

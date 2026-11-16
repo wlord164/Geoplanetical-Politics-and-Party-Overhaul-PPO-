@@ -4,7 +4,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const lockPattern = /^\.party-mod-lock-(\d+)-[a-z0-9]+$/i;
-const legacyPattern = /^\.party-mod-previous-1\.1\.2-[a-z0-9-]+$/i;
+const legacyPattern = /^\.party-mod-previous-(?:1\.1\.[234]|renderer)-[a-z0-9-]+$/i;
+const legacyStages = new Set(["steam-1.1.2", "previous-originals"]);
 const stagedFiles = new Set([
   "app.asar", "app.bundle.js", "simulation-worker.bundle.js", "Geoplanetical.exe",
   "previous-app.asar", "previous-app.bundle.js", "previous-simulation-worker.bundle.js", "previous-Geoplanetical.exe",
@@ -35,20 +36,27 @@ function cleanStage(stage, keepLegacy) {
   for (const entry of entries) {
     const known = stagedFiles.has(entry.name) || /^(moves(?:-prepared)?\.json|move-\d+|committed)$/.test(entry.name);
     if (entry.isFile() && known) continue;
-    if (entry.isDirectory() && entry.name === "steam-1.1.2") continue;
+    if (entry.isDirectory() && legacyStages.has(entry.name)) {
+      for (const file of fs.readdirSync(path.join(stage, entry.name), { withFileTypes: true })) {
+        if (!file.isFile() || !stagedFiles.has(file.name)) {
+          throw new Error("Unexpected preserved installer file: " + path.join(stage, entry.name, file.name));
+        }
+      }
+      continue;
+    }
     throw new Error(`Unexpected file in installer transaction: ${path.join(stage, entry.name)}`);
   }
   if (keepLegacy) {
-    const legacy = path.join(stage, "steam-1.1.2");
-    if (fs.existsSync(legacy)) {
+    const legacyName = entries.find(entry => entry.isDirectory() && legacyStages.has(entry.name))?.name;
+    if (legacyName) {
       const destination = path.join(path.dirname(stage), keepLegacy);
-      fs.renameSync(legacy, destination);
+      fs.renameSync(path.join(stage, legacyName), destination);
     }
   }
   const journal = path.join(stage, "moves.json");
   if (fs.existsSync(journal)) fs.unlinkSync(journal);
   for (const entry of entries) {
-    if (entry.name === "moves.json" || (keepLegacy && entry.name === "steam-1.1.2")) continue;
+    if (entry.name === "moves.json" || (keepLegacy && legacyStages.has(entry.name))) continue;
     const file = path.join(stage, entry.name);
     if (entry.isDirectory()) fs.rmdirSync(file);
     else fs.unlinkSync(file);
@@ -67,7 +75,7 @@ function recoverTransaction({ stage, game, valid }) {
     return;
   }
   const { moves, legacy } = JSON.parse(fs.readFileSync(journal, "utf8"));
-  const isLegacyFile = file => legacy && path.dirname(file) === path.join(stage, "steam-1.1.2") &&
+  const isLegacyFile = file => legacy && legacyStages.has(path.basename(path.dirname(file))) && path.dirname(path.dirname(file)) === stage &&
     valid(path.join(stage, path.basename(file)));
   if ((legacy !== null && !legacyPattern.test(legacy)) || !Array.isArray(moves) || !moves.every(move =>
     Array.isArray(move) && move.length === 2 && move.every(file =>

@@ -4,13 +4,13 @@ A Geoplanetical mod that expands party politics, elections, uprisings, and histo
 
 ## Install or update
 
-Requires **Geoplanetical 1.1.3 on Windows Steam**, [Node.js LTS](https://nodejs.org/en/download), and about 4 GB free on the Steam library drive.
+Requires **Geoplanetical 1.1.4 on Windows Steam (build 26709373)**, [Node.js LTS](https://nodejs.org/en/download), and about 4 GB free on the Steam library drive.
 
-1. Close Geoplanetical and extract the downloaded ZIP.
+1. Close Geoplanetical and extract this compatibility ZIP into a new folder.
 2. Run `Install Party Mod.cmd` from the newly extracted folder, even if PPO is already installed.
 3. Launch Geoplanetical through Steam.
 
-To remove PPO, close the game and run `Restore Original Game.cmd`.
+To remove PPO, close the game and run `Restore Original Game.cmd` from that folder. Keep PPO campaign saves for use with a compatible PPO installation.
 
 ## Where to start
 

@@ -6,330 +6,59 @@ const { createHash } = require("node:crypto");
 const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
 const { withInstallerTransaction } = require("./installer-transaction.cjs");
-const executableHash = "6c0f558ebc1674d309480e5f268280583424a920f8556a756e01c3136c41b675";
-const workerHash = "c38f7da0de30b5df6818e6884ff1b2763154351016b10163b3369533564a6fda";
-const archiveHash = "be810dd717afc249fc1b46ec349440d4732f4ce2aa3b58f77d3fcfd6972efd48";
-const archivePayloadHash = "fdeda8a30d6d51fa831e4ba07f52ace98575631be1d00e4d78a23581d6d3015b";
-const previousStock = {
+// Windows Steam build 26709373, depot 940231 manifest 43069630429240561.
+const currentStock = {
+  version: "1.1.4",
+  archive: "3546fb0a84f279a4dfdb0dac55bedb53849a2e88073887e8a121e4c6ce6ad2bd",
+  payload: "1350bfc579b9578e92591deffe774654c83c237ebc211bd05a37aec8bd779138",
+  executable: "44ffa2b19e8eb63ca64aa09dd7a1cdd766194ba20faa8444a99ad2b7f5462134",
+  worker: "b6c6f5385c43515d9c10dfd920f98ba76da45fdba83575ab3d62c064e41a21f0",
+  renderer: "a6192a73e70c0eab556629f4917a6a74b8ef582bf8bc339bc58420bfb30103d9",
+};
+const previousStock = [{
+  version: "1.1.3",
+  archive: "be810dd717afc249fc1b46ec349440d4732f4ce2aa3b58f77d3fcfd6972efd48",
+  payload: "fdeda8a30d6d51fa831e4ba07f52ace98575631be1d00e4d78a23581d6d3015b",
+  executable: "6c0f558ebc1674d309480e5f268280583424a920f8556a756e01c3136c41b675",
+  worker: "c38f7da0de30b5df6818e6884ff1b2763154351016b10163b3369533564a6fda",
+}, {
+  version: "1.1.2",
   archive: "519dda4117db8ef49eb77a66ed2a9ee9c5a53225fa91847868654f586109e34a",
   payload: "e45165ccaea35062b9697aff48f9c67258dc53002708d75dad7d2ccff1fee05c",
   executable: "a53d56e974d6a8b8a3669fdf3de5a4278b250a51fbd43a1561f2ac1cb269daf6",
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
-};
-const previousPatches = [{
-  // Verified Far-Right Currents release.
-  archive: "b18dbb38b4e15ac6ebcbed42490430b3666e01a8c088daa476b22584b169855e",
-  worker: "d6d24029116785c0e14bc67028835ae56337fb478ccc5bf967e9b31eeb9047ff",
-  renderer: "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6",
-  executable: "29414e30a81e943ddf5e6ae487b88d3f05f79b70d164dee1cf75f9b2760b0842",
-}, {
-  // Verified membership-backed Ideology Overhaul release.
-  archive: "f367c3ab90f8ba2aebad59def49aa660865e2a5bcee37789a8cea3e5485de3dc",
-  worker: "7104c076fe8702e46abb158c962c0f7680440efe383d34e1a828fd4b0e9df9dc",
-  renderer: "3e96283cc48f22f390d0a39fcbad3bf99ba71188a62ed7ec8aed1f1563e4057f",
-  executable: "13ed007501126e98afdabb116ce2055395429c0592e85d0ae2f9831df1f4d0ca",
-}, {
-  // Verified Congress Expansion release.
-  archive: "3f6ea58d175b311a6364e37e3878c259e7f121571b48dc4283bb9335cdcbc046",
-  worker: "1c31f312457bfe5878fccbfe8aa1c8e6cdc78512ae216c59d293042accc7781e",
-  renderer: "0dd9e36becea39be7ae6484b70d6f7cb8cf3b20844dd48a221ccad80c903e878",
-  executable: "348ace0971a11d6677130b4a1a09615a66da92e3672d492ac2e25a057ecd419e",
-}, {
-  // Verified Party Leadership and Ideology update.
-  archive: "4c2ebfca480f2f9f57c7d3e40ce2fbe95e9147683c939798e9de060f1880593a",
-  worker: "e9282eee85384ce519818f4705eccc19c339e0e0c54db9f47bc884cb31ef4a5d",
-  renderer: "05d674a36921246a72a33c3694d3b9f0b7193f54b007110a4dc24dac968f2487",
-  executable: "c49a75bda4714794e001af313236e5dcf5ed18c4828b779f4b8e5bff6fb30370",
-}, {
-  // Verified Congress Layout candidate.
-  archive: "47ab85f5f44b3ef1f8ec891990621127abf627058342869685ccb1e5470539e5",
-  worker: "67faacc21d82e5a6bd915f6d2d4ad3cff3aaa55f46c9008cf18446e7340e1940",
-  renderer: "2470d35f3979d0e705e366bd4d8bc27ef7578031940d0712eab73c4148ea08fe",
-  executable: "604a91791380a4c0aa6f7bee8f90066380c2e3253272a2ec28a35281ea89490e",
-}, {
-  // Verified Congress Portraits and Ideology candidate.
-  archive: "0b42cd8510f6745191543ad4449435efd92d43350c8907e5c0f064c46ca954ac",
-  worker: "67faacc21d82e5a6bd915f6d2d4ad3cff3aaa55f46c9008cf18446e7340e1940",
-  renderer: "b56bbd651da2a14b39d6f19914ddd787aa9218d25e7308374db6a824a200e199",
-  executable: "286ac0c4dda972e15c999039a0eabf423a2a603004276e8769166da73c128fed",
-}, {
-  // Verified Faction Leadership and Ideology candidate.
-  archive: "3b943953cd955928b4f6629941a6a0107af8400b630ffe32fb7a57b8c881ce5d",
-  worker: "bb1af6db6cc91f2f4ba3cd7df28f4cbe281d723bca76964097d14049643d5c88",
-  renderer: "978a8ab5bf5aaaa81e73d07411ae8d07b57fdf0becf69ceae539f2b3b205fca3",
-  executable: "550fdcf6e98d02f45d5ce997031c2efa2a0c11f50fc92329e783b060769c970e",
-}, {
-  // Verified Domestic Politics and Stability Update.
-  archive: "a6115b6d4c36b6142279be7e7d6e9c639cafd8b798de230b41852ac41a3bf056",
-  worker: "49a42d36fe20ca490f1df3403148377892e3729ac597795cfb4b6a75b694c01b",
-  renderer: "e322fc6833a7a33baa2b2e66833f10bbe2d6dc2faeb8f6a652b74803d4791727",
-  executable: "d30c6020510fbc562714add0dbe29008b3a0f6f8b331f1cde6217e29e462a987",
-}, {
-  // Verified Congress and Staff Follow-up.
-  archive: "d926ad407a8312e5e0aa12e642540307f2ecb6b258874e11e30c20f81a93d939",
-  worker: "e0dc5af6b7d22ba833581ab503ffc8e851e26a088888ca10a980ca3fe6aff2f6",
-  renderer: "c677564d90f8e53e9d403f612551baf9876ea39dd7824d98fbd5e76e4b5e8242",
-  executable: "f26ca6e0c63b18b63062b40f15fc32750eac72e12516aed317f2b3c69b2b10fc",
-}, {
-  // Verified Domestic Politics UI follow-up.
-  archive: "6f07cec33f70b159607c0bbb12046d5f034b2c0364feafbc20dae4c33b4fcf54",
-  worker: "7c5f1ac309d671a735a2cb6f00aea170642a1f9c4c464ad2dd3e73ac3517c9c8",
-  renderer: "ed73f6046a28984d7d21120d5073be42e3b06a028668ada15625c250aa296474",
-  executable: "efbb461ae7ee1cc4ed0466dea5b4fd40e98f628dce6445e234ffcd55718d7496",
-}, {
-  // Verified Domestic Politics candidate.
-  archive: "ef4b96bdf3f591b4f909f9c4e0dc7ccb312bf3bbbc11e77aa363fbc1023781b3",
-  worker: "a97ff534bb6959a48fd1ee771a1e3523c1644a9e6c92fefe375dcebd40ed30ca",
-  renderer: "0b6b5321aa82ef5d657f4661d32442fa72f6c750d935031daa0d4f0f86d4c763",
-  executable: "485ccef538cb993cec9df0ed5f30463306625f7fce4ff8a0da5eac454e8e866a",
-}, {
-  // Historical Conflicts Cleanup.
-  archive: "7c30fbeb494c03c1d4ac3ed5cd8504b44a5d10c1c0fca47396d4cf026b6d5e1c",
-  worker: "c20cf7ccd1e593b416992a6ffad72761409dc5a449858edbebee40d95ee928d7",
-  renderer: "7dba7ed6092b02ee1b1486c0502f6a61ad8fc8a73c39f8a729cc831274d83b5a",
-  executable: "a2fb994be34368323afa806392ed9555071f847b6e245fa831fe453d7f3d6fb5",
-}, {
-  // Private War Interface test build.
-  archive: "b1142453e12ec895b2632838f452c83229e645ca1218394d1b032ff5f9cc7a12",
-  worker: "15db8a598e7fabb5898462c8c8f5354c6690ff8ac3664eb874cc375e71618c25",
-  renderer: "506e1ea8625fe13742147a3bd621e0b9bd7a07c8ff94568f5f8a02128ee48d54",
-  executable: "22568e9943fc6a5de3d9a978d60a1612a9f63cc16ec520ee13fe9a077567dd99",
-}, {
-  // Campaign Rules Correction.
-  archive: "0257335ea1e7f6054e03e3d947ab2e61cf0050f0badc8abc6853edd62fb2627e",
-  worker: "170bae214e26ac80dd47be3291472ac30565643f01572fc7a529c57d479e67a5",
-  renderer: "555fac76f011886992925a4118f8010cb24cdb568d4a54000b64279ce63e2186",
-  executable: "237ccfebd93d0d3cb8bf0a60ef10631f3033b7d897c75bc4fe3c98cdb92a0405",
-}, {
-  // Follow-up Hotfix.
-  archive: "e2d9ca3cc86588bda07fa183c0b0aa45ff43582e7c181a68a3c222dc50f81218",
-  worker: "d36afb31029be6748b17dc28d4c062f10ff78cbac959ab0b2016972beea44352",
-  renderer: "57575cd948e816253c33085bc8da3e6161125e082b3dc42063e20502d472759f",
-  executable: "28fff77e891b6fb2019f17c746bfaa358f151aa5b73753a71e1824f01507aa01",
-}, {
-  // Stabilization Hotfix.
-  archive: "6813f676955c48a973909da7325bf87a7bf875f1590834f090b122caf54afd8b",
-  worker: "a7bfb4e17d374a49303d255690bedb17cdc5e6340cbeb1a6575e7be73e3bc4a9",
-  renderer: "94dd70ed5c0fced7c3c6b638ddb49f0504e58844c07a9d189665c937b82bb704",
-  executable: "a5dbe48fca4da6a8a2836821b687f598d2ff15449274ef9e23abe14c677d74a0",
-}, {
-  // Political Control Borders.
-  archive: "239ed1c6ef396e16e964503b22c809d6222b32639bcacc9d53360a4f5d3a1f3a",
-  worker: "330ee4b1388cae85a1b3fb987e7af5dbc01e2ff635f0b2cfba44df50e490b44f",
-  renderer: "0142e701c8cff93f53a23cd118aa24576442776c6758624f29830e0bb41ce18c",
-  executable: "a28bb7c94adf47451deb82cfcf61c437ab16fc26bc3be987ca6c80c253b4d75c",
-}, {
-  archive: "c685da27b3e63df5c4129a319d4fbce347666731d49c52a667d1b0aea6f80f91",
-  worker: "330ee4b1388cae85a1b3fb987e7af5dbc01e2ff635f0b2cfba44df50e490b44f",
-  renderer: "3e97091a5857751adf41cc0d827231140f32ef4d31a61b719ebd8fd96efebb3c",
-  executable: "1724b06e52c3283095b8ef0a0d011b0c30250573ec0e8e7d750f4aa69fe57ef0",
-}, {
-  archive: "182d43a81129ea384e50a85a3f70ab221179331f0ab84ee051f487114c57141e",
-  worker: "d4e5cd8118ad7f325f628141e0c542454bdd4c90f50b526d5df61c4161dc7e33",
-  renderer: "f0e75aa908b240c9d11cac130b3d69682b87f087b4f22040745ee52b7c33ccff",
-  executable: "2c1081517b9614de6a3caeb994988b961a7073b0f2eb04ae8485dbfc962f5bb0",
-}, {
-  archive: "c886ef0ecfb0108de29d81c2cd6a70e1594309b6cb16c9202b5c99ff2f3e6290",
-  worker: "05acfcaf21fd27b0eafae38be0f97a3a00d780c30d096772e52af11d48c1eccb",
-  renderer: "4798b0b4048bbfdd2ad7f83c9e566eb4077ded140aeabd3a29d8ba8b47824c55",
-  executable: "36b42d3ebec7199f2a280967777c3b1be14ea8ddcdc385a00d547f7fbb0139d8",
-}, {
-  archive: "4b9f1b0759620ad053b012a7317df94d622562240a284b7439bc6fe5aefdd69b",
-  worker: "804e1b063436751c2024070fe142371f28b9bc6314c598430828835463bc9047",
-  renderer: "3be9941f8a6a30dfda8d9f8e941b6afafcfc9b163d14e93505851ddda14deba7",
-  executable: "ef461ef7c7dfead339a3aa0cac4d851d00a51d2670c678648476e1537d3c3d12",
-}, {
-  archive: "df7ee2ef470b384fe3c71c1c2c3f02831555ff9de7c0545034eaa19adce1adf5",
-  worker: "58b5731bf91984af193cbf908072e1b132fa1c906d93ff35c935ab6f1e12a774",
-  renderer: "457e95fe3583d381c63b989e07c5bdbdd0e1e7abc418271563e6643e6d0c82bf",
-  executable: "69a89259692a4fd97256ef2f269ec91c729a13433dd963c625e5e648cdefea89",
-}, {
-  archive: "f939f835f77e86f518d980f89f337e9295a36cdb75cdaee9cdc0ef06ab3e7e2b",
-  worker: "5e8027a637282474ff7500effb6f69dda46c1837909b48508e0602e4e88d638e",
-  renderer: "4f841245d253a8530cef68f146a2f85a4949da66bbd939e348c4426a8d015cb7",
-  executable: "3ddcc7e8653b7cd45ebc25459e9a0c96adb2b913c15d85db07a9056a2351fc18",
-}, {
-  archive: "8e58b7c7f6a3e4a3780fc8577bf5fa312e69cad4526e751def042c434f8d8802",
-  worker: "53e3dce7aa8651fd2833189612412629efdf668868eb5cc4040a23a8bcccbd59",
-  renderer: "af7ebb84b286a694844bedf5e250e0180a16b1373f44a9f886aa567c00800db3",
-  executable: "7f61e44bfeae019af2520b272aa6919acd2f98750d57bb770435bf2b25838704",
-}, {
-  archive: "5fb54c5fe31f02cb69f7777bc0ac52ecfc4b1170d799956973ddcb120644d791",
-  worker: "63deec24022266047700503888430087ef8e2d785eead7df6970a43f1038c3f6",
-  renderer: "1bab71a38a94bf9dad3ce66307ee8fe49f4ce2db327ea697bc2eef4dc2267293",
-  executable: "e4c127efc03f0b0ce988f18b3c86ede3c4ec305bc397a3fc0330453df2296931",
-}, {
-  archive: "5b172cff3cfb66136909aedcffb32a700c4483455ab321548223f1d590cd4fe0",
-  worker: "fb7789524c90b138a8de9f04c56978ba2c612362d96d35b91da432243043b69f",
-  renderer: "e137884166f5a46f355f9e43d0908a1999c3fb8fe2f1676f8b861c1f03f66c4b",
-  executable: "b6b5694d024be59b68c3b2522c8ddce0761cf6aab9e17925eab1ac341d7f34ff",
-}, {
-  archive: "81204010a66a1af440e996bb1264339c32b3e851759e381e319062225fec4099",
-  worker: "24bc50ddaac5fbc3d942ab14f236d305cf46143a12ea21afb85530613db7c821",
-  renderer: "cfd9c9aed92b53d5759ea69b32949e55a601dc80d4236cd8f94ac69b77016296",
-  executable: "a47117b0a4376d12bc23c7f19dcee4f359f415457cd41e69421b685cc5713f8a",
-}, {
-  archive: "8a583b16adf089a0acdcfbeab269f14ebc0061508f747101c612ac5de3c21dec",
-  worker: "c849a82ed3fdef3faf23e496e91ce9a4bb2972ffab089eee46c95ee3b9fe7c43",
-  renderer: "cfd9c9aed92b53d5759ea69b32949e55a601dc80d4236cd8f94ac69b77016296",
-  executable: "e320db04927c77ec7973c41f9d9ffad52b12a19f78aaca28958b9bcb1cc36750",
-}, {
-  archive: "213eb3099dcc78c8607467d688caf551ec9fde256bfc7df54f8441d2370aae94",
-  worker: "82b8d628d47da2e75981030229b105280294eaac6d7e0063f6d2a455075428a4",
-  renderer: "45f0225d6ec7892b0d226712e1470a97a1fc1c0bed0b89fd16816722c08ace5b",
-  executable: "d866dfcb13f3502c3a1f8fdb97faddbad1fac3bdd813f37fb1b282df83ab400b",
-}, {
-  archive: "908a346a7ffa281f417bd1217c44eeb22f9695c3c685eb5f0bc25a9e4876e820",
-  worker: "abaa0f03ef7cd4fb76f814894e104f8ef558a520debdb90b1ac58887051e2e68",
-  renderer: "ef3f30bcaa22fb1d4faebf5b3fa5cb007433e89a1ee4d8e818909d8cedb6927a",
-  executable: "4f71bfdfc5626d8fadd35ac30bec0a0525e1d1d3947c0be0e3978a09b8631a33",
-}, {
-  archive: "d1895c7ea431abcfe0f839ac5636c89fff79f3f3e2a6cdc49677450babdd7056",
-  worker: "c606b829330658bf73cf127f00cfe530ea41e1efbd83047fcf4ded4b30563a95",
-  renderer: "0f92adf27b2c5f19ce1884d4f4aa621f471e6dca27b6a5a8b6e02f4d801fe463",
-  executable: "d2ac87d2437100c1f689c09a7ea30b319077ef46b5155fe49495b0e08a1eb32d",
-}, {
-  archive: "0dfd257fa99cd279b61b3bd5c070b99f87e390b6f3092336a9d5ad31ffb33934",
-  worker: "ac2e32b48f6b3f215a6ea3bfd700c7fac7cf44d6045134ee3c2021c4201e9f41",
-  renderer: "bf77d657fd6161c068c4aa54152e71e286b7df28305fceb2368c782f24124254",
-  executable: "6cee55e23b24a90aba1471c2f38a54ffeb49fb3e786cc98d9848d557d4f3bc44",
-}, {
-  archive: "5851cc67fb766161c12018abb3b2ffb97fd3f15d533c3ab9af298ed975c4ea20",
-  worker: "c7af40d2016e5b0fd4b714af9fc01ef898d3d99de27ff735ef02b638da9e5441",
-  renderer: "9adeb33853c5a0067279df607b3170c628b8081c90d74a0d8103430bdceed1d8",
-  executable: "727205d09bbf686870243ef61164bc173bc08b72d6deb8041df48ba6d40debd4",
-}, {
-  archive: "ddceb5d5b42ce9b9904c31d5d2978a8224835b6007c01929be9e61b8ad640816",
-  worker: "1eedfbdcabbd6e41024b16058275eefb01586fa9c1cecf21f2b66889074a34cc",
-  renderer: "a326fcd09745064c24d87e8ae181f6360863e356c1b8ee2e1047bf40d1cf9a42",
-  executable: "3c60623bb520cadeea788cf5de863edecbff1091bb9ab3a2e7164475eda2621e",
-}, {
-  archive: "c72b574379b2e6ad78593ee37af6c2708213befc3cbd40fdfa02fe6c5222a0b0",
-  worker: "4fe95038751c5da9f99d0c408648b1911f07c0f473763470e1700eed864756f6",
-  renderer: "30c2f38674e30208af05cc3bb89cc9be42d8cceb7c6362c688042b6ae7d8399e",
-  executable: "9d11eef148967be41ffb93e45282a06fe238d399f359ff465ba75ab8c941899e",
-}, {
-  archive: "b15443670eae9c4f69c75d0d61419cebea1abbe06d04b85773232389fcfccd8a",
-  worker: "4fe95038751c5da9f99d0c408648b1911f07c0f473763470e1700eed864756f6",
-  renderer: "103b85f7821d40e8c99b2a85358eb6bcbae01fee9c45a0ed52655b5384b2c4ac",
-  executable: "de38a70efdb0c939014dacaec03c95bdc1ba46c337666ea2a0450620eefbbe34",
-}, {
-  archive: "68e7fe31c8b3dd763584b68e913702421b837880bf57301ebf9699a7cddb4a76",
-  worker: "ce8a74e7ab374bc404a51fe98d1751310d7e581cc71c20dc1ab4360ed89add18",
-  renderer: "d4cbd8fc70a788c1cd8e15ab87005dba6afcdc5054c96f2b41da3fda83f4b5f4",
-  executable: "18abe385fa320fd9495595921926695ce8ffe315af549d6e2f6307a125c79930",
-}, {
-  archive: "d6c516e4a64eb056c2bae6410a570828377006e6734815d96257cd5ea18d5009",
-  worker: "27569d1c7633977db168f71c21f9803022306832d321bc2b8cd0b8b7a7bff71d",
-  renderer: "d4cbd8fc70a788c1cd8e15ab87005dba6afcdc5054c96f2b41da3fda83f4b5f4",
-  executable: "3b81e217663a73edd90a37e6160d577468acca570d680431eabe0055f6b04a73",
-}, {
-  archive: "745646fef583f3104ff78332d92b212dd7780fb948970ffad4009c6d5c3ccce4",
-  worker: "8dd41855cfcc13b739a7a2a293796c27fde4983035848762359d9c6b33be68dd",
-  renderer: "a7299b6059f0349223366d24b728909c7363950b8dc28a92915e76673771a6bd",
-  executable: "5981fb8da736a4ed1861ed904a7aaece777973dfe461dd826709849fbfd27d2b",
-}, {
-  archive: "75670b2f499c9373fc8b3893943e581acba53fe4b809a211ed7a35bc0f6270b7",
-  worker: "8dd41855cfcc13b739a7a2a293796c27fde4983035848762359d9c6b33be68dd",
-  renderer: "18d74a7bec03d59c30467f36c1bdfe7012c1ea86b1c06dccc3f47a88a3a77944",
-  executable: "a92299e62e14caa362b680aafc0ebaedcc49f51f73a0d3b70d9ad199886b7ce6",
-}, {
-  archive: "c6b0b5747b39c18a0edb7296f8a6287b486449e8593caaf425b5dc6fc566b42d",
-  worker: "8dd41855cfcc13b739a7a2a293796c27fde4983035848762359d9c6b33be68dd",
-  renderer: "a5174ec4e6c36796fac56234e792531c3ef4b4c540d429c0ec9adce02aae1ac8",
-  executable: "c02eaada8a70bd9252dea7f0f0cbff52c2bb9ef7482c0ca7c669d01bea4f86df",
-}, {
-  archive: "f252b2d88dcdea4642c755a9ea2966f83603512b81629874d3b8023bbff064d1",
-  worker: "6932ee0555206dafe1fb33d78e43d85210a1bb6f9ebe8ac0025f677849a8aec5",
-  renderer: "03c4add77abec6c9bb673cd2dc5a1122af48c4f592b19f81313cf58046f842d7",
-  executable: "701188ad744326924febb0d02c562efc8fd5842e96f755c7230f2a45a104a170",
-}, {
-  archive: "88b33513832f7585c910032813c93b3bb36b3ae5ce148c71d3f5cc298a0c294a",
-  worker: "5f399238bc4841679735c1c6273689539ecc91f532896317b1c4a32ee57f5e6e",
-  renderer: "c2a1c70ebcd5a10403714d1702e9824de3e3371a7535180bbff2b86a4c0092cc",
-  executable: "b0500e44a68b319cfe23061d02a915b79777aec5ad38a333266fccba7c4b44da",
-}, {
-  archive: "a3a3958bd6c5d0f51ff202060b26ad734c4867f671d120e675ed6eb9dcaba6f5",
-  worker: "5f399238bc4841679735c1c6273689539ecc91f532896317b1c4a32ee57f5e6e",
-  renderer: "3a75a51652f345aa0c05d8110773b15736ca2b95e0a76d8f7a4471eadb836297",
-  executable: "9b1027fa87ae3c0d587775e6466c943d8558fadc0da2919a0889a75c44066c7f",
-}, {
-  archive: "48eff79a5b27b43df1a1d6924479b6fd2b047d1f8e17ccf4b41a46046789daac",
-  worker: "8e52d60b43f5280fd6431123ee16cc27340a06efc9b3d2764ba2a7d0c826b4ab",
-  renderer: "3d8528d3772825d1bcf611ebf21b9db919afd185ccb44051df0fd9e25452be2f",
-  executable: "9f02989fc79ef412d29edb7564065c7fbb945a119c8666f9d91e16e7155505cf",
-}, {
-  archive: "ffe8113a10113332d9df296da6c138b7515150c0ed6da4765e2bd93250b1b379",
-  worker: "58ce6983d4f959a141c65bcc5ffbe41d5a0c244492984d8851b284f428515aff",
-  renderer: "ec2514ba4da8fc42cb8bce545d203a32507c30817ef980a69eebcf28ff22e7a9",
-  executable: "f78fe5d666ca5ac0a4f0290a75622e2a93699147b025b052e3f0cc85eb5af6d6",
-}, {
-  archive: "30f24d89ac0088bf6f55c542b9970713d5a89d148346f122acb7ae02a2dff5f4",
-  worker: "75df017bb79b93c3c7fcac238d264302301d5564a658e3e3d2861968103b19f3",
-  renderer: "d43fd81e48bacd38486274a8dc569ead62f89297d4c9705f103fe594caafd97b",
-  executable: "cf19db8f5f3ff9e2b7ecb671179b2f82202e04ca2edcefbc082b55e540a72d9c",
-}, {
-  archive: "480715f2d9781acc754132ef5a7c269a89ec4634007a2373320f133f8571a0a8",
-  worker: "82a4f3c60b0c6af0d39dcba683d41272c7e2bf5845cd83c2ea5a4a610a19dcdc",
-  renderer: "f7827f00e45adaf9419c89b432dc093aedc4d57a2bc45e9b230225280f965b7e",
-  executable: "38a2dde1a3d4b0052d521f48423b4ebe91af58ec2a13af7efc8105a6e99021f4",
-}, {
-  archive: "f163b6ae1a088cb26d32552b9246ddecb5281b3bbbd8af169facfcef85a088ae",
-  worker: "531311d7732ac9de87b7ebf021cf5bdec06f9a19c4d707ef6dec16443fe7445f",
-  renderer: "c2eaa33df6610761ff35d1d53eaf32d7159f1ff13ffcd915341e5e2ae862a0e9",
-  executable: "0778c2604c604d1b4506c3825aa2ff6264075b9c16206b333fb22b9b0c7c4a45",
-}, {
-  archive: "5376cf0c315a09f4a42f26651dff594575600c64024222b76dd37d74af942757",
-  worker: "f266f85c87ae883d7576796c67509156dc9c2b1bab444dc2053f247bf2f8ca7c",
-  renderer: "7e61c172dad114269f846d11d83f6d6eee13ed9718609c30af1c0f018d5ca4a6",
-  executable: "a04df5f9c534f88f731f6168712210796927347431fcbb7706e53f6104539e5b",
-}, {
-  archive: "60e47decdd1d692a8382cdbd9df625e8fc88ee21df848e9566f99aa7085fe091",
-  worker: "50aeed9960ac61e93c60851515d88167f4e1976b93a6f976a7c3123c5242700a",
-  renderer: "af8265031c09aa9bd1eed24a1a1a73390b274b2ada2380dbec3c3f48117cfebc",
-  executable: "fcefedea00868ba0c9d5aeb19943ebb8b266f3c49989e929878dcb343278f837",
-}, {
-  archive: "05d568a42efbc8387a095c30c902a52c09bf5eb1a9726954ec2e6f8e44ad2859",
-  worker: "6f0473149235a906c7925a965c8ea84c63060942529e6f0601177cd2524a8f25",
-  renderer: "26dc8c3f9609e1bec666ff639659bac09980416bd3d2fb5c738d878dba89c394",
-  executable: "533502e76e61f2f021063ff105e6f6c258923701362f04ffbcef8eabe8929965",
-}, {
-  // Worldwide Historical Conflicts and Ideology Update (68514dd).
-  archive: "55bc26641fe06c41a2cd923e3cdb10c6f3d4030d3973ec9e422c087b2f1b0b70",
-  worker: "74867e182f7c65f493359f57e1a372114c66cf268b591aa9c11c1e0957b0a8ed",
-  renderer: "6386fd28e39c05ba82f64f6ec0af82f6f5a32174e25b28aea1b3a5bccdfd8b47",
-  executable: "5fe64c02183d88f904b9a4eb41900257bbe88438e87fe624ea7180959745a0ee",
-}, {
-  // Historical map update installed before territorial governments.
-  archive: "40258391467472e5144c49f8fd69cc7af59da97a0fec8e481eaaa9b713f6e855",
-  worker: "93900c6cf8b5795522c5cf4ceb24597afc2fb5ca8c59374c825f5e72bd5d5ed7",
-  renderer: "1d9395a019387e945ae30326bba1824dc1609da9a7dca1a136113bf5fa7a6876",
-  executable: "8afa2bb9923aab89be93556c6c631aff049b7fdbbb2007d40427403315080667",
-}, {
-  // Territorial Governments update.
-  archive: "af522ffe63e409b384e48c4b77d8785222087eafefd0bd5e503837eea0a3dd1d",
-  worker: "83034c8b732bbced620f7e28151063221ebf6004349e90018121041b9636a74b",
-  renderer: "f3e873fecca56166cde1e66f48aca11690cf5609c43201547a0e367a2d4c01de",
-  executable: "ffb01f1f13367111ce1f9f641d314a10a7b6296b651f0e17e85cac9fc443bcd7",
-}, {
-  // Campaign Rules update.
-  archive: "651d6596fa77909a0932c5dba0f75a64a2e79804d7ee8dbc6a65154e99bc0ca0",
-  worker: "804e1b063436751c2024070fe142371f28b9bc6314c598430828835463bc9047",
-  renderer: "428293592321e1d3f39c7adfe9580878bba83567e48db677377bf26863ce630d",
-  executable: "20ce6ee99abee9297703fac7e906f030ca9985904731f3803da95a9b3e2b3fcd",
-}, {
-  // Regional Map Layout update.
-  archive: "9d160ffc694ea90b89a77b0716de1cb1b5e5c3918b3367a4120db69addd6071a",
-  worker: "804e1b063436751c2024070fe142371f28b9bc6314c598430828835463bc9047",
-  renderer: "2242ae52a3bdc2ed80c22aed5771d77855bd5e54e8a4f99f193565cc661d3853",
-  executable: "44e4cfa836b4a9f0691efd68ff0c9a4891e5ebe307fac444500d408fd4ab043a",
-}, {
-  // Party Ideology Overhaul (262ae3a).
-  archive: "c9777671de1b10266f3a028325f293b0abdfcfdcf05018fe7518573c4825c184",
-  worker: "68e4a1bd649631cd4ed77807d2f0fd037957df5e52093ba9bd639d276be52525",
-  renderer: "c51fb033f44075802ec35eafe78bcce2d69941aadfa3a5cf0b9391ab9ab2bc02",
-  executable: "77bb377ded8e922c1fb74430872ebb38d06a92b50ee681d4d8e99bdb217e8a9f",
 }];
+
+// Steam can leave a verified PPO renderer on disk after replacing the three
+// stock files. The stock ASAR uses its own packed renderer.
+const previousRenderers = new Set([
+  "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
+  "e7730587c368f404b33ae83ea748103226b34c9283c520b6345b7816887f8f63", // Private Congress spacing candidate
+  "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6", // Verified Far-Right Currents release
+  "3e96283cc48f22f390d0a39fcbad3bf99ba71188a62ed7ec8aed1f1563e4057f", // Verified membership-backed Ideology Overhaul release
+  "0dd9e36becea39be7ae6484b70d6f7cb8cf3b20844dd48a221ccad80c903e878", // Verified Congress Expansion release
+  "05d674a36921246a72a33c3694d3b9f0b7193f54b007110a4dc24dac968f2487", // Verified Party Leadership and Ideology update
+  "2470d35f3979d0e705e366bd4d8bc27ef7578031940d0712eab73c4148ea08fe", // Verified Congress Layout candidate
+  "b56bbd651da2a14b39d6f19914ddd787aa9218d25e7308374db6a824a200e199", // Verified Congress Portraits and Ideology candidate
+  "978a8ab5bf5aaaa81e73d07411ae8d07b57fdf0becf69ceae539f2b3b205fca3", // Verified Faction Leadership and Ideology candidate
+  "e322fc6833a7a33baa2b2e66833f10bbe2d6dc2faeb8f6a652b74803d4791727", // Verified Domestic Politics and Stability Update
+  "c677564d90f8e53e9d403f612551baf9876ea39dd7824d98fbd5e76e4b5e8242", // Verified Congress and Staff Follow-up
+  "ed73f6046a28984d7d21120d5073be42e3b06a028668ada15625c250aa296474", // Verified Domestic Politics UI follow-up
+  "0b6b5321aa82ef5d657f4661d32442fa72f6c750d935031daa0d4f0f86d4c763", // Verified Domestic Politics candidate
+  "7dba7ed6092b02ee1b1486c0502f6a61ad8fc8a73c39f8a729cc831274d83b5a", // Historical Conflicts Cleanup
+  "506e1ea8625fe13742147a3bd621e0b9bd7a07c8ff94568f5f8a02128ee48d54", // Private War Interface test build
+  "555fac76f011886992925a4118f8010cb24cdb568d4a54000b64279ce63e2186", // Campaign Rules Correction
+  "57575cd948e816253c33085bc8da3e6161125e082b3dc42063e20502d472759f", // Follow-up Hotfix
+  "94dd70ed5c0fced7c3c6b638ddb49f0504e58844c07a9d189665c937b82bb704", // Stabilization Hotfix
+  "0142e701c8cff93f53a23cd118aa24576442776c6758624f29830e0bb41ce18c", // Political Control Borders
+  "6386fd28e39c05ba82f64f6ec0af82f6f5a32174e25b28aea1b3a5bccdfd8b47", // Worldwide Historical Conflicts and Ideology Update (68514dd)
+  "1d9395a019387e945ae30326bba1824dc1609da9a7dca1a136113bf5fa7a6876", // Historical map update installed before territorial governments
+  "f3e873fecca56166cde1e66f48aca11690cf5609c43201547a0e367a2d4c01de", // Territorial Governments update
+  "428293592321e1d3f39c7adfe9580878bba83567e48db677377bf26863ce630d", // Campaign Rules update
+  "2242ae52a3bdc2ed80c22aed5771d77855bd5e54e8a4f99f193565cc661d3853", // Regional Map Layout update
+  "c51fb033f44075802ec35eafe78bcce2d69941aadfa3a5cf0b9391ab9ab2bc02", // Party Ideology Overhaul (262ae3a)
+]);
+const backups = { archive: "backupArchive", worker: "backupWorker", executable: "backupExecutable" };
 
 function steamGamePath() {
   const output = execFileSync("reg.exe", ["query", "HKLM\\SOFTWARE\\WOW6432Node\\Valve\\Steam", "/v", "InstallPath"], { encoding: "utf8" });
@@ -392,7 +121,7 @@ function updateEntry(entry, bytes) {
 }
 
 function updateArchiveDigest(bytes, originalHash, newHash) {
-  if (sha256(bytes) !== executableHash) throw new Error(`Unsupported Geoplanetical executable. This mod targets ${version}.`);
+  if (sha256(bytes) !== currentStock.executable) throw new Error(`Unsupported Geoplanetical executable. This mod targets ${version}.`);
   const resource = JSON.stringify([{ file: "resources\\app.asar", alg: "SHA256", value: originalHash }]);
   const index = bytes.indexOf(resource);
   if (index < 0 || bytes.indexOf(resource, index + resource.length) >= 0) throw new Error("The expected Electron archive integrity resource was not found");
@@ -462,7 +191,7 @@ function getFiles(game) {
     backupExecutable: executable + ".party-mod-original" };
 }
 
-function verifyArchivePayload(file, { offset }, expected = archivePayloadHash) {
+function verifyArchivePayload(file, { offset }, expected = currentStock.payload) {
   const hash = createHash("sha256");
   const chunk = Buffer.allocUnsafe(16 * 1024 * 1024);
   const fd = fs.openSync(file, "r");
@@ -479,191 +208,184 @@ function verifyArchivePayload(file, { offset }, expected = archivePayloadHash) {
   }
 }
 
-function verifiedArchiveHash(file) {
-  const header = openArchive(file);
-  verifyArchivePayload(file, header);
-  return header.hash;
+function buildRenderer(archive, header) {
+  const entry = header.json.files.renderer.files["app.bundle.js"];
+  const original = readEntry(archive, header, entry);
+  if (sha256(original) !== currentStock.renderer) throw new Error(`Unsupported Geoplanetical renderer. This mod targets ${version}.`);
+  return patchRenderer(original);
 }
 
 function buildPatch(archive, worker, executable) {
   const header = openArchive(archive);
-  if (header.hash !== archiveHash) {
-    throw new Error(`The original game archive must be from Geoplanetical ${version}. Backups from older Steam builds cannot be used for this version.`);
+  if (header.hash !== currentStock.archive) {
+    throw new Error(`The original game archive must be from Geoplanetical ${version}, Steam build 26709373.`);
   }
   verifyArchivePayload(archive, header);
-  const entries = header.json.files.renderer.files;
-  const rendererBytes = patchRenderer(readEntry(archive, header, entries["app.bundle.js"]));
+  const rendererBytes = buildRenderer(archive, header);
   const workerBytes = patchWorker(fs.readFileSync(worker));
   const headerBytes = patchedArchiveHeader(header, rendererBytes, workerBytes);
   const executableBytes = updateArchiveDigest(fs.readFileSync(executable), header.hash, sha256(headerBytes));
   return { archive: headerBytes, worker: workerBytes, renderer: rendererBytes, executable: executableBytes };
 }
 
-function installedHashes(files, allowMissing = false) {
-  return Object.fromEntries(Object.keys(previousPatches[0]).map(key => {
-    const file = files[key];
-    const hash = fs.existsSync(file) ? (key === "archive" ? verifiedArchiveHash(file) : sha256(fs.readFileSync(file))) : null;
-    if (!hash && !allowMissing) throw new Error(`The active ${key} file is missing. Run Restore Original Game before updating.`);
-    return [key, hash];
-  }));
+function fileIdentity(file) {
+  const stat = fs.lstatSync(file, { bigint: true, throwIfNoEntry: false });
+  if (!stat) return null;
+  if (!stat.isFile()) throw new Error(`Expected an ordinary game file at ${file}`);
+  return [stat.dev, stat.ino, stat.size, stat.mtimeNs, stat.ctimeNs].join(":");
 }
 
-function matchesPatch(installed, known) {
-  return Object.entries(installed).every(([key, hash]) => hash === null || hash === known[key]);
+function readState(files) {
+  const identities = Object.fromEntries(Object.entries(files).map(([key, file]) => [key, fileIdentity(file)]));
+  const headers = Object.fromEntries(["archive", "backupArchive"].map(key => [key,
+    identities[key] === null ? null : openArchive(files[key]),
+  ]));
+  const hashes = Object.fromEntries(Object.entries(files).map(([key, file]) => [key, identities[key] === null ? null
+    : headers[key]?.hash ?? sha256(fs.readFileSync(file))
+  ]));
+  return { identities, headers, hashes };
 }
 
-function patchHashes(patch) {
-  return Object.fromEntries(Object.entries(patch).map(([key, bytes]) => [key, sha256(bytes)]));
+function stockRuntime(hashes) {
+  return Object.keys(backups).every(key => hashes[key] === currentStock[key]);
 }
 
-function hasStockFiles(archive, worker, executable, stock) {
-  return [archive, worker, executable].every(file => fs.existsSync(file)) &&
-    openArchive(archive).hash === stock.archive &&
-    sha256(fs.readFileSync(worker)) === stock.worker &&
-    sha256(fs.readFileSync(executable)) === stock.executable;
+function verifyBackups(files, state) {
+  const existing = Object.entries(backups).filter(([, key]) => state.hashes[key] !== null);
+  if (!existing.length) return { existing, stock: null };
+  const stock = [currentStock, ...previousStock].find(profile =>
+    existing.every(([key, backupKey]) => state.hashes[backupKey] === profile[key]));
+  if (!stock) throw new Error("PPO original backups contain unknown files or files from different Steam builds.");
+  if (state.headers.backupArchive) verifyArchivePayload(files.backupArchive, state.headers.backupArchive, stock.payload);
+  return { existing, stock };
 }
 
-function isCurrentStock(files) {
-  return hasStockFiles(files.archive, files.worker, files.executable, {
-    archive: archiveHash, worker: workerHash, executable: executableHash,
+function verifyStockRenderer(files, state, patchedRenderer) {
+  const hash = state.hashes.renderer;
+  if (hash === null || previousRenderers.has(hash)) return;
+  if (hash !== sha256(patchedRenderer ?? buildRenderer(files.archive, state.headers.archive))) {
+    throw new Error("An unrecognized detached renderer is present. PPO did not replace any files.");
+  }
+}
+
+function verifyPatchedRuntime(files, state) {
+  if (!state.headers.backupArchive || state.headers.backupArchive.hash !== currentStock.archive ||
+      state.hashes.backupWorker !== currentStock.worker || state.hashes.backupExecutable !== currentStock.executable) {
+    throw new Error(`The active files are not verified Geoplanetical ${version}, Steam build 26709373. Run Steam Verify Integrity before retrying.`);
+  }
+  const patch = buildPatch(files.backupArchive, files.backupWorker, files.backupExecutable);
+  if (!Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes))) {
+    throw new Error("The active game files are mixed or differ from this PPO build. Run Steam Verify Integrity before retrying.");
+  }
+  verifyArchivePayload(files.archive, state.headers.archive);
+}
+
+function preserveStockLeftovers(files, staged, backupState, detachedRenderer) {
+  const names = backupState.existing.map(([, backupKey]) => files[backupKey]);
+  if (detachedRenderer) names.push(files.renderer);
+  if (!names.length) return { moves: [], legacy: null };
+  const previous = backupState.stock?.version ?? "renderer";
+  const legacy = `.party-mod-previous-${previous}-${Date.now()}-${process.pid}`;
+  const shelf = path.join(staged, "previous-originals");
+  fs.mkdirSync(shelf);
+  return { moves: names.map(file => [file, path.join(shelf, path.basename(file))]), legacy };
+}
+
+function runTransaction(files, action, checkRunning) {
+  return withInstallerTransaction(files, (staged, commit) => {
+    const state = readState(files);
+    return action(files, state, staged, (moves, legacy) => {
+      checkRunning?.();
+      for (const [key, file] of Object.entries(files)) {
+        if (fileIdentity(file) !== state.identities[key]) {
+          throw new Error(`A game file changed during preparation: ${path.basename(file)}. Retry after the Steam update finishes.`);
+        }
+      }
+      commit(moves, legacy);
+    });
   });
 }
 
-function verifiedDuplicateBackups(files, backups) {
-  const expected = { [files.archive]: archiveHash, [files.worker]: workerHash, [files.executable]: executableHash };
-  return backups.every(([active, backup]) => {
-    const hash = active === files.archive ? verifiedArchiveHash(backup) : sha256(fs.readFileSync(backup));
-    return hash === expected[active];
-  });
+function install(files, checkRunning) {
+  return runTransaction(files, installPatch, checkRunning);
 }
 
-function isKnownRenderer(renderer, patch) {
-  if (!fs.existsSync(renderer)) return true;
-  const hash = sha256(fs.readFileSync(renderer));
-  return hash === sha256(patch.renderer) || previousPatches.some(previous => previous.renderer === hash);
-}
-
-function install(files) {
-  return withInstallerTransaction(files, (staged, commit) => installPatch(files, staged, commit));
-}
-
-function installPatch(files, staged, commit) {
-  const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
-  const backups = [[archive, backupArchive], [worker, backupWorker], [executable, backupExecutable]];
-  const existingBackups = backups.filter(([, backup]) => fs.existsSync(backup));
-  const hasBackups = existingBackups.length > 0;
-  const activeStock = hasBackups && isCurrentStock(files);
-  const incompleteBackups = hasBackups && existingBackups.length < backups.length;
-  const replaceBackups = incompleteBackups && activeStock && verifiedDuplicateBackups(files, existingBackups);
-  if (incompleteBackups && !replaceBackups) throw new Error("Some original game backups are missing. Restore the Steam files before updating.");
-  const steamUpdated = activeStock && !incompleteBackups && hasStockFiles(backupArchive, backupWorker, backupExecutable, previousStock);
-  const upgrading = hasBackups && !steamUpdated && !replaceBackups;
-  if (steamUpdated) verifyArchivePayload(backupArchive, openArchive(backupArchive), previousStock.payload);
-  const detachedRenderer = fs.existsSync(renderer);
-  const originalArchive = upgrading ? backupArchive : archive;
-  const patch = buildPatch(originalArchive, upgrading ? backupWorker : worker, upgrading ? backupExecutable : executable);
-  if ((activeStock && !isKnownRenderer(renderer, patch)) || (!hasBackups && detachedRenderer)) {
-    throw new Error("An unrecognized renderer file is present. Restore the original game before installing.");
+function installPatch(files, state, staged, commit) {
+  if (!stockRuntime(state.hashes)) {
+    verifyPatchedRuntime(files, state);
+    return;
   }
-  if (upgrading) {
-    if (activeStock) {
-      verifyArchivePayload(archive, openArchive(archive));
-    } else {
-      const current = installedHashes(files);
-      if (matchesPatch(current, patchHashes(patch))) return;
-      if (!previousPatches.some(previous => matchesPatch(current, previous))) throw new Error("The existing patch differs from the supported releases. No game files were replaced.");
-    }
-  }
-  const newArchive = path.join(staged, "app.asar");
-  const newWorker = path.join(staged, "simulation-worker.bundle.js");
-  const newRenderer = path.join(staged, "app.bundle.js");
-  const newExecutable = path.join(staged, "Geoplanetical.exe");
-  const legacyDirectory = path.join(staged, "steam-1.1.2");
+
+  const prior = verifyBackups(files, state);
+  const patch = buildPatch(files.archive, files.worker, files.executable);
+  verifyStockRenderer(files, state, patch.renderer);
+
   fs.mkdirSync(staged);
-  writePatchedArchive(originalArchive, newArchive, patch.archive);
-  fs.writeFileSync(newWorker, patch.worker, { flag: "wx", flush: true });
-  fs.writeFileSync(newRenderer, patch.renderer, { flag: "wx", flush: true });
-  fs.writeFileSync(newExecutable, patch.executable, { flag: "wx", flush: true });
-  if (verifiedArchiveHash(newArchive) !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
-  const moves = [];
-  const legacy = steamUpdated ? `.party-mod-previous-1.1.2-${Date.now()}-${process.pid}` : null;
-  if (legacy) {
-    fs.mkdirSync(legacyDirectory);
-    const legacyFiles = backups.map(([, backup]) => backup);
-    if (detachedRenderer) legacyFiles.push(renderer);
-    for (const file of legacyFiles) moves.push([file, path.join(legacyDirectory, path.basename(file))]);
+  const { moves, legacy } = preserveStockLeftovers(files, staged, prior, state.hashes.renderer !== null);
+  const replacements = {
+    renderer: path.join(staged, "app.bundle.js"),
+    worker: path.join(staged, "simulation-worker.bundle.js"),
+    archive: path.join(staged, "app.asar"),
+    executable: path.join(staged, "Geoplanetical.exe"),
+  };
+  writePatchedArchive(files.archive, replacements.archive, patch.archive);
+  const header = openArchive(replacements.archive);
+  if (header.hash !== sha256(patch.archive)) throw new Error("The staged archive failed verification");
+  verifyArchivePayload(replacements.archive, header);
+  for (const key of ["renderer", "worker", "executable"]) {
+    fs.writeFileSync(replacements[key], patch[key], { flag: "wx", flush: true });
   }
-  if (replaceBackups) {
-    for (const [, backup] of existingBackups) moves.push([backup, path.join(staged, path.basename(backup))]);
-    if (detachedRenderer) moves.push([renderer, path.join(staged, "previous-app.bundle.js")]);
-  }
-  const replacements = upgrading ? [archive, worker, renderer, executable].filter(file => fs.existsSync(file))
-    .map(file => [file, path.join(staged, "previous-" + path.basename(file))]) : backups;
-  moves.push(...replacements, [newRenderer, renderer], [newWorker, worker], [newArchive, archive], [newExecutable, executable]);
+  for (const [key, backupKey] of Object.entries(backups)) moves.push([files[key], files[backupKey]]);
+  for (const [key, stagedFile] of Object.entries(replacements)) moves.push([stagedFile, files[key]]);
   commit(moves, legacy);
 }
 
-function restore(files) {
-  return withInstallerTransaction(files, (staged, commit) => restorePatch(files, staged, commit));
+function restore(files, checkRunning) {
+  return runTransaction(files, restorePatch, checkRunning);
 }
 
-function restorePatch(files, staged, commit) {
-  const { archive, worker, renderer, executable, backupArchive, backupWorker, backupExecutable } = files;
-  const backups = [[archive, backupArchive], [worker, backupWorker], [executable, backupExecutable]];
-  const existingBackups = backups.filter(([, backup]) => fs.existsSync(backup));
-  if (!existingBackups.length && !fs.existsSync(renderer) && isCurrentStock(files)) {
-    verifyArchivePayload(archive, openArchive(archive));
-    return;
-  }
-  if (existingBackups.length < backups.length) {
-    if (!existingBackups.length || !isCurrentStock(files) || !verifiedDuplicateBackups(files, existingBackups)) {
-      throw new Error("The three original backup files are required for a restore.");
-    }
-    const detached = fs.existsSync(renderer);
-    if (detached) {
-      if (!isKnownRenderer(renderer, buildPatch(archive, worker, executable))) {
-        throw new Error("The active game files changed since installation. Keep the updated files and use Steam Verify Integrity if needed.");
-      }
-    } else {
-      verifyArchivePayload(archive, openArchive(archive));
-    }
+function restorePatch(files, state, staged, commit) {
+  if (stockRuntime(state.hashes)) {
+    const prior = verifyBackups(files, state);
+    verifyArchivePayload(files.archive, state.headers.archive);
+    verifyStockRenderer(files, state);
+    const detachedRenderer = state.hashes.renderer !== null;
+    if (!prior.existing.length && !detachedRenderer) return;
     fs.mkdirSync(staged);
-    const moves = existingBackups.map(([, backup]) => [backup, path.join(staged, path.basename(backup))]);
-    if (detached) moves.push([renderer, path.join(staged, path.basename(renderer))]);
-    commit(moves);
+    const { moves, legacy } = preserveStockLeftovers(files, staged, prior, detachedRenderer);
+    commit(moves, legacy);
     return;
   }
-  const patch = buildPatch(backupArchive, backupWorker, backupExecutable);
-  const current = installedHashes(files, true);
-  const repairedBySteam = current.archive === archiveHash && current.worker === workerHash &&
-    current.executable === executableHash && isKnownRenderer(renderer, patch);
-  if (!repairedBySteam && !matchesPatch(current, patchHashes(patch)) && !previousPatches.some(previous => matchesPatch(current, previous))) {
-    throw new Error("The active game files changed since installation. Keep the updated files and use Steam Verify Integrity if needed.");
-  }
+
+  verifyPatchedRuntime(files, state);
   fs.mkdirSync(staged);
-  const moves = [renderer, worker, archive, executable].filter(file => fs.existsSync(file))
-    .map(file => [file, path.join(staged, path.basename(file))]);
-  moves.push([backupWorker, worker], [backupArchive, archive], [backupExecutable, executable]);
+  const moves = ["renderer", "worker", "archive", "executable"].map(key =>
+    [files[key], path.join(staged, "previous-" + path.basename(files[key]))]);
+  for (const [key, backupKey] of Object.entries(backups)) moves.push([files[backupKey], files[key]]);
   commit(moves);
+}
+
+function assertGameClosed() {
+  const tasks = execFileSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command",
+    "[bool](Get-Process -Name Geoplanetical -ErrorAction SilentlyContinue)"], { encoding: "utf8" }).trim();
+  if (tasks === "True") throw new Error("Close Geoplanetical before continuing.");
+  if (tasks !== "False") throw new Error("Unable to verify that Geoplanetical is closed.");
 }
 
 if (require.main === module) try {
   const action = process.argv[2];
   if (!["install", "restore"].includes(action)) throw new Error("Use install or restore, followed optionally by the Geoplanetical folder.");
-  const tasks = execFileSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command",
-    "[bool](Get-Process -Name Geoplanetical -ErrorAction SilentlyContinue)"], { encoding: "utf8" }).trim();
-  if (tasks === "True") throw new Error("Close Geoplanetical before continuing.");
-  if (tasks !== "False") throw new Error("Unable to verify that Geoplanetical is closed.");
+  assertGameClosed();
   const game = path.resolve(process.argv[3] || steamGamePath());
   const files = getFiles(game);
   if (!fs.existsSync(files.executable) && !fs.existsSync(path.join(path.dirname(files.archive), ".party-mod-transaction", "moves.json"))) {
     throw new Error("Geoplanetical.exe was not found in the selected folder.");
   }
   if (action === "install") {
-    install(files);
+    install(files, assertGameClosed);
     console.log(`Politics and Party Overhaul (PPO) installed for Geoplanetical ${version}. Launch Geoplanetical from Steam.`);
   } else {
-    restore(files);
+    restore(files, assertGameClosed);
     console.log("Original Geoplanetical files restored.");
   }
 } catch (error) {

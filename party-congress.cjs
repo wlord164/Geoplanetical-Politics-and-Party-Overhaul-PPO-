@@ -32,7 +32,7 @@ function renderPartyCongressChart(factions, total, ui, membershipBacked) {
   const legend = [];
   const evidence = [];
   const ideologies = new Map();
-  const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumSignificantDigits: 2 });
+  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumSignificantDigits: 2 });
   let pointIndex = 0;
 
   for (const group of factions) {
@@ -47,10 +47,10 @@ function renderPartyCongressChart(factions, total, ui, membershipBacked) {
     const scores = Object.entries({ econ: "Economy", social: "Social policy", gov: "Authority", nat: "National orientation" })
       .map(([axis, name]) => name + " " + Math.round(100 * group.axisWeights[axis] / group.weight));
     const count = group.seats + (group.seats === 1 ? " delegate" : " delegates");
-    evidence.push({ group, html: `<li data-gpm-congress-evidence-faction="${b(group.label)}" data-delegates="${group.seats}"><strong>${b(label)}</strong> · ${b(count)}
-      ${group.description ? "<small>" + b(group.description) + "</small>" : ""}
-      <small>${b([...scores, ...sources].join(" · "))}</small>
-      ${group.names.length ? "<small>" + b(group.names.join(", ")) + "</small>" : ""}
+    evidence.push({ group, html: `<li data-gpm-congress-evidence-faction="${v(group.label)}" data-delegates="${group.seats}"><strong>${v(label)}</strong> · ${v(count)}
+      ${group.description ? "<small>" + v(group.description) + "</small>" : ""}
+      <small>${v([...scores, ...sources].join(" · "))}</small>
+      ${group.names.length ? "<small>" + v(group.names.join(", ")) + "</small>" : ""}
       </li>` });
     if (!group.seats) continue;
     const umbrella = gpmCongressDoctrine(gpmCongressDoctrine(group.doctrineId)?.chartAs);
@@ -71,9 +71,9 @@ function renderPartyCongressChart(factions, total, ui, membershipBacked) {
     const { key, label, seats, color } = ideology;
     const outline = gpmCongressColorOutlines[color];
     const keyline = outline ? ` style="stroke:${outline};stroke-width:${outlineWidth.toFixed(2)}px" vector-effect="non-scaling-stroke"` : "";
-    const ideologyKey = b(key);
+    const ideologyKey = v(key);
     for (const group of ideology.factions) {
-      const factionKey = b(group.label);
+      const factionKey = v(group.label);
       for (let seat = 0; seat < group.seats; seat++) {
         const point = points[pointIndex++];
         marks.push(`<circle class="seat" data-pty="${id}" data-gpm-congress-seat-faction="${factionKey}"
@@ -84,21 +84,21 @@ function renderPartyCongressChart(factions, total, ui, membershipBacked) {
     const count = seats + (seats === 1 ? " delegate" : " delegates");
     const swatch = "background:" + color + (outline ? ";box-shadow:inset 0 0 0 1px " + outline : "");
     legend.push(`<span class="hc-leg-item" tabindex="0" data-pty="${id}" data-gpm-congress-chart-ideology="${ideologyKey}"
-      data-gpm-faction="${ideologyKey}" data-delegates="${seats}" aria-label="${b(label + ", " + count)}"><i style="${swatch}"></i>${b(label)} <b>${seats}</b></span>`);
+      data-gpm-faction="${ideologyKey}" data-delegates="${seats}" aria-label="${v(label + ", " + count)}"><i style="${swatch}"></i>${v(label)} <b>${seats}</b></span>`);
   }
   evidence.sort((left, right) => right.group.seats - left.group.seats || left.group.displayLabel.localeCompare(right.group.displayLabel));
   const top = composition.filter(ideology => ideology.seats === composition[0].seats);
   const chartLabel = total + (membershipBacked ? " Congress delegates by ideology" : " estimated Congress delegates by ideology");
   const chart = `<svg viewBox="0 0 340 178" class="hc-svg" data-gpm-congress-seat-dots
-      role="img" aria-label="${b(chartLabel)}">
-      <text x="170" y="161" class="hc-total" text-anchor="middle">${b(new Intl.NumberFormat(cs()).format(total))}</text>
+      role="img" aria-label="${v(chartLabel)}">
+      <text x="170" y="161" class="hc-total" text-anchor="middle">${v(new Intl.NumberFormat(ks()).format(total))}</text>
       <text x="170" y="175" class="hc-total-sub" text-anchor="middle">delegates</text>
       ${marks.join("")}
     </svg>`;
   return `${top.length ? `<div class="gpm-congress-leading">
     <small>${top.length === 1 ? "Largest ideology in Congress" : "Largest ideologies in Congress"}</small>
-    ${top.map(ideology => `<div data-gpm-congress-largest data-gpm-faction="${b(ideology.key)}" data-delegates="${ideology.seats}">
-      <strong>${b(ideology.label)}</strong> <span>${ideology.seats} of ${total} delegates</span>
+    ${top.map(ideology => `<div data-gpm-congress-largest data-gpm-faction="${v(ideology.key)}" data-delegates="${ideology.seats}">
+      <strong>${v(ideology.label)}</strong> <span>${ideology.seats} of ${total} delegates</span>
     </div>`).join("")}
   </div>` : ""}
   <div class="hemicycle">
@@ -147,7 +147,7 @@ function partyCongressVoteSummary(vote, ui, forecast = false, labels) {
 
 function partyCongressVoteRows(vote, labels, showTally = true) {
   if (!vote?.factions?.length) return "";
-  const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 });
+  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 2 });
   const resize = vote.kind === "size";
   const proposedRequired = resize ? partyCongressRecognitionSeats(vote.proposed) : null;
   return vote.factions.filter(faction => faction.currentSeats > 0 || faction.proposedSeats > 0)
@@ -168,11 +168,11 @@ function partyCongressVoteRows(vote, labels, showTally = true) {
       faction.proposedSeats ? "Below the representative threshold" : "No seats in the proposed Congress";
     const attributes = ' data-current-delegates="' + current + '"' + (resize ?
       ' data-proposed-delegates="' + faction.proposedSeats + '" data-proposed-qualifies="' + qualifies + '"' : "");
-    return '<li class="gpm-congress-faction" data-gpm-ballot-faction="' + b(faction.label) + '"' + attributes + '><strong>' +
-      b(labels?.get(faction.label) || partyCongressFactionLabel(faction.label)) + '</strong><span class="num">' + b(seatCount) +
-      '<small>' + b(influence) + '</small></span>' +
-      (showTally ? '<span>' + b(position + tally) + '</span><small>' + b(faction.reason || "") + '</small>' : "") +
-      (proposedStatus ? '<small>' + b(proposedStatus) + '</small>' : "") + '</li>';
+    return '<li class="gpm-congress-faction" data-gpm-ballot-faction="' + v(faction.label) + '"' + attributes + '><strong>' +
+      v(labels?.get(faction.label) || partyCongressFactionLabel(faction.label)) + '</strong><span class="num">' + v(seatCount) +
+      '<small>' + v(influence) + '</small></span>' +
+      (showTally ? '<span>' + v(position + tally) + '</span><small>' + v(faction.reason || "") + '</small>' : "") +
+      (proposedStatus ? '<small>' + v(proposedStatus) + '</small>' : "") + '</li>';
   }).join("");
 }
 
@@ -187,7 +187,7 @@ function partyCongressPendingRows(data, currentGroups, pending, labels) {
 
 function partyCongressPendingText(pending, ui, labels) {
   if (!pending) return "";
-  const approved = new Intl.NumberFormat(cs()).format(pending.size) + " delegates approved";
+  const approved = new Intl.NumberFormat(ks()).format(pending.size) + " delegates approved";
   if (pending.deferred?.reason === "commitment") {
     const factions = (pending.deferred.factionLabels || []).map(label => labels?.get(label) || partyCongressFactionLabel(label));
     const deadline = Number.isFinite(pending.deferred.untilDay) ? " (next commitment deadline " + ui.gameDate(pending.deferred.untilDay) + ")" : "";
@@ -200,9 +200,9 @@ function partyCongressPendingText(pending, ui, labels) {
 
 function partyCongressGrantOptions(vote, labels) {
   return '<option value="">No grant</option>' + (vote?.bargains || []).map(grant => {
-    const cash = rr(grant.cash * 1e6 * hA(), gA());
-    return '<option value="' + b(grant.label) + '"' + (grant.affordable ? "" : " disabled") + '>' +
-      b((labels?.get(grant.label) || grant.label) + " · +" + grant.extraYes + " yes · " + cash + (grant.affordable ? "" : " · Unaffordable")) + '</option>';
+    const cash = Rr(grant.cash * 1e6 * qx(), zx());
+    return '<option value="' + v(grant.label) + '"' + (grant.affordable ? "" : " disabled") + '>' +
+      v((labels?.get(grant.label) || grant.label) + " · +" + grant.extraYes + " yes · " + cash + (grant.affordable ? "" : " · Unaffordable")) + '</option>';
   }).join("");
 }
 
@@ -210,7 +210,7 @@ function partyCongressGrantDetail(vote, labels) {
   if (!vote?.bargain) return "Offer one faction a grant to gain votes. You pay only if the motion passes.";
   const { label, extraYes, cash } = vote.bargain;
   return (labels?.get(label) || label) + " adds " + extraYes + " yes " + (extraYes === 1 ? "vote" : "votes") + ". If adopted, the party treasury pays " +
-    rr(cash * 1e6 * hA(), gA()) + ".";
+    Rr(cash * 1e6 * qx(), zx()) + ".";
 }
 
 function partyCongressPriorityDetail(data, priority, ui) {
@@ -271,10 +271,10 @@ function partyCongressBargainRecord(record, programmes, ui, forecast = false) {
   const deadline = Number.isFinite(record.deadlineDay) && ["offered", "countered", "accepted"].includes(record.status)
     ? " · Before " + ui.gameDate(record.deadlineDay) : "";
   const resolved = Number.isFinite(record.closedDay) ? " · " + ui.gameDate(record.closedDay) : "";
-  const members = record.membersAdded > 0 ? " · " + new Intl.NumberFormat(cs()).format(record.membersAdded) + " members recruited" : "";
-  return "<strong>" + b(forecast ? "Expected response · " + status : status + resolved) + "</strong><p>" +
-    b(label + budget + endorsement + deadline + members) + "</p>" +
-    (record.reason ? "<small>" + b(partyCongressBargainReason(record.reason)) + "</small>" : "");
+  const members = record.membersAdded > 0 ? " · " + new Intl.NumberFormat(ks()).format(record.membersAdded) + " members recruited" : "";
+  return "<strong>" + v(forecast ? "Expected response · " + status : status + resolved) + "</strong><p>" +
+    v(label + budget + endorsement + deadline + members) + "</p>" +
+    (record.reason ? "<small>" + v(partyCongressBargainReason(record.reason)) + "</small>" : "");
 }
 
 function partyCongressBargainingHtml(state, ui, view) {
@@ -294,12 +294,12 @@ function partyCongressBargainingHtml(state, ui, view) {
   }
   const programmes = data.programmes || [];
   const option = (value, label, selected) =>
-    '<option value="' + b(value) + '"' + (selected === value ? " selected" : "") + '>' + b(label) + '</option>';
+    '<option value="' + v(value) + '"' + (selected === value ? " selected" : "") + '>' + v(label) + '</option>';
   const button = (action, label, attributes = "") =>
-    '<button class="k" type="button" data-gpm-bargain-action="' + action + '"' + attributes + '>' + b(label) + '</button>';
-  const focus = id => ' data-gpm-profile-focus="faction-' + b(id) + '"';
+    '<button class="k" type="button" data-gpm-bargain-action="' + action + '"' + attributes + '>' + v(label) + '</button>';
+  const focus = id => ' data-gpm-profile-focus="faction-' + v(id) + '"';
   const review = Number.isFinite(data.nextReviewDay) ? ui.gameDate(data.nextReviewDay) : "";
-  const partyLeader = data.partyLeader?.name ? '<small data-gpm-congress-party-leader>Party leader · ' + b(data.partyLeader.name) + '</small>' : "";
+  const partyLeader = data.partyLeader?.name ? '<small data-gpm-congress-party-leader>Party leader · ' + v(data.partyLeader.name) + '</small>' : "";
   const currentSize = view?.party?.congress?.size;
   const size = partyCongressSizeIsValid(currentSize) ? currentSize : gpmCongressDefaultSize;
   const required = partyCongressRecognitionSeats(size);
@@ -307,7 +307,7 @@ function partyCongressBargainingHtml(state, ui, view) {
     '" data-congress-delegates="' + size + '">Factions with at least ' + gpmCongressRecognitionPercent +
     '% of delegates (' + required + ' of ' + size + ') qualify for a representative at a Congress review.</small>';
   const intro = review && data.day < data.nextReviewDay
-    ? '<small>Next scheduled Congress review ' + b(review) + '.</small>'
+    ? '<small>Next scheduled Congress review ' + v(review) + '.</small>'
     : button("review", "Convene Congress review", focus("review"));
   const programmeNames = ids => (ids || []).map(id => programmes.find(choice => choice.id === id)?.label).filter(Boolean).join(", ");
   const roster = factions.length ? '<ul class="gpm-congress-roster" aria-label="Congress factions">' +
@@ -315,16 +315,16 @@ function partyCongressBargainingHtml(state, ui, view) {
       const leader = faction.leader;
       const leaderId = leader?.personId || leader?.id;
       const person = leaderId && view?.people?.get(leaderId);
-      const portraitUrl = person && Ts(person, view._simYear || 2026);
+      const portraitUrl = person && Hs(person, view._simYear || 2026);
       const leaderName = leader?.name || "Open leader profile";
       const portrait = portraitUrl
-        ? '<span class="gov-face" data-gpm-faction-portrait><img class="char-av" src="' + b(portraitUrl) + '" alt=""></span>'
+        ? '<span class="gov-face" data-gpm-faction-portrait><img class="char-av" src="' + v(portraitUrl) + '" alt=""></span>'
         : '<span class="gov-face" data-gpm-faction-portrait><span class="gov-initials" aria-hidden="true">' +
-          b(dgt(leaderName)) + '</span></span>';
+          v(Vyt(leaderName)) + '</span></span>';
       const leaderAction = leaderId
         ? '<button class="k k-ghost gov-person" type="button"' +
-          ' data-gpm-bargain-action="person" data-gpm-faction-person="' + b(leaderId) + '"' + focus(faction.id + "-profile") + '>' +
-          portrait + '<span class="gov-person-copy"><b>' + b(leaderName) + '</b></span></button>'
+          ' data-gpm-bargain-action="person" data-gpm-faction-person="' + v(leaderId) + '"' + focus(faction.id + "-profile") + '>' +
+          portrait + '<span class="gov-person-copy"><b>' + v(leaderName) + '</b></span></button>'
         : '<small>' + (faction.seats >= required ? (faction.id ? "Leadership vacant" : "Representative pending Congress review") :
           "Below the representative threshold") + '</small>';
       const leaderStatus = ({ elected: "Elected leader", appointed: "Appointed leader", acting: "Acting leader" })[leader?.status];
@@ -336,21 +336,21 @@ function partyCongressBargainingHtml(state, ui, view) {
       const representation = delegateChange > 0 ? `+${delegateChange} delegates from organizing and delivery` : "";
       const currentIssues = (faction.issuePriorities || []).filter(issue => issue.onAgenda).map(issue => issue.label);
       const completedIssues = (faction.issuePriorities || []).filter(issue => issue.lastDeliveredDay != null).map(issue => issue.label);
-      const select = leaderId && leaderId !== data.partyLeader?.id ? button("select", "Negotiate", ' data-gpm-faction-id="' + b(faction.id) + '" aria-pressed="' +
+      const select = leaderId && leaderId !== data.partyLeader?.id ? button("select", "Negotiate", ' data-gpm-faction-id="' + v(faction.id) + '" aria-pressed="' +
         (selectedId === faction.id) + '"' + focus(faction.id + "-negotiate")) : "";
-      return '<li class="gpm-congress-representative" data-gpm-congress-faction-id="' + b(faction.label) +
+      return '<li class="gpm-congress-representative" data-gpm-congress-faction-id="' + v(faction.label) +
         '" data-delegates="' + faction.seats + '">' +
-        '<div class="gpm-congress-rep-header"><strong>' + b(faction.displayLabel || faction.label) + '</strong><span class="num">' +
-        b(faction.seats + (faction.seats === 1 ? " delegate" : " delegates")) + '</span></div>' +
+        '<div class="gpm-congress-rep-header"><strong>' + v(faction.displayLabel || faction.label) + '</strong><span class="num">' +
+        v(faction.seats + (faction.seats === 1 ? " delegate" : " delegates")) + '</span></div>' +
         '<div class="gpm-congress-rep-controls">' + leaderAction + select + '</div>' +
         '<div class="gpm-congress-rep-details">' +
-        (leaderStatus || trust ? '<small>' + b([leaderStatus, trust].filter(Boolean).join(" · ")) + '</small>' : "") +
-        (faction.description ? '<small>' + b(faction.description) + '</small>' : "") +
-        (organized || representation ? '<small>' + b([organized, representation].filter(Boolean).join(" · ")) + '</small>' : "") +
-        (priorities ? '<small>' + b("Priorities · " + priorities) + '</small>' : "") +
-        (currentIssues.length ? '<small>' + b("Issues on the agenda · " + currentIssues.join(", ")) + '</small>' : "") +
-        (completedIssues.length ? '<small>' + b("Delivered · " + completedIssues.join(", ")) + '</small>' : "") +
-        (redLines ? '<small>' + b("Red lines · " + redLines) + '</small>' : "") + '</div></li>';
+        (leaderStatus || trust ? '<small>' + v([leaderStatus, trust].filter(Boolean).join(" · ")) + '</small>' : "") +
+        (faction.description ? '<small>' + v(faction.description) + '</small>' : "") +
+        (organized || representation ? '<small>' + v([organized, representation].filter(Boolean).join(" · ")) + '</small>' : "") +
+        (priorities ? '<small>' + v("Priorities · " + priorities) + '</small>' : "") +
+        (currentIssues.length ? '<small>' + v("Issues on the agenda · " + currentIssues.join(", ")) + '</small>' : "") +
+        (completedIssues.length ? '<small>' + v("Delivered · " + completedIssues.join(", ")) + '</small>' : "") +
+        (redLines ? '<small>' + v("Red lines · " + redLines) + '</small>' : "") + '</div></li>';
     }).join("") + '</ul>' : "";
   const faction = selectedId && factions.find(item => item.id === selectedId &&
     (item.leader?.personId || item.leader?.id) !== data.partyLeader?.id);
@@ -370,7 +370,7 @@ function partyCongressBargainingHtml(state, ui, view) {
         '<label>Programme <select class="k" name="programme"' + focus("programme") + '>' +
         programmes.map(choice => option(choice.id, choice.label, programme)).join("") + '</select></label>' +
         (subject === "organizing" ? '<label>Proposed grant (USD) <input class="k" name="cashUsd" type="number" min="0" max="1000000" step="1" value="' +
-          b(cashUsd) + '"' + focus("cashUsd") + '></label>' : "") +
+          v(cashUsd) + '"' + focus("cashUsd") + '></label>' : "") +
         '</div><small>' + (subject === "organizing"
           ? "The party reserves the agreed grant on acceptance and pays it when Congress adopts the programme. A failed pledge releases the reserve."
           : "A pledge commits the party to adopt the programme at a Congress vote. Bills follow the usual legislative procedure.") + '</small>' +
@@ -383,8 +383,8 @@ function partyCongressBargainingHtml(state, ui, view) {
       previous.map(record => '<li class="gpm-congress-ballot">' + partyCongressBargainRecord(record, programmes, ui) + '</li>').join("") +
       '</ul></details>' : "";
     const label = faction.displayLabel || faction.label;
-    negotiation = '<section class="gpm-congress-ballot" aria-label="' + b("Negotiate with " + label) + '">' +
-      '<h4>' + b(label) + '</h4>' + body + history + '</section>';
+    negotiation = '<section class="gpm-congress-ballot" aria-label="' + v("Negotiate with " + label) + '">' +
+      '<h4>' + v(label) + '</h4>' + body + history + '</section>';
   }
   const checked = value => value ? " checked" : "";
   const dollars = value => Math.round((value || 0) * 1e6);
@@ -471,7 +471,7 @@ function bindPartyCongressBargaining(panel, congress, ui, view) {
     paintFeedback();
     try {
       const response = action === "quote"
-        ? await at(session, "gpm.partyFactionQuote", input)
+        ? await Je(session, "gpm.partyFactionQuote", input)
         : await ui._mpSubmit(button, "applyPlayerAction", [{ verb: "gpm.party.factionBargain", partyId: congress.partyId, action, ...input }]);
       if (!sameSession()) return;
       if (action === "quote") {
@@ -592,7 +592,7 @@ function partyCongressIdentityHtml(identity, profiles) {
     preset: "Founding preset",
   })[source] || (source ? String(source).replace(/[-_]+/g, " ") : "");
   const reading = (title, value, detail = "") => `<div class="gpm-domestic-summary">
-    <h4>${b(title)}</h4><p>${b(value || "Unknown")}</p>${detail ? `<small>${b(detail)}</small>` : ""}</div>`;
+    <h4>${v(title)}</h4><p>${v(value || "Unknown")}</p>${detail ? `<small>${v(detail)}</small>` : ""}</div>`;
   const declaredLabel = declared?.ideologyLabel || declared?.label;
   const foundingLabel = foundingPreset?.ideologyLabel || foundingPreset?.label;
   const platform = profiles?.find(profile => profile.origin === "platform")?.ideology;
@@ -601,7 +601,7 @@ function partyCongressIdentityHtml(identity, profiles) {
   const provenance = declaredLabel ? sourceLabel(declared.source) : foundingLabel ? "Founding preset" :
     estimate ? "Estimated from the current party platform" : "";
   const header = ideology ? `<div class="gpm-congress-leading" data-gpm-congress-party-ideology>
-    <small>Party ideology</small><div><strong>${b(ideology)}</strong>${provenance ? `<small>${b(provenance)}</small>` : ""}</div>
+    <small>Party ideology</small><div><strong>${v(ideology)}</strong>${provenance ? `<small>${v(provenance)}</small>` : ""}</div>
   </div>` : "";
   const tradition = declared?.label && declared.label !== ideology ? reading("Declared tradition", declared.label) : "";
   const founding = foundingPreset?.label && foundingPreset.label !== ideology && foundingPreset.label !== declared?.label
@@ -614,8 +614,8 @@ function partyCongressIdentityHtml(identity, profiles) {
     <summary>Party platform</summary>
     ${tradition || founding || historical ? `<div class="gpm-domestic-grid">${tradition}${founding}${historical}</div>` : ""}
     ${issues.length ? `<details><summary>Recorded issue positions</summary><ul class="gpm-congress-vote-rows">
-      ${issues.map(issue => `<li class="gpm-congress-faction"><strong>${b(issue.label)}</strong>
-        <span>${b(issue.value)}</span><small>${b([
+      ${issues.map(issue => `<li class="gpm-congress-faction"><strong>${v(issue.label)}</strong>
+        <span>${v(issue.value)}</span><small>${v([
           issue.priority ? "Priority " + issue.priority : "", sourceLabel(issue.source),
         ].filter(Boolean).join(" · "))}</small></li>`).join("")}
       </ul></details>` : ""}
@@ -634,9 +634,9 @@ function partyCongressRolePolicyHtml(data) {
     if (!value) return "";
     try {
       const url = new URL(value);
-      if (url.protocol === "https:") return `<a href="${b(url.href)}" target="_blank" rel="noopener noreferrer">${b(label)}</a>`;
+      if (url.protocol === "https:") return `<a href="${v(url.href)}" target="_blank" rel="noopener noreferrer">${v(label)}</a>`;
     } catch {}
-    return `<small>${b(readable(value))}</small>`;
+    return `<small>${v(readable(value))}</small>`;
   };
   const evidenceItem = rule => {
     const kind = ({ partyCharter: "Party charter", formalLaw: "Formal law", observedRoster: "Recorded practice" })[rule.kind] ||
@@ -647,17 +647,17 @@ function partyCongressRolePolicyHtml(data) {
       rule.effectiveUntil && "Ends " + rule.effectiveUntil,
       rule.appliesOnDate === false && "Outside documented dates",
     ].filter(Boolean).join(" · ");
-    return `<li><p><strong>${b(scope || "Scoped rule")}</strong></p>
-      <p>${b(rule.description || rule.provision || "")}</p>
-      ${rule.exception ? `<small>${b("Exception · " + readable(rule.exception))}</small>` : ""}
-      <small>${b([rule.description && rule.provision, date, rule.confidence && readable(rule.confidence) + " confidence",
+    return `<li><p><strong>${v(scope || "Scoped rule")}</strong></p>
+      <p>${v(rule.description || rule.provision || "")}</p>
+      ${rule.exception ? `<small>${v("Exception · " + readable(rule.exception))}</small>` : ""}
+      <small>${v([rule.description && rule.provision, date, rule.confidence && readable(rule.confidence) + " confidence",
         readable(rule.authorityId)].filter(Boolean).join(" · "))}</small>
       <div class="gpm-congress-control">${source(rule.source, "Primary source")}${source(rule.corroboration, "Corroborating source")}</div>
     </li>`;
   };
   const roleList = (items, heading) => items.length ? `<section class="gpm-congress-ballot">
-    <h4>${b(heading)}</h4>${items.map(({ role, evidence }) => `<div>
-      <strong>${b(roleNames[role] || role)}</strong><ul>${evidence.map(evidenceItem).join("")}</ul></div>`).join("")}
+    <h4>${v(heading)}</h4>${items.map(({ role, evidence }) => `<div>
+      <strong>${v(roleNames[role] || role)}</strong><ul>${evidence.map(evidenceItem).join("")}</ul></div>`).join("")}
   </section>` : "";
   const documented = data.roles.filter(row => row.evidence?.length);
   const ordinary = data.roles.filter(row => row.confidence === "ordinary_eligibility").map(row => roleNames[row.role] || row.role);
@@ -667,10 +667,10 @@ function partyCongressRolePolicyHtml(data) {
     rosters.get(row.role).push(row);
   }
   return `
-    ${data.date ? `<small>Scenario date ${b(data.date)}</small>` : ""}
+    ${data.date ? `<small>Scenario date ${v(data.date)}</small>` : ""}
     ${roleList(documented, "Applicable rules")}
     ${ordinary.length ? `<p>Ordinary game eligibility applies where a documented rule is unavailable.</p>
-      <small>${b(ordinary.join(" · "))}</small>` : ""}
+      <small>${v(ordinary.join(" · "))}</small>` : ""}
     ${roleList([...rosters].map(([role, evidence]) => ({ role, evidence })), "Documented rosters")}
   `;
 }
@@ -690,10 +690,10 @@ function partyCongressCurrentReason(reason, date) {
 }
 
 function partyCongressCurrentHtml(currents, ui) {
-  const numbers = new Intl.NumberFormat(cs());
+  const numbers = new Intl.NumberFormat(ks());
   return currents.map(current => {
     const { cashM, activistsK } = current.cost || {};
-    const costs = [Number.isFinite(cashM) ? rr(cashM * 1e6 * hA(), gA()) : "",
+    const costs = [Number.isFinite(cashM) ? Rr(cashM * 1e6 * qx(), zx()) : "",
       Number.isFinite(activistsK) ? numbers.format(Math.round(activistsK * 1000)) + " activists" : ""].filter(Boolean);
     const members = Number.isFinite(current.members) ? numbers.format(current.members) +
       (current.members === 1 ? " affiliated member" : " affiliated members") : "";
@@ -702,16 +702,16 @@ function partyCongressCurrentHtml(currents, ui) {
         " · " + numbers.format(current.requiredRegions) + " required" : "";
     const date = Number.isFinite(current.nextDay) ? ui.gameDate(current.nextDay) : "";
     const enabled = current.eligible && current.expected != null;
-    return `<li class="gpm-congress-faction" data-gpm-congress-current="${b(current.id)}">
-      <strong>${b(current.label)}</strong>
-      ${current.description ? `<small>${b(current.description)}</small>` : ""}
-      ${members ? `<small>${b(members)}</small>` : ""}
-      ${branches ? `<small>${b(branches)}</small>` : ""}
+    return `<li class="gpm-congress-faction" data-gpm-congress-current="${v(current.id)}">
+      <strong>${v(current.label)}</strong>
+      ${current.description ? `<small>${v(current.description)}</small>` : ""}
+      ${members ? `<small>${v(members)}</small>` : ""}
+      ${branches ? `<small>${v(branches)}</small>` : ""}
       ${current.isPlatform ? "<small>Founding current</small>" : `
-        ${costs.length ? `<small>${b("Cost · " + costs.join(" · "))}</small>` : ""}
-        ${current.eligible ? "" : `<small>${b(partyCongressCurrentReason(current.reason, date))}</small>`}
-        <span class="gpm-congress-control"><button class="k" type="button" data-gpm-current-organize="${b(current.id)}"
-          aria-label="${b("Organize current " + current.label)}"${enabled ? " data-gpm-action-ready" : " disabled"}>Organize current</button></span>`}
+        ${costs.length ? `<small>${v("Cost · " + costs.join(" · "))}</small>` : ""}
+        ${current.eligible ? "" : `<small>${v(partyCongressCurrentReason(current.reason, date))}</small>`}
+        <span class="gpm-congress-control"><button class="k" type="button" data-gpm-current-organize="${v(current.id)}"
+          aria-label="${v("Organize current " + current.label)}"${enabled ? " data-gpm-action-ready" : " disabled"}>Organize current</button></span>`}
     </li>`;
   }).join("");
 }
@@ -722,25 +722,25 @@ function partyCongressCharterHtml(motions, labels, ui) {
     const closed = motion.choices.some(choice => choice.forecast?.reason === "charter-closed");
     const lastVote = motion.lastVote && { ...motion.lastVote, kind: "charter", label:
       motion.choices.find(choice => choice.value === motion.lastVote.value)?.label || motion.lastVote.label };
-    return `<section class="gpm-congress-ballot" data-gpm-congress-charter-motion="${b(motion.id)}">
-      <h4>${b(motion.label)}</h4>
-      ${motion.description ? `<small>${b(motion.description)}</small>` : ""}
-      ${current ? `<small>${b("Current rule · " + current.label)}</small>` : ""}
+    return `<section class="gpm-congress-ballot" data-gpm-congress-charter-motion="${v(motion.id)}">
+      <h4>${v(motion.label)}</h4>
+      ${motion.description ? `<small>${v(motion.description)}</small>` : ""}
+      ${current ? `<small>${v("Current rule · " + current.label)}</small>` : ""}
       ${closed ? "<small>Current party rules prohibit faction representatives.</small>" : ""}
       ${motion.choices.filter(choice => choice.value !== motion.current && choice.forecast?.reason !== "charter-closed").map(choice => {
         const forecast = choice.forecast && { ...choice.forecast, kind: "charter" };
         const rows = partyCongressVoteRows(forecast, labels);
         const enabled = forecast?.ok && forecast.expected != null;
         return `<div class="gpm-congress-ballot">
-          <strong>${b("Proposed rule · " + choice.label)}</strong>
-          <small>${b(partyCongressVoteSummary(forecast, ui, true) || "Forecast unavailable.")}</small>
-          ${rows ? `<details data-gpm-charter-faction-preview="${b(motion.id)}:${b(choice.value)}">
+          <strong>${v("Proposed rule · " + choice.label)}</strong>
+          <small>${v(partyCongressVoteSummary(forecast, ui, true) || "Forecast unavailable.")}</small>
+          ${rows ? `<details data-gpm-charter-faction-preview="${v(motion.id)}:${v(choice.value)}">
             <summary>Faction forecast</summary><ul class="gpm-congress-vote-rows">${rows}</ul></details>` : ""}
-          <button class="k" type="button" data-gpm-charter-submit="${b(motion.id)}" data-gpm-charter-value="${b(choice.value)}"
-            aria-label="${b("Hold charter vote for " + choice.label)}"${enabled ? " data-gpm-action-ready" : " disabled"}>Hold charter vote</button>
+          <button class="k" type="button" data-gpm-charter-submit="${v(motion.id)}" data-gpm-charter-value="${v(choice.value)}"
+            aria-label="${v("Hold charter vote for " + choice.label)}"${enabled ? " data-gpm-action-ready" : " disabled"}>Hold charter vote</button>
         </div>`;
       }).join("")}
-      ${lastVote ? `<small>${b(partyCongressVoteSummary(lastVote, ui, false, labels))}</small>` : ""}
+      ${lastVote ? `<small>${v(partyCongressVoteSummary(lastVote, ui, false, labels))}</small>` : ""}
     </section>`;
   }).join("");
 }
@@ -758,7 +758,7 @@ function bindPartyCongressRolePolicy(panel, congress, ui) {
     const current = () => contents.isConnected && ui._mpSession === congress.session &&
       panel._gpmCongressUi === congress && rolePolicy.token === token;
     try {
-      const policy = await at(congress.session, "gpm.partyRolePolicy", {});
+      const policy = await Je(congress.session, "gpm.partyRolePolicy", {});
       if (current()) contents.innerHTML = partyCongressRolePolicyHtml(policy);
     } catch {
       if (current()) contents.textContent = "Could not load role eligibility. Reopen to try again.";
@@ -779,9 +779,9 @@ function renderPartyCongress(view, party, ui) {
   if (!data || !party) return "";
   const current = partyCongressSizeIsValid(data.size) ? data.size : gpmCongressDefaultSize;
   const proposed = data.pendingResize?.size ?? partyCongressSizeDraft(view, party, ui, current);
-  const numbers = new Intl.NumberFormat(cs());
+  const numbers = new Intl.NumberFormat(ks());
   const quickPicks = [100, 200, 300, 500, 750, 1000].map(size =>
-    '<button class="k" type="button" data-gpm-congress-size-pick="' + size + '">' + b(numbers.format(size)) + '</button>'
+    '<button class="k" type="button" data-gpm-congress-size-pick="' + size + '">' + v(numbers.format(size)) + '</button>'
   ).join("");
   return '<section class="mcard wide gpm-party-congress" aria-label="Party Congress">' +
     '<h3 class="mc-title">Party Congress</h3>' +
@@ -801,7 +801,7 @@ function renderPartyCongress(view, party, ui) {
       '<div class="gpm-congress-ballot" data-gpm-role-policy-contents></div></details>' +
     '<section class="gpm-congress-ballot" aria-label="Delegate count">' +
       '<h4>Delegate count</h4>' +
-      '<div class="gpm-congress-size-summary"><span>Current delegates <strong data-gpm-congress-current-size>' + b(numbers.format(current)) + '</strong></span>' +
+      '<div class="gpm-congress-size-summary"><span>Current delegates <strong data-gpm-congress-current-size>' + v(numbers.format(current)) + '</strong></span>' +
         '<label class="gpm-congress-control">Proposed size <input class="k gpm-congress-size" data-gpm-congress-size data-gpm-congress-proposed' +
         ' type="number" inputmode="numeric" required min="' + gpmCongressSizeMin + '" max="' + gpmCongressSizeMax +
         '" step="1" value="' + proposed + '"></label></div>' +
@@ -907,9 +907,9 @@ function bindPartyCongress(panel, view, party, ui) {
     const pending = currentData.pendingResize;
     if (pending && input.valueAsNumber !== pending.size) input.value = String(pending.size);
     const proposed = input.valueAsNumber;
-    const voteKey = JSON.stringify([proposed, bargain.value, state.sizeFeedback, state.ballotKey, hA(), gA()]);
+    const voteKey = JSON.stringify([proposed, bargain.value, state.sizeFeedback, state.ballotKey, qx(), zx()]);
     if (voteKey === state.sizeVoteKey) return state.sizeVote;
-    const numbers = new Intl.NumberFormat(cs());
+    const numbers = new Intl.NumberFormat(ks());
     setText(get("current-size"), numbers.format(current));
     input.setAttribute("aria-invalid", String(!partyCongressSizeIsValid(proposed)));
     for (const button of quickPicks) button.setAttribute("aria-pressed", String(Number(button.dataset.gpmCongressSizePick) === proposed));
@@ -944,7 +944,7 @@ function bindPartyCongress(panel, view, party, ui) {
     setHtml(get("size-rows"), pending ? partyCongressPendingRows(currentData, state.factions || [], pending, state.factionLabels) :
       partyCongressVoteRows(sizeVote, state.factionLabels));
     setResult(get("result"), currentData.lastVote, state.sizeFeedback);
-    state.sizeVoteKey = JSON.stringify([proposed, selected, state.sizeFeedback, state.ballotKey, hA(), gA()]);
+    state.sizeVoteKey = JSON.stringify([proposed, selected, state.sizeFeedback, state.ballotKey, qx(), zx()]);
     return state.sizeVote = sizeVote;
   };
 
@@ -966,7 +966,7 @@ function bindPartyCongress(panel, view, party, ui) {
     const { data: currentData } = state;
     const selected = currentData.programme?.kind || programme.value;
     if (setHtml(programme, Object.entries(partyCongressAvailableProgrammes(currentData)).map(([kind, choice]) =>
-      '<option value="' + b(kind) + '">' + b(choice.label) + '</option>').join("")) &&
+      '<option value="' + v(kind) + '">' + v(choice.label) + '</option>').join("")) &&
       [...programme.options].some(option => option.value === selected)) programme.value = selected;
     if (currentData.programme) programme.value = currentData.programme.kind;
     const voteKey = JSON.stringify([programme.value, state.programmeFeedback, state.ballotKey]);
@@ -984,7 +984,7 @@ function bindPartyCongress(panel, view, party, ui) {
     const { data: currentData } = state;
     const current = partyCongressSizeIsValid(currentData.size) ? currentData.size : gpmCongressDefaultSize;
     const chartKey = JSON.stringify([current, currentData.profiles, currentData.figures, currentData.identity, currentData.membershipBacked,
-      currentData.factionDelegateFactors, currentData.factionLegacyAssignments, currentData.factionLegacyProtectedLabels, cs()]);
+      currentData.factionDelegateFactors, currentData.factionLegacyAssignments, currentData.factionLegacyProtectedLabels, ks()]);
     if (chartKey === state.chartKey) return;
     state.chartKey = chartKey;
     const focused = chart.contains(document.activeElement) ? document.activeElement.getAttribute("data-gpm-congress-chart-ideology") : null;
@@ -1028,7 +1028,7 @@ function bindPartyCongress(panel, view, party, ui) {
     const available = view.party?.organizing?.activistsK;
     resources.hidden = !Number.isFinite(available);
     const organizers = resources.hidden ? 0 : Math.round(available * 1000);
-    setText(resources, resources.hidden ? "" : new Intl.NumberFormat(cs()).format(organizers) +
+    setText(resources, resources.hidden ? "" : new Intl.NumberFormat(ks()).format(organizers) +
       (organizers === 1 ? " activist available" : " activists available"));
     setHtml(get("current-rows"), currents.hidden ? "" : partyCongressCurrentHtml(currentRows, ui));
     const motionHost = get("charter-motions");
@@ -1046,7 +1046,7 @@ function bindPartyCongress(panel, view, party, ui) {
   const paint = () => {
     if (panel.hidden) return;
     const { bargaining, identity, ...ballots } = state.data;
-    state.ballotKey = JSON.stringify([ballots, identity?.declared, cs()]);
+    state.ballotKey = JSON.stringify([ballots, identity?.declared, ks()]);
     const identityHost = get("identity");
     const identityHtml = partyCongressIdentityHtml(identity, state.data.profiles);
     identityHost.hidden = !identityHtml;
@@ -1166,7 +1166,7 @@ function bindPartyCongress(panel, view, party, ui) {
         Number.isFinite(response.nextDay) ? ui.gameDate(response.nextDay) : "");
       const recruited = response.recruited ?? response.membersAdded;
       return "Organized " + current.label + (recruited > 0 ? " · " +
-        new Intl.NumberFormat(cs()).format(recruited) + (recruited === 1 ? " member recruited" : " members recruited") : "") + ".";
+        new Intl.NumberFormat(ks()).format(recruited) + (recruited === 1 ? " member recruited" : " members recruited") : "") + ".";
     });
   };
   charter.onclick = event => {

@@ -112,7 +112,7 @@ function gpmRenderRegionalOverview() {
 }
 
 function gpmRegionalPercent(value) {
-  return new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 }).format(value);
+  return new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 2 }).format(value);
 }
 
 function gpmRegionalPoints(value) {
@@ -135,15 +135,15 @@ function gpmRegionalBreakdown(region, view, ui, opened = null) {
         : row.rallyHalfLife > 0 ? `Rally boost halves every ${row.rallyHalfLife} days after the grace period.` : "");
       const expiration = row.rallyBoost > .00005 && Number.isFinite(row.rallyExpiresDay) && row.rallyExpiresDay > view.day
         ? `Fades below the tracked minimum on ${ui.gameDate(row.rallyExpiresDay)}.` : "";
-      return `<article><details data-gpm-breakdown-party="${b(row.partyId)}" ${opened?.parties.has(row.partyId) ? "open" : ""}>
-        <summary><strong>${b(name)}</strong><span>${b(gpmRegionalPercent(row.support))}</span></summary>
-        <dl><dt>Baseline vote share</dt><dd>${b(gpmRegionalPercent(row.baseShare))}</dd>
-          <dt>Rival campaign effect</dt><dd>${b(gpmRegionalPoints(row.rivalEffect || 0))}</dd>
-          <dt>Local presence</dt><dd>${b(gpmRegionalPoints(row.presenceBoost || 0))}</dd>
-          <dt>Headquarters</dt><dd>${b(gpmRegionalPoints(row.headquartersBoost || 0))}</dd>
-          <dt>Temporary rallies</dt><dd>${b(gpmRegionalPoints(row.rallyBoost || 0))}</dd>
-          <dt>Current estimate</dt><dd>${b(gpmRegionalPercent(row.support))}</dd></dl>
-        ${[timing, decay, expiration].filter(Boolean).map(text => `<small>${b(text)}</small>`).join(" ")}
+      return `<article><details data-gpm-breakdown-party="${v(row.partyId)}" ${opened?.parties.has(row.partyId) ? "open" : ""}>
+        <summary><strong>${v(name)}</strong><span>${v(gpmRegionalPercent(row.support))}</span></summary>
+        <dl><dt>Baseline vote share</dt><dd>${v(gpmRegionalPercent(row.baseShare))}</dd>
+          <dt>Rival campaign effect</dt><dd>${v(gpmRegionalPoints(row.rivalEffect || 0))}</dd>
+          <dt>Local presence</dt><dd>${v(gpmRegionalPoints(row.presenceBoost || 0))}</dd>
+          <dt>Headquarters</dt><dd>${v(gpmRegionalPoints(row.headquartersBoost || 0))}</dd>
+          <dt>Temporary rallies</dt><dd>${v(gpmRegionalPoints(row.rallyBoost || 0))}</dd>
+          <dt>Current estimate</dt><dd>${v(gpmRegionalPercent(row.support))}</dd></dl>
+        ${[timing, decay, expiration].filter(Boolean).map(text => `<small>${v(text)}</small>`).join(" ")}
       </details></article>`;
     }).join("")}</details>`;
 }
@@ -162,18 +162,18 @@ function gpmRegionalThresholdText(rules) {
 
 function gpmRegionalNational(national) {
   if (!Number.isFinite(national?.support)) return "";
-  const details = [`<strong>${b(gpmRegionalPercent(national.support))}</strong> national vote estimate`];
+  const details = [`<strong>${v(gpmRegionalPercent(national.support))}</strong> national vote estimate`];
   const qualifyingShare = national.qualifyingShare ?? (national.mode === "national" ? national.support : null);
   if (Number.isFinite(qualifyingShare) && national.threshold > 0) {
     const gap = national.threshold - qualifyingShare;
-    details.push(gap > 0 ? `${b(gpmRegionalPoints(gap).replace(/^\+/, ""))} short of the threshold` : "Threshold cleared");
+    details.push(gap > 0 ? `${v(gpmRegionalPoints(gap).replace(/^\+/, ""))} short of the threshold` : "Threshold cleared");
   }
   if (Number.isInteger(national.seats)) {
     details.push(`${national.seats} projected ${national.seats === 1 ? "seat" : "seats"}` +
       (Number.isInteger(national.totalSeats) ? " of " + national.totalSeats : ""));
   }
   const rules = [gpmRegionalSeatRules(national), gpmRegionalThresholdText(national)].filter(Boolean).join(" · ");
-  return `<p>${details.join(" · ")}</p><small>${b(rules)} · Estimate under current conditions. See Campaign Plan for the election-day outlook.</small>`;
+  return `<p>${details.join(" · ")}</p><small>${v(rules)} · Estimate under current conditions. See Campaign Plan for the election-day outlook.</small>`;
 }
 
 function gpmRegionalSeatRules(rules) {
@@ -195,7 +195,7 @@ function gpmCampaignSpendingText(quote, ui) {
     " · " + gpmRegionalPercent(before.support) + " → " + gpmRegionalPercent(after.support) +
     " (" + gpmRegionalPoints(after.support - before.support) + ")";
   const seats = before.seats === null ? "" : " · " + before.seats + " → " + after.seats + " projected seats";
-  const spend = " · " + li(quote.cost.activistsK) + " activists spent";
+  const spend = " · " + yr(quote.cost.activistsK) + " activists spent";
   const limit = forecast.weightHeadroom <= 0 ? "This contest has reached the effective voting-weight cap."
     : forecast.weightHeadroom <= forecast.proposedPoints ? "This operation reaches the effective voting-weight cap."
     : forecast.nextScore >= forecast.scoreCap ? "This operation reaches the campaign score cap."
@@ -212,7 +212,7 @@ function gpmCampaignSpendingText(quote, ui) {
 }
 
 function gpmRegionalProjectControls(region, data, ui, state, focusScope = "") {
-  const money = amount => rr(amount * 1e6 * hA(), gA());
+  const money = amount => Rr(amount * 1e6 * qx(), zx());
   const effects = {
     investment: data.presenceHalfLife > 0 ? "Builds electoral presence, which halves every " + data.presenceHalfLife + " days."
       : "Builds lasting electoral presence. Gains taper as local presence rises.",
@@ -223,12 +223,12 @@ function gpmRegionalProjectControls(region, data, ui, state, focusScope = "") {
   return Object.entries(region.quotes).map(([kind, quote]) => {
     const open = quote.ok && !state.busy && !state.pending.has(kind);
     const compare = quote.ok || ["budget", "resources"].includes(quote.reason);
-    const cost = compare && quote.cash != null ? money(quote.cash) + " · " + li(quote.activistsK) + " activists assigned" : "";
-    const timing = compare && Number.isFinite(quote.endDay) ? " · Finishes " + b(ui.gameDate(quote.endDay)) : "";
+    const cost = compare && quote.cash != null ? money(quote.cash) + " · " + yr(quote.activistsK) + " activists assigned" : "";
+    const timing = compare && Number.isFinite(quote.endDay) ? " · Finishes " + v(ui.gameDate(quote.endDay)) : "";
     return `<div class="gpm-region-action"><button type="button" class="k" data-gpm-region-action="${kind}"` +
       ` ${focusScope ? `data-gpm-profile-focus="${focusScope}-${kind}"` : ""} aria-disabled="${!open}">${gpmRegionalActionName(kind)}</button>` +
-      (cost ? `<small>${b(cost)}${timing}</small>` : "") + `<small>${b(effects[kind])}</small>` +
-      gpmRegionalProjection(quote, ui) + (quote.ok ? "" : `<small>${b(gpmRegionalReason(quote, ui))}</small>`) + "</div>";
+      (cost ? `<small>${v(cost)}${timing}</small>` : "") + `<small>${v(effects[kind])}</small>` +
+      gpmRegionalProjection(quote, ui) + (quote.ok ? "" : `<small>${v(gpmRegionalReason(quote, ui))}</small>`) + "</div>";
   }).join("");
 }
 
@@ -236,32 +236,32 @@ function gpmRegionalInlineTools(region, data, state, view, ui) {
   const byKey = new Map(data.regions.map(item => [item.key, item]));
   const partyName = key => byKey.has(key) ? gpmRegionalRegionName(byKey.get(key)) : key;
   const headquarters = data.regions.find(item => item.headquarters);
-  const dates = project => " · " + li(project.activistsK || 0) + " assigned until " + ui.gameDate(project.endDay);
+  const dates = project => " · " + yr(project.activistsK || 0) + " assigned until " + ui.gameDate(project.endDay);
   const projects = data.projects.map(project => {
     const max = project.endDay - project.startDay;
     const progress = project.startDay == null || max <= 0 ? "" :
-      `<progress value="${Math.max(0, Math.min(max, view.day - project.startDay))}" max="${max}" aria-label="${b(gpmRegionalActionName(project.kind) + " progress")}"></progress>`;
-    return `<article><small>${b(gpmRegionalActionName(project.kind) + " in " + partyName(project.key) + dates(project))}</small>${progress}</article>`;
+      `<progress value="${Math.max(0, Math.min(max, view.day - project.startDay))}" max="${max}" aria-label="${v(gpmRegionalActionName(project.kind) + " progress")}"></progress>`;
+    return `<article><small>${v(gpmRegionalActionName(project.kind) + " in " + partyName(project.key) + dates(project))}</small>${progress}</article>`;
   });
   const otherAssignments = (data.assignments || []).filter(project => !project.key).map(project =>
-    `<small>${b(gpmRegionalActionName(project.kind) + dates(project))}</small>`);
+    `<small>${v(gpmRegionalActionName(project.kind) + dates(project))}</small>`);
   const recent = data.recent?.length ? data.recent : region.lastAction ? [{ key: region.key, ...region.lastAction }] : [];
   const receipts = recent.slice(0, 3).map(last => {
     const result = { cancelled: "Cancelled", completed: "Completed", strong: "Strong growth", partial: "Modest growth" }[last.result];
     return [gpmRegionalActionName(last.kind) + " in " + partyName(last.key), result, ui.gameDate(last.day),
-      Number.isFinite(last.activistsK) && li(last.activistsK) + " activists returned"].filter(Boolean).join(" · ");
+      Number.isFinite(last.activistsK) && yr(last.activistsK) + " activists returned"].filter(Boolean).join(" · ");
   });
   const other = byKey.get(state.compare) || data.regions.filter(item => item.key !== region.key)
     .sort((a, b) => b.populationShare - a.populationShare)[0];
   const compare = other && `<details data-gpm-region-compare ${state.compareOpen ? "open" : ""}>` +
     `<summary data-gpm-profile-focus="compare">Compare project quotes by region</summary>` +
-    `<label>Compare with <select class="k" data-gpm-profile-focus="compare-region" data-gpm-compare-region>${data.regions.filter(item => item.key !== region.key).map(item => `<option value="${b(item.key)}" ${item.key === other.key ? "selected" : ""}>${b(partyName(item.key))} · ${b(gpmRegionalPercent(item.populationShare))}</option>`).join("")}</select></label>` +
-    `<div class="gpm-regional-comparison">${[region, other].map(item => `<article><strong>${b(partyName(item.key))} · ${b(gpmRegionalPercent(item.populationShare))} of modeled population</strong>` + Object.entries(item.quotes).filter(([, quote]) => Number.isFinite(quote.cash)).map(([kind, quote]) => `<small>${b(gpmRegionalActionName(kind) + " · " + rr(quote.cash * 1e6 * hA(), gA()) + " · " + li(quote.activistsK) + " activists · " + ui.gameDate(quote.endDay))}</small>` + gpmRegionalProjection(quote, ui)).join("") + "</article>").join("")}</div></details>`;
-  return `<p>${b(rr(data.treasuryM * 1e6 * hA(), gA()))} in party funds · ${b(li(data.activistsK))} activists available</p>` +
-    `<small>${headquarters ? `Party headquarters · ${b(gpmRegionalRegionName(headquarters))}` : "Party headquarters can be established in Regional Campaigning or Uprising."}</small>` +
+    `<label>Compare with <select class="k" data-gpm-profile-focus="compare-region" data-gpm-compare-region>${data.regions.filter(item => item.key !== region.key).map(item => `<option value="${v(item.key)}" ${item.key === other.key ? "selected" : ""}>${v(partyName(item.key))} · ${v(gpmRegionalPercent(item.populationShare))}</option>`).join("")}</select></label>` +
+    `<div class="gpm-regional-comparison">${[region, other].map(item => `<article><strong>${v(partyName(item.key))} · ${v(gpmRegionalPercent(item.populationShare))} of modeled population</strong>` + Object.entries(item.quotes).filter(([, quote]) => Number.isFinite(quote.cash)).map(([kind, quote]) => `<small>${v(gpmRegionalActionName(kind) + " · " + Rr(quote.cash * 1e6 * qx(), zx()) + " · " + yr(quote.activistsK) + " activists · " + ui.gameDate(quote.endDay))}</small>` + gpmRegionalProjection(quote, ui)).join("") + "</article>").join("")}</div></details>`;
+  return `<p>${v(Rr(data.treasuryM * 1e6 * qx(), zx()))} in party funds · ${v(yr(data.activistsK))} activists available</p>` +
+    `<small>${headquarters ? `Party headquarters · ${v(gpmRegionalRegionName(headquarters))}` : "Party headquarters can be established in Regional Campaigning or Uprising."}</small>` +
     (region.district ? `<small>${region.district.projected} projected seat${region.district.projected === 1 ? "" : "s"} in this region · ${region.district.total} available before any national bonus or renewal adjustment</small>` : "") +
     `<div class="gpm-regional-projects">${projects.join("")}${otherAssignments.join("")}</div>` +
-    receipts.map(receipt => `<small>${b(receipt)}</small>`).join("") +
+    receipts.map(receipt => `<small>${v(receipt)}</small>`).join("") +
     gpmRegionalProjectControls(region, data, ui, state, "project") + (compare || "");
 }
 
@@ -274,9 +274,9 @@ function gpmRegionalProjection(quote, ui) {
     const local = gpmRegionalPoints(outcome.localAfter - forecast.localBefore);
     const national = Number.isFinite(outcome.nationalAfter) && Number.isFinite(forecast.nationalBefore)
       ? ` · ${gpmRegionalPoints(outcome.nationalAfter - forecast.nationalBefore)} nationally` : "";
-    return `<small>${b(label + chance + " · " + local + " locally" + national)}</small>`;
+    return `<small>${v(label + chance + " · " + local + " locally" + national)}</small>`;
   }).join("");
-  return outcomes + `<small>Vote estimate on completion, ${b(ui.gameDate(forecast.day))}, if other conditions hold.</small>`;
+  return outcomes + `<small>Vote estimate on completion, ${v(ui.gameDate(forecast.day))}, if other conditions hold.</small>`;
 }
 
 function gpmRegionalSupportScale(regions) {
@@ -310,7 +310,7 @@ function gpmRegionalSupportLegend(scale) {
   const ticks = [min, (min + max) / 2, max].map((support, index) => {
     const prefix = index === 0 && clippedLow ? "≤" : index === 2 && clippedHigh ? "≥" : "";
     const position = gpmRegionalSupportPosition(support, scale) * 100;
-    return `<small style="--gpm-tick-position:${position}%">${b(prefix + gpmRegionalPercent(support))}</small>`;
+    return `<small style="--gpm-tick-position:${position}%">${v(prefix + gpmRegionalPercent(support))}</small>`;
   });
   const gradient = `linear-gradient(90deg in hsl, ${gpmRegionalSupportColor(min, scale)}, ${gpmRegionalSupportColor(max, scale)})`;
   return `<small>Estimated vote share · local scale</small>
@@ -358,7 +358,7 @@ function gpmBindRegionalOverview(profile, view, ui) {
     return;
   }
   select.disabled = open.disabled = false;
-  const percent = new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 2 });
+  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 2 });
   const format = value => percent.format(value);
   const scale = gpmRegionalSupportScale(regions);
   const byId = new Map(regions.map(region => [region.id, region]));
@@ -370,22 +370,22 @@ function gpmBindRegionalOverview(profile, view, ui) {
     ui._gpmSupportGeometry = { world, signature, layout: gpmRegionalMapLayout(features) };
   }
   const layout = ui._gpmSupportGeometry.layout;
-  const svg = ({ paths, viewBox }, label, attributes = "") => `<svg viewBox="${viewBox}" role="group" aria-label="${b(label)}" ${attributes}>
+  const svg = ({ paths, viewBox }, label, attributes = "") => `<svg viewBox="${viewBox}" role="group" aria-label="${v(label)}" ${attributes}>
     ${paths.map(({ provId, d }) => {
       const region = byId.get(provId);
       const caption = `${names.get(provId)} · ${format(region.support)}`;
-      return `<path d="${b(d)}" data-gpm-support-region="${provId}" data-gpm-profile-focus="map-region-${provId}" role="button" tabindex="0" aria-pressed="false" aria-label="${b(caption)}" fill="${gpmRegionalSupportColor(region.support, scale)}">
-        <title>${b(caption)}</title></path>`;
+      return `<path d="${v(d)}" data-gpm-support-region="${provId}" data-gpm-profile-focus="map-region-${provId}" role="button" tabindex="0" aria-pressed="false" aria-label="${v(caption)}" fill="${gpmRegionalSupportColor(region.support, scale)}">
+        <title>${v(caption)}</title></path>`;
     }).join("")}</svg>`;
   map.innerHTML = layout ? svg(layout, "Estimated regional party support", "data-gpm-support-main") +
     (layout.insets.length ? `<div class="gpm-support-insets" data-gpm-support-insets aria-label="Territory insets">${layout.insets.map(inset => {
       const label = inset.ids.map(id => names.get(id)).filter(Boolean).join(", ");
-      return `<div class="gpm-support-inset" data-gpm-support-inset>${svg(inset, label)}<small>${b(label)}</small></div>`;
+      return `<div class="gpm-support-inset" data-gpm-support-inset>${svg(inset, label)}<small>${v(label)}</small></div>`;
     }).join("")}</div>` : "")
     : "Map geometry is unavailable. Choose a region below to view its support.";
   legend.innerHTML = layout ? gpmRegionalSupportLegend(scale) : "";
-  select.innerHTML = [...regions].sort((a, b) => names.get(a.id).localeCompare(names.get(b.id), cs()))
-    .map(region => `<option value="${region.id}">${b(names.get(region.id))} · ${b(format(region.populationShare))} of modeled population</option>`).join("");
+  select.innerHTML = [...regions].sort((a, b) => names.get(a.id).localeCompare(names.get(b.id), ks()))
+    .map(region => `<option value="${region.id}">${v(names.get(region.id))} · ${v(format(region.populationShare))} of modeled population</option>`).join("");
   const strongest = regions.reduce((best, region) => region.support > best.support ? region : best);
   const update = region => {
     if (!region) return;
@@ -456,22 +456,22 @@ function gpmRenderRegionalMap(ui, state) {
     active?.matches("[data-gpm-region-action]") ? '[data-gpm-region-action="' + active.dataset.gpmRegionAction + '"]' :
     active?.matches("[data-gpm-region-breakdown] > summary") ? "[data-gpm-region-breakdown] > summary" :
     active?.matches("[data-gpm-breakdown-party] > summary") ? `[data-gpm-breakdown-party="${CSS.escape(active.parentElement.dataset.gpmBreakdownParty)}"] > summary` : null;
-  const money = amount => rr(amount * 1e6 * hA(), gA());
-  const pct = value => new Intl.NumberFormat(cs(), { style: "percent", maximumFractionDigits: 1 }).format(value);
+  const money = amount => Rr(amount * 1e6 * qx(), zx());
+  const pct = value => new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 1 }).format(value);
   const points = value => (value > 0 ? "+" : "") + (value * 100).toFixed(2) + " pp";
   const regionName = key => {
     const entry = data.regions.find(item => item.key === key);
     return entry ? gpmRegionalRegionName(entry) : key;
   };
   const options = data.regions.map(entry => [entry, gpmRegionalRegionName(entry)])
-    .sort((a, b) => a[1].localeCompare(b[1], cs()))
-    .map(([entry, name]) => `<option value="${entry.id}" ${entry.id === region?.id ? "selected" : ""}>${b(name)}</option>`).join("");
-  const jobs = data.projects.map(project => `<small>${b(gpmRegionalActionName(project.kind))} · ${b(regionName(project.key))}
-    · Finishes ${b(ui.gameDate(project.endDay))}</small>`).join("");
+    .sort((a, b) => a[1].localeCompare(b[1], ks()))
+    .map(([entry, name]) => `<option value="${entry.id}" ${entry.id === region?.id ? "selected" : ""}>${v(name)}</option>`).join("");
+  const jobs = data.projects.map(project => `<small>${v(gpmRegionalActionName(project.kind))} · ${v(regionName(project.key))}
+    · Finishes ${v(ui.gameDate(project.endDay))}</small>`).join("");
   const headquarters = data.regions.find(entry => entry.headquarters);
   const header = `<div class="gpm-regional-national">${gpmRegionalNational(data.national)}</div>
-    <small>${b(money(data.treasuryM))} in party funds · ${b(Math.round(data.activistsK * 1000).toLocaleString(cs()))} available activists</small>
-    ${headquarters ? `<small>Party headquarters · ${b(gpmRegionalRegionName(headquarters))}</small>` : ""}
+    <small>${v(money(data.treasuryM))} in party funds · ${v(Math.round(data.activistsK * 1000).toLocaleString(ks()))} available activists</small>
+    ${headquarters ? `<small>Party headquarters · ${v(gpmRegionalRegionName(headquarters))}</small>` : ""}
     ${jobs}<label>Region <select class="k" data-gpm-region-select ${data.regions.length ? "" : "disabled"}>
       <option value="" ${region ? "" : "selected"}>Choose a region</option>${options}</select></label>`;
   let detail = `<p>${data.regions.length ? "Click a highlighted state or province on the globe." : "No campaign regions are available for this country."}</p>`;
@@ -484,27 +484,27 @@ function gpmRenderRegionalMap(ui, state) {
         : kind === "rally" ? (data.rallyHalfLife === 0 ? "The local rally bonus does not decay."
           : `The rally bonus holds at full strength for ${data.rallyGraceDays ?? 21} days before fading.`)
           : "Adds a lasting support boost in this region.";
-      const cost = quote.cash == null ? "" : `${money(quote.cash)} · ${Math.round(quote.activistsK * 1000).toLocaleString(cs())} activists · ${quote.days} days`;
+      const cost = quote.cash == null ? "" : `${money(quote.cash)} · ${Math.round(quote.activistsK * 1000).toLocaleString(ks())} activists · ${quote.days} days`;
       return `<div class="gpm-region-action"><button type="button" class="k" data-gpm-region-action="${kind}"
         ${quote.ok && !state.busy && !state.pending.has(kind) ? "" : "disabled"}>${gpmRegionalActionName(kind)}</button>
-        ${cost ? `<small>${b(cost)}</small><small>${b(effect)}</small>` : ""}
+        ${cost ? `<small>${v(cost)}</small><small>${v(effect)}</small>` : ""}
         ${gpmRegionalProjection(quote, ui)}
-        ${quote.ok ? "" : `<small>${b(gpmRegionalReason(quote, ui))}</small>`}</div>`;
+        ${quote.ok ? "" : `<small>${v(gpmRegionalReason(quote, ui))}</small>`}</div>`;
     }).join("");
     const last = region.lastAction;
     const receipt = last && { cancelled: "Cancelled", completed: "Completed", strong: "Strong growth", partial: "Modest growth" }[last.result];
-    detail = `<div class="gpm-region-detail"><h3>${b(gpmRegionalRegionName(region))}</h3>
-      <dl><dt>Estimated party support</dt><dd>${b(pct(region.support))}</dd>
-      <dt>Leading party</dt><dd>${b(leader ? Sa(leader) : "—")}</dd>
-      <dt>Margin vs. strongest rival</dt><dd>${b(points(region.margin))}</dd>
-      <dt>Lasting boost · presence and HQ</dt><dd>${b(gpmRegionalPoints(region.permanentBoost ?? 0))}</dd>
-      ${region.headquartersBoost > .00005 ? `<dt>From headquarters</dt><dd>${b(gpmRegionalPoints(region.headquartersBoost))}</dd>` : ""}
-      <dt>Temporary rally boost</dt><dd>${b(gpmRegionalPoints(region.rallyBoost ?? 0))}</dd>
-      ${region.rivalBoost < -.00005 ? `<dt>Rival activity</dt><dd>${b(gpmRegionalPoints(region.rivalBoost))}</dd>` : ""}
-      <dt>Local party presence</dt><dd>${b(pct(region.presence))}</dd></dl>
-      ${region.rallyFullUntil > view.day ? `<small>Rally at full strength until ${b(ui.gameDate(region.rallyFullUntil))}.</small>` : ""}
+    detail = `<div class="gpm-region-detail"><h3>${v(gpmRegionalRegionName(region))}</h3>
+      <dl><dt>Estimated party support</dt><dd>${v(pct(region.support))}</dd>
+      <dt>Leading party</dt><dd>${v(leader ? Sa(leader) : "—")}</dd>
+      <dt>Margin vs. strongest rival</dt><dd>${v(points(region.margin))}</dd>
+      <dt>Lasting boost · presence and HQ</dt><dd>${v(gpmRegionalPoints(region.permanentBoost ?? 0))}</dd>
+      ${region.headquartersBoost > .00005 ? `<dt>From headquarters</dt><dd>${v(gpmRegionalPoints(region.headquartersBoost))}</dd>` : ""}
+      <dt>Temporary rally boost</dt><dd>${v(gpmRegionalPoints(region.rallyBoost ?? 0))}</dd>
+      ${region.rivalBoost < -.00005 ? `<dt>Rival activity</dt><dd>${v(gpmRegionalPoints(region.rivalBoost))}</dd>` : ""}
+      <dt>Local party presence</dt><dd>${v(pct(region.presence))}</dd></dl>
+      ${region.rallyFullUntil > view.day ? `<small>Rally at full strength until ${v(ui.gameDate(region.rallyFullUntil))}.</small>` : ""}
       ${gpmRegionalBreakdown(region, view, ui, gpmRegionalBreakdownOpened(panel))}
-      ${receipt ? `<small>${b(gpmRegionalActionName(last.kind))} · ${b(receipt)} · ${b(ui.gameDate(last.day))}</small>` : ""}
+      ${receipt ? `<small>${v(gpmRegionalActionName(last.kind))} · ${v(receipt)} · ${v(ui.gameDate(last.day))}</small>` : ""}
       ${actions}</div>`;
   }
   panel.querySelector("[data-gpm-region-content]").innerHTML = header + detail;
@@ -524,11 +524,11 @@ function gpmRenderRegionalMap(ui, state) {
 function gpmRefreshRegionalMap(ui, snapshot = null) {
   const state = ui.gpmRegionalActive;
   if (!state || state.busy) return;
-  if (state.session !== ze || !state.panel.isConnected) {
+  if (state.session !== Ge || !state.panel.isConnected) {
     gpmCloseRegionalMap(ui);
     return;
   }
-  const view = Va(state.session, snapshot);
+  const view = Ja(state.session, snapshot);
   const data = view?.party?.regionalCampaign;
   if (!data) return;
   if (data.partyId !== state.data.partyId || data.countryKey !== state.data.countryKey) {
@@ -567,7 +567,7 @@ function gpmSelectRegionalProvince(ui, id) {
 function gpmRegionalGlobeClick(ui, coords) {
   const state = ui.gpmRegionalActive;
   if (!state) return false;
-  if (state.session !== ze) {
+  if (state.session !== Ge) {
     gpmCloseRegionalMap(ui);
     return false;
   }
@@ -578,13 +578,13 @@ function gpmRegionalGlobeClick(ui, coords) {
 async function gpmSubmitRegionalAction(ui, kind, state = ui.gpmRegionalActive) {
   const region = state?.data.regions.find(entry => entry.id === state.selected);
   const quote = region?.quotes[kind];
-  if (!quote?.ok || state.busy || state.pending.has(kind) || state.session !== ze) return;
+  if (!quote?.ok || state.busy || state.pending.has(kind) || state.session !== Ge) return;
   state.busy = true;
   state.status = "Scheduling project…";
   state.paint();
   let snapshot = null;
   try {
-    const result = await Te(state.session, "applyPlayerAction", [{
+    const result = await Le(state.session, "applyPlayerAction", [{
       verb: "gpm.party.regional." + kind, partyId: state.data.partyId, provinceId: region.id,
       provinceKey: region.key, quoteToken: quote.token,
     }]);
@@ -594,7 +594,7 @@ async function gpmSubmitRegionalAction(ui, kind, state = ui.gpmRegionalActive) {
       // Block a second submission against stale quotes until the worker publishes a fresh view.
       state.pending.set(kind, result.endDay);
     }
-    try { snapshot = await at(state.session, G.POLITICS); }
+    try { snapshot = await Je(state.session, G.POLITICS); }
     catch (error) { console.error("[PPO] Regional campaign refresh failed", error); }
   } catch (error) {
     console.error("[PPO] Regional campaign action failed", error);
@@ -604,8 +604,8 @@ async function gpmSubmitRegionalAction(ui, kind, state = ui.gpmRegionalActive) {
     if (ui.gpmRegionalActive === state) {
       gpmRefreshRegionalMap(ui, snapshot);
       if (ui.gpmRegionalActive === state) state.paint();
-    } else if (ui._gpmRegionalInline === state && state.session === ze) {
-      const view = Va(state.session, snapshot);
+    } else if (ui._gpmRegionalInline === state && state.session === Ge) {
+      const view = Ja(state.session, snapshot);
       const data = view?.party?.regionalCampaign;
       if (view?.day >= state.view.day && data?.partyId === state.data.partyId && data.countryKey === state.data.countryKey) {
         state.view = view;
@@ -619,19 +619,19 @@ async function gpmSubmitRegionalAction(ui, kind, state = ui.gpmRegionalActive) {
 
 async function gpmOpenRegionalMap(ui, button, provinceKey) {
   const session = ui._mpSession;
-  if (ui.gpmRegionalActive || session !== ze || !ui.globe || button.disabled) return;
+  if (ui.gpmRegionalActive || session !== Ge || !ui.globe || button.disabled) return;
   button.disabled = true;
   try {
-    if (ui.globe.activeBody === "moon") await Pue("earth");
+    if (ui.globe.activeBody === "moon") await bpe("earth");
     await ui.acquireSimulationViewLease("gpm-regional", [G.POLITICS]);
-    const view = Va(session);
+    const view = Ja(session);
     const data = view?.party?.regionalCampaign;
-    if (!button.isConnected || session !== ze || !data || ui.globe.activeBody === "moon") {
+    if (!button.isConnected || session !== Ge || !data || ui.globe.activeBody === "moon") {
       await ui.releaseSimulationViewLease("gpm-regional");
       return;
     }
-    mve(ui);
-    if (sCt()) Xg(false);
+    v9e(ui);
+    if (OLt()) Z3(false);
     ui.closeModule();
     ui.deselectCountry();
     const panel = document.createElement("aside");
@@ -646,7 +646,7 @@ async function gpmOpenRegionalMap(ui, button, provinceKey) {
     state.paint = () => gpmRenderRegionalMap(ui, state);
     ui.gpmRegionalActive = state;
     ui.closeGpmRegionalMap = () => gpmCloseRegionalMap(ui);
-    Xe("screen-game").append(panel);
+    tt("screen-game").append(panel);
     panel.addEventListener("click", event => {
       if (event.target.closest("[data-gpm-region-close]")) gpmCloseRegionalMap(ui, true);
       const action = event.target.closest('[data-gpm-region-action][aria-disabled="false"]');
@@ -657,11 +657,11 @@ async function gpmOpenRegionalMap(ui, button, provinceKey) {
         gpmSelectRegionalProvince(ui, event.target.value === "" ? null : Number(event.target.value));
       }
     });
-    jk("gpm-regional");
+    fM("gpm-regional");
     globe._forceStrategic = true;
     globe.setDataMapIdentity("gpm-regional");
-    Ju();
-    const country = sy(data.countryKey);
+    Md();
+    const country = s6(data.countryKey);
     if (country) globe.focusCountry(country, 3.45);
     gpmRenderRegionalMap(ui, state);
     panel.querySelector("[data-gpm-region-close]").focus({ preventScroll: true });
@@ -682,9 +682,9 @@ function gpmCloseRegionalMap(ui, returnToParty = false) {
   state.globe.clearChoropleth();
   state.globe.setDataMapIdentity(state.previousMap);
   state.globe._forceStrategic = state.previousStrategic;
-  Gk("gpm-regional");
-  Ju();
-  if (returnToParty && state.session === ze) ui.openModule("politics", "myparty");
+  gM("gpm-regional");
+  Md();
+  if (returnToParty && state.session === Ge) ui.openModule("politics", "myparty");
   ui.releaseSimulationViewLease("gpm-regional").catch(error => console.error("[PPO] Regional campaign view release failed", error));
 }
 

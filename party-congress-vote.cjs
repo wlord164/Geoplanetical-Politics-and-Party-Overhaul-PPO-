@@ -381,7 +381,7 @@ function partyCongressProgrammeLawBonus(party, lawId, day, target) {
   const choice = partyCongressProgrammes()[programme.kind];
   if (!choice.laws.includes(lawId)) return 0;
   if (!choice.lawTargets || target === undefined) return 1;
-  return Jr(choice.lawTargets[lawId], target) ? 1 : 0;
+  return uo(choice.lawTargets[lawId], target) ? 1 : 0;
 }
 
 function partyCongressEligible(party) {
@@ -440,7 +440,7 @@ function applyPartyCongressVote(sim, country, party, kind, input, data = null) {
 }
 
 function partyCongressAgenda(sim, country, partyId) {
-  const party = YL(country, partyId);
+  const party = pW(country, partyId);
   const state = party?.gpmCongressSizeState;
   const bargains = typeof gpmFactionAgenda === "function" ? gpmFactionAgenda(sim, country, partyId) : [];
   if (!state) return bargains;
@@ -459,10 +459,10 @@ function partyCongressAgenda(sim, country, partyId) {
 function registerPartyCongressSize() {
   for (const [verb, kind] of [["gpm.party.congressSize", "size"], ["gpm.party.congressPriority", "priority"],
     ["gpm.party.congressProgramme", "programme"]]) {
-    n5t(verb, {
+    Xgt(verb, {
       apply(sim, country, input) {
-        if (country.key !== sim.playerKey || Uo(country) !== input.partyId) return { ok: false, reason: "party" };
-        return applyPartyCongressVote(sim, country, YL(country, input.partyId), kind, input);
+        if (country.key !== sim.playerKey || cn(country) !== input.partyId) return { ok: false, reason: "party" };
+        return applyPartyCongressVote(sim, country, pW(country, input.partyId), kind, input);
       },
     });
   }
