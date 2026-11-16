@@ -114,7 +114,9 @@ function gpmFactionMigratePartyDoctrines(sim, country, party) {
 function gpmMigrateFactionDoctrines(sim) {
   for (const country of sim.countries.values()) {
     for (const party of country.pol?.parties || []) {
-      if (party.gpmFactionPolitics) gpmFactionMigratePartyDoctrines(sim, country, party);
+      if (!party.gpmFactionPolitics) continue;
+      gpmFactionMigratePartyDoctrines(sim, country, party);
+      gpmFactionSeparatePartyLeader(sim, country, party);
     }
   }
 }
@@ -174,13 +176,41 @@ function gpmFactionReview(sim, country, party) {
   return { ok: true, changed: true, nextReviewDay: state.nextReviewDay };
 }
 
-function gpmFactionUpdateLeaders(sim, country, party, people) {
-  const factions = Object.values(party.gpmFactionPolitics?.factions || {}).filter(faction => faction.seats > 0);
-  const used = new Set();
+function gpmFactionPartyLeader(sim, country, party) {
+  const offices = iGr(sim, country, party.id) ? sim.playerControl?.controlledOfficeIds || [] : mL(country, party);
+  return Osa(sim, country, party.id, t$(country, party, offices).heldOfficeIds);
+}
+
+function gpmFactionSeparatePartyLeader(sim, country, party) {
+  const state = party?.gpmFactionPolitics;
+  if (state?.nextReviewDay == null || !partyCongressEligible(party)) return;
+  const partyLeaderId = gpmFactionPartyLeader(sim, country, party)?.id;
+  if (!partyLeaderId || !Object.values(state.factions).some(faction =>
+    faction.seats > 0 && faction.leadership?.personId === partyLeaderId)) return;
+  gpmFactionUpdateLeaders(sim, country, party, partyCongressPlanningData(sim, country).people, partyLeaderId);
+}
+
+function gpmFactionUpdateLeaders(sim, country, party, people, partyLeaderId = gpmFactionPartyLeader(sim, country, party)?.id) {
+  const state = party.gpmFactionPolitics;
+  const factions = Object.values(state?.factions || {}).filter(faction => faction.seats > 0);
+  const used = new Set(partyLeaderId ? [partyLeaderId] : []);
   for (const faction of factions) {
+    const outgoingId = faction.leadership?.personId;
     const others = new Set(factions.filter(other => other !== faction).map(other => other.leadership?.personId).filter(Boolean));
     const leader = gpmFactionLeader(sim, country, party, faction, new Set([...used, ...others]), people);
     if (leader) used.add(leader.id);
+    const separating = outgoingId && outgoingId === partyLeaderId;
+    if (!separating && !leader) continue;
+    // A commitment already accepted by the party follows the faction during this role separation.
+    for (const offer of state.offers) {
+      if (offer.factionId !== faction.id || !gpmFactionOpen(offer)) continue;
+      const outgoingOffer = separating && offer.leaderId === outgoingId;
+      if (outgoingOffer && offer.status !== "accepted") {
+        gpmFactionClose(sim, country, party, state, offer, "expired", offer.deadlineDay <= sim.day ? "deadline" : "leader");
+      } else if (offer.status === "accepted" && offer.deadlineDay > sim.day && (offer.leaderId === null || outgoingOffer)) {
+        offer.leaderId = leader?.id ?? null;
+      }
+    }
   }
 }
 
@@ -195,8 +225,11 @@ function gpmFactionLiveLeader(sim, country, party, faction) {
 
 function gpmFactionEndorsements(sim, country, party) {
   const state = party.gpmFactionPolitics;
-  return (state?.offers || []).flatMap(offer => {
-    if (offer.status !== "accepted" || offer.deadlineDay <= sim.day) return [];
+  const accepted = (state?.offers || []).filter(offer => offer.status === "accepted" && offer.deadlineDay > sim.day);
+  if (!accepted.length) return [];
+  const partyLeaderId = gpmFactionPartyLeader(sim, country, party)?.id;
+  return accepted.flatMap(offer => {
+    if (!offer.leaderId || offer.leaderId === partyLeaderId) return [];
     const faction = state.factions[offer.factionId];
     if (gpmFactionLiveLeader(sim, country, party, faction)?.id !== offer.leaderId) return [];
     return [{ label: faction.label, programme: offer.programme, extraYes: offer.extraYes }];
@@ -216,10 +249,12 @@ function gpmFactionPresentationTitle(sim, country, party, faction) {
 function gpmFactionView(sim, country, party) {
   const state = party.gpmFactionPolitics;
   const offers = state?.offers || [];
+  const partyLeader = gpmFactionPartyLeader(sim, country, party);
   return {
     day: sim.day,
     initialized: state?.nextReviewDay != null,
     nextReviewDay: state?.nextReviewDay ?? null,
+    partyLeader: partyLeader ? { id: partyLeader.id, name: uAe(partyLeader) } : null,
     factions: Object.values(state?.factions || {}).map(({ id, label, seats, trust, priorities, redLines, leadership, organization, issuePriorities, doctrineId, positions }) => ({
       id, label, displayLabel: partyCongressFactionLabel(label), seats, trust, priorities, redLines, doctrineId, positions, leader: gpmFactionLeaderView(sim, { leadership }),
       organization, issuePriorities,
@@ -235,8 +270,9 @@ function gpmFactionView(sim, country, party) {
 function gpmFactionCongressData(sim, country, partyId) {
   const party = YL(country, partyId);
   if (!party || Uo(country) !== partyId) return null;
-  return { bargaining: gpmFactionView(sim, country, party), factionEndorsements: gpmFactionEndorsements(sim, country, party),
-    factionDelegateFactors: gpmFactionDelegateFactors(party.gpmFactionPolitics) };
+  return partyCongressView(sim, country, partyId, undefined, undefined, {
+    bargaining: gpmFactionView(sim, country, party),
+  });
 }
 
 function gpmFactionCashAvailable(sim, party, cashM, actor, subject) {
@@ -265,13 +301,14 @@ function gpmFactionQuote(sim, country, party, input, actor) {
       !Number.isFinite(cashM) || cashM < 0 || cashM > 1 || (subject === "programme" && cashM !== 0)) {
     return { ok: false, reason: "terms" };
   }
+  const leaderId = faction.leadership?.personId;
+  if (leaderId && leaderId === gpmFactionPartyLeader(sim, country, party)?.id) return { ok: false, reason: "party-leader" };
   if (state.offers.some(offer => offer.factionId === faction.id && gpmFactionOpen(offer) && offer.deadlineDay > sim.day)) {
     return { ok: false, reason: "conflict" };
   }
   const leader = gpmFactionLiveLeader(sim, country, party, faction);
   if (!leader) return { ok: false, reason: "leader" };
-  const planning = partyCongressPlanningData(sim, country);
-  const data = partyCongressView(sim, country, party.id, planning.electorate, planning.people);
+  const data = partyCongressView(sim, country, party.id);
   const vote = partyCongressProgrammeVote(data, programme);
   if (!vote.ok) return { ok: false, reason: "programme" };
   const group = vote.factions.find(item => item.label === faction.label);
@@ -324,6 +361,7 @@ function gpmFactionExpire(sim, country, party) {
   const state = party.gpmFactionPolitics;
   for (const offer of state?.offers || []) {
     if (!gpmFactionOpen(offer)) continue;
+    if (offer.status === "accepted" && offer.leaderId === null && offer.deadlineDay > sim.day) continue;
     const faction = state.factions[offer.factionId];
     const leader = gpmFactionLiveLeader(sim, country, party, faction);
     if (offer.deadlineDay > sim.day && leader?.id === offer.leaderId) continue;
@@ -334,6 +372,7 @@ function gpmFactionExpire(sim, country, party) {
 
 function gpmFactionSettleVote(sim, country, party, vote) {
   const state = party.gpmFactionPolitics;
+  gpmFactionSeparatePartyLeader(sim, country, party);
   gpmFactionExpire(sim, country, party);
   for (const offer of state?.offers || []) {
     if (offer.status !== "accepted") continue;
@@ -429,6 +468,7 @@ function gpmFactionAutomate(sim, country, party, actor) {
 function gpmFactionDaily(sim, country, party) {
   const state = party.gpmFactionPolitics;
   if (state?.nextReviewDay == null) return;
+  gpmFactionSeparatePartyLeader(sim, country, party);
   gpmFactionExpire(sim, country, party);
   if (!partyCongressEligible(party)) return;
   const charter = gpmFactionLeadershipCharter(sim, party);
@@ -467,7 +507,8 @@ module.exports = { workerFunctions: [
   `const gpmFactionMandateDefaults = ${JSON.stringify(defaultMandate)};`,
   gpmFactionMandate, gpmFactionId, gpmFactionResolveId, gpmFactionAlignment, gpmFactionSetDoctrine,
   gpmFactionHasRedLine, gpmFactionAddMigratedDoctrinePolicy,
-  gpmFactionOpen, gpmFactionMigratePartyDoctrines, gpmMigrateFactionDoctrines, gpmFactionPublicOffer, gpmFactionReview, gpmFactionUpdateLeaders,
+  gpmFactionOpen, gpmFactionMigratePartyDoctrines, gpmMigrateFactionDoctrines, gpmFactionPublicOffer, gpmFactionReview,
+  gpmFactionPartyLeader, gpmFactionSeparatePartyLeader, gpmFactionUpdateLeaders,
   gpmFactionLiveLeader, gpmFactionEndorsements, gpmFactionPresentationTitles, gpmFactionPresentationTitle, gpmFactionView, gpmFactionCongressData, gpmFactionCashAvailable, gpmFactionQuote, gpmFactionClose,
   gpmFactionExpire, gpmFactionSettleVote, gpmFactionAction, gpmFactionAutomate, gpmFactionDaily, gpmFactionAgenda,
   registerPartyFactionBargaining,
