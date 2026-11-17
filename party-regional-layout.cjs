@@ -43,6 +43,47 @@ function gpmCreatePartyMapFeatures(topology, arcCoordinates) {
     return closed && simplified.length < 4 ? points : simplified;
   }
 
+  function orientedArea(points) {
+    const [originX, originY] = points[0];
+    let area = 0;
+    let previousX = 0;
+    let previousY = 0;
+    for (let index = 1; index < points.length; index++) {
+      const x = points[index][0] - originX;
+      const y = points[index][1] - originY;
+      area += previousX * y - previousY * x;
+      previousX = x;
+      previousY = y;
+    }
+    return area;
+  }
+
+  function ringCanReverse(ring) {
+    const first = ring[0];
+    const edge = cache.get(first < 0 ? ~first : first).coordinates;
+    const [originX, originY] = edge[first < 0 ? edge.length - 1 : 0];
+    let area = 0;
+    let minimumChange = 0;
+    let maximumChange = 0;
+    let magnitude = 0;
+    for (const ref of ring) {
+      const { coordinates, sourceArea, change } = cache.get(ref < 0 ? ~ref : ref);
+      const [startX, startY] = coordinates[0];
+      const [endX, endY] = coordinates[coordinates.length - 1];
+      const translated = (startX - originX) * (endY - originY) - (startY - originY) * (endX - originX);
+      const direction = ref < 0 ? -1 : 1;
+      area += direction * (sourceArea + translated);
+      magnitude += Math.abs(sourceArea) + Math.abs(translated);
+      const difference = direction * change;
+      minimumChange += Math.min(0, difference);
+      maximumChange += Math.max(0, difference);
+    }
+    if (minimumChange === 0 && maximumChange === 0) return false;
+    // Use the whole range since a shared arc may be retained to protect another ring.
+    const margin = Math.max(1, magnitude) * 1e-12;
+    return area + minimumChange <= margin && area + maximumChange >= -margin;
+  }
+
   return features => {
     const area = features.reduce((sum, feature) => sum + (feature.__area || 0), 0);
     // SVG maps have a short display span. Keep smaller territories closer to full detail.
@@ -57,6 +98,7 @@ function gpmCreatePartyMapFeatures(topology, arcCoordinates) {
       return province?.type === "Polygon" || province?.type === "MultiPolygon" ? province : null;
     });
     const arcTolerances = new Map();
+    const rings = [];
     for (const [index, province] of shapes.entries()) {
       if (!province) continue;
       // A tiny region may be shown on its own inset. Protect its shared edges too.
@@ -64,6 +106,7 @@ function gpmCreatePartyMapFeatures(topology, arcCoordinates) {
       const polygons = province.type === "Polygon" ? [province.arcs] : province.arcs;
       for (const polygon of polygons) {
         for (const ring of polygon) {
+          if (ring.length) rings.push(ring);
           for (const ref of ring) {
             const id = ref < 0 ? ~ref : ref;
             arcTolerances.set(id, Math.min(arcTolerances.get(id) ?? tolerance, localTolerance));
@@ -71,17 +114,25 @@ function gpmCreatePartyMapFeatures(topology, arcCoordinates) {
         }
       }
     }
-    const arcs = [];
     for (const [id, limit] of arcTolerances) {
-      let simplified = cache.get(id);
-      if (simplified?.limit !== limit) {
+      if (cache.get(id)?.limit !== limit) {
         const points = arcCoordinates(id);
         const coordinates = limit >= .001 ? simplify(points, limit * limit) : points;
-        simplified = { limit, coordinates };
-        cache.set(id, simplified);
+        const sourceArea = orientedArea(points);
+        const change = coordinates === points ? 0 : orientedArea(coordinates) - sourceArea;
+        cache.set(id, { limit, coordinates, sourceArea, change });
       }
+    }
+    const retainedArcs = new Set();
+    for (const ring of rings) {
+      if (!ringCanReverse(ring)) continue;
+      for (const ref of ring) retainedArcs.add(ref < 0 ? ~ref : ref);
+    }
+    const arcs = [];
+    for (const id of arcTolerances.keys()) {
+      const entry = cache.get(id);
       // Both sides of a border use the same reduced TopoJSON arc, in opposite directions.
-      arcs[id] = simplified.coordinates;
+      arcs[id] = retainedArcs.has(id) ? (entry.original ??= arcCoordinates(id)) : entry.coordinates;
     }
     const displayTopology = { arcs };
     return features.map((feature, index) => {
