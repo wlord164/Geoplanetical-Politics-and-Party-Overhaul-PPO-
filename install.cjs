@@ -29,19 +29,26 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
-// Verified private 1.1.4 compatibility build. The archive's header and
-// unchanged payload are verified independently.
-const previousPatchedRuntime = {
+// Earlier PPO 1.1.4 builds. The archive header and unchanged payload are
+// verified independently.
+const previousPatchedRuntimes = [{
+  // Published 1.1.4 compatibility release (d9c63da).
+  archive: "e51220cad19059e629b0fadd2ffd0cc6b46f59aa48c6b5bfc2ee47b56f368ab8",
+  renderer: "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267",
+  worker: "bb600731bc4db7e3ff4e912941d5393b0d6e9033413ac9b834b4ca32331f7dce",
+  executable: "6067ea3c781cb9bf0637b71c024c0f9fdb4355566e5efe92c805f3b828d3019d",
+}, {
+  // Private 1.1.4 compatibility build.
   archive: "91a7f00efa90df2b0e093751eff5275308f95bfc46bf934344e9e2a172061b2e",
   renderer: "76c3ae3345a4887eebc2c22069cad73e448a18a72f1a15432072e55ada7774c7",
   worker: "514978645ca604523eeb384026909303a26e95dacd50a9a74da1d4777c16eb21",
   executable: "ca268a6d0476a75cd720dfc048990a4eb63fc3148e6241dd0d14fbfe2fd843a7",
-};
+}];
 
 // Steam can leave a verified PPO renderer on disk after replacing the three
 // stock files. The stock ASAR uses its own packed renderer.
 const previousRenderers = new Set([
-  previousPatchedRuntime.renderer,
+  ...previousPatchedRuntimes.map(profile => profile.renderer),
   "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
   "e7730587c368f404b33ae83ea748103226b34c9283c520b6345b7816887f8f63", // Private Congress spacing candidate
   "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6", // Verified Far-Right Currents release
@@ -285,7 +292,8 @@ function verifyPatchedRuntime(files, state) {
   }
   const patch = buildPatch(files.backupArchive, files.backupWorker, files.backupExecutable);
   const current = Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes));
-  const previous = Object.entries(previousPatchedRuntime).every(([key, hash]) => state.hashes[key] === hash);
+  const previous = previousPatchedRuntimes.some(profile =>
+    Object.entries(profile).every(([key, hash]) => state.hashes[key] === hash));
   if (!current && !previous) {
     throw new Error("The active game files are mixed or differ from this PPO build. Run Steam Verify Integrity before retrying.");
   }

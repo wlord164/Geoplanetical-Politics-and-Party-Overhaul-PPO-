@@ -468,7 +468,8 @@ function gpmUprisingInheritedWars(sim) {
 function gpmUprisingDemoteWar(sim, war) {
   if (war.mode !== "operational") return;
   // The operational controller belongs to the player country that opened or adopted it.
-  if (sim.aiWars.has(war.id) && sim.aiWars.get(war.id) !== war) {
+  const strategicWars = sim.aiWars ??= new Map();
+  if (strategicWars.has(war.id) && strategicWars.get(war.id) !== war) {
     throw new Error("Inherited war identifier conflicts with a strategic war: " + war.id);
   }
   for (const [key, current] of sim.wars) {
@@ -477,7 +478,7 @@ function gpmUprisingDemoteWar(sim, war) {
   Object.assign(war, { mode: "strategic", enemyKey: null, enemyName: null,
     score: war._score?.total ?? war.score ?? 0, a: war.sideAKey, b: war.sideBKey,
     aName: lo(sim, sim.countries.get(war.sideAKey)), bName: lo(sim, sim.countries.get(war.sideBKey)) });
-  sim.aiWars.set(war.id, war);
+  strategicWars.set(war.id, war);
 }
 
 function gpmUprisingLeaveNativeWar(sim, war, country) {
@@ -790,7 +791,7 @@ function gpmUprisingOpen(sim, country, input) {
   const founderId = founder.id;
   const provinceKey = province.__provKey;
   const childKey = childPrefix + parentKey + "-" + sim.day;
-  const priorOperationalWar = sim.wars.get(parentKey);
+  const priorOperationalWar = sim.wars?.get(parentKey);
   if (priorOperationalWar && !Eo(priorOperationalWar, parentKey)) {
     return { ok: false, reason: "war_stale" };
   }
@@ -823,7 +824,7 @@ function gpmUprisingOpen(sim, country, input) {
   gpmApplyUprisingCharter(sim, child, childCharter);
   const handoff = sim.switchPlayerControl({ countryKey: childKey, partyId: founderId });
   if (!handoff.ok || !handoff.current.controlsExecutive) throw new Error("Breakaway control failed");
-  for (const outsideWar of [...sim.wars.values()]) {
+  for (const outsideWar of [...(sim.wars?.values() || [])]) {
     if (!Eo(outsideWar, parentKey) || Eo(outsideWar, childKey)) continue;
     d1t(sim, outsideWar, sim.day, "strategic");
     Wpa(sim, outsideWar.id);
@@ -835,7 +836,7 @@ function gpmUprisingOpen(sim, country, input) {
   const deployed = gpmUprisingDeployPreparations(sim, child, province, divisions, stockpile);
   delete founder.gpmUprisingPreparations;
   const target = Gy(sim, parentKey);
-  const war = pWa(sim, parent, { id: sim.conflicts.has("player:" + parentKey) ? "player:" + childKey : undefined,
+  const war = pWa(sim, parent, { id: sim.conflicts?.has("player:" + parentKey) ? "player:" + childKey : undefined,
     selectedTargetActorKey: parentKey,
     targetDefenseAuthorityKeys: target.defenseAuthorityKeys,
     targetDiplomacyAuthorityKeys: target.diplomacyAuthorityKeys,
