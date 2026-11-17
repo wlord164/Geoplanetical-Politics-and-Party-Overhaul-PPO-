@@ -152,7 +152,9 @@ function readCatalog() {
       if (!title || (!plan.regionalOnly && Array.from(title).length > 40) || !conflict.sides.flat().includes(actorId) ||
           !conflict.countryKeys.includes(plan.countryKey) || !plan.regime ||
           !["national", "autonomy", "independence"].includes(plan.scope) ||
-          (plan.scope !== "national" && !plan.regionKeys?.length)) throw new Error("Invalid victory profile " + id + " / " + actorId);
+          ((plan.regionalOnly || plan.scope !== "national") && !plan.regionKeys?.length)) {
+        throw new Error("Invalid victory profile " + id + " / " + actorId);
+      }
       result.victories[id][actorId] = { title, administration: actor.victoryAdministration || actor.administrationName,
         government: actor.victoryGovernment, ...plan };
     }
@@ -261,7 +263,7 @@ function patchHistoricalConflictsWorker(source, replaceOnce) {
     ["function tv(e,t){let a=t?.id;if(!a)return!1;",
       "function tv(e,t){let a=t?.id;if(!a)return!1;gpmHistoricalCloseNative(e,t);"],
     ['if(!Eo(o,l)||!u||c?.side===u.side)return{ok:!1,reasonId:"combatant"};',
-      'if(!Eo(o,l)||!Eo(o,i.__countryKey)||!u||c?.side===u.side)return{ok:!1,reasonId:"combatant"};if(!gpmHistoricalCheckOccupation(e,o,i,l))return{ok:!1,reasonId:"regional_war_scope"};'],
+      'if(!Eo(o,l)||!Eo(o,i.__countryKey)||!u||c?.side===u.side)return{ok:!1,reasonId:"combatant"};if(!gpmHistoricalCheckOccupation(e,o,i))return{ok:!1,reasonId:"regional_war_scope"};'],
     ['P&&t.has(S)&&I&&w&&o(I)&&I.side!==w.side||(vwt(y,v)',
       'P&&t.has(S)&&I&&w&&o(I)&&o(w)&&I.side!==w.side||(vwt(y,v)'],
     ['if(i&&e.countries?.has?.(s)&&r(l)&&c&&l.side!==c.side)continue;',

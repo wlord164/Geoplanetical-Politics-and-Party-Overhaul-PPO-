@@ -225,11 +225,9 @@ function gpmHistoricalAllowsRegionalGain(sim, government, province) {
     plan.regionKeys.includes(province.properties?.gpmOpeningSourceProvince);
 }
 
-function gpmHistoricalCheckOccupation(sim, war, province, controller) {
-  if (!controller.startsWith(gpmHistoricalFactionPrefix)) return true;
+function gpmHistoricalCheckOccupation(sim, war, province) {
   const opening = gpmHistoricalOpeningWar(sim, war);
-  return !opening || controller !== opening.govt.key || province.__countryKey !== opening.govt.parentKey ||
-    gpmHistoricalAllowsRegionalGain(sim, opening.govt, province);
+  return !opening || gpmHistoricalAllowsRegionalGain(sim, opening.govt, province);
 }
 
 function gpmHistoricalSettleOpeningWars(sim) {
@@ -694,17 +692,38 @@ function gpmHistoricalLinkNativeWar(sim, war) {
 }
 
 function gpmHistoricalRestoreNativeWars(sim) {
+  let released = false;
   for (const war of sim.conflicts?.values() || []) {
     gpmHistoricalLinkNativeWar(sim, war);
-    if (!gpmHistoricalVisibleStatuses.has(war.status) || !gpmHistoricalOpeningWar(sim, war)) continue;
-    for (const [key, controller] of Object.entries(war.occupationCredit || {})) {
+    if (!gpmHistoricalVisibleStatuses.has(war.status)) continue;
+    const opening = gpmHistoricalOpeningWar(sim, war);
+    if (!opening) continue;
+    const outside = Object.keys(war.occupationCredit || {}).filter(key => {
       const province = sim.world.provByKey.get(key);
-      if (!province || gpmHistoricalCheckOccupation(sim, war, province, controller)) continue;
+      return province && !gpmHistoricalAllowsRegionalGain(sim, opening.govt, province);
+    });
+    if (!outside.length) continue;
+    const strategic = war.mode === "strategic";
+    const territoryBalance = () => hht(sim, war, "B") - hht(sim, war, "A");
+    const previousBalance = strategic ? territoryBalance() : 0;
+    let changed = false;
+    for (const key of outside) {
       if (!RS(sim, war, key).ok) continue;
+      const province = sim.world.provByKey.get(key);
       war.occupied?.delete(province.__provId);
       war.lost?.delete(province.__provId);
+      changed = true;
+    }
+    if (!changed) continue;
+    released = true;
+    jme(sim, war);
+    if (strategic) {
+      // Update the territory component of the strategic score and keep the previous battle momentum.
+      if (Number.isFinite(war.score)) war.score = Q9(war.score + 70 * (territoryBalance() - previousBalance), -100, 100);
+      if (war.personnel?.p && war.personnel?.e) vht(sim, war);
     }
   }
+  if (released) YG(sim);
 }
 
 function gpmHistoricalConflictEntries(sim) {

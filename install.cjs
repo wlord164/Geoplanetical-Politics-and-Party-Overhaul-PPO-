@@ -32,6 +32,12 @@ const previousStock = [{
 // Earlier PPO 1.1.4 builds. The archive header and unchanged payload are
 // verified independently.
 const previousPatchedRuntimes = [{
+  // Uprising declaration hotfix (da804a8).
+  archive: "e18549e2e96afd03fb715e5deacd20188200fcf016221dad00f42701fcedcb0b",
+  renderer: "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267",
+  worker: "f9b8dab842f59a99a170841005640477fb35dd6e9536087173207b68380d92d6",
+  executable: "fa8d62ae71e8843d6917f105bdf157e50c096789bd30a75f290cd0bdcd6cb109",
+}, {
   // Published 1.1.4 compatibility release (d9c63da).
   archive: "e51220cad19059e629b0fadd2ffd0cc6b46f59aa48c6b5bfc2ee47b56f368ab8",
   renderer: "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267",

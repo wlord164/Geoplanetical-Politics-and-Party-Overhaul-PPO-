@@ -21,7 +21,7 @@ Myanmar census, Table A-3: https://unstats.un.org/unsd/demographic-social/census
 
 Where withdrawal terms are available, a government involved in the occupation can submit them. An opposition party can petition its government to negotiate. Decisions and War details show both approval estimates. Expand What affects the odds? to see favorable and unfavorable factors. The government uses the higher of your party's public support or best chamber seat share. Party organizing and election gains can improve that first decision. An implemented deal removes that occupation report and its effects. Overlapping wars and agreements keep their own outcomes.
 
-Only opposing combatants can occupy territory in the same war. Regional wars stay within their objectives. Wartime independence or a change of national government requires a decisive military result or an explicit concession. Existing settlements stay in the save.
+Only opposing combatants can occupy territory in the same war. In a local war, every combatant can occupy only the regions defined for that front, including countries that join after the war starts. Loading an existing save releases occupation outside those regions. Wartime independence or a change of national government requires a decisive military result or an explicit concession. Existing settlements stay in the save.
 
 Dossier portraits marked Illustrative portrait depict fictional people. Where a real leader is documented, their name and role are shown separately. Where an opening leader is unverified, a locally appropriate name appears under Fictional scenario character. These dossier illustrations do not replace people in the campaign simulation.
 
