@@ -633,6 +633,31 @@ function patchRenderer(bytes) {
   const savedCountryName = '!Object.hasOwn(a,"customName")&&a.name?a.name:md(a.key||e.playerKey,a.name||t)';
   js = replaceOnce(js, savedCountryName,
     '!Object.hasOwn(a,"customName")&&a.name&&!(gpmOfficialCountryName(a.key||e.playerKey)&&pC(a.key||e.playerKey).includes(a.name))?a.name:md(a.key||e.playerKey,a.name||t)');
+  const refreshCountryNames = 'function HS(e,t=null){!e||!e.features||(T6t(t),p_e(e))}';
+  js = replaceOnce(js, refreshCountryNames, `${refreshCountryNames}
+  function gpmProjectCommittedCountryNames(bridge) {
+    const shell = bridge.source?.readView?.(G.SHELL);
+    if (!shell?.ready || !bridge.world?.features || bridge._gpmCountryNameShell === shell) return;
+    bridge._gpmCountryNameShell = shell;
+    const changed = new Set(j8.keys());
+    for (const country of shell.countries) {
+      if ((country.customName || "") === (j8.get(country.key) || "")) changed.delete(country.key);
+      else changed.add(country.key);
+    }
+    if (!changed.size) return;
+    HS(bridge.world, bridge.source);
+    bridge.globe?.invalidateNationLabels?.([...changed]);
+  }
+  function gpmNationIdentityRow(session, hud, flags) {
+    const key = session.playerKey || hud.key || flags.key;
+    return [session.player, hud, flags].find(country => country?.key && country.key === key) || { key };
+  }`);
+  js = replaceOnce(js, 'n&&r.size&&this.onTerritoryProjected?.([...r])}return t}applyTerritoryChange(t){',
+    'n&&r.size&&this.onTerritoryProjected?.([...r])}gpmProjectCommittedCountryNames(this);return t}applyTerritoryChange(t){');
+  js = replaceOnce(js, '_heroHtml(e,t,a,n){let r=this._fsDraftFlag()',
+    '_heroHtml(e,t,a,n){const identity=gpmNationIdentityRow(e,t,n);let r=this._fsDraftFlag()');
+  js = replaceOnce(js, 's=!!n.customName,l=md(t.key,t.name),', 's=!!identity.customName,l=md(identity.key,identity.name),');
+  js = replaceOnce(js, '<span class="nid-name">${_i(j(n,t.key))}</span>', '<span class="nid-name">${_i(j(identity,identity.key))}</span>');
   js = replaceOnce(js, 'function Ma(e,t=e?.countryKey){', 'function Ma(e,t=e?.countryKey){if(e?.nameDesc?.gpmName)return e.nameDesc.gpmName;');
   js = replaceOnce(js, 's=i?p9(`${i}:${r.id}`)?.tag:null;s&&n.add(s)', 's=r.nameDesc?.gpmName?r.nameDesc.gpmTag:i?p9(`${i}:${r.id}`)?.tag:null;s&&n.add(s)');
   js = replaceOnce(js, 'c=s?.tag||h6t(l,n);n.add(c)', 'c=(r.nameDesc?.gpmName?r.nameDesc.gpmTag:s?.tag)||h6t(l,n);n.add(c)');
@@ -725,6 +750,8 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'function IWa(e,t,a){return Pke(e.parties,[{share:1,', 'function IWa(e,t,a){return Pke(e.parties,[{id:t.id,share:1,');
   js = replaceOnce(js, 'function cJo({querySim:e,country:t,partyId:a}){', 'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding){');
   js = replaceOnce(js, 'function i6r(e){let t=e?.player;', 'function i6r(e){let gpmElectorate,t=e?.player;');
+  js = replaceOnce(js, 'devShowIds:!!e._devShowIds,player:n,people:u,dynasties:d,',
+    'devShowIds:!!e._devShowIds,player:{...n,...ht(e,t)},people:u,dynasties:d,');
   js = replaceOnce(js, 'electorate:Hr(o._electorateBreakdown(n)),electoral:', 'electorate:(gpmElectorate=Hr(o._electorateBreakdown(n))),electoral:');
   js = replaceOnce(js, 'party:cJo(r)}}var uJo', 'party:cJo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId))}}var uJo');
   js = replaceOnce(js, 'outreach:Cya(e,t,a),negotiations:mGa(e,t,a)', 'outreach:Cya(e,t,a),organizing:partyOrganizingView(e,t,a),congress:partyCongressView(e,t,a,gpmElectorate),supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:mGa(e,t,a)');
