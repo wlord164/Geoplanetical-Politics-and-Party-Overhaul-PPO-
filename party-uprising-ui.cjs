@@ -391,7 +391,7 @@ function gpmUprisingPanel(state, ui) {
   const data = state.data;
   const button = (action, label, disabled = false) =>
     '<button class="k" type="button" data-gpm-uprising-action="' + action + '"'
-    + (disabled || state.busy || (state.loading && !["openMap", "closeMap", "cancel"].includes(action)) ? " disabled" : "") + ">" + label + "</button>";
+    + (disabled ? " disabled data-gpm-uprising-ineligible" : "") + ">" + label + "</button>";
   const actions = (...buttons) => '<div class="gpm-uprising-actions">' + buttons.join("") + "</div>";
   if (!data) return state.loading ? "" : actions(button("refresh", "Load uprising"));
   const party = data.partyName || state.partyName || "Your party";
@@ -446,7 +446,7 @@ function gpmUprisingPanel(state, ui) {
   const readiness = data.preparations && !state.confirm ? gpmUprisingReadiness(data.preparations, percent) : "";
   if (state.mapOpen && preparations) return preparations;
   if (!data.available || data.phase !== "ready" || typeof data.quoteId !== "string") {
-    return readiness + preparations + "<p>" + v(gpmUprisingReason(data.reason)) + "</p>" + actions(button("refresh", "Refresh", state.loading));
+    return readiness + preparations + "<p>" + v(gpmUprisingReason(data.reason)) + "</p>" + actions(button("refresh", "Refresh"));
   }
   const otherRegions = data.preparations?.regions.filter(entry => entry.defects && !entry.starting) || [];
   const deployment = data.preparations?.deploymentCount;
@@ -477,7 +477,7 @@ function gpmUprisingPanel(state, ui) {
   const heading = state.confirm
     ? '<header class="gpm-uprising-confirmation" data-gpm-uprising-confirmation>'
       + '<h4 tabindex="-1" data-gpm-uprising-confirm-title>Confirm declaration</h4>'
-      + actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading)) + "</header>"
+      + actions(button("cancel", "Cancel"), button("declare", "Declare Uprising")) + "</header>"
     : "<p><strong>Declaration preview</strong></p>";
   const vacatedSeats = data.vacatedSeats > 0
     ? "<p>Your party gives up " + v(String(data.vacatedSeats))
@@ -485,7 +485,7 @@ function gpmUprisingPanel(state, ui) {
       + " in the original legislature when you declare. Larger parties receive priority in the redistribution.</p>"
     : "";
   const controls = state.confirm ? ""
-    : actions(button("review", "Review Declaration", state.loading), button("refresh", "Refresh", state.loading));
+    : actions(button("review", "Review Declaration"), button("refresh", "Refresh"));
   return readiness + preparations + heading
     + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + v(party)
     + "</dd><dt>" + (data.restoresOriginalName ? "Wartime name" : "Breakaway") + "</dt><dd>" + nameField
@@ -549,6 +549,19 @@ function gpmBindUprising(profile, view, ui) {
     return button;
   };
 
+  // Keep the preparation map mounted when a request only changes control availability.
+  const syncControls = () => {
+    if (!panel.isConnected) return;
+    for (const button of content.querySelectorAll("[data-gpm-uprising-action]")) {
+      const action = button.dataset.gpmUprisingAction;
+      const disabled = button.hasAttribute("data-gpm-uprising-ineligible") || state.busy ||
+        (state.loading && !["openMap", "closeMap", "cancel"].includes(action));
+      if (button.disabled !== disabled) button.disabled = disabled;
+    }
+    const message = state.loading ? "Checking the current uprising details…" : state.status;
+    if (status.textContent !== message) status.textContent = message;
+  };
+
   const paint = () => {
     if (!panel.isConnected) return;
     const html = gpmUprisingPanel(state, ui);
@@ -561,6 +574,7 @@ function gpmBindUprising(profile, view, ui) {
       const expanded = content.querySelector("[data-gpm-uprising-charter]")?.open;
       content.innerHTML = html;
       content._gpmUprisingHtml = html;
+      syncControls();
       const details = content.querySelector("[data-gpm-uprising-charter]");
       if (details && expanded) details.open = true;
       const list = content.querySelector(".gpm-uprising-region-list");
@@ -569,18 +583,19 @@ function gpmBindUprising(profile, view, ui) {
       else if (activeRegion) list?.querySelector('[data-gpm-uprising-region-row="' + activeRegion + '"]')?.focus({ preventScroll: true });
       else if (active?.dataset.gpmUprisingAction) focus(active.dataset.gpmUprisingAction);
       else if (activeConfirmation) content.querySelector("[data-gpm-uprising-confirm-title]")?.focus({ preventScroll: true });
-    }
-    status.textContent = state.loading ? "Checking the current uprising details…" : state.status;
+    } else syncControls();
   };
   const currentParty = view.player?.pol?.parties?.find(party => party.id === partyId);
   state.partyName = currentParty ? Ma(currentParty, countryKey) : null;
   state.paint = paint;
+  state.syncControls = syncControls;
 
   const load = async () => {
     if (state.loading || state.busy || !isCurrent()) return;
     state.loading = true;
     state.requestDay = view.day;
-    state.paint();
+    if (state.data) state.syncControls();
+    else state.paint();
     try {
       const data = await Xe(session, "gpm.uprising", {});
       if (!isCurrent()) return;
@@ -610,7 +625,7 @@ function gpmBindUprising(profile, view, ui) {
     state.status = "Declaring the uprising…";
     const { quoteId, restoresOriginalName, breakawayName } = state.data;
     const name = restoresOriginalName ? breakawayName : state.selectedName;
-    state.paint();
+    state.syncControls();
     let result;
     try {
       result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag,
@@ -679,7 +694,7 @@ function gpmBindUprising(profile, view, ui) {
     };
     state.busy = true;
     state.status = "Applying the preparation…";
-    state.paint();
+    state.syncControls();
     try {
       const result = await Le(session, "applyPlayerAction", [payload]);
       if (isCurrent()) state.status = result?.ok ? success[action] : gpmUprisingPreparationReason(result?.reason);
