@@ -1462,6 +1462,13 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
             vec4 choroPrevSample`);
   js = replaceOnce(js, 'this.fillMesh.visible=this._attack||(this._strategicMix',
     'this.fillMesh.visible=(this.activeBody==="earth"&&e.gpmHistoricalFillOn.value>.5)||this._attack||(this._strategicMix');
+  js = replaceOnce(js, 'this._prevBodyQuat=a.quaternion.clone(),this.activeBody=e}else{let n=this._earthCam',
+    `this._prevBodyQuat=a.quaternion.clone(),this.activeBody=e;
+    if(t==="earth"){
+      if(this.camera.near===.004){this.camera.near=.1;this.camera.updateProjectionMatrix()}
+      if(this._savedNear===.004)this._savedNear=.1;
+    }
+    }else{let n=this._earthCam`);
   js = replaceOnce(js, " + gpmHistoricalConflictsStyle;", " + gpmHistoricalConflictsStyle + gpmHistoricalMapStyle;");
   js = replaceOnce(js, 'var ase=["climate-tip","climate-stress-tip","war-target-tip"]',
     'var ase=["climate-tip","climate-stress-tip","war-target-tip","gpm-history-map-tip"]');

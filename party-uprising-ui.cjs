@@ -543,6 +543,12 @@ function gpmBindUprising(profile, view, ui) {
   const content = panel.querySelector("[data-gpm-uprising-content]");
   const status = panel.querySelector("[data-gpm-uprising-status]");
   const isCurrent = () => ui._mpSession === session && ui._gpmUprisingUi === state;
+  const quoteIsCurrent = () => {
+    const data = state.data;
+    const control = session.playerControl;
+    return !!data && !!control && data.day === session.day && data.countryKey === control.countryKey &&
+      data.partyId === control.partyId && data.campaignId === control.campaignId && data.controlRevision === control.controlRevision;
+  };
   const focus = action => {
     const button = content.querySelector('[data-gpm-uprising-action="' + action + '"]');
     button?.focus({ preventScroll: true });
@@ -552,9 +558,11 @@ function gpmBindUprising(profile, view, ui) {
   // Keep the preparation map mounted when a request only changes control availability.
   const syncControls = () => {
     if (!panel.isConnected) return;
+    const hasCurrentQuote = quoteIsCurrent();
     for (const button of content.querySelectorAll("[data-gpm-uprising-action]")) {
       const action = button.dataset.gpmUprisingAction;
       const disabled = button.hasAttribute("data-gpm-uprising-ineligible") || state.busy ||
+        (!hasCurrentQuote && (action === "review" || action === "declare")) ||
         (state.loading && !["openMap", "closeMap", "cancel"].includes(action));
       if (button.disabled !== disabled) button.disabled = disabled;
     }
@@ -601,18 +609,24 @@ function gpmBindUprising(profile, view, ui) {
       if (!isCurrent()) return;
       if (!data || data.countryKey !== countryKey || (partyId != null && data.partyId !== partyId)) {
         state.data = null;
+        state.confirm = false;
         state.status = "The uprising details are unavailable for this party.";
         return;
       }
       if (state.data?.quoteId !== data.quoteId && state.confirm) {
         state.confirm = false;
         state.status = gpmUprisingReason("stale");
-      }
+      } else if (state.loadFailed) state.status = "";
+      state.loadFailed = false;
       if (!data.names?.includes(state.selectedName)) state.selectedName = data.breakawayName;
       state.data = data;
     } catch (error) {
       console.warn("[PPO] Uprising details failed", error);
-      if (isCurrent()) state.status = "Could not load the uprising details. Try refreshing.";
+      if (isCurrent()) {
+        state.confirm = false;
+        state.loadFailed = true;
+        state.status = "Could not load the uprising details. Try refreshing.";
+      }
     } finally {
       state.loading = false;
       if (isCurrent()) state.paint();
@@ -621,6 +635,13 @@ function gpmBindUprising(profile, view, ui) {
 
   const declare = async () => {
     if (state.loading || state.busy || !state.confirm || !state.data?.available || !isCurrent()) return;
+    if (!quoteIsCurrent()) {
+      state.confirm = false;
+      state.status = gpmUprisingReason("stale");
+      state.paint();
+      await load();
+      return;
+    }
     state.busy = true;
     state.status = "Declaring the uprising…";
     const { quoteId, restoresOriginalName, breakawayName } = state.data;
@@ -769,6 +790,11 @@ function gpmBindUprising(profile, view, ui) {
       state.paint();
     } else if (action === "review" || action === "cancel") {
       if (state.flagRequest) return;
+      if (action === "review" && !quoteIsCurrent()) {
+        state.syncControls();
+        void load();
+        return;
+      }
       state.confirm = action === "review";
       state.status = "";
       state.paint();

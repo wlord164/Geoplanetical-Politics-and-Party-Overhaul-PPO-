@@ -660,6 +660,8 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, 's3("publicFacilityPlannerActive","closePublicFacilityPlanner")',
     's3("publicFacilityPlannerActive","closePublicFacilityPlanner"),s3("gpmRegionalActive","closeGpmRegionalMap")');
   js = replaceOnce(js, 'if(an!=="game")return;if(ye.warRoomActive)', 'if(an!=="game")return;if(gpmRegionalGlobeClick(ye,t))return;if(ye.warRoomActive)');
+  js = replaceOnce(js, 'we.onBodyChange=a=>{JN(a),Qi.setActiveBody(a)',
+    'we.onBodyChange=a=>{if(a!=="earth")gpmCloseRegionalMap(ye);JN(a),Qi.setActiveBody(a)');
   js = replaceOnce(js, '_refreshTabUnsafe(e=null){', '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);');
   js = replaceOnce(js, 'showScreen(e){for(let t of document.querySelectorAll(".screen"))',
     'showScreen(e){if(e!=="game")gpmCloseRegionalMap(this);for(let t of document.querySelectorAll(".screen"))');

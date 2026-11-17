@@ -24,7 +24,7 @@ const mapIdentities = {
   "mmr-cndf": ["Chin National Defence Force", "#e78bb8"],
   "mmr-knpp": ["Karenni Army", "#59c3db"],
   "mmr-mndaa": ["Kokang (MNDAA)", "#da8964"],
-  "mmr-tnla": ["Na’ang (TNLA)", "#a5bd58"],
+  "mmr-tnla": ["Ta’ang (TNLA)", "#a5bd58"],
   "mmr-uwsa": ["Wa State", "#48a4a5"],
   "ucdp-actor-6716": ["JNIM", "#54c6a0"],
   "is-sahel": ["ISSP", "#dba852"],
