@@ -41,6 +41,8 @@ const style = [
   ".gpm-uprising-readiness li strong { min-width: 4.5rem; color: #ffdc86; }",
   ".gpm-uprising-readiness li .gpm-uprising-ready { color: #9bd6ad; }",
   ".gpm-uprising-actions { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }",
+  ".gpm-uprising-confirmation { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gap-2); }",
+  ".gpm-uprising-confirmation h4 { margin: 0; }",
   ".gpm-uprising [data-gpm-uprising-action='declare'] { border-color: var(--mark-late, #edc583); }",
   ".gpm-uprising-flag { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }",
   ".gpm-uprising-flag img { max-width: 3.6rem; max-height: 2.4rem; object-fit: contain; }",
@@ -472,16 +474,19 @@ function gpmUprisingPanel(state, ui) {
     : " under the new constitution. The reunited assembly keeps its sitting members until an election.";
   const nameOutcome = data.restoresOriginalName ? "Victory restores <strong>" + v(data.victoryName) + "</strong>."
     : "The reunited country keeps the breakaway name.";
-  const heading = state.confirm ? "Confirm declaration" : "Declaration preview";
+  const heading = state.confirm
+    ? '<header class="gpm-uprising-confirmation" data-gpm-uprising-confirmation>'
+      + '<h4 tabindex="-1" data-gpm-uprising-confirm-title>Confirm declaration</h4>'
+      + actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading)) + "</header>"
+    : "<p><strong>Declaration preview</strong></p>";
   const vacatedSeats = data.vacatedSeats > 0
     ? "<p>Your party gives up " + v(String(data.vacatedSeats))
       + (data.vacatedSeats === 1 ? " seat" : " seats")
       + " in the original legislature when you declare. Larger parties receive priority in the redistribution.</p>"
     : "";
-  const controls = state.confirm
-    ? actions(button("cancel", "Cancel"), button("declare", "Declare Uprising", state.loading))
+  const controls = state.confirm ? ""
     : actions(button("review", "Review Declaration", state.loading), button("refresh", "Refresh", state.loading));
-  return readiness + preparations + "<p><strong>" + heading + "</strong></p>"
+  return readiness + preparations + heading
     + '<dl class="gpm-uprising-details"><dt>Party</dt><dd>' + v(party)
     + "</dd><dt>" + (data.restoresOriginalName ? "Wartime name" : "Breakaway") + "</dt><dd>" + nameField
     + "</dd><dt>Breakaway flag</dt><dd>" + flagField
@@ -538,7 +543,11 @@ function gpmBindUprising(profile, view, ui) {
   const content = panel.querySelector("[data-gpm-uprising-content]");
   const status = panel.querySelector("[data-gpm-uprising-status]");
   const isCurrent = () => ui._mpSession === session && ui._gpmUprisingUi === state;
-  const focus = action => content.querySelector('[data-gpm-uprising-action="' + action + '"]')?.focus({ preventScroll: true });
+  const focus = action => {
+    const button = content.querySelector('[data-gpm-uprising-action="' + action + '"]');
+    button?.focus({ preventScroll: true });
+    return button;
+  };
 
   const paint = () => {
     if (!panel.isConnected) return;
@@ -547,6 +556,7 @@ function gpmBindUprising(profile, view, ui) {
       const active = content.contains(document.activeElement) ? document.activeElement : null;
       const selectedField = active?.matches("select") ? active.dataset.gpmUprisingField : null;
       const activeRegion = active?.dataset.gpmUprisingRegionRow;
+      const activeConfirmation = active?.hasAttribute("data-gpm-uprising-confirm-title");
       const listScroll = content.querySelector(".gpm-uprising-region-list")?.scrollTop;
       const expanded = content.querySelector("[data-gpm-uprising-charter]")?.open;
       content.innerHTML = html;
@@ -558,6 +568,7 @@ function gpmBindUprising(profile, view, ui) {
       if (selectedField) content.querySelector('[data-gpm-uprising-field="' + selectedField + '"]')?.focus({ preventScroll: true });
       else if (activeRegion) list?.querySelector('[data-gpm-uprising-region-row="' + activeRegion + '"]')?.focus({ preventScroll: true });
       else if (active?.dataset.gpmUprisingAction) focus(active.dataset.gpmUprisingAction);
+      else if (activeConfirmation) content.querySelector("[data-gpm-uprising-confirm-title]")?.focus({ preventScroll: true });
     }
     status.textContent = state.loading ? "Checking the current uprising details…" : state.status;
   };
@@ -746,7 +757,9 @@ function gpmBindUprising(profile, view, ui) {
       state.confirm = action === "review";
       state.status = "";
       state.paint();
-      focus(state.confirm ? "cancel" : "review");
+      const target = state.confirm ? content.querySelector("[data-gpm-uprising-confirmation]") : focus("review");
+      if (state.confirm) target?.querySelector("[data-gpm-uprising-confirm-title]")?.focus({ preventScroll: true });
+      target?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
     } else if (action === "declare") {
       void declare();
     } else if (action === "war") {
