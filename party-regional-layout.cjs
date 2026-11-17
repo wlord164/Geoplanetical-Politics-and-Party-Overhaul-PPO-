@@ -1,6 +1,97 @@
 "use strict";
 
-function gpmRegionalMapLayout(features) {
+function gpmCreatePartyMapFeatures(topology, arcCoordinates) {
+  const provinces = topology.objects.provinces.geometries;
+  let previousTolerance = 0;
+  let cache = new Map();
+
+  function simplify(points, toleranceSq) {
+    if (points.length < 8) return points;
+    for (let index = 1; index < points.length; index++) {
+      if (Math.abs(points[index][0] - points[index - 1][0]) > 180) return points;
+    }
+    const last = points.length - 1;
+    const keep = new Uint8Array(points.length);
+    keep[0] = keep[last] = 1;
+    const stack = [0, last];
+    while (stack.length) {
+      const end = stack.pop();
+      const start = stack.pop();
+      const [x, y] = points[start];
+      const dx = points[end][0] - x;
+      const dy = points[end][1] - y;
+      const lengthSq = dx * dx + dy * dy;
+      let farthest = toleranceSq;
+      let split = -1;
+      for (let index = start + 1; index < end; index++) {
+        const offsetX = points[index][0] - x;
+        const offsetY = points[index][1] - y;
+        const along = lengthSq ? Math.min(1, Math.max(0, (offsetX * dx + offsetY * dy) / lengthSq)) : 0;
+        const errorSq = (offsetX - dx * along) ** 2 + (offsetY - dy * along) ** 2;
+        if (errorSq > farthest) {
+          farthest = errorSq;
+          split = index;
+        }
+      }
+      if (split >= 0) {
+        keep[split] = 1;
+        stack.push(start, split, split, end);
+      }
+    }
+    const simplified = points.filter((_, index) => keep[index]);
+    const closed = points[0][0] === points[last][0] && points[0][1] === points[last][1];
+    return closed && simplified.length < 4 ? points : simplified;
+  }
+
+  return features => {
+    const area = features.reduce((sum, feature) => sum + (feature.__area || 0), 0);
+    // SVG maps have a short display span. Keep smaller territories closer to full detail.
+    const tolerance = Math.min(.04, Math.sqrt(area) * 180 / Math.PI / 1250);
+    if (!(tolerance >= .001)) return features;
+    if (tolerance !== previousTolerance) {
+      previousTolerance = tolerance;
+      cache = new Map();
+    }
+    const shapes = features.map(feature => {
+      const province = provinces[feature.__provId];
+      return province?.type === "Polygon" || province?.type === "MultiPolygon" ? province : null;
+    });
+    const arcTolerances = new Map();
+    for (const [index, province] of shapes.entries()) {
+      if (!province) continue;
+      // A tiny region may be shown on its own inset. Protect its shared edges too.
+      const localTolerance = Math.min(tolerance, Math.sqrt(features[index].__area || 0) * 180 / Math.PI / 125);
+      const polygons = province.type === "Polygon" ? [province.arcs] : province.arcs;
+      for (const polygon of polygons) {
+        for (const ring of polygon) {
+          for (const ref of ring) {
+            const id = ref < 0 ? ~ref : ref;
+            arcTolerances.set(id, Math.min(arcTolerances.get(id) ?? tolerance, localTolerance));
+          }
+        }
+      }
+    }
+    const arcs = [];
+    for (const [id, limit] of arcTolerances) {
+      let simplified = cache.get(id);
+      if (simplified?.limit !== limit) {
+        const points = arcCoordinates(id);
+        const coordinates = limit >= .001 ? simplify(points, limit * limit) : points;
+        simplified = { limit, coordinates };
+        cache.set(id, simplified);
+      }
+      // Both sides of a border use the same reduced TopoJSON arc, in opposite directions.
+      arcs[id] = simplified.coordinates;
+    }
+    const displayTopology = { arcs };
+    return features.map((feature, index) => {
+      const province = shapes[index];
+      return province ? { ...feature, geometry: D4(displayTopology, province).geometry } : feature;
+    });
+  };
+}
+
+function gpmRegionalMapLayout(features, displayFeatures = features) {
   if (!features.length) return null;
 
   // Nearby islands stay in geographic position regardless of population.
@@ -32,7 +123,7 @@ function gpmRegionalMapLayout(features) {
     const { type, coordinates } = feature.geometry;
     const polygons = type === "MultiPolygon" ? coordinates : type === "Polygon" ? [coordinates] : [];
     const points = polygons.flatMap(polygon => (polygon[0] || []).map(([lon, lat]) => p0e(lon, lat)));
-    const center = zd(feature);
+    const center = feature.__centroid || zd(feature);
     const sphere = center?.every(Number.isFinite) ? p0e(...center) : null;
     const extent = sphere ? points.reduce((max, point) => Math.max(max, distanceSq(point, sphere)), 0) : Infinity;
     const item = { points, sphere, radius: Math.sqrt(extent) };
@@ -91,13 +182,16 @@ function gpmRegionalMapLayout(features) {
     return core.length && core.length < parts.length ? core.map(part => part.shape) : group;
   }
 
-  const primary = plot(main, 620, 450, 12, 1.24, 3.1);
+  const displayById = new Map(displayFeatures.map(feature => [feature.__provId, feature]));
+  const display = group => group.map(feature => displayById.get(feature.__provId));
+  const primary = plot(display(main), 620, 450, 12, 1.24, 3.1);
   if (!primary) return null;
   const insets = components.flatMap(group => {
-    const map = plot(group, 150, 102, 6, 1.05, 2.05, insetFrame(group));
+    const shapes = display(group);
+    const map = plot(shapes, 150, 102, 6, 1.05, 2.05, insetFrame(shapes));
     return map ? [{ ...map, ids: group.map(feature => feature.__provId) }] : [];
   });
   return { ...primary, insets };
 }
 
-module.exports = { gpmRegionalMapLayout };
+module.exports = { gpmCreatePartyMapFeatures, gpmRegionalMapLayout };

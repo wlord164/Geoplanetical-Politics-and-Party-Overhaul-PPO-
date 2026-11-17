@@ -152,7 +152,8 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
     .filter(feature => feature?.geometry && byId.get(feature.__provId)?.key === feature.__provKey);
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (state.geometry?.world !== world || state.geometry?.signature !== signature) {
-    state.geometry = { world, signature, layout: features.length ? TM(features, 620, 510, { pad: 12 }) : null };
+    const displayFeatures = world?.gpmPartyMapFeatures?.(features) || features;
+    state.geometry = { world, signature, layout: displayFeatures.length ? TM(displayFeatures, 620, 510, { pad: 12 }) : null };
   }
   const layout = state.geometry?.layout;
   const svg = (paths, width, height) => '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="'

@@ -1,5 +1,5 @@
 "use strict";
-const { gpmRegionalMapLayout } = require("./party-regional-layout.cjs");
+const { gpmCreatePartyMapFeatures, gpmRegionalMapLayout } = require("./party-regional-layout.cjs");
 
 const style = `
   .gpm-regional-overview { display: grid; gap: var(--gap-2); min-width: 0; }
@@ -112,7 +112,12 @@ function gpmRenderRegionalOverview() {
 }
 
 function gpmRegionalPercent(value) {
-  return new Intl.NumberFormat(Es(), { style: "percent", maximumFractionDigits: 2 }).format(value);
+  const locale = Es();
+  if (!gpmRegionalPercent.formatter || gpmRegionalPercent.locale !== locale) {
+    gpmRegionalPercent.locale = locale;
+    gpmRegionalPercent.formatter = new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 2 });
+  }
+  return gpmRegionalPercent.formatter.format(value);
 }
 
 function gpmRegionalPoints(value) {
@@ -368,7 +373,8 @@ function gpmBindRegionalOverview(profile, view, ui) {
     .filter(feature => feature?.geometry && byId.get(feature.__provId)?.key === feature.__provKey);
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (ui._gpmSupportGeometry?.world !== world || ui._gpmSupportGeometry?.signature !== signature) {
-    ui._gpmSupportGeometry = { world, signature, layout: gpmRegionalMapLayout(features) };
+    const display = world?.gpmPartyMapFeatures?.(features) || features;
+    ui._gpmSupportGeometry = { world, signature, layout: gpmRegionalMapLayout(features, display) };
   }
   const layout = ui._gpmSupportGeometry.layout;
   const svg = ({ paths, viewBox }, label, attributes = "") => `<svg viewBox="${viewBox}" role="group" aria-label="${v(label)}" ${attributes}>
@@ -699,7 +705,7 @@ module.exports = {
     gpmRegionalNational, gpmRegionalSeatRules,
     gpmCampaignSpendingText, gpmRegionalProjection, gpmRegionalProjectControls, gpmRegionalInlineTools, gpmRegionalClearPending,
     gpmRegionalSupportScale, gpmRegionalSupportPosition, gpmRegionalSupportColor, gpmRegionalSupportLegend,
-    gpmRegionalMapLayout, gpmBindRegionalOverview, gpmRenderRegionalMap,
+    gpmCreatePartyMapFeatures, gpmRegionalMapLayout, gpmBindRegionalOverview, gpmRenderRegionalMap,
     gpmRefreshRegionalMap, gpmSelectRegionalProvince, gpmRegionalGlobeClick, gpmSubmitRegionalAction,
     gpmOpenRegionalMap, gpmCloseRegionalMap],
 };

@@ -36,9 +36,17 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
+const previousPpo = {
+  archive: "6de84dc5caab854cf1b328546200a1a8a59a012b3b3d174bd5d2388e24017092",
+  worker: "0a19e1f66ac9d5bff7368221741a18eeea6bc2794206b1e68531132f7517f3a8",
+  renderer: "de8f9d0e155fc3b03a1db1d481b63830e9a3467ac1b738e4a8c0e0c62338d2e5",
+  executable: "556ce831498640c16ea790430042aded2c01a60fabc0b9279491eb8171adabb5",
+};
+
 // Steam can leave a verified PPO renderer on disk after replacing the three
 // stock files. The stock ASAR uses its own packed renderer.
 const previousRenderers = new Set([
+  previousPpo.renderer, // PPO 1.1.5 Compatibility Update
   "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267", // Published PPO 1.1.4 releases
   "76c3ae3345a4887eebc2c22069cad73e448a18a72e55ada7774c7", // Private PPO 1.1.4 compatibility build
   "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
@@ -283,10 +291,12 @@ function verifyPatchedRuntime(files, state) {
     throw new Error(`The active files are not verified Geoplanetical ${version}, Steam build ${currentStock.build}. Run Steam Verify Integrity before retrying.`);
   }
   const patch = buildPatch(files.backupArchive, files.backupWorker, files.backupExecutable);
-  if (!Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes))) {
+  const current = Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes));
+  if (!current && !Object.entries(previousPpo).every(([key, hash]) => state.hashes[key] === hash)) {
     throw new Error("The active game files are mixed or differ from this PPO build. Run Steam Verify Integrity before retrying.");
   }
   verifyArchivePayload(files.archive, state.headers.archive);
+  return current ? null : patch;
 }
 
 function preserveStockLeftovers(files, staged, backupState, detachedRenderer) {
@@ -336,9 +346,18 @@ function stagePatch(files, originalArchive, staged, patch) {
   return Object.entries(replacements).map(([key, stagedFile]) => [stagedFile, files[key]]);
 }
 
+function holdPatchedRuntime(files, staged) {
+  return ["renderer", "worker", "archive", "executable"].map(key =>
+    [files[key], path.join(staged, "previous-" + path.basename(files[key]))]);
+}
+
 function installPatch(files, state, staged, commit) {
   if (!stockRuntime(state.hashes)) {
-    verifyPatchedRuntime(files, state);
+    const update = verifyPatchedRuntime(files, state);
+    if (update) {
+      fs.mkdirSync(staged);
+      commit([...holdPatchedRuntime(files, staged), ...stagePatch(files, files.backupArchive, staged, update)]);
+    }
     return;
   }
 
@@ -371,8 +390,7 @@ function restorePatch(files, state, staged, commit) {
 
   verifyPatchedRuntime(files, state);
   fs.mkdirSync(staged);
-  const moves = ["renderer", "worker", "archive", "executable"].map(key =>
-    [files[key], path.join(staged, "previous-" + path.basename(files[key]))]);
+  const moves = holdPatchedRuntime(files, staged);
   for (const [key, backupKey] of Object.entries(backups)) moves.push([files[backupKey], files[key]]);
   commit(moves);
 }

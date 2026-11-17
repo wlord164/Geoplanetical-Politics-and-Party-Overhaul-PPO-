@@ -1510,7 +1510,7 @@ function patchHistoricalConflictMapRenderer(source, replaceOnce) {
       e.every(([lon,lat])=>Math.hypot(lon-first[0],lat-first[1])<10*a)){
       a=Number.EPSILON;t=ht*1.0008;
     }`);
-  js = replaceOnce(js, 'provinceBordersFor:ce,adjacency:T', `provinceBordersFor:ce,gpmPoliticalEdges:classify=>{
+  js = replaceOnce(js, 'provinceBordersFor:ce,adjacency:T', `provinceBordersFor:ce,gpmPartyMapFeatures:gpmCreatePartyMapFeatures(t,O),gpmPoliticalEdges:classify=>{
     const edges={control:{type:"MultiLineString",coordinates:[]},captured:{type:"MultiLineString",coordinates:[]}};
     for(const [arc,owners] of Y){
       if(owners.length!==2)continue;
