@@ -109,7 +109,7 @@ function gpmHistoricalUpdateFront(sim, definition, row, strength) {
   const sum = strength[0] + strength[1];
   const relative = sum ? (strength[1] - strength[0]) / sum : 0;
   const week = Math.floor(sim.day / 7);
-  const noise = (ka(definition.id + ":" + week + ":" + sim.rngSeed0) >>> 0) % 17 - 8;
+  const noise = (Aa(definition.id + ":" + week + ":" + sim.rngSeed0) >>> 0) % 17 - 8;
   const movement = Math.round(relative * 7) + noise;
   row.advantage = Math.max(-100, Math.min(100, (row.advantage || 0) + movement));
   if (row.weeksActive < 12 || Math.abs(row.advantage) < gpmHistoricalVictoryThreshold) return;
@@ -203,8 +203,8 @@ function gpmHistoricalWithdrawalAction(sim, definition, row) {
   if (sim.playerControlsGovernment()) {
     return { option: { id: "propose-withdrawal", label: "Propose withdrawal", description: plan.terms.note } };
   }
-  const party = ES(country, cn(country));
-  if (!party?.organization || party.legal === false || Rfa(country.pol).has(party.id)) {
+  const party = rP(country, fn(country));
+  if (!party?.organization || party.legal === false || xya(country.pol).has(party.id)) {
     return { reason: "A government can propose terms, and a legal opposition party can petition it to negotiate." };
   }
   return { option: { id: "petition-withdrawal", label: "Petition for withdrawal",
@@ -215,7 +215,7 @@ function gpmHistoricalWithdrawalAction(sim, definition, row) {
 
 function gpmHistoricalWithdrawalAssessment(sim, plan, country, counterparty, party) {
   const willingness = plan.terms.withdrawal.willingness;
-  const alignment = I5t(sim, counterparty, country);
+  const alignment = wgt(sim, counterparty, country);
   const support = party ? Math.max(0, party.support || 0) : 0;
   const seats = party ? partyForeignFundingSeatShare(country, party) : 0;
   return { support, seats, willingness, alignment,
@@ -249,7 +249,7 @@ function gpmHistoricalReviewWithdrawalPetition(sim, definition, row) {
   if (petition?.status !== "pending" || petition.reviewDay > sim.day) return;
   const plan = gpmHistoricalWithdrawalPlan(sim, definition, row);
   const country = sim.countries.get(petition.countryKey);
-  const party = ES(country, petition.partyId);
+  const party = rP(country, petition.partyId);
   const counterparty = gpmHistoricalWithdrawalCounterparty(plan, country);
   if (country?.key === sim.playerKey && sim.playerControlsGovernment()) {
     gpmHistoricalRecordWithdrawalPetition(sim, row, petition, "unavailable",

@@ -63,11 +63,11 @@ function gpmProjectedOrganization(sim, country, party, through) {
   const active = party.gpmOrganizing?.projects?.length || Object.keys(party.gpmOrganizing?.groups || {}).length ||
     party.outreach?.project || Object.keys(party.outreach?.networks || {}).length || recruitment.length;
   if (!active) return null;
-  const groups = new Map(vCe(country).map(group => [group.id, group]));
-  const governor = Mc(sim, country, "head_of_gov");
-  const charisma = governor ? qx(1 + (governor.traits.charisma - .5) * .3 +
+  const groups = new Map(yke(country).map(group => [group.id, group]));
+  const governor = N0(sim, country, "head_of_gov");
+  const charisma = governor ? TO(1 + (governor.traits.charisma - .5) * .3 +
     (governor.traits.notoriety || 0) * .12, .5, 1.7) : 1;
-  const options = { blocs, salience: country.pol.salience, charisma, growthGainPct: T2e(sim, country) };
+  const options = { blocs, salience: country.pol.salience, charisma, growthGainPct: lme(sim, country) };
   const rules = gpmCampaignRulesFor(sim);
   const clock = { day: sim.day, gpmCampaignRules: rules, playerKey: null, gpmDomesticForecast: canRecruit };
   const members = country.pol.parties.map(member => ({ ...member }));
@@ -85,16 +85,16 @@ function gpmProjectedOrganization(sim, country, party, through) {
       const { kind, activistsK, endDay } = recruitment[nextRecruitment++];
       gpmDomesticEarnMembers(clock, country, expected, kind, activistsK, endDay);
     }
-    blt(clock, country, expected);
-    Rlt(polity, {}, 7, options);
+    jct(clock, country, expected);
+    eut(polity, {}, 7, options);
   }
   return Object.fromEntries(members.map(member => [member.id, member.support]));
 }
 
 function gpmPartyElectionRecap(sim, country, chamber, votes, previous, day, contestId) {
   const polity = country.pol;
-  const eligible = v6(polity, votes);
-  const totals = partyRegionalNationalShares(polity, Lx(sim, country), eligible);
+  const eligible = zg(polity, votes);
+  const totals = partyRegionalNationalShares(polity, DO(sim, country), eligible);
   return {
     ...partyCampaignChamberRules(chamber), day, contestId,
     chamberName: chamber.name || chamber.id, chamberNameKey: chamber._nameKey || null,
@@ -122,7 +122,7 @@ function gpmPartyElectionRecapView(country, partyId, contestId = null) {
 
 function gpmDomesticAgenda(sim, country, partyId) {
   if (!partyId || !country.pol) return { rows: [] };
-  const party = pW(country, partyId);
+  const party = sL(country, partyId);
   if (!party) return { rows: [] };
   const day = sim.day || 0;
   const rows = [];
@@ -185,7 +185,7 @@ function gpmDomesticAgenda(sim, country, partyId) {
 
 function partyCampaignPlanForecast(sim, country, partyId, contestId) {
   const contest = st(country)?.contests?.[contestId];
-  const party = pW(country, partyId);
+  const party = sL(country, partyId);
   if (!party || !contest) return null;
   const current = partyCampaignForecast(sim, country, partyId, contestId, 0, { local: true });
   if (!current) return null;

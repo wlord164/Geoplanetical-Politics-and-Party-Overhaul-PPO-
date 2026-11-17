@@ -6,16 +6,23 @@ const { createHash } = require("node:crypto");
 const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
 const { withInstallerTransaction } = require("./installer-transaction.cjs");
-// Windows Steam build 26709373, depot 940231 manifest 43069630429240561.
+// Windows Steam depot 940231, manifest 6518859217795271965.
 const currentStock = {
+  version,
+  build: 26734764,
+  archive: "fe485532947956a4e5ffc19a49725b04658c9343c5fc5439573eac1f4b7558ef",
+  payload: "b1b2d2e8157c4ed8d894cde85e655e65be383daecee484e86666d7907f8a6d0e",
+  executable: "8aceeeaa664cecf7d6d845994dd1db20fd20a9c22a41bb65e2eb037642ce4b13",
+  worker: "de9c2d4ecfd8d214bbef2a14d1fc1f92e80d7e0b001b8a61a9d3c5e726c94534",
+  renderer: "11d9822c3aa59d0abeafd377efdf46fd789b575f8f6323751aa38b995acfd859",
+};
+const previousStock = [{
   version: "1.1.4",
   archive: "3546fb0a84f279a4dfdb0dac55bedb53849a2e88073887e8a121e4c6ce6ad2bd",
   payload: "1350bfc579b9578e92591deffe774654c83c237ebc211bd05a37aec8bd779138",
   executable: "44ffa2b19e8eb63ca64aa09dd7a1cdd766194ba20faa8444a99ad2b7f5462134",
   worker: "b6c6f5385c43515d9c10dfd920f98ba76da45fdba83575ab3d62c064e41a21f0",
-  renderer: "a6192a73e70c0eab556629f4917a6a74b8ef582bf8bc339bc58420bfb30103d9",
-};
-const previousStock = [{
+}, {
   version: "1.1.3",
   archive: "be810dd717afc249fc1b46ec349440d4732f4ce2aa3b58f77d3fcfd6972efd48",
   payload: "fdeda8a30d6d51fa831e4ba07f52ace98575631be1d00e4d78a23581d6d3015b",
@@ -29,32 +36,11 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
-// Earlier PPO 1.1.4 builds. The archive header and unchanged payload are
-// verified independently.
-const previousPatchedRuntimes = [{
-  // Uprising declaration hotfix (da804a8).
-  archive: "e18549e2e96afd03fb715e5deacd20188200fcf016221dad00f42701fcedcb0b",
-  renderer: "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267",
-  worker: "f9b8dab842f59a99a170841005640477fb35dd6e9536087173207b68380d92d6",
-  executable: "fa8d62ae71e8843d6917f105bdf157e50c096789bd30a75f290cd0bdcd6cb109",
-}, {
-  // Published 1.1.4 compatibility release (d9c63da).
-  archive: "e51220cad19059e629b0fadd2ffd0cc6b46f59aa48c6b5bfc2ee47b56f368ab8",
-  renderer: "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267",
-  worker: "bb600731bc4db7e3ff4e912941d5393b0d6e9033413ac9b834b4ca32331f7dce",
-  executable: "6067ea3c781cb9bf0637b71c024c0f9fdb4355566e5efe92c805f3b828d3019d",
-}, {
-  // Private 1.1.4 compatibility build.
-  archive: "91a7f00efa90df2b0e093751eff5275308f95bfc46bf934344e9e2a172061b2e",
-  renderer: "76c3ae3345a4887eebc2c22069cad73e448a18a72f1a15432072e55ada7774c7",
-  worker: "514978645ca604523eeb384026909303a26e95dacd50a9a74da1d4777c16eb21",
-  executable: "ca268a6d0476a75cd720dfc048990a4eb63fc3148e6241dd0d14fbfe2fd843a7",
-}];
-
 // Steam can leave a verified PPO renderer on disk after replacing the three
 // stock files. The stock ASAR uses its own packed renderer.
 const previousRenderers = new Set([
-  ...previousPatchedRuntimes.map(profile => profile.renderer),
+  "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267", // Published PPO 1.1.4 releases
+  "76c3ae3345a4887eebc2c22069cad73e448a18a72e55ada7774c7", // Private PPO 1.1.4 compatibility build
   "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
   "e7730587c368f404b33ae83ea748103226b34c9283c520b6345b7816887f8f63", // Private Congress spacing candidate
   "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6", // Verified Far-Right Currents release
@@ -241,7 +227,7 @@ function buildRenderer(archive, header) {
 function buildPatch(archive, worker, executable) {
   const header = openArchive(archive);
   if (header.hash !== currentStock.archive) {
-    throw new Error(`The original game archive must be from Geoplanetical ${version}, Steam build 26709373.`);
+    throw new Error(`The original game archive must be from Geoplanetical ${version}, Steam build ${currentStock.build}.`);
   }
   verifyArchivePayload(archive, header);
   const rendererBytes = buildRenderer(archive, header);
@@ -294,17 +280,13 @@ function verifyStockRenderer(files, state, patchedRenderer) {
 function verifyPatchedRuntime(files, state) {
   if (!state.headers.backupArchive || state.headers.backupArchive.hash !== currentStock.archive ||
       state.hashes.backupWorker !== currentStock.worker || state.hashes.backupExecutable !== currentStock.executable) {
-    throw new Error(`The active files are not verified Geoplanetical ${version}, Steam build 26709373. Run Steam Verify Integrity before retrying.`);
+    throw new Error(`The active files are not verified Geoplanetical ${version}, Steam build ${currentStock.build}. Run Steam Verify Integrity before retrying.`);
   }
   const patch = buildPatch(files.backupArchive, files.backupWorker, files.backupExecutable);
-  const current = Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes));
-  const previous = previousPatchedRuntimes.some(profile =>
-    Object.entries(profile).every(([key, hash]) => state.hashes[key] === hash));
-  if (!current && !previous) {
+  if (!Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes))) {
     throw new Error("The active game files are mixed or differ from this PPO build. Run Steam Verify Integrity before retrying.");
   }
   verifyArchivePayload(files.archive, state.headers.archive);
-  return { patch, current };
 }
 
 function preserveStockLeftovers(files, staged, backupState, detachedRenderer) {
@@ -356,12 +338,7 @@ function stagePatch(files, originalArchive, staged, patch) {
 
 function installPatch(files, state, staged, commit) {
   if (!stockRuntime(state.hashes)) {
-    const { patch, current } = verifyPatchedRuntime(files, state);
-    if (current) return;
-    fs.mkdirSync(staged);
-    const replacements = stagePatch(files, files.backupArchive, staged, patch);
-    const previous = replacements.map(([, file]) => [file, path.join(staged, "previous-" + path.basename(file))]);
-    commit([...previous, ...replacements]);
+    verifyPatchedRuntime(files, state);
     return;
   }
 

@@ -24,11 +24,11 @@ function gpmRenderPartyLaws() {
 }
 
 function gpmPartyLawRows(laws, country) {
-  const formatGain = new Intl.NumberFormat(ks(), { maximumFractionDigits: 1 });
+  const formatGain = new Intl.NumberFormat(Es(), { maximumFractionDigits: 1 });
   return laws.map((law, index) => {
-    const definition = Ds(law.lawId);
-    const name = Un(law.lawId);
-    const value = definition ? xi(definition, law.value, country) : "";
+    const definition = Ys(law.lawId);
+    const name = Vn(law.lawId);
+    const value = definition ? Ei(definition, law.value, country) : "";
     const vote = law.total > 0
       ? `${law.yes} of ${law.total} yes${Number.isFinite(law.requiredVotes) ? ` · ${law.requiredVotes} needed` : ""}`
       : "Chamber vote unavailable";
@@ -89,7 +89,7 @@ function gpmBindPartyLaws(profile, view, ui) {
     state.error = "";
     state.paint();
     try {
-      const data = await Je(session, "gpm.partyLawShortlist", {});
+      const data = await Xe(session, "gpm.partyLawShortlist", {});
       if (!isCurrent()) return;
       if (data?.partyId !== partyId || !Array.isArray(data.laws)) {
         state.error = "Law forecasts are unavailable for this party.";

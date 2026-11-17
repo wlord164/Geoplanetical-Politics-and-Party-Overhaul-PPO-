@@ -26,14 +26,14 @@ function gpmRefreshViewTimeoutOnWork(client, work) {
 function patchSimulationViewTimeout(js, replaceOnce) {
   // The Worker handles requests in post order. Give each bounded request its
   // full budget once it reaches the front, including the renderer's clock pulse.
-  js = replaceOnce(js, 'var Q$=class{constructor(t={}){',
-    `${gpmStartQueuedRequestTimeout}\n${gpmRefreshViewTimeoutOnWork}\nvar Q$=class{constructor(t={}){`);
+  js = replaceOnce(js, 'var OF=class{constructor(t={}){',
+    `${gpmStartQueuedRequestTimeout}\n${gpmRefreshViewTimeoutOnWork}\nvar OF=class{constructor(t={}){`);
   js = replaceOnce(js, 'let p=l===1/0?null:setTimeout(()=>{if(!this.requests.has(i))return;',
     'const startTimeout=(delay=l)=>l===1/0?null:setTimeout(()=>{if(!this.requests.has(i))return;');
   js = replaceOnce(js, '},l);this.requests.set(i,{resolve:u,reject:d,command:t,timer:p,recoveryTimer:null,',
     `},delay);
-    const isFiniteView = t === $d.VIEW_SNAPSHOT && l !== Infinity;
-    const deferTimeout = l !== Infinity && t !== $d.SHUTDOWN && this.requests.size > 0 &&
+    const isFiniteView = t === Wd.VIEW_SNAPSHOT && l !== Infinity;
+    const deferTimeout = l !== Infinity && t !== Wd.SHUTDOWN && this.requests.size > 0 &&
       [...this.requests.values()].every(request => request.hasTimeout);
     const viewWatchdog = isFiniteView ? {schedule:startTimeout,timeout:l,deadline:0,progress:null} : null;
     const armTimeout = () => {

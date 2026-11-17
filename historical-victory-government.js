@@ -107,9 +107,9 @@ function gpmHistoricalVictoryParty(sim, country, actor, outcome, ideology) {
   const existing = country.pol.parties.find(party => party.gpmHistoricalActorId === actor.id);
   if (existing && existing.legal !== false) return existing;
   const assessment = gpmHistoricalCatalog.factionReview.actors[actor.id];
-  const previous = w1o(country.pol.parties);
-  const change = zfa(country.pol, ideology, .02, (party, parties) => {
-    ufa(party, Il(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
+  const previous = E4o(country.pol.parties);
+  const change = $ya(country.pol, ideology, .02, (party, parties) => {
+    mya(party, xl(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
     party.nameDesc = {
       ...party.nameDesc,
       gpmName: outcome.partyName || actor.name,
@@ -120,10 +120,10 @@ function gpmHistoricalVictoryParty(sim, country, actor, outcome, ideology) {
     };
     party.gpmHistoricalActorId = actor.id;
   });
-  bKa(country, change, previous);
-  _fa(country, change, previous);
+  eBa(country, change, previous);
+  kya(country, change, previous);
   sim._reconcilePolity(country);
-  const party = ES(country, change.id);
+  const party = rP(country, change.id);
   if (!party) throw new Error("Historical victory party was not created: " + actor.id);
   return party;
 }
@@ -134,18 +134,18 @@ function gpmHistoricalVictoryRegimeDraft(draft, profile) {
   constitution.blueprint = profile.blueprint;
   constitution.pressFreedom = profile.pressFreedom;
   constitution._integrity0 = profile.integrity;
-  constitution._integBaseline = Object.fromEntries(RCt.map(({ id }) => [id, constitution[id]]));
-  Object.assign(regime, structuredClone(Zae[profile.blueprint]), { id: profile.blueprint });
+  constitution._integBaseline = Object.fromEntries(xAt.map(({ id }) => [id, constitution[id]]));
+  Object.assign(regime, structuredClone(Zre[profile.blueprint]), { id: profile.blueprint });
   if (profile.family) {
     regime.family = profile.family;
     regime.headOfState.selection = "party";
     regime.headOfGov.selection = "president";
     regime.definingElection = "none";
   }
-  regime.electoralIntegrity = KA(constitution);
+  regime.electoralIntegrity = vA(constitution);
   regime._concBase = profile.concentration;
-  regime.powerConcentration = Math.max(0, Math.min(.98, profile.concentration + Lw(constitution)));
-  regime.termLimited = Qae(constitution);
+  regime.powerConcentration = Math.max(0, Math.min(.98, profile.concentration + vI(constitution)));
+  regime.termLimited = Qre(constitution);
   for (const power of constitution.powers) {
     if (power.power === "confidence" && profile.reform.confidenceMode === "constructive") {
       power.constructive = true;
@@ -157,14 +157,14 @@ function gpmHistoricalInstallVictoryGovernment(sim, country, actor, outcome) {
   const base = gpmHistoricalVictoryRegimes[outcome?.regime];
   const profile = base && (outcome.reform ? { ...base, reform: { ...base.reform, ...outcome.reform } } : base);
   const chamber = country?.pol?.chambers[0];
-  if (!profile || !chamber || !actor?.id || !outcome.title || eUe(outcome.title) !== outcome.title) {
+  if (!profile || !chamber || !actor?.id || !outcome.title || tHe(outcome.title) !== outcome.title) {
     throw new Error("Invalid historical victory government: " + (actor?.id || country?.key));
   }
 
   // Preflight the constitutional reform and law IDs before creating a party.
-  C7t(country, chamber, profile.reform);
+  _bt(country, chamber, profile.reform);
   const changes = Object.entries(outcome.laws || {}).map(([lawId, value]) => {
-    if (!Ea(lawId)) throw new Error("Unknown historical victory law: " + lawId);
+    if (!Ra(lawId)) throw new Error("Unknown historical victory law: " + lawId);
     return { lawId, value };
   });
   const controlledExecutive = sim.playerKey === country.key && sim.playerControlsGovernment();
@@ -176,10 +176,10 @@ function gpmHistoricalInstallVictoryGovernment(sim, country, actor, outcome) {
   gpmUprising.applyCharter(sim, country, { changes });
   const appliedLaws = {};
   for (const { lawId, value } of changes) {
-    if (uo(country.laws[lawId], value)) appliedLaws[lawId] = ar(country.laws[lawId]);
+    if (fo(country.laws[lawId], value)) appliedLaws[lawId] = or(country.laws[lawId]);
   }
   country.gpmHistoricalAdministration = outcome.administration || null;
-  if (!PCt(sim, country.key, outcome.title)) throw new Error("Invalid historical state name: " + outcome.title);
+  if (!_At(sim, country.key, outcome.title)) throw new Error("Invalid historical state name: " + outcome.title);
   if (controlledExecutive && !sim.playerControlsGovernment()) {
     const handoff = sim.switchPlayerControl({ countryKey: country.key, partyId: party.id });
     if (!handoff.ok || !handoff.current.controlsExecutive) {

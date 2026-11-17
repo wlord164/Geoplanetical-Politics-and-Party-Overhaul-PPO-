@@ -150,7 +150,7 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
     .filter(feature => feature?.geometry && byId.get(feature.__provId)?.key === feature.__provKey);
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (state.geometry?.world !== world || state.geometry?.signature !== signature) {
-    state.geometry = { world, signature, layout: features.length ? I_(features, 620, 510, { pad: 12 }) : null };
+    state.geometry = { world, signature, layout: features.length ? TM(features, 620, 510, { pad: 12 }) : null };
   }
   const layout = state.geometry?.layout;
   const svg = (paths, width, height) => '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="'
@@ -206,7 +206,7 @@ function gpmUprisingRoster(roster) {
 }
 
 function gpmUprisingPersonnel(amountK) {
-  return new Intl.NumberFormat(ks(), { maximumFractionDigits: 0 }).format(amountK * 1000);
+  return new Intl.NumberFormat(Es(), { maximumFractionDigits: 0 }).format(amountK * 1000);
 }
 
 function gpmUprisingEquipmentLabel(item) {
@@ -227,7 +227,7 @@ function gpmUprisingDivisionPanel(division, state, prep, button, date, money, cr
   const opts = (choices, selected) => choices.map(choice =>
     '<option value="' + v(choice.id) + '"' + (selected === choice ? " selected" : "") + ">" + v(choice.label) + "</option>").join("");
   const equipmentList = items => (items || []).filter(item => item.units > 0).map(item =>
-    Number(item.units).toLocaleString(ks()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
+    Number(item.units).toLocaleString(Es()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
   const equipment = equipmentList(kit?.equipment);
   const stock = equipmentList(division.stockpile);
   const headquarters = prep.headquarters;
@@ -268,8 +268,8 @@ function gpmUprisingPreparations(state, ui, button) {
   const prep = state.data.preparations;
   if (!prep || state.confirm) return "";
   const { regions, wing, division, foreignAid, threshold } = prep;
-  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 1 });
-  const number = new Intl.NumberFormat(ks(), { maximumFractionDigits: 1 });
+  const percent = new Intl.NumberFormat(Es(), { style: "percent", maximumFractionDigits: 1 });
+  const number = new Intl.NumberFormat(Es(), { maximumFractionDigits: 1 });
   const points = value => number.format(value * 100) + " pp";
   const date = day => ui.gameDate?.(day) || "Day " + day;
   const money = amount => gpmForeignFundingMoney(amount);
@@ -280,7 +280,7 @@ function gpmUprisingPreparations(state, ui, button) {
   const hqProject = prep.headquarters?.project;
   const map = gpmUprisingMap(state, ui, prep, selected, percent);
   const regionList = '<ul class="gpm-uprising-region-list" aria-label="Regional footholds">'
-    + [...regions].sort((a, b) => name(a).localeCompare(name(b), ks())).map(region => {
+    + [...regions].sort((a, b) => name(a).localeCompare(name(b), Es())).map(region => {
       const color = gpmUprisingPreparationColor(region, state.mapLayer || "foothold");
       return '<li><button class="k" type="button" data-gpm-uprising-region-row="' + v(String(region.id))
         + '" aria-pressed="' + (region === selected) + '"><i class="gpm-uprising-swatch" style="background:' + color
@@ -395,7 +395,7 @@ function gpmUprisingPanel(state, ui) {
   const party = data.partyName || state.partyName || "Your party";
   const region = data.provinceKey ? Ut(data.provinceKey, data.regionName) : data.regionName;
   const seatOutcome = data.singleParty ? " and holds every seat in the assembly" : " under the new constitution";
-  const percent = new Intl.NumberFormat(ks(), { style: "percent", maximumFractionDigits: 2 });
+  const percent = new Intl.NumberFormat(Es(), { style: "percent", maximumFractionDigits: 2 });
   const before = Number.isFinite(data.nationalSupport) ? percent.format(data.nationalSupport) : "—";
   const after = Number.isFinite(data.victorySupport) ? percent.format(data.victorySupport) : "—";
   const lawChanges = Array.isArray(data.charterLaws) ? data.charterLaws : [];
@@ -403,7 +403,7 @@ function gpmUprisingPanel(state, ui) {
     ? '<details data-gpm-uprising-charter><summary>' + lawChanges.length
       + (lawChanges.length === 1 ? " law change" : " law changes")
       + '</summary><ul class="gpm-uprising-charter">' + lawChanges.map(law =>
-        "<li>" + v(law.name || Un(law.lawId)) + " · " + v(law.option || (Ds(law.lawId) ? xi(Ds(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
+        "<li>" + v(law.name || Vn(law.lawId)) + " · " + v(law.option || (Ys(law.lawId) ? Ei(Ys(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
     : "<small>The policy review found no law changes.</small>";
   if (data.phase === "active") {
     const note = data.warStatus === "suspended"
@@ -503,12 +503,12 @@ function gpmUprisingPanel(state, ui) {
 }
 
 async function gpmSyncUprisingControl(session) {
-  if (Ge !== session || !session.playerKey) return;
+  if (Ue !== session || !session.playerKey) return;
   const key = session.playerKey;
   if (session._gpmUprisingPresentedKey === key) return;
   session._gpmUprisingPresentedKey = key;
   try {
-    await YLt({ current: { countryKey: key } });
+    await hzt({ current: { countryKey: key } });
   } catch (error) {
     console.warn("[PPO] Uprising player control presentation failed", error);
   }
@@ -562,7 +562,7 @@ function gpmBindUprising(profile, view, ui) {
     status.textContent = state.loading ? "Checking the current uprising details…" : state.status;
   };
   const currentParty = view.player?.pol?.parties?.find(party => party.id === partyId);
-  state.partyName = currentParty ? Sa(currentParty, countryKey) : null;
+  state.partyName = currentParty ? Ma(currentParty, countryKey) : null;
   state.paint = paint;
 
   const load = async () => {
@@ -571,7 +571,7 @@ function gpmBindUprising(profile, view, ui) {
     state.requestDay = view.day;
     state.paint();
     try {
-      const data = await Je(session, "gpm.uprising", {});
+      const data = await Xe(session, "gpm.uprising", {});
       if (!isCurrent()) return;
       if (!data || data.countryKey !== countryKey || (partyId != null && data.partyId !== partyId)) {
         state.data = null;
@@ -605,9 +605,9 @@ function gpmBindUprising(profile, view, ui) {
       result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag,
         ...gpmExpectedActor(state.data.countryKey, state.data.partyId, state.data) }]);
       if (result?.ok) {
-        if (Ge === session) {
+        if (Ue === session) {
           await gpmSyncUprisingControl(session);
-          if (Ge === session) await ui.openMilitaryMode?.();
+          if (Ue === session) await ui.openMilitaryMode?.();
         }
         return;
       }
@@ -706,7 +706,7 @@ function gpmBindUprising(profile, view, ui) {
     state.status = "Reading flag image…";
     state.paint();
     let image;
-    try { image = await WF(file); } catch {}
+    try { image = await TG(file); } catch {}
     if (!isCurrent() || request !== state.flagRequest) return;
     state.flagRequest = null;
     if (image) state.flag = { src: image.src, ratio: image.ratio };
@@ -783,28 +783,28 @@ function patchUprisingRenderer(source) {
   replaceOnce(bind, bind + '\n    if (tab.id === "gpm-tab-uprising") gpmBindUprising(profile, view, ui);');
   const styleMount = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;";
   replaceOnce(styleMount, styleMount.replace(";", " + gpmUprisingStyle;"));
-  const flagLookup = "function d5(e){return n8(),e=du(e),e?rR.get(e)||Hq.get(e)||Zw(e):null}";
+  const flagLookup = "function H5(e){return K8(),e=_u(e),e?hC.get(e)||Mz.get(e)||QS(e):null}";
   const { dynamicFlagKey } = require("./party-uprising.cjs");
-  replaceOnce("pwe=e=>u3t.test(a8(e))||zte(a8(e))!==null",
-    `pwe=e=>u3t.test(a8(e))||zte(a8(e))!==null||${dynamicFlagKey}.test(a8(e))`);
-  replaceOnce(flagLookup, `function d5(e){
-    const data=n8(),key=du(e);
+  replaceOnce("x_e=e=>Y6t.test(H8(e))||Vne(H8(e))!==null",
+    `x_e=e=>Y6t.test(H8(e))||Vne(H8(e))!==null||${dynamicFlagKey}.test(H8(e))`);
+  replaceOnce(flagLookup, `function H5(e){
+    const data=K8(),key=_u(e);
     if(!key)return null;
     const choice=data?.gpmUprisingFlags?.[key],parent=choice?.parentFlag;
-    return rR.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||Hq.get(key)||Zw(key)||
-      (parent&&(rR.get(parent)||Hq.get(parent)||Zw(parent)))||null;
+    return hC.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||Mz.get(key)||QS(key)||
+      (parent&&(hC.get(parent)||Mz.get(parent)||QS(parent)))||null;
   }`);
-  replaceOnce("function p5(e){return ywe(n8(),e)}",
-    'function p5(e){const data=n8(), mode=ywe(data,e), legacy=data?.gpmUprisingFlags?.[du(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
-  replaceOnce("function Jw(e){let t=n8();return t?.images?.[t?.image?.[du(e)]]||null}",
-    'function Jw(e){const data=n8(),key=du(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
-  replaceOnce("function Mwe(e){return n8(),e=du(e),e?Hq.get(e)||Zw(e):null}",
-    'function Mwe(e){const data=n8(),key=du(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(Hq.get(key)||Zw(key)||(parent&&(rR.get(parent)||Hq.get(parent)||Zw(parent)))||null):null}');
+  replaceOnce("function K5(e){return T_e(K8(),e)}",
+    'function K5(e){const data=K8(), mode=T_e(data,e), legacy=data?.gpmUprisingFlags?.[_u(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
+  replaceOnce("function XS(e){let t=K8();return t?.images?.[t?.image?.[_u(e)]]||null}",
+    'function XS(e){const data=K8(),key=_u(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
+  replaceOnce("function $_e(e){return K8(),e=_u(e),e?Mz.get(e)||QS(e):null}",
+    'function $_e(e){const data=K8(),key=_u(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(Mz.get(key)||QS(key)||(parent&&(hC.get(parent)||Mz.get(parent)||QS(parent)))||null):null}');
   const initialize = "\nmountPartyButtons();\n";
   replaceOnce(initialize, "\nconst gpmUprisingStyle = " + JSON.stringify(style) + ";\n"
     + rendererFunctions.join("\n") + initialize);
-  const frame = "function tKe(){let e=Ge.consumeViewDelta";
-  replaceOnce(frame, "function tKe(){gpmWatchUprisingControl(Ge);let e=Ge.consumeViewDelta");
+  const frame = "function WYe(){let e=Ue.consumeViewDelta";
+  replaceOnce(frame, "function WYe(){gpmWatchUprisingControl(Ue);let e=Ue.consumeViewDelta");
   return asBuffer ? Buffer.from(js) : js;
 }
 

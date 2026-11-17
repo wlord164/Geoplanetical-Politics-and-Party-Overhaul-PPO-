@@ -31,11 +31,11 @@ function gpmCampaignRuleValues() {
 }
 
 function gpmCampaignFoundingRegions() {
-  const key = ge._suSel?.__key;
+  const key = ye._suSel?.__key;
   if (key == null) return [];
-  return (mr?.provinces || []).filter(province => String(province.__countryKey) === String(key) && province.__provKey)
+  return (br?.provinces || []).filter(province => String(province.__countryKey) === String(key) && province.__provKey)
     .map(province => ({ key: province.__provKey, name: Ut(province.__provKey, province.__name) }))
-    .sort((a, b) => a.name.localeCompare(b.name, ks()));
+    .sort((a, b) => a.name.localeCompare(b.name, Es()));
 }
 
 function gpmCampaignRulesForStart() {
@@ -49,7 +49,7 @@ function gpmCampaignFoundingSummary() {
   const summary = [gpmCampaignRulesUI.presets[rules.preset]?.label || "Custom", `Up to ${rules.startingSupport}% starting support`,
     rules.startingSeats > 0 ? `Up to ${rules.startingSeats} starting ${rules.startingSeats === 1 ? "seat" : "seats"}` : "Zero starting seats",
     "No government office"];
-  if (rules.startingCash !== null) summary.push(`$${Number(rules.startingCash).toLocaleString(ks())} founding cash`);
+  if (rules.startingCash !== null) summary.push(`$${Number(rules.startingCash).toLocaleString(Es())} founding cash`);
   if (rules.startingPresence > 0 && rules.startingRegions.length) {
     summary.push(`${rules.startingPresence}% presence in ${rules.startingRegions.length} selected ${rules.startingRegions.length === 1 ? "region" : "regions"}`);
   }
@@ -136,9 +136,9 @@ function gpmShowCampaignRules(entry) {
   sectionsElement.addEventListener("input", event => {
     const input = event.target;
     if (input.matches("[data-campaign-region-search]")) {
-      const search = input.value.trim().toLocaleLowerCase(ks());
+      const search = input.value.trim().toLocaleLowerCase(Es());
       for (const row of sectionsElement.querySelectorAll("[data-campaign-region]")) {
-        row.hidden = !row.textContent.toLocaleLowerCase(ks()).includes(search);
+        row.hidden = !row.textContent.toLocaleLowerCase(Es()).includes(search);
       }
       return;
     }

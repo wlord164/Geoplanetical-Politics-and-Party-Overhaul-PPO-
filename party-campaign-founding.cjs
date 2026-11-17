@@ -15,7 +15,7 @@ function gpmFoundingSupportSeed(politics, rules) {
 function gpmFoundingSeatPlan(country, party, requested) {
   const politics = country.pol;
   const institution = st(country);
-  const canStand = Object.hasOwn(v6(politics, { [party.id]: party.support }), party.id);
+  const canStand = Object.hasOwn(zg(politics, { [party.id]: party.support }), party.id);
   if (!canStand || !institution || party.legal === false) return { seats: 0, reason: "party-ineligible" };
 
   const chamber = (politics.chambers || []).filter(candidate => {
@@ -33,7 +33,7 @@ function gpmFoundingSeatPlan(country, party, requested) {
       counts.reduce((total, seats) => total + seats, 0) !== chamber.seats ||
       composition[party.id] > 0) return { seats: 0, reason: "unsupported-composition" };
 
-  const government = Rfa(politics);
+  const government = xya(politics);
   const legal = new Set(politics.parties.filter(member => member.legal !== false && member.id !== party.id).map(member => member.id));
   const donors = Object.keys(composition).filter(id => legal.has(id));
   const majority = Math.floor(chamber.seats / 2) + 1;
@@ -96,7 +96,7 @@ function gpmCommitCampaignFounding(sim, country, party, rules, draft) {
   const plan = gpmFoundingSeatPlan(country, party, requested);
   if (!plan.seats) return { seats: 0, regionKeys, seatReason: plan.reason };
   const institution = st(country);
-  const result = Gc(sim, country, {
+  const result = $0(sim, country, {
     intent: "constitution.reconcile",
     transitionId: "gpm.founding.seats:" + country.key + ":" + party.id,
     expectedRevision: institution.revision,

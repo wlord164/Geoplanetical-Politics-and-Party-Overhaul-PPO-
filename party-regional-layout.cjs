@@ -31,9 +31,9 @@ function gpmRegionalMapLayout(features) {
     if (geometry.has(feature)) return geometry.get(feature);
     const { type, coordinates } = feature.geometry;
     const polygons = type === "MultiPolygon" ? coordinates : type === "Polygon" ? [coordinates] : [];
-    const points = polygons.flatMap(polygon => (polygon[0] || []).map(([lon, lat]) => Jce(lon, lat)));
-    const center = Cd(feature);
-    const sphere = center?.every(Number.isFinite) ? Jce(...center) : null;
+    const points = polygons.flatMap(polygon => (polygon[0] || []).map(([lon, lat]) => p0e(lon, lat)));
+    const center = zd(feature);
+    const sphere = center?.every(Number.isFinite) ? p0e(...center) : null;
     const extent = sphere ? points.reduce((max, point) => Math.max(max, distanceSq(point, sphere)), 0) : Infinity;
     const item = { points, sphere, radius: Math.sqrt(extent) };
     geometry.set(feature, item);
@@ -57,8 +57,8 @@ function gpmRegionalMapLayout(features) {
   function plot(group, width, height, pad, minAspect, maxAspect, fitGroup = group) {
     const collection = { type: "FeatureCollection", features: group };
     const frame = fitGroup === group ? collection : { type: "FeatureCollection", features: fitGroup };
-    const projection = IRt(fitGroup).fitExtent([[pad, pad], [width - pad, height - pad]], frame);
-    const path = U2(projection);
+    const projection = RNt(fitGroup).fitExtent([[pad, pad], [width - pad, height - pad]], frame);
+    const path = dh(projection);
     const [[x0, y0], [x1, y1]] = path.bounds(frame);
     if (![x0, y0, x1, y1].every(Number.isFinite)) return null;
     let w = Math.max(1, x1 - x0) + pad * 2;
@@ -80,14 +80,14 @@ function gpmRegionalMapLayout(features) {
     const [feature] = group;
     const parts = feature.geometry.coordinates.map(coordinates => ({
       type: "Feature", geometry: { type: "Polygon", coordinates },
-    })).map(shape => ({ shape, area: r4(shape), center: Cd(shape) }));
+    })).map(shape => ({ shape, area: B4(shape), center: zd(shape) }));
     const largest = parts.reduce((best, part) => part.area > (best?.area || 0) ? part : best, null);
     if (!largest || !largest.center?.every(Number.isFinite)) return group;
     const nearbyLimit = 240 / 6371;
     const anchors = parts.filter(part => part.area >= largest.area * .025);
     const core = parts.filter(part => anchors.includes(part) ||
       (part.center?.every(Number.isFinite) && anchors.some(anchor => anchor.center?.every(Number.isFinite) &&
-        o$e(part.center, anchor.center) <= nearbyLimit)));
+        Nje(part.center, anchor.center) <= nearbyLimit)));
     return core.length && core.length < parts.length ? core.map(part => part.shape) : group;
   }
 
