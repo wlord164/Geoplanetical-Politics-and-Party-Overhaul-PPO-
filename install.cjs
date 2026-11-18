@@ -49,38 +49,6 @@ const previousPpo = [{ // PPO 1.1.5 Compatibility Update
   executable: "b25d0e92352eb0bdc8f747f75b6352ce58a56ad5309ae18f0ca8aaf83c02b72e",
 }];
 
-// Steam can leave a verified PPO renderer on disk after replacing the three
-// stock files. The stock ASAR uses its own packed renderer.
-const previousRenderers = new Set([
-  ...previousPpo.map(profile => profile.renderer),
-  "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267", // Published PPO 1.1.4 releases
-  "76c3ae3345a4887eebc2c22069cad73e448a18a72e55ada7774c7", // Private PPO 1.1.4 compatibility build
-  "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
-  "e7730587c368f404b33ae83ea748103226b34c9283c520b6345b7816887f8f63", // Private Congress spacing candidate
-  "a24180e1b1e516c21c24e1fc1abd804d1a9ae4f29f18cc2995a5ece7be3774e6", // Verified Far-Right Currents release
-  "3e96283cc48f22f390d0a39fcbad3bf99ba71188a62ed7ec8aed1f1563e4057f", // Verified membership-backed Ideology Overhaul release
-  "0dd9e36becea39be7ae6484b70d6f7cb8cf3b20844dd48a221ccad80c903e878", // Verified Congress Expansion release
-  "05d674a36921246a72a33c3694d3b9f0b7193f54b007110a4dc24dac968f2487", // Verified Party Leadership and Ideology update
-  "2470d35f3979d0e705e366bd4d8bc27ef7578031940d0712eab73c4148ea08fe", // Verified Congress Layout candidate
-  "b56bbd651da2a14b39d6f19914ddd787aa9218d25e7308374db6a824a200e199", // Verified Congress Portraits and Ideology candidate
-  "978a8ab5bf5aaaa81e73d07411ae8d07b57fdf0becf69ceae539f2b3b205fca3", // Verified Faction Leadership and Ideology candidate
-  "e322fc6833a7a33baa2b2e66833f10bbe2d6dc2faeb8f6a652b74803d4791727", // Verified Domestic Politics and Stability Update
-  "c677564d90f8e53e9d403f612551baf9876ea39dd7824d98fbd5e76e4b5e8242", // Verified Congress and Staff Follow-up
-  "ed73f6046a28984d7d21120d5073be42e3b06a028668ada15625c250aa296474", // Verified Domestic Politics UI follow-up
-  "0b6b5321aa82ef5d657f4661d32442fa72f6c750d935031daa0d4f0f86d4c763", // Verified Domestic Politics candidate
-  "7dba7ed6092b02ee1b1486c0502f6a61ad8fc8a73c39f8a729cc831274d83b5a", // Historical Conflicts Cleanup
-  "506e1ea8625fe13742147a3bd621e0b9bd7a07c8ff94568f5f8a02128ee48d54", // Private War Interface test build
-  "555fac76f011886992925a4118f8010cb24cdb568d4a54000b64279ce63e2186", // Campaign Rules Correction
-  "57575cd948e816253c33085bc8da3e6161125e082b3dc42063e20502d472759f", // Follow-up Hotfix
-  "94dd70ed5c0fced7c3c6b638ddb49f0504e58844c07a9d189665c937b82bb704", // Stabilization Hotfix
-  "0142e701c8cff93f53a23cd118aa24576442776c6758624f29830e0bb41ce18c", // Political Control Borders
-  "6386fd28e39c05ba82f64f6ec0af82f6f5a32174e25b28aea1b3a5bccdfd8b47", // Worldwide Historical Conflicts and Ideology Update (68514dd)
-  "1d9395a019387e945ae30326bba1824dc1609da9a7dca1a136113bf5fa7a6876", // Historical map update installed before territorial governments
-  "f3e873fecca56166cde1e66f48aca11690cf5609c43201547a0e367a2d4c01de", // Territorial Governments update
-  "428293592321e1d3f39c7adfe9580878bba83567e48db677377bf26863ce630d", // Campaign Rules update
-  "2242ae52a3bdc2ed80c22aed5771d77855bd5e54e8a4f99f193565cc661d3853", // Regional Map Layout update
-  "c51fb033f44075802ec35eafe78bcce2d69941aadfa3a5cf0b9391ab9ab2bc02", // Party Ideology Overhaul (262ae3a)
-]);
 const backups = { archive: "backupArchive", worker: "backupWorker", executable: "backupExecutable" };
 
 function steamGamePath() {
@@ -283,14 +251,6 @@ function verifyBackups(files, state) {
   return { existing, stock };
 }
 
-function verifyStockRenderer(files, state, patchedRenderer) {
-  const hash = state.hashes.renderer;
-  if (hash === null || previousRenderers.has(hash)) return;
-  if (hash !== sha256(patchedRenderer ?? buildRenderer(files.archive, state.headers.archive))) {
-    throw new Error("An unrecognized detached renderer is present. PPO did not replace any files.");
-  }
-}
-
 function verifyPatchedRuntime(files, state) {
   if (!state.headers.backupArchive || state.headers.backupArchive.hash !== currentStock.archive ||
       state.hashes.backupWorker !== currentStock.worker || state.hashes.backupExecutable !== currentStock.executable) {
@@ -307,6 +267,7 @@ function verifyPatchedRuntime(files, state) {
 
 function preserveStockLeftovers(files, staged, backupState, detachedRenderer) {
   const names = backupState.existing.map(([, backupKey]) => files[backupKey]);
+  // Verified stock ASAR loads its packed renderer. Preserve any loose file left by an earlier install.
   if (detachedRenderer) names.push(files.renderer);
   if (!names.length) return { moves: [], legacy: null };
   const previous = backupState.stock?.version ?? "renderer";
@@ -369,7 +330,6 @@ function installPatch(files, state, staged, commit) {
 
   const prior = verifyBackups(files, state);
   const patch = buildPatch(files.archive, files.worker, files.executable);
-  verifyStockRenderer(files, state, patch.renderer);
 
   fs.mkdirSync(staged);
   const { moves, legacy } = preserveStockLeftovers(files, staged, prior, state.hashes.renderer !== null);
@@ -385,7 +345,6 @@ function restorePatch(files, state, staged, commit) {
   if (stockRuntime(state.hashes)) {
     const prior = verifyBackups(files, state);
     verifyArchivePayload(files.archive, state.headers.archive);
-    verifyStockRenderer(files, state);
     const detachedRenderer = state.hashes.renderer !== null;
     if (!prior.existing.length && !detachedRenderer) return;
     fs.mkdirSync(staged);
