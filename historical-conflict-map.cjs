@@ -117,7 +117,7 @@ function gpmHistoricalNativeMapName(key, fallback) {
 
 function gpmHistoricalNativeMapFlag(key, fallback) {
   K8();
-  return hC.get(_u(key))?.url || gpmHistoricalNativeMapActor(key)?.identity?.flag?.image || fallback;
+  return hC.get(_u(key))?.url || gpmHistoricalAssetUrl(gpmHistoricalNativeMapActor(key)?.identity?.flag?.asset) || fallback;
 }
 
 function gpmHistoricalNativeMapActor(key) {

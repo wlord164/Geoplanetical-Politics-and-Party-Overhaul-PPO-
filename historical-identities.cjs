@@ -59,17 +59,24 @@ function patchHistoricalNameWorker(source, replaceOnce) {
     'l=gpmHistoricalGeneratedName(e.key,s,i)||N7r(xl(e.key),s,i),c=r&&r.parties.find');
 }
 
-function readMedia({ file, source, credit, license, ...details }, actorId) {
+function readAsset(file, extension, assets) {
+  if (assets && !assets.has(file)) {
+    const bytes = readFileSync(join(__dirname, file));
+    if (!bytes.length) throw new Error("Empty historical identity image: " + file);
+    assets.set(file, `data:image/${assetTypes[extension]};base64,${bytes.toString("base64")}`);
+  }
+  return file;
+}
+
+function readMedia({ file, source, credit, license, ...details }, actorId, assets) {
   const path = typeof file === "string" && file.match(/^historical-identity-assets\/[a-z0-9][a-z0-9.-]*\.(jpg|jpeg|png|webp)$/);
   if (!path || !/^https:\/\//.test(source) || !credit || !license) {
     throw new Error("Invalid historical identity image: " + actorId);
   }
-  const bytes = readFileSync(join(__dirname, file));
-  if (!bytes.length) throw new Error("Empty historical identity image: " + file);
-  return { ...details, source, credit, license, image: `data:image/${assetTypes[path[1]]};base64,${bytes.toString("base64")}` };
+  return { ...details, source, credit, license, asset: readAsset(file, path[1], assets) };
 }
 
-function readIdentities() {
+function readIdentities(assets) {
   const identities = Object.create(null);
   const convention = JSON.parse(readFileSync(join(__dirname, "historical-flag-convention.json"), "utf8"));
   for (const name of ["sudan", "world", "independence", "opening"]) {
@@ -86,16 +93,16 @@ function readIdentities() {
           throw new Error("Invalid historical leader: " + id + "/" + office);
         }
         identity[office] = { ...person,
-          ...(person.portrait ? { portrait: readMedia(person.portrait, id) } : {}) };
+          ...(person.portrait ? { portrait: readMedia(person.portrait, id, assets) } : {}) };
       }
       for (const flag of ["flag", "administrationFlag", "victoryFlag"]) {
         if (!record[flag]) continue;
         if (Object.hasOwn(identity, flag)) throw new Error("Duplicate historical identity: " + id + "/" + flag);
-        identity[flag] = readMedia(record[flag], id);
+        identity[flag] = readMedia(record[flag], id, assets);
       }
     }
   }
-  const flags = Object.fromEntries(Object.entries(convention.banners).map(([key, media]) => [key, readMedia(media, key)]));
+  const flags = Object.fromEntries(Object.entries(convention.banners).map(([key, media]) => [key, readMedia(media, key, assets)]));
   for (const [id, key] of Object.entries(convention.actors)) {
     if (!flags[key]) throw new Error("Unknown historical flag convention: " + id);
     const identity = identities[id] ??= {};
@@ -104,7 +111,7 @@ function readIdentities() {
   return identities;
 }
 
-function readIdentityIllustrations() {
+function readIdentityIllustrations(assets) {
   const records = JSON.parse(readFileSync(join(__dirname, "historical-identity-illustrations.json"), "utf8"));
   if (!records || typeof records !== "object" || Array.isArray(records)) {
     throw new Error("Invalid historical dossier illustrations catalog");
@@ -117,24 +124,34 @@ function readIdentityIllustrations() {
         (fictionalName !== undefined && (typeof fictionalName !== "string" || !fictionalName.trim()))) {
       throw new Error("Invalid historical dossier illustration: " + id);
     }
-    const bytes = readFileSync(join(__dirname, file));
-    if (!bytes.length) throw new Error("Empty historical dossier illustration: " + file);
     return [id, {
-      image: `data:image/${assetTypes[extension]};base64,${bytes.toString("base64")}`,
+      asset: readAsset(file, extension, assets),
       ...(fictionalName ? { fictionalName: fictionalName.trim() } : {}),
     }];
   }));
+}
+
+function gpmHistoricalAssetUrl(asset) {
+  return Object.hasOwn(gpmHistoricalAssets, asset) ? gpmHistoricalAssets[asset] : null;
+}
+
+function gpmHistoricalFlagUrls(flags) {
+  return Object.fromEntries(Object.entries(flags).map(([id, { asset, ...flag }]) =>
+    [id, { url: gpmHistoricalAssetUrl(asset), ...flag }]));
 }
 
 function gpmNativeHistoricalPortrait(person, year, fallbackIcon) {
   const tag = person?.gpmHistoricalPerson;
   const historical = gpmHistoricalPeople[tag];
   const actorId = historical && tag.endsWith(":leader") ? tag.slice(0, -":leader".length) : null;
-  const illustration = actorId && !historical.image && gpmHistoricalDossierIllustrations[actorId];
+  const image = gpmHistoricalAssetUrl(historical?.asset);
+  const illustration = actorId && !image && gpmHistoricalDossierIllustrations[actorId];
+  const illustrationImage = gpmHistoricalAssetUrl(illustration?.asset);
   const representative = historical?.representative;
-  const photo = representative?.image || illustration?.image || (historical && !historical.image ? loe(person, year) : rl(person, year));
+  const photo = gpmHistoricalAssetUrl(representative?.asset) || illustrationImage || image ||
+    (historical ? loe(person, year) : rl(person, year));
   const note = representative ? `Photo: ${representative.name} (faction representative)` :
-    illustration?.image ? "Illustrative portrait" : historical && !historical.image && photo ? "Game-generated portrait" : null;
+    illustrationImage ? "Illustrative portrait" : historical && !image && photo ? "Game-generated portrait" : null;
   const title = representative ? [representative.name, representative.role, "Faction representative"].filter(Boolean).join(" · ") : note;
   return {
     html: photo ? `<img class="il-av" src="${v(photo)}" alt="${v(note || "")}"${title ? ` title="${v(title)}"` : ""}>` : fallbackIcon,
@@ -143,16 +160,19 @@ function gpmNativeHistoricalPortrait(person, year, fallbackIcon) {
 }
 
 function patchHistoricalIdentityRenderer(source, replaceOnce) {
-  const identities = readIdentities();
+  // Resolve the same asset references used in worker views and native country displays.
+  const assets = new Map();
+  const identities = readIdentities(assets);
+  const illustrations = readIdentityIllustrations(assets);
   const people = Object.fromEntries(Object.entries(identities).flatMap(([actorId, identity]) =>
     ["leader", "headOfState", "headOfGovernment"].filter(office => identity[office]).map(office =>
-      [`${actorId}:${office}`, { image: identity[office].portrait?.image || null, role: identity[office].role,
+      [`${actorId}:${office}`, { asset: identity[office].portrait?.asset || null, role: identity[office].role,
         representative: !identity[office].portrait && identity.representative ?
-          { name: identity.representative.name, role: identity.representative.role, image: identity.representative.portrait.image } : null }])));
+          { name: identity.representative.name, role: identity.representative.role, asset: identity.representative.portrait.asset } : null }])));
   const portraitSelector = 'function rl(e,t,a){';
   let patched = replaceOnce(source, portraitSelector,
     `const gpmHistoricalPeople = ${JSON.stringify(people)};\n${gpmNativeHistoricalPortrait}\n` +
-    `${portraitSelector}const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person)return person.image;`);
+    `${portraitSelector}const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person)return gpmHistoricalAssetUrl(person.asset);`);
   patched = replaceOnce(patched, 'let w=e.nationalExecutiveRoleId?o(', 'let w=gpmHistoricalPeople[n.gpmHistoricalPerson]?.role||(e.nationalExecutiveRoleId?o(');
   patched = replaceOnce(patched, ':o("inspector.leader.title"),k=t.year', ':o("inspector.leader.title")),k=t.year');
   patched = replaceOnce(patched, 'o("inspector.leader.age",{age:M}):""))}else a?',
@@ -169,7 +189,7 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
     'o("inspector.leader.age",{age:k-w.born}):"")+(M.note?" · "+M.note:e.key?.startsWith("gpm-historical-")&&gpmHistoricalPeople[n?.gpmHistoricalPerson]&&!w.gpmHistoricalPerson?" · Simulated officeholder":""))}else l.style.display="none"}');
   const flagSelector = 'function QS(e){return AY(e)||ere(e)}';
   const flagEntry = (flag, provisional) => ({
-    url: flag.image, ratio: flag.ratio || 1.5, label: `${provisional ? "Provisional · " : ""}${flag.name}`,
+    asset: flag.asset, ratio: flag.ratio || 1.5, label: `${provisional ? "Provisional · " : ""}${flag.name}`,
   });
   const polityFlags = Object.fromEntries(Object.entries(identities).flatMap(([actorId, identity]) => {
     const regionalFlag = identity.victoryFlag || identity.administrationFlag || identity.flag;
@@ -183,7 +203,10 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
     return flag ? [[actorId, flagEntry(flag, flag === identity.flag)]] : [];
   }));
   patched = replaceOnce(patched, flagSelector,
-    `const gpmHistoricalPolityFlags=${JSON.stringify(polityFlags)};\nconst gpmHistoricalVictoryFlags=${JSON.stringify(victoryFlags)};\n` +
+    `const gpmHistoricalAssets = ${JSON.stringify(Object.fromEntries(assets))};\n${gpmHistoricalAssetUrl}\n` +
+    `const gpmHistoricalDossierIllustrations = ${JSON.stringify(illustrations)};\n` +
+    `${gpmHistoricalFlagUrls}\n` +
+    `const gpmHistoricalPolityFlags=gpmHistoricalFlagUrls(${JSON.stringify(polityFlags)});\nconst gpmHistoricalVictoryFlags=gpmHistoricalFlagUrls(${JSON.stringify(victoryFlags)});\n` +
     'function QS(e){const key=_u(e);const victor=K8()?.gpmHistoricalFlags?.[key];return gpmHistoricalVictoryFlags[victor]||gpmHistoricalPolityFlags[key]||AY(e)||ere(e)}');
   patched = replaceOnce(patched, 'return` data-flag="${t}"`+V_e(H5(t))',
     'const flag=H5(t);return` data-flag="${t}"${gpmHistoricalFlagLabel(flag)}`+V_e(flag)');
@@ -193,4 +216,4 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
     'let n=_u(e);const flag=H5(n);return`<span class="flag ${a||""}" data-flag="${n}"${gpmHistoricalFlagLabel(flag)}${V_e(flag,');
 }
 
-module.exports = { readIdentities, readIdentityIllustrations, patchHistoricalIdentityRenderer, patchHistoricalNameWorker };
+module.exports = { readIdentities, patchHistoricalIdentityRenderer, patchHistoricalNameWorker };

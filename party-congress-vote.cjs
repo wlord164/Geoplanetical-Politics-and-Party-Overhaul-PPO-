@@ -477,9 +477,9 @@ module.exports = {
     partyCongressFactionLabel, partyCongressFactionId, partyCongressProfileDoctrine,
     partyCongressPlatformTradition, partyCongressSizeIsValid, partyCongressSizeRecommendation, partyCongressRecognitionSeats,
     partyCongressFactions, partyCongressBallot, partyCongressSizeVote,
-    partyCongressPriorityIsValid, partyCongressPriorityCost, partyCongressPriorityVote,
+    partyCongressPriorityIsValid, partyCongressPriorityVote,
     partyCongressProgrammes, partyCongressAvailableProgrammes, partyCongressIssueAffinity, partyCongressProgrammeVote, partyCongressForecastKey,
   ],
-  workerFunctions: [partyCongressActivePriority, partyCongressActiveProgramme, partyCongressProgrammeLawBonus,
+  workerFunctions: [partyCongressPriorityCost, partyCongressActivePriority, partyCongressActiveProgramme, partyCongressProgrammeLawBonus,
     partyCongressEligible, applyPartyCongressVote, partyCongressAgenda, registerPartyCongressSize],
 };

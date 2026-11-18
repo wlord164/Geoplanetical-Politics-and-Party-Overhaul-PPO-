@@ -183,5 +183,5 @@ module.exports = { gpmPartyRoles, gpmSourcedRoleRules, gpmResolveRoleEligibility
   `const gpmPartyRoles = Object.freeze(${JSON.stringify(gpmPartyRoles)});`,
   `const gpmSourcedRoleRules = Object.freeze(${JSON.stringify(gpmSourcedRoleRules)});`,
   gpmRoleDateInEffect, gpmRoleRuleApplies, gpmRoleRuleException, gpmRoleRuleFailure, gpmRoleRuleSummary,
-  gpmResolveRoleEligibility, gpmRoleSlots, gpmRoleSlate, gpmPartyRoleBinding, gpmPartyRoleRules, gpmPartyRolePolicyView,
+  gpmResolveRoleEligibility, gpmPartyRoleBinding, gpmPartyRoleRules, gpmPartyRolePolicyView,
 ] };

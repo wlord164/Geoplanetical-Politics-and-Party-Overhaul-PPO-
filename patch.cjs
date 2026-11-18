@@ -666,7 +666,28 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '<span>${o("pol.family."+OC(i))}</span>', '${partyIdeologyBadge(i)}');
   js = replaceOnce(js, '<div class="pa-axis" data-tip="${v(k)}"><div><span>${o(`political.ideology.${b}.neg`)}</span>', '<div class="pa-axis" data-tip="${v(k)}"><div><span>${o(`political.ideology.${b}.neg`)}</span><b class="gpm-axis-score">${partyAxisScore(i.ideology?.[b])}</b>');
   js = replaceOnce(js, 'f=p?"pol.family."+OC(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?"myparty.hero.titleParty":f,g].filter(M=>Je(M)).map(M=>o(M))', 'f=p?partyIdeologyLabel(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?o("myparty.hero.titleParty"):f,Je(g)?o(g):""].filter(Boolean)');
-  js = replaceOnce(js, 'tt("btn-start").addEventListener("click",()=>', `let gpmNewParty = null;\nconst gpmCampaignRulesUI = ${JSON.stringify({ presets: campaignRules.presets, sections: campaignRules.sections })};\nconst gpmCampaignRulesStyle = ${JSON.stringify(setupStyle)};\n${setupFunctions.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${partyIdeologyLabel}\n${partyIdeologyBadge}\n${partyAxisScore}\n${setupIdeology}\n${partyDialog}\n${mountPartyButtons}\n${bindElectorateWidth}\n${congressDoctrines.join("\n")}\n${congressVoting.join("\n")}\n${congressRenderer.join("\n")}\n${supportRenderer.join("\n")}\n${renderPartyProfile}\n${bindPartyProfile}\n${organizingRenderer.join("\n")}\nmountPartyButtons();\ntt("btn-start").addEventListener("click",()=>`);
+  const startButton = 'tt("btn-start").addEventListener("click",()=>';
+  const rendererPresets = Object.fromEntries(Object.entries(presets).map(([id, { label, values, program, foundingChoice }]) =>
+    [id, { label, values, program, foundingChoice }]));
+  js = replaceOnce(js, startButton, [
+    "let gpmNewParty = null;",
+    "const gpmCampaignRulesUI = " + JSON.stringify({ presets: campaignRules.presets, sections: campaignRules.sections }) + ";",
+    "const gpmCampaignRulesStyle = " + JSON.stringify(setupStyle) + ";",
+    ...setupFunctions,
+    "const gpmAxes = " + JSON.stringify(axes) + ";",
+    "const gpmPresets = " + JSON.stringify(rendererPresets) + ";",
+    estimatePartyIdeology, partyIdeologyLabel, partyIdeologyBadge, partyAxisScore, setupIdeology, partyDialog,
+    mountPartyButtons, bindElectorateWidth,
+    ...congressDoctrines, ...congressVoting, ...congressRenderer, ...supportRenderer,
+    renderPartyProfile, bindPartyProfile, ...organizingRenderer,
+    "const gpmRegionalMapStyle = " + JSON.stringify(regionalMapStyle) + ";",
+    "const gpmForeignFundingStyle = " + JSON.stringify(fundingStyle) + ";",
+    ...regionalRenderer, ...fundingRenderer,
+    "const gpmLawShortlistStyle = " + JSON.stringify(lawShortlistStyle) + ";",
+    ...lawShortlistRenderer,
+    "mountPartyButtons();",
+    startButton,
+  ].join("\n"));
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
   js = replaceOnce(js, 'this._mpWire(e,t),JH(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,p,this),bindPartyOrganizing(e,t,this),JH(this,e,t)');
@@ -681,7 +702,6 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, '${v(i(L.id))} \\xB7 ${$(O)}', '${v(i(L.id))} \\xB7 ${$(O,!1,2)}');
   js = replaceOnce(js, 'this._chipById(n,L.id,{win:O===0})}<b class="num">${$(Math.round(L.v*100))}', 'this._chipById(n,L.id,{win:O===0})}<b class="num">${$(L.v*100,!1,2)}');
   js = patchLawLabels(js, replaceOnce);
-  js = replaceOnce(js, "\nmountPartyButtons();\n", `\nconst gpmRegionalMapStyle = ${JSON.stringify(regionalMapStyle)};\nconst gpmForeignFundingStyle = ${JSON.stringify(fundingStyle)};\n${regionalRenderer.join("\n")}\n${fundingRenderer.join("\n")}\nconst gpmLawShortlistStyle = ${JSON.stringify(lawShortlistStyle)};\n${lawShortlistRenderer.join("\n")}\nmountPartyButtons();\n`);
   js = replaceOnce(js, 's3("publicFacilityPlannerActive","closePublicFacilityPlanner")',
     's3("publicFacilityPlannerActive","closePublicFacilityPlanner"),s3("gpmRegionalActive","closeGpmRegionalMap")');
   js = replaceOnce(js, 'if(an!=="game")return;if(ye.warRoomActive)', 'if(an!=="game")return;if(gpmRegionalGlobeClick(ye,t))return;if(ye.warRoomActive)');
@@ -722,7 +742,30 @@ function patchWorker(bytes) {
     "\nfunction m2a(e){gpmHistoricalProvinceTransport(e.world,Wce);let t={};");
   js = replaceOnce(js, "function y2a(e,t,a=null){let r=p2a(t);z_e(r);",
     "function y2a(e,t,a=null){let r=p2a(t);z_e(r);gpmHistoricalProvinceTransport(e.world,Wce,r.byProvince);");
-  js = replaceOnce(js, 'async function MCt(e,t,a=[]){', `${campaignRules.declarations.join("\n")}\n${campaignFounding.join("\n")}\n${domesticForecast.join("\n")}\nconst gpmAxes = ${JSON.stringify(axes)};\nconst gpmPresets = ${JSON.stringify(presets)};\n${estimatePartyIdeology}\n${validatePartyName}\n${renameDomesticParty}\n${registerPartyRename}\n${ideologyIdentityWorker.join("\n")}\n${createStartingParty}\n${organizingWorker.join("\n")}\n${congressWorker.join("\n")}\n${congressDoctrines.join("\n")}\n${congressVoting.join("\n")}\n${congressVoteWorker.join("\n")}\n${supportWorker.join("\n")}\n${aiWorker.join("\n")}\n${advancePartyModDay}\n${retirePartyCongresses}\n${partyOrganizationForMerger}\nregisterPartyRename();\nregisterPartyOrganizing();\nregisterPartyCongressSize();\nasync function MCt(e,t,a=[]){`);
+  const startSimulation = 'async function MCt(e,t,a=[]){';
+  js = replaceOnce(js, startSimulation, [
+    ...campaignRules.declarations, ...campaignFounding, ...domesticForecast,
+    "const gpmAxes = " + JSON.stringify(axes) + ";",
+    "const gpmPresets = " + JSON.stringify(presets) + ";",
+    estimatePartyIdeology, validatePartyName, renameDomesticParty, registerPartyRename,
+    ...ideologyIdentityWorker, createStartingParty, ...organizingWorker,
+    ...congressWorker, ...congressDoctrines, ...congressVoting, ...congressVoteWorker,
+    ...supportWorker, ...aiWorker, advancePartyModDay, retirePartyCongresses, partyOrganizationForMerger,
+    ...factionPeople, ...factionBargaining, ...factionDevelopment,
+    "registerPartyFactionBargaining();",
+    "registerPartyRename();",
+    gpmTransferPartyLifecycle, gpmPartyForCountryBirth, gpmCommitCountryBirthParties,
+    "registerPartyOrganizing();",
+    "registerPartyCongressSize();",
+    "const gpmRegionalRules = " + JSON.stringify(regionalRules) + ";",
+    ...regionalWorker, ...fundingWorker, ...lawShortlistWorker,
+    "registerPartyRegionalCampaign();",
+    "registerPartyForeignFunding();",
+    ...congressCurrents, ...congressCharter,
+    "registerPartyCongressCurrents();",
+    "registerPartyCongressCharter();",
+    startSimulation,
+  ].join("\n"));
   js = replaceOnce(js, 'yield"domestic.weekly"),t.has(tr.WEEKLY_POLITICS)', 'yield"domestic.weekly"),_e("advancePartyModDay",()=>advancePartyModDay(e)),t.has(tr.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:',
     'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,currents:t.gpmCongressCurrents?structuredClone(t.gpmCongressCurrents):null,campaigns:');
@@ -732,9 +775,6 @@ function patchWorker(bytes) {
     'w.pol.parties=(i.pol.parties||[]).map(A=>gpmPartyForCountryBirth(A,typeof t.gpmUprisingFounderId==="string"?null:P))');
   js = replaceOnce(js, 'e.people&&Tmt(e,w),I&&(I.__bornIdentity=kk(RWe(w,I))),w}function B_o',
     'e.people&&Tmt(e,w),I&&(I.__bornIdentity=kk(RWe(w,I))),gpmCommitCountryBirthParties(i,w,t.gpmUprisingFounderId,P),w}function B_o');
-  js = replaceOnce(js, 'registerPartyOrganizing();\nregisterPartyCongressSize();',
-    `${gpmTransferPartyLifecycle}\n${gpmPartyForCountryBirth}\n${gpmCommitCountryBirthParties}\nregisterPartyOrganizing();\nregisterPartyCongressSize();`);
-  js = replaceOnce(js, 'function qWa(e,t){return Mya(e,t),pGa(e,t),e._reviewPartyParliamentAi(t)}', 'function qWa(e,t){return gpmBindCampaignPolity(e,t.pol),Mya(e,t),pGa(e,t),advancePartyModAI(e,t),e._reviewPartyParliamentAi(t)}');
   // Preserve existing balances and exact refunds in base currency units.
   js = replaceOnce(js, 'a.treasuryM=wW(oK(a.treasuryM||0,0,1e4))', 'a.treasuryM=wW(oK(a.treasuryM||0,0,1e4),6)');
   js = replaceOnce(js, 'Vu=1e3,Kme=1e4,BTa=10', 'Vu=1e6,Kme=1e4,BTa=10');
@@ -748,13 +788,19 @@ function patchWorker(bytes) {
     'n.treasuryM=partyForeignFundingTreasury($u(e,t.parent),u/Vu),n.activistsK=Ln(n.activistsK*.75)');
   js = replaceOnce(js, 'I*=Lct(b,p.id)', 'I*=Lct(b,p.id)*partyOrganizingWeight(b,p.id)');
   js = replaceOnce(js, 'function IWa(e,t,a){return Pke(e.parties,[{share:1,', 'function IWa(e,t,a){return Pke(e.parties,[{id:t.id,share:1,');
-  js = replaceOnce(js, 'function cJo({querySim:e,country:t,partyId:a}){', 'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding){');
+  // Build the controlled party's private summaries before publishing the public roster.
+  js = replaceOnce(js, 'function cJo({querySim:e,country:t,partyId:a}){',
+    'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan,gpmFactionData){');
   js = replaceOnce(js, 'function i6r(e){let t=e?.player;', 'function i6r(e){let gpmElectorate,t=e?.player;');
   js = replaceOnce(js, 'devShowIds:!!e._devShowIds,player:n,people:u,dynasties:d,',
     'devShowIds:!!e._devShowIds,player:{...n,...ht(e,t)},people:u,dynasties:d,');
   js = replaceOnce(js, 'electorate:Hr(o._electorateBreakdown(n)),electoral:', 'electorate:(gpmElectorate=Hr(o._electorateBreakdown(n))),electoral:');
-  js = replaceOnce(js, 'party:cJo(r)}}var uJo', 'party:cJo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId))}}var uJo');
-  js = replaceOnce(js, 'outreach:Cya(e,t,a),negotiations:mGa(e,t,a)', 'outreach:Cya(e,t,a),organizing:partyOrganizingView(e,t,a),congress:partyCongressView(e,t,a,gpmElectorate),supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:mGa(e,t,a)');
+  js = replaceOnce(js, 'party:cJo(r)}}var uJo',
+    'party:cJo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId),{...gpmDomesticView(e,t,r.partyId),agenda:gpmDomesticAgenda(e,t,r.partyId),recentResult:gpmPartyElectionRecapView(t,r.partyId)},gpmFactionCongressData(e,t,r.partyId))}}var uJo');
+  js = replaceOnce(js, 'outreach:Cya(e,t,a),negotiations:mGa(e,t,a)',
+    'outreach:Cya(e,t,a),organizing:partyOrganizingView(e,t,a),campaignPlan:gpmPlan,congress:gpmFactionData,' +
+    'regionalCampaign:partyRegionalCampaignView(e,t,a),agreement:partyAgreementView(e,t,a),foreignFunding:gpmFunding,' +
+    'supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:mGa(e,t,a)');
   js = replaceOnce(js, 'function D4o(e,t){', `${isCustomParty}\n${gpmApplyEmergingPartyFounding}\nfunction D4o(e,t){`);
   js = replaceOnce(js, 'n=$ya(a,f,m*.55,u)', 'n=$ya(a,f,gpmFoundingSupportSeed(a,gpmCampaignRulesFor(e)),u)');
   js = replaceOnce(js, 'e._reconcilePolity(t),t._landscapeCd=24',
@@ -765,8 +811,6 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 'comp:e.nameDesc.comp||null}:null}function h6r', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null,gpmDeclaredIdeology:e.nameDesc.gpmDeclaredIdeology||null,gpmHistoricalIdeology:e.nameDesc.gpmHistoricalIdeology||null,gpmHistoricalIdeologyEquivalent:e.nameDesc.gpmHistoricalIdeologyEquivalent||null}:null}function h6r');
   js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
-  js = replaceOnce(js, "registerPartyCongressSize();\nasync function MCt",
-    `registerPartyCongressSize();\nconst gpmRegionalRules = ${JSON.stringify(regionalRules)};\n${regionalWorker.join("\n")}\n${fundingWorker.join("\n")}\n${lawShortlistWorker.join("\n")}\nregisterPartyRegionalCampaign();\nregisterPartyForeignFunding();\n${congressCurrents.join("\n")}\n${congressCharter.join("\n")}\nregisterPartyCongressCurrents();\nregisterPartyCongressCharter();\nasync function MCt`);
   js = replaceOnce(js, 'id:r.__provId,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,partyPerf:',
     'id:r.__provId,key:r.__provKey,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,day:e.day||0,partyPerf:');
   js = replaceOnce(js, 'function wke(e,t,a=null){', 'function wke(e,t,a=null,gpmApplyRegions=true){');
@@ -793,20 +837,20 @@ function patchWorker(bytes) {
     'reportOrder:[]},gpmNational=partyRegionalNationalShares(r,DO(e,t),S),_=r.parties.filter(X=>b[X.id]!=null).map(X=>({id:X.id,votes:Math.max(0,gpmNational[X.id]||0)}))');
   js = replaceOnce(js, 'u=Uyt(e,t,c,i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}',
     'u=Uyt(e,t,partyRegionalNationalShares(t.pol,DO(e,t),c),i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}');
-  js = replaceOnce(js, 'congress:partyCongressView(e,t,a,gpmElectorate),supportBase:',
-    'congress:partyCongressView(e,t,a,gpmElectorate),regionalCampaign:partyRegionalCampaignView(e,t,a),foreignFunding:gpmFunding,supportBase:');
   js = replaceOnce(js, 'YUe(r,a,t.params||{})',
     '(a==="gpm.foreignFunding"?partyForeignFundingDirectory(r,t.params||{}):a==="gpm.partyLawShortlist"?partyLawShortlist(r):YUe(r,a,t.params||{}))');
-  // Publish only the funding summary, never the stored outcome rolls or exposure day.
+  // Publish summaries while keeping private party state on the worker.
   js = replaceOnce(js, 'n.pol.parties=n6r(t.pol);',
-    'n.pol.parties=n6r(t.pol).map(({gpmForeignFunding,...party})=>party);');
+    'n.pol.parties=n6r(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party);');
   const { patchHistoricalConflictsWorker } = require("./historical-conflicts.cjs");
   const { patchHistoricalNameWorker } = require("./historical-identities.cjs");
   let historical = replaceOnce(patchHistoricalConflictsWorker(patchUprisingWorker(js, replaceOnce), replaceOnce),
     'this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)',
     'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),gpmMigrateDomesticCampaign(b),o&&(gpmMigrateFactionDoctrines(b),gpmCongressMigrateCurrents(b)),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
   historical = replaceOnce(historical, '(a==="gpm.historicalMap"?',
-    '(a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:a==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(r,r.player,fn(r.player),t.params?.contestId):a==="gpm.historicalMap"?');
+    '(a==="gpm.partyFactionQuote"?gpmFactionQuote(r,r.player,sL(r.player,fn(r.player)),t.params||{},"player"):' +
+    'a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:' +
+    'a==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(r,r.player,fn(r.player),t.params?.contestId):a==="gpm.historicalMap"?');
   const { patchWorkingCapital } = require("./working-capital.cjs");
   const { patchTerritorialPayroll } = require("./territorial-payroll.cjs");
   historical = patchWorkingCapital(historical, replaceOnce);
@@ -814,36 +858,12 @@ function patchWorker(bytes) {
   let worker = patchHistoricalNameWorker(patchSudanReunificationWorker(historical, replaceOnce), replaceOnce);
   worker = patchDomesticWorker(worker, replaceOnce);
   worker = patchAgreementWorker(worker, replaceOnce);
-  worker = replaceOnce(worker, 'regionalCampaign:partyRegionalCampaignView(e,t,a),',
-    'regionalCampaign:partyRegionalCampaignView(e,t,a),agreement:partyAgreementView(e,t,a),');
-  // Source the controlled party's summary before the public party roster strips its private state.
-  worker = replaceOnce(worker, 'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding){',
-    'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan){');
-  worker = replaceOnce(worker, 'campaignPlan:gpmDomesticView(e,t,a),', 'campaignPlan:gpmPlan,');
-  worker = replaceOnce(worker, 'party:cJo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId))',
-    'party:cJo(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId),{...gpmDomesticView(e,t,r.partyId),agenda:gpmDomesticAgenda(e,t,r.partyId),recentResult:gpmPartyElectionRecapView(t,r.partyId)})');
   worker = replaceOnce(worker, ',situation:DFe(e,a),space:e.space?cZo(e,a.key):null,pressures:lZo(e,a),technology:',
     ',situation:DFe(e,a),gpmDomesticAgenda:gpmDomesticAgenda(e,a,fn(a)),space:e.space?cZo(e,a.key):null,pressures:lZo(e,a),technology:');
   worker = replaceOnce(worker, 'e._onLegislative(t,i,p,g,d,b)?.electionResolved===!0?e._politicalCampaigns.delete(u):i.composition=p',
     '(()=>{const recap=gpmPartyElectionRecap(e,t,i,m,p,d,s);if(e._onLegislative(t,i,p,g,d,b)?.electionResolved===!0){e._politicalCampaigns.delete(u);gpmStorePartyElectionRecap(t,recap)}else i.composition=p})()');
   worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,...a})',
-    '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,...a})');
-  worker = replaceOnce(worker, 'n6r(t.pol).map(({gpmForeignFunding,...party})=>party)',
-    'n6r(t.pol).map(({gpmForeignFunding,gpmDomestic,...party})=>party)');
-  worker = replaceOnce(worker, 'registerPartyRename();',
-    `${factionPeople.join("\n")}\n${factionBargaining.join("\n")}\n${factionDevelopment.join("\n")}\nregisterPartyFactionBargaining();\nregisterPartyRename();`);
-  worker = replaceOnce(worker, 'a==="gpm.campaignRules"?',
-    'a==="gpm.partyFactionQuote"?gpmFactionQuote(r,r.player,sL(r.player,fn(r.player)),t.params||{},"player"):a==="gpm.campaignRules"?');
-  worker = replaceOnce(worker, 'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan){',
-    'function cJo({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan,gpmFactionData){');
-  worker = replaceOnce(worker, 'congress:partyCongressView(e,t,a,gpmElectorate),',
-    'congress:gpmFactionData,');
-  worker = replaceOnce(worker, 'recentResult:gpmPartyElectionRecapView(t,r.partyId)})',
-    'recentResult:gpmPartyElectionRecapView(t,r.partyId)},gpmFactionCongressData(e,t,r.partyId))');
-  worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,...a})',
     '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...a})');
-  worker = replaceOnce(worker, 'n6r(t.pol).map(({gpmForeignFunding,gpmDomestic,...party})=>party)',
-    'n6r(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party)');
   worker = patchFactionPeopleWorker(worker, replaceOnce);
   worker = patchFactionDevelopmentWorker(worker, replaceOnce);
   worker = replaceOnce(worker, 'g3e(this,this.player),a.changed&&(XTe(this),dWe(this))',

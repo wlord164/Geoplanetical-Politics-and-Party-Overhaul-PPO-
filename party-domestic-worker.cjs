@@ -294,14 +294,12 @@ function patchDomesticWorker(source, replaceOnce) {
   source = replaceOnce(source, "registerPartyOrganizing();\nregisterPartyCongressSize();",
     declarations + "registerPartyOrganizing();\nregisterPartyCongressSize();");
   source = replaceOnce(source,
-    "function qWa(e,t){return gpmBindCampaignPolity(e,t.pol),Mya(e,t),pGa(e,t),advancePartyModAI(e,t),e._reviewPartyParliamentAi(t)}",
+    "function qWa(e,t){return Mya(e,t),pGa(e,t),e._reviewPartyParliamentAi(t)}",
     "function qWa(e,t){return gpmBindCampaignPolity(e,t.pol),pGa(e,t),e._reviewPartyParliamentAi(t)}");
   source = replaceOnce(source,
     '!(e.playerControlsParty?.(t,r.id)??(t.key===e.playerKey&&r.id===fn(t)))&&r.legal!==!1&&Jmo(e,t,r)}return Fyt(e,t),!0}',
     'gpmDomesticEligibleParty(t,r)&&gpmDomesticAssessMembership(e,t,r)}return Fyt(e,t),advancePartyModAI(e,t),!0}');
   source = replaceOnce(source, "L5t(()=>r3o(e,t,a)),a[0].election.nextDay", "L5t(()=>gpmDomesticContestAI(e,t,a)),a[0].election.nextDay");
-  source = replaceOnce(source, "organizing:partyOrganizingView(e,t,a),congress:",
-    "organizing:partyOrganizingView(e,t,a),campaignPlan:gpmDomesticView(e,t,a),congress:");
   source = replaceOnce(source, "o.lastFundraiseMonth=xme(e),{ok:!0,partyId:a,gainM:i,treasuryM:o.treasuryM}",
     'o.lastFundraiseMonth=xme(e),gpmDomesticReceipt(e,t,r,"fundraise",{cashM:i}),{ok:!0,partyId:a,gainM:i,treasuryM:o.treasuryM}');
   source = replaceOnce(source, "n.lastRecruitMonth=xme(e),{ok:!0,partyId:a,spendM:i,gainedK:l,activistsK:n.activistsK}",

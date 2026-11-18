@@ -36,17 +36,23 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
-const previousPpo = {
+const previousPpoWorker = "0a19e1f66ac9d5bff7368221741a18eeea6bc2794206b1e68531132f7517f3a8";
+const previousPpo = [{ // PPO 1.1.5 Compatibility Update
   archive: "6de84dc5caab854cf1b328546200a1a8a59a012b3b3d174bd5d2388e24017092",
-  worker: "0a19e1f66ac9d5bff7368221741a18eeea6bc2794206b1e68531132f7517f3a8",
+  worker: previousPpoWorker,
   renderer: "de8f9d0e155fc3b03a1db1d481b63830e9a3467ac1b738e4a8c0e0c62338d2e5",
   executable: "556ce831498640c16ea790430042aded2c01a60fabc0b9279491eb8171adabb5",
-};
+}, { // PPO 1.1.5 Map Performance Update
+  archive: "368509852895b8730b5ac1d3a1b6a1ed7aa6b488f417da4655bd7c5e82ba49d9",
+  worker: previousPpoWorker,
+  renderer: "ca9ee062ad6ef8baaf7d52ad0c35c5afb9a71d03d787c6d584df5a3392d047e6",
+  executable: "b25d0e92352eb0bdc8f747f75b6352ce58a56ad5309ae18f0ca8aaf83c02b72e",
+}];
 
 // Steam can leave a verified PPO renderer on disk after replacing the three
 // stock files. The stock ASAR uses its own packed renderer.
 const previousRenderers = new Set([
-  previousPpo.renderer, // PPO 1.1.5 Compatibility Update
+  ...previousPpo.map(profile => profile.renderer),
   "2b69af81dcbf9464ec8abf413853e5dffc60b063738f1720842841c3cd49e267", // Published PPO 1.1.4 releases
   "76c3ae3345a4887eebc2c22069cad73e448a18a72e55ada7774c7", // Private PPO 1.1.4 compatibility build
   "1cb5a52eb49d2b80be339f133bc91ab92b3616e5390433d1ffe51af14d7697c6", // Simulation Stability Update
@@ -292,7 +298,7 @@ function verifyPatchedRuntime(files, state) {
   }
   const patch = buildPatch(files.backupArchive, files.backupWorker, files.backupExecutable);
   const current = Object.entries(patch).every(([key, bytes]) => state.hashes[key] === sha256(bytes));
-  if (!current && !Object.entries(previousPpo).every(([key, hash]) => state.hashes[key] === hash)) {
+  if (!current && !previousPpo.some(profile => Object.entries(profile).every(([key, hash]) => state.hashes[key] === hash))) {
     throw new Error("The active game files are mixed or differ from this PPO build. Run Steam Verify Integrity before retrying.");
   }
   verifyArchivePayload(files.archive, state.headers.archive);

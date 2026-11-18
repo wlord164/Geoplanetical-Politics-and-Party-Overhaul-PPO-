@@ -1,7 +1,5 @@
 "use strict";
 
-const { readIdentityIllustrations } = require("./historical-identities.cjs");
-
 const style = `
   .gpm-history { display: grid; gap: var(--gap-3); min-width: 0; container: gpm-conflicts / inline-size; }
   .gpm-history :is(p, ul, dl) { margin: 0; }
@@ -174,8 +172,8 @@ function gpmHistoricalPlayerRole(role, status) {
 }
 
 function gpmHistoricalWarParticipant(participant, scopeId, { actor, focused, page } = {}) {
-  const { id, countryKey, name, flagUrl, flagCode, associatedFlagCode, associatedFlagLabel, role, strength, deaths } = participant;
-  const fallbackFlag = flagUrl || (flagCode ? ki(flagCode) : null);
+  const { id, countryKey, name, flagAsset, flagUrl, flagCode, associatedFlagCode, associatedFlagLabel, role, strength, deaths } = participant;
+  const fallbackFlag = gpmHistoricalAssetUrl(flagAsset) || flagUrl || (flagCode ? ki(flagCode) : null);
   const participantFlag = countryKey ? gpmHistoricalNativeMapFlag(countryKey, fallbackFlag) : fallbackFlag;
   const associatedFlag = !participantFlag && associatedFlagCode && associatedFlagLabel ? QS(associatedFlagCode)?.url : null;
   const flag = participantFlag || associatedFlag;
@@ -198,14 +196,15 @@ function gpmHistoricalWarParticipant(participant, scopeId, { actor, focused, pag
 function gpmHistoricalWarPortrait(actor) {
   const leader = actor.leadership?.leader;
   const opening = [actor.identity?.headOfState, actor.identity?.leader, actor.identity?.headOfGovernment]
-    .find(official => official?.portrait?.image);
+    .find(official => official?.portrait?.asset);
   const representative = actor.identity?.representative;
   const illustration = gpmHistoricalDossierIllustrations[actor.id];
-  const portrait = leader ? rl(leader, actor.leadership.year) : opening?.portrait?.image;
+  const portrait = leader ? rl(leader, actor.leadership.year) : gpmHistoricalAssetUrl(opening?.portrait?.asset);
+  const representativeImage = gpmHistoricalAssetUrl(representative?.portrait?.asset);
   const canUseIllustration = !leader || !!leader.gpmHistoricalPerson;
-  const image = portrait || (canUseIllustration && (representative?.portrait?.image || illustration?.image));
+  const image = portrait || (canUseIllustration && (representativeImage || gpmHistoricalAssetUrl(illustration?.asset)));
   if (!image) return "";
-  const label = portrait ? (leader ? Ot(leader) : opening?.name) : representative?.portrait?.image ? representative.name : "Illustrative portrait";
+  const label = portrait ? (leader ? Ot(leader) : opening?.name) : representativeImage ? representative.name : "Illustrative portrait";
   return `<div class="gpm-war-portrait"><img src="${v(image)}" alt="" loading="lazy"><small>${v(label || "Portrait")}</small></div>`;
 }
 
@@ -257,7 +256,7 @@ function gpmHistoricalWarFallback(conflict, actors) {
       goals: incident ? ["Maintain influence in the affected area"] : ["Protect positions on this front"], goalBasis: "Scenario objectives",
       participants: ids.map(id => {
         const actor = actors?.get(id);
-        return { id, name: actor?.shortName || actor?.name || j(id), flagUrl: actor?.identity?.flag?.image,
+        return { id, name: actor?.shortName || actor?.name || j(id), flagAsset: actor?.identity?.flag?.asset,
           strength: actor?.strength?.range ? { label: actor.strength.range, scope: "Historical estimate" } : null };
       }) })) };
 }
@@ -340,10 +339,11 @@ function gpmMountHistoricalInspector(ui, session, shell) {
 
 function gpmHistoricalFactionHeading(actor) {
   const flag = actor.identity?.flag;
+  const flagUrl = gpmHistoricalAssetUrl(flag?.asset);
   const ratio = Number.isFinite(flag?.ratio) && flag.ratio > 0 ? flag.ratio : 1.5;
   return `<div class="insp-head">
-    ${flag?.image ? `<img class="flag fl-xl" data-gpm-faction-flag style="--flag-ratio:${ratio}"
-      src="${v(flag.image)}" alt="${v(flag.name || actor.name)}">` : ""}
+    ${flagUrl ? `<img class="flag fl-xl" data-gpm-faction-flag style="--flag-ratio:${ratio}"
+      src="${v(flagUrl)}" alt="${v(flag.name || actor.name)}">` : ""}
     <div class="insp-id">
       <div class="insp-name">${v(actor.mapName || actor.wartimeMapName || actor.shortName || actor.name)}</div>
       <div class="insp-regime">${v(gpmHistoricalLabel(actor.kind))}</div>
@@ -359,9 +359,9 @@ function gpmHistoricalFactionProfile(actor, front) {
   const illustration = gpmHistoricalDossierIllustrations[actor.id];
   const currentName = leader ? Ot(leader) : opening?.name;
   const documented = !leader || !!leader.gpmHistoricalPerson;
-  const portrait = leader ? rl(leader, actor.leadership.year) : opening?.portrait?.image;
-  const representativeImage = documented && !portrait && representative?.portrait?.image;
-  const illustrativeImage = documented && !portrait && !representativeImage && illustration?.image;
+  const portrait = leader ? rl(leader, actor.leadership.year) : gpmHistoricalAssetUrl(opening?.portrait?.asset);
+  const representativeImage = documented && !portrait && gpmHistoricalAssetUrl(representative?.portrait?.asset);
+  const illustrativeImage = documented && !portrait && !representativeImage && gpmHistoricalAssetUrl(illustration?.asset);
   const photo = portrait || representativeImage || illustrativeImage;
   const leaderName = currentName || (representativeImage && representative.name) ||
     (illustrativeImage && illustration.fictionalName) || "Leadership not documented";
@@ -704,7 +704,7 @@ function gpmHistoricalOtherGroups(conflict, card, actors, focusedId) {
     const estimate = actor.strength;
     const label = Number.isFinite(estimate?.gamePersonnel)
       ? `${estimate.gamePersonnel.toLocaleString(Es())} personnel` : estimate?.range;
-    const participant = { id, name: actor.shortName || actor.name, flagUrl: actor.identity?.flag?.image,
+    const participant = { id, name: actor.shortName || actor.name, flagAsset: actor.identity?.flag?.asset,
       strength: label ? { label, scope: "Scenario estimate" } : null };
     return gpmHistoricalWarParticipant(participant, `related-${conflict.id}`, { actor, focused: id === focusedId, page: true });
   };
@@ -741,6 +741,7 @@ function gpmHistoricalDetail(conflict, state, ui) {
   const winner = outcome && actors.get(outcome.actorId);
   const victoryFlag = winner && ["national", "independence", "autonomy"].includes(outcome.scope)
     ? winner.identity?.victoryFlag || winner.identity?.administrationFlag || winner.identity?.flag : null;
+  const victoryFlagUrl = gpmHistoricalAssetUrl(victoryFlag?.asset);
   const settlement = outcome?.title || (conflict.settlement && gpmHistoricalLabel(conflict.settlement));
   const administrationName = outcome?.administration || conflict.administrationName;
   const administration = administrationName !== settlement ? administrationName : null;
@@ -748,7 +749,7 @@ function gpmHistoricalDetail(conflict, state, ui) {
   const postwar = settlement || administration || winner || outcome?.note
     ? `<section class="gpm-history-detail" aria-label="Outcome"><h4>Outcome</h4>
     ${settlement ? `<p><b>${v(settlement)}</b></p>` : ""}
-    ${winner && (!outcome.negotiated || victoryFlag) ? `<div class="gpm-history-actor-heading">${victoryFlag ? `<img class="gpm-history-flag" src="${v(victoryFlag.image)}" alt="${v(victoryFlag.name)}">` : ""}
+    ${winner && (!outcome.negotiated || victoryFlag) ? `<div class="gpm-history-actor-heading">${victoryFlagUrl ? `<img class="gpm-history-flag" src="${v(victoryFlagUrl)}" alt="${v(victoryFlag.name)}">` : ""}
       <span>${v(administration || winner.shortName || winner.name)}${administration || outcome.negotiated ? "" : " won"}</span></div>` : administration ? `<p>${v(administration)}</p>` : ""}
     ${outcome?.note && conflict.petition?.status !== "accepted" ? `<p>${v(outcome.note)}</p>` : ""}
     ${policyNames.length ? `<p><b>Policies adopted</b> · ${v(policyNames.join(", "))}</p>` : ""}</section>` : "";
@@ -1184,7 +1185,6 @@ function patchHistoricalConflictsRenderer(source, replaceOnce) {
     gpmHistoricalRegions, gpmHistoricalPetitionAssessment, gpmHistoricalOtherGroups, gpmHistoricalDetail, gpmHistoricalDecisions, gpmOpenHistoricalDecisions, gpmHistoricalConflictsView, gpmBuildHistoricalConflicts];
   const initialize = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, initialize, "\nconst gpmHistoricalConflictsStyle = " + JSON.stringify(style) + ";\n"
-    + "const gpmHistoricalDossierIllustrations = " + JSON.stringify(readIdentityIllustrations()) + ";\n"
     + rendererFunctions.join("\n") + initialize);
   const mountStyle = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle + gpmUprisingStyle;";
   js = replaceOnce(js, mountStyle, mountStyle.replace(";", " + gpmHistoricalConflictsStyle;"));

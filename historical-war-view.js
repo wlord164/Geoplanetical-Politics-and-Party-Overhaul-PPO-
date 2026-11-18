@@ -191,7 +191,7 @@ function gpmWarParticipant(sim, war, actorId, key, role) {
     war.coalitions?.[side]?.principalKey === key;
   const kia = war?.personnelByCountry?.[key]?.kia ?? (bilateralPrincipal ? war.personnel?.[side === "A" ? "p" : "e"]?.kia : null);
   return { id: actorId, countryKey: country?.key || key || null, name: gpmHistoricalShortName(actor) || uo(sim, country) || key || actorId,
-    flagCode: country?.a2 || null, flagUrl: actor?.identity?.flag?.image || null, role, strength,
+    flagCode: country?.a2 || null, flagAsset: actor?.identity?.flag?.asset || null, role, strength,
     ...(associatedCountry?.a2 ? { associatedFlagCode: associatedCountry.a2, associatedFlagLabel: association.label } : {}),
     deaths: Number.isFinite(kia) ? Math.round(kia * 1e6) : null };
 }
