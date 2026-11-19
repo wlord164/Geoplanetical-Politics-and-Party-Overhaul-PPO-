@@ -53,6 +53,8 @@ function gpmFrontlineRestore(saved, sim) {
       afterId: parent?.id ?? null, completed: plan.completed === true, holdLine: gpmFrontlineTracePoints(plan.holdLine),
       holdLineUnavailable: plan.holdLineUnavailable === true, resumeRequired: plan.resumeRequired === true,
       routeBlocked: plan.routeBlocked === true || !!candidate && !arrow,
+      requestedDay: Number.isSafeInteger(plan.requestedDay) ? plan.requestedDay : null,
+      revision: Number.isSafeInteger(plan.revision) ? plan.revision : 0,
       ...(parent ? {} : { name: typeof plan.name === "string" ? plan.name.slice(0, 80).trim() : null,
         generalId: typeof plan.generalId === "string" ? plan.generalId : null,
         slot: Number.isSafeInteger(plan.slot) && plan.slot > 0 ? plan.slot : null }) });
@@ -199,11 +201,11 @@ function gpmFrontlinePrepare(sim, country, input, operation) {
     if (conflict.gpmFrontline?.some(plan => plan.owner === owner && plan !== record && plan.formationIds.some(id => formationIds.includes(id)) &&
         !(conflict === war && sameChain(plan)))) return { ok: false, reason: "formation_overlap" };
   }
-  const dormant = Array.isArray(input.line) && !input.line.length && input.mode === "hold" && !input.arrow?.length && !parent && !successor;
+  const dormant = input.contactId == null && Array.isArray(input.line) && !input.line.length && input.mode === "hold" && !input.arrow?.length && !parent && !successor;
   if (parent && !parent.completed && !parent.arrow.length) return { ok: false, reason: "queue_front" };
-  const requestedLine = gpmFrontlineTracePoints(input.line);
-  const line = dormant ? [] : gpmFrontlinePlanLine(war, requestedLine, parent);
-  if (!line) return { ok: false, reason: requestedLine ? "no_connected_front" : "front" };
+  const selected = dormant ? { ok: true, line: [] } : gpmFrontlineLineRequest(war, input, parent);
+  if (!selected.ok) return selected;
+  const { line } = selected;
   if (!formationIds.length && !dormant) return { ok: false, reason: "formation" };
   const objective = input.arrow?.length ? gpmFrontlineCanonicalArrow(sim, war, owner, input.arrow, line, input.objectiveProvinceKey) : null;
   if (objective && !objective.ok) return objective;
@@ -217,6 +219,7 @@ function gpmFrontlinePrepare(sim, country, input, operation) {
   return { ok: true, war, plans, record, plan: { id, owner, formationIds, line, arrow: objective?.arrow || [], color,
     mode: input.mode, afterId: parentId, objectiveProvinceKey: objective?.objectiveProvinceKey ?? null,
     completed: false, holdLine: null, resumeRequired: parent?.holdLineUnavailable === true,
+    requestedDay: dormant ? null : sim.day ?? 0, revision: (record?.revision || 0) + 1,
     ...(parent ? {} : { name: metadata.name, slot: metadata.slot, generalId: metadata.generalId }) } };
 }
 
@@ -280,6 +283,8 @@ function gpmFrontlineChange(sim, country, input, operation) {
     if (input.mode === "hold" && record.mode !== "hold") gpmFrontlineFreezeLine(sim, war, record);
     record.mode = input.mode;
     record.resumeRequired = false;
+    record.requestedDay = sim.day ?? 0;
+    record.revision = (record.revision || 0) + 1;
   } else {
     war.gpmFrontline = record ? plans.map(item => item === record ? plan : item) : [...plans, plan];
   }
@@ -331,7 +336,7 @@ function gpmFrontlineView(sim, input) {
   const wars = eligibleWars.map(war => ({ id: war.id, name: war.enemyName || war.id, enemyKey: war.enemyKey,
     side: war.participants[owner].side, status: war.status }));
   const war = eligibleWars.find(item => item.id === input.warId) || eligibleWars[0];
-  if (!war) return { wars, warId: null, formations: [], stations: [], plans: [], generals: [] };
+  if (!war) return { wars, warId: null, day: sim.day ?? 0, formations: [], stations: [], contacts: [], plans: [], generals: [] };
   const plans = (war.gpmFrontline || []).filter(plan => plan.owner === owner);
   const active = gpmFrontlineActivePlans(war, owner);
   const side = war.participants[owner].side;
@@ -341,9 +346,12 @@ function gpmFrontlineView(sim, input) {
     const reason = gpmFrontlineFormationReason(sim, war, owner, unit);
     return { id: unit.id, name: unit.name || `${unit.type} ${unit.ord ?? ""}`.trim(), position: Ce(sim, unit) || null,
       org: unit.org ?? Math.round(mu(unit) * 100), ammoDays: unit.supply?.ammoDays ?? null, planId: assigned?.id ?? null,
-      posture: unit._stance || unit.order?.kind || null, eligible: !reason, reason };
+      armyId: assigned ? gpmFrontlineArmyRoot(plans, assigned)?.id ?? null : null,
+      posture: unit._stance || unit.order?.kind || null, eligible: !reason, reason,
+      ...gpmFrontlineTelemetry(sim, war, unit, assigned, reason) };
   });
-  return { wars, warId: war.id, side, status: war.status, formations, generals: gpmFrontlineGenerals(sim, owner),
+  return { wars, warId: war.id, side, status: war.status, day: sim.day ?? 0, formations, generals: gpmFrontlineGenerals(sim, owner),
+    contacts: gpmFrontlineContactChains(war).map(chain => ({ id: chain.id, line: chain.points, closed: chain.closed })),
     stations: gpmFrontlineStations(war).map(station => ({ id: station.id, position: [station.lon, station.lat] })),
     plans: plans.map(plan => {
       const { owner: countryKey, ...summary } = plan;
@@ -403,7 +411,8 @@ function gpmFrontlineDestination(sim, formation, enemy) {
     const contact = QFa(sim, war, side, point);
     const key = contact && Rg(contact.nodeId);
     if (!key || Bi(point, [contact.lon, contact.lat]) > 90) continue;
-    return { assignmentPatch: { warKey: enemy, sectorProvKey: key }, goalProvId: Ap(sim, key),
+    return { assignmentPatch: { warKey: enemy, sectorProvKey: key, gpmFrontlinePlanId: plan.id,
+      gpmFrontlineReceivedDay: sim.day ?? 0, gpmFrontlineRevision: plan.revision || 0 }, goalProvId: Ap(sim, key),
       destLL: [contact.lon, contact.lat], dest: { type: "front", warKey: enemy, provKey: key } };
   }
   return { goalProvId: -1, destLL: null, dest: { type: "front", warKey: enemy, provKey: null } };

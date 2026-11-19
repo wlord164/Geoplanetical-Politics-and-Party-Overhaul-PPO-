@@ -2,7 +2,7 @@ const { readFileSync } = require("node:fs");
 const { join } = require("node:path");
 
 function patchFrontlineWorker(source, replaceOnce) {
-  const worker = ["frontline-contact.js", "frontline-terrain.js", "frontline-simulation.js"].map(file => readFileSync(join(__dirname, file), "utf8")).join("\n");
+  const worker = ["frontline-contact.js", "frontline-terrain.js", "frontline-telemetry.js", "frontline-simulation.js"].map(file => readFileSync(join(__dirname, file), "utf8")).join("\n");
   const anchors = [
     ["registerPartyOrganizing();\nregisterPartyCongressSize();",
       worker + "\nregisterFrontlinePlans();\nregisterPartyOrganizing();\nregisterPartyCongressSize();"],
@@ -19,8 +19,18 @@ function patchFrontlineWorker(source, replaceOnce) {
       'N=gpmFrontlineOrderKind(e,t,E,sk(E)>.3&&(B||x.has(E.id)||T)?"attack":"hold"),q=e.countries.get(E.owner)'],
     ['reason:B?"expand_beachhead":N==="attack"?"local_opportunity":"sector_hold"',
       'reason:gpmFrontlineOrders(e,t,E)?"gpm_frontline":B?"expand_beachhead":N==="attack"?"local_opportunity":"sector_hold"'],
+    ['if(U<0){E._frontAtSlot=!1;continue}let F=E._sectorIntent',
+      'if(U<0){E._frontAtSlot=!1;gpmFrontlineRecordRoute(e,t,E,true);continue}let F=E._sectorIntent'],
+    ['r._frontAtSlot=!r._frontMoving):(r._frontMoving=!1,r._frontAtSlot=!1)}var r6o=120',
+      'r._frontAtSlot=!r._frontMoving):(r._frontMoving=!1,r._frontAtSlot=!1),gpmFrontlineRecordRoute(e,t,r,!u)}var r6o=120'],
+    ['d._deployRouteFailure={conflictId:d.assignment.conflictId}',
+      'd._deployRouteFailure={conflictId:d.assignment.conflictId,reason:p.reason||p.status||"no_route",day:e.day||0}'],
     ["for(let E of n)E._stance=cUa(E,g,e.day||0,b(E));for(let E of i)E._stance=cUa(E,v,e.day||0,b(E));",
       "for(let E of n)E._stance=gpmFrontlineCombatStance(e,t,E,g,b(E));for(let E of i)E._stance=gpmFrontlineCombatStance(e,t,E,v,b(E));"],
+    ['d.set(E.id,(d.get(E.id)||0)+G),u.add(E.id),E._stance',
+      'd.set(E.id,(d.get(E.id)||0)+G),u.add(E.id),gpmFrontlineRecordCombat(e,t,E,O),E._stance'],
+    ['p.set(E.id,(p.get(E.id)||0)+G),u.add(E.id),E._stance',
+      'p.set(E.id,(p.get(E.id)||0)+G),u.add(E.id),gpmFrontlineRecordCombat(e,t,E,O),E._stance'],
     ['_=E=>E._stance==="attack"||E._stance==="encircled",k=(E,O,G,D)',
       '_=E=>gpmFrontlineProjectsPressure(e,t,E),k=(E,O,G,D)'],
     ["wt=wFa(t.field,nt.pAttack,nt.eHold,nt.eAttack,nt.pHold)", "wt=wFa(t.field,nt.pAttack,nt.eHold,nt.eAttack,nt.pHold,gpmFrontlinePressureFilter(e,t))"],

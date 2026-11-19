@@ -37,7 +37,12 @@ const previousStock = [{
 }];
 
 const previousPpoWorker = "0a19e1f66ac9d5bff7368221741a18eeea6bc2794206b1e68531132f7517f3a8";
-const previousPpo = [{ // PPO 1.1.5 Cleanup and Installer Fix
+const previousPpo = [{ // PPO 1.1.5 Frontline prototype
+  archive: "7c37d73e154baa1accd005684783b067d2d686e926f8fd3a22e0ff288194abcf",
+  worker: "3765e5f74af6a2cc43e31a6a48ce471f7741401977ac9787ac143c912282ee95",
+  renderer: "2893d1051615fd8ae09bd9be20609f39219fc0d9295b614c29232310961311e2",
+  executable: "2e444128165fc724afd24b78e6a96d894a92558c516fb0198e27e8eae8c35545",
+}, { // PPO 1.1.5 Cleanup and Installer Fix
   archive: "2bbd0fd658fe2528f78312cae617dd00d8fdca14bcf1abb1ef7506844d60e256",
   worker: "edfeb8bbafbb4c82229368207be09ac1c497e961aaa25c2b232c7e125a8799c4",
   renderer: "62a9e2841ec4c3b9b6200229f8982e5a0712eb4030b3783973d05bcea8fd3895",

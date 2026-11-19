@@ -171,8 +171,9 @@ function gpmFrontlineRoutePreview(sim, input) {
   const war = sim.conflicts?.get(input.warId);
   if (!gpmFrontlineWar(sim, war)) return { ok: false, reason: "conflict" };
   const previous = war.gpmFrontline?.find(plan => plan.id === input.afterId && plan.owner === sim.playerKey);
-  const line = gpmFrontlinePlanLine(war, gpmFrontlineTracePoints(input.line), previous);
-  if (!line) return { ok: false, reason: "front" };
+  const selected = gpmFrontlineLineRequest(war, input, previous);
+  if (!selected.ok) return selected;
+  const { line } = selected;
   const result = gpmFrontlineCanonicalArrow(sim, war, sim.playerKey, input.validateArrow || input.arrow, line, input.objectiveProvinceKey);
   if (result.ok && gpmFrontlineRoute(line, result.arrow[0]).distanceKm > gpmFrontlineSectorKm) return { ok: false, reason: "arrow_start" };
   return result;
