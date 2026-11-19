@@ -562,7 +562,8 @@
             },
             {
               "id": "NU",
-              "name": "Blue and White - National Unity",
+              "name": "Blue and White",
+              "officialName": "Blue and White - National Unity Party",
               "seats": 8,
               "kind": "parliamentary faction",
               "heads": [
@@ -571,7 +572,8 @@
             },
             {
               "id": "UTJ",
-              "name": "United Torah Judaism (Yahadut Hatorah)",
+              "name": "United Torah Judaism",
+              "officialName": "United Torah Judaism (Yahadut Hatorah)",
               "seats": 7,
               "kind": "parliamentary faction",
               "heads": [
@@ -609,7 +611,8 @@
             },
             {
               "id": "gpm-il-united-arab-list",
-              "name": "United Arab List (Ra’am)",
+              "name": "Ra’am",
+              "officialName": "United Arab List (Ra’am)",
               "seats": 5,
               "kind": "parliamentary faction",
               "heads": [
@@ -628,7 +631,8 @@
             },
             {
               "id": "DEM",
-              "name": "Labor parliamentary faction",
+              "name": "Labor",
+              "officialName": "Labor parliamentary faction",
               "seats": 4,
               "kind": "parliamentary faction",
               "heads": [
@@ -637,7 +641,8 @@
             },
             {
               "id": "gpm-il-new-hope",
-              "name": "New Hope - The United Right",
+              "name": "New Hope",
+              "officialName": "New Hope - The United Right",
               "seats": 4,
               "kind": "parliamentary faction",
               "heads": [

@@ -171,21 +171,33 @@ function gpmHistoricalPlayerRole(role, status) {
   return "";
 }
 
+function gpmHistoricalIdeologyLabel(actor) {
+  const ideology = actor?.ppoIdeology;
+  return ideology?.historicalLabel || ideology?.label ||
+    (actor?.ideology?.length <= 80 ? actor.ideology.replace(/\.$/, "") : null) ||
+    (ideology?.territorial ? gpmHistoricalLabel(ideology.territorial) : null);
+}
+
 function gpmHistoricalWarParticipant(participant, scopeId, { actor, focused, page } = {}) {
   const { id, countryKey, name, flagAsset, flagUrl, flagCode, associatedFlagCode, associatedFlagLabel, role, strength, deaths } = participant;
-  const fallbackFlag = gpmHistoricalAssetUrl(flagAsset) || flagUrl || (flagCode ? Mi(flagCode) : null);
+  const recordedFlag = actor?.identity?.flag;
+  const historicalFlag = gpmHistoricalAssetUrl(recordedFlag?.asset || flagAsset);
+  const fallbackFlag = historicalFlag || flagUrl || (flagCode ? Mi(flagCode) : null);
   const participantFlag = countryKey ? gpmHistoricalNativeMapFlag(countryKey, fallbackFlag) : fallbackFlag;
   const associatedFlag = !participantFlag && associatedFlagCode && associatedFlagLabel ? Mk(associatedFlagCode)?.url : null;
-  const flag = participantFlag || associatedFlag;
+  const summaryFlag = !historicalFlag && (participantFlag || associatedFlag);
   const involvement = role === "support" ? "Supporter" : ["access", "territorial_access"].includes(role) ? "Grants access" : "";
   const key = `war-${scopeId}-${id}`;
   const estimate = strength?.label || "Unknown";
+  const ideology = gpmHistoricalIdeologyLabel(actor);
   return `<details class="gpm-war-participant" data-history-panel="${b(key)}"${focused ? " open data-history-focused-actor" : ""}>
     <summary data-focus-key="${b(key)}" data-authority-safe>
-      ${flag ? `<img class="gpm-war-flag" src="${b(flag)}" alt="${associatedFlag ? b(associatedFlagLabel) : ""}"${associatedFlag ? ` title="${b(associatedFlagLabel)}"` : ""} loading="lazy">` : ""}
+      ${summaryFlag ? `<img class="gpm-war-flag" src="${b(summaryFlag)}" alt="${associatedFlag ? b(associatedFlagLabel) : ""}"${associatedFlag ? ` title="${b(associatedFlagLabel)}"` : ""} loading="lazy">` : ""}
       <span><b>${b(name)}</b>${involvement ? `<small>${involvement}</small>` : ""}</span>
     </summary>
+    ${historicalFlag ? `<img class="gpm-war-flag" src="${b(historicalFlag)}" alt="${b(recordedFlag?.name || name)}" loading="lazy">` : ""}
     <dl class="gpm-war-stat">
+      ${ideology ? `<div><dt>Ideology</dt><dd>${b(ideology)}</dd></div>` : ""}
       <div><dt>Estimated strength</dt><dd>${b(estimate)}</dd>${strength?.scope ? `<small>${b(strength.scope)}</small>` : ""}</div>
       ${Number.isFinite(deaths) || !page ? `<div><dt>Military deaths in this war</dt><dd>${Number.isFinite(deaths) ? b(deaths.toLocaleString(Ds())) : "Unknown"}</dd></div>` : ""}
     </dl>
@@ -338,12 +350,7 @@ function gpmMountHistoricalInspector(ui, session, shell) {
 }
 
 function gpmHistoricalFactionHeading(actor) {
-  const flag = actor.identity?.flag;
-  const flagUrl = gpmHistoricalAssetUrl(flag?.asset);
-  const ratio = Number.isFinite(flag?.ratio) && flag.ratio > 0 ? flag.ratio : 1.5;
   return `<div class="insp-head">
-    ${flagUrl ? `<img class="flag fl-xl" data-gpm-faction-flag style="--flag-ratio:${ratio}"
-      src="${b(flagUrl)}" alt="${b(flag.name || actor.name)}">` : ""}
     <div class="insp-id">
       <div class="insp-name">${b(actor.mapName || actor.wartimeMapName || actor.shortName || actor.name)}</div>
       <div class="insp-regime">${b(gpmHistoricalLabel(actor.kind))}</div>
@@ -353,6 +360,9 @@ function gpmHistoricalFactionHeading(actor) {
 
 function gpmHistoricalFactionProfile(actor, front) {
   const identity = actor.identity;
+  const flag = identity?.flag;
+  const flagUrl = gpmHistoricalAssetUrl(flag?.asset);
+  const ratio = Number.isFinite(flag?.ratio) && flag.ratio > 0 ? flag.ratio : 1.5;
   const opening = identity?.headOfState || identity?.leader || identity?.headOfGovernment;
   const leader = actor.leadership?.leader;
   const representative = identity?.representative;
@@ -377,9 +387,7 @@ function gpmHistoricalFactionProfile(actor, front) {
       <span><b>${b(person.name)}</b> <small>${b(person.role)}</small></span></li>`;
   };
   const ideology = actor.ppoIdeology;
-  const politics = ideology?.historicalLabel || ideology?.label ||
-    (actor.ideology?.length <= 80 ? actor.ideology.replace(/\.$/, "") : null) ||
-    (ideology?.territorial ? gpmHistoricalLabel(ideology.territorial) : null);
+  const politics = gpmHistoricalIdeologyLabel(actor);
   const badges = front.status === "active" ? `<span class="badge alert">${o("inspector.badge.atWar")}</span>` :
     front.status ? `<span class="badge">${b(gpmHistoricalLabel(front.status))}</span>` : "";
   const stats = [
@@ -397,21 +405,25 @@ function gpmHistoricalFactionProfile(actor, front) {
   };
   return `${gpmHistoricalFactionHeading(actor)}
     ${badges ? `<div class="badges insp-badges">${badges}</div>` : ""}
-    <div class="k insp-leader" data-gpm-faction-leader>
-      <span class="insp-ic il-ic">${photo ? `<img class="il-av" src="${b(photo)}" alt="${b(photoCredit || leaderName)}">` : Y.user}</span>
-      <span class="il-txt"><span class="il-role">${b(leaderName)}</span>
-        ${leaderRole || photoCredit ? `<span class="il-sub">${b([leaderRole, photoCredit].filter(Boolean).join(" · "))}</span>` : ""}
-      </span>
-    </div>
-    ${officials.length ? `<details data-gpm-faction-officials><summary>Opening faction officials</summary>
-      <ul class="gpm-faction-laws">${officials.map(officialRow).join("")}</ul></details>` : ""}
     ${stats.length ? `<div class="insp-econ">${stats.map(([label, value]) =>
       `<div class="stat" data-gpm-faction-stat><label>${b(label)}</label><span class="v">${b(value.toLocaleString(Ds()))}</span></div>`).join("")}</div>` : ""}
-    ${details.length ? `<div class="insp-rel">${details.map(([label, value]) =>
-      `<div class="ir-cell"><label>${b(label)}</label><span>${b(value)}</span></div>`).join("")}</div>` : ""}
-    ${laws.length ? `<div data-gpm-faction-policies><div class="insp-tier">Policies</div>
-      <ul class="gpm-faction-laws">${laws.slice(0, 3).map(policy).join("")}</ul>
-      ${laws.length > 3 ? `<details><summary>More policies</summary><ul class="gpm-faction-laws">${laws.slice(3).map(policy).join("")}</ul></details>` : ""}</div>` : ""}`;
+    <details class="gpm-history-section" data-gpm-faction-details><summary>Faction details</summary>
+      ${flagUrl ? `<img class="flag fl-xl" data-gpm-faction-flag style="--flag-ratio:${ratio}"
+        src="${b(flagUrl)}" alt="${b(flag.name || actor.name)}" loading="lazy">` : ""}
+      <div class="k insp-leader" data-gpm-faction-leader>
+        <span class="insp-ic il-ic">${photo ? `<img class="il-av" src="${b(photo)}" alt="${b(photoCredit || leaderName)}" loading="lazy">` : Y.user}</span>
+        <span class="il-txt"><span class="il-role">${b(leaderName)}</span>
+          ${leaderRole || photoCredit ? `<span class="il-sub">${b([leaderRole, photoCredit].filter(Boolean).join(" · "))}</span>` : ""}
+        </span>
+      </div>
+      ${officials.length ? `<div data-gpm-faction-officials><div class="insp-tier">Opening faction officials</div>
+        <ul class="gpm-faction-laws">${officials.map(officialRow).join("")}</ul></div>` : ""}
+      ${details.length ? `<div class="insp-rel">${details.map(([label, value]) =>
+        `<div class="ir-cell"><label>${b(label)}</label><span>${b(value)}</span></div>`).join("")}</div>` : ""}
+      ${laws.length ? `<div data-gpm-faction-policies><div class="insp-tier">Policies</div>
+        <ul class="gpm-faction-laws">${laws.slice(0, 3).map(policy).join("")}</ul>
+        ${laws.length > 3 ? `<details><summary>More policies</summary><ul class="gpm-faction-laws">${laws.slice(3).map(policy).join("")}</ul></details>` : ""}</div>` : ""}
+    </details>`;
 }
 
 async function gpmOpenHistoricalFactionInspector(ui, session, item, front, faction) {
@@ -1187,7 +1199,7 @@ function gpmBuildHistoricalConflicts(container, ui, session) {
 }
 
 function patchHistoricalConflictsRenderer(source, replaceOnce) {
-  const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalPlayerRole, gpmHistoricalWarParticipant, gpmHistoricalWarPortrait,
+  const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalPlayerRole, gpmHistoricalIdeologyLabel, gpmHistoricalWarParticipant, gpmHistoricalWarPortrait,
     gpmHistoricalWarCard, gpmHistoricalWarFallback, gpmShowNextWarAlert, gpmQueueWarAlert,
     gpmMountHistoricalInspector, gpmHistoricalFactionHeading, gpmHistoricalFactionProfile, gpmOpenHistoricalFactionInspector,
     gpmHistoricalControlSummary, gpmHistoricalControlStatus, gpmHistoricalFrontSummary, gpmHistoricalOverlayFront, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,
