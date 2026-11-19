@@ -24,7 +24,7 @@ You can continue an existing campaign. Start a new game to load the January 1, 2
 
 ### Frontline orders
 
-Select an army in the bottom roster or press **+** to group divisions from the map or roster. Click the highlighted contact line to assign the whole front, or drag along it to assign a sector.
+Select an army above the command console or press **+** to group divisions from the map or roster. Click the highlighted contact line to assign the whole front, or drag along it to assign a sector.
 
 Choose **Save & Hold** to defend the assigned line. To attack, select **Set objective**, pick a province, review the arrow, and choose **Save & Advance**. For an army already at the front, **Hold** stops its push while it continues defending. **Advance** resumes its saved objective when the route is valid. The army's order shows its activity and any reason it is waiting.
 

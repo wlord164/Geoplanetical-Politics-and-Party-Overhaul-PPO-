@@ -27,21 +27,34 @@ const style = `
 .gpm-frontline-roster label:has(input:disabled) { color: var(--text-3); }
 .gpm-frontline-crosshair { cursor: crosshair !important; touch-action: none; }
 .gpm-frontline-selection-box { position: fixed; z-index: 990; pointer-events: none; border: 1px solid #82ddf9; background: #82ddf926; box-shadow: 0 0 0 1px #0a1d3099; }
-.gpm-frontline-roster-bar { position: fixed; z-index: 46; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; padding: 4px 6px 0; gap: 5px; max-width: calc(100vw - 26px); overflow-x: auto; box-sizing: border-box; }
-body.gpm-frontline-planning #war-console { margin-bottom: calc(var(--pad) + 116px); }
+#mil-frame.gpm-frontline-planning { grid-template-rows: auto minmax(0, 1fr) auto auto; }
+#mil-frame.gpm-frontline-planning > #war-console { grid-row: 4; margin-bottom: 0; border-end-start-radius: 0; border-end-end-radius: 0; }
+.gpm-frontline-roster-bar {
+  --frontline-tile-height: 64px; --frontline-face-height: 34px; --frontline-face-width: 30px;
+  --frontline-max-slot-width: 86px; --frontline-add-width: 40px;
+  grid-row: 3; justify-self: center; align-self: end; pointer-events: auto; display: flex;
+  width: max-content; min-width: 0; max-width: calc(100% - 2 * var(--pad)); box-sizing: border-box;
+  margin: 0 0 3px; padding: 2px 4px 0; gap: 4px; overflow-x: auto; scrollbar-width: thin;
+}
+@media (max-width: 1024px) {
+  .gpm-frontline-roster-bar {
+    --frontline-tile-height: 56px; --frontline-face-height: 27px; --frontline-face-width: 24px;
+    --frontline-max-slot-width: 76px; --frontline-add-width: 36px;
+  }
+}
 .gpm-frontline-slot { flex: 0 0 var(--frontline-slot-width, 98px); min-width: 0; position: relative; }
-.gpm-frontline-slot > button[data-gpm-frontline-slot] { display: grid; grid-template: 16px 42px 12px / minmax(0, 1fr); align-content: center; justify-items: center; gap: 0; box-sizing: border-box; width: 100%; height: 76px; min-height: 76px; padding: 3px 5px; }
-.gpm-frontline-slot-name { color: white; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 11px/14px var(--font-display); }
-.gpm-frontline-slot-status { color: var(--text-2); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 10px/12px var(--font-display); }
+.gpm-frontline-slot > button[data-gpm-frontline-slot] { display: grid; grid-template: 12px var(--frontline-face-height) 10px / minmax(0, 1fr); align-content: center; justify-items: center; gap: 0; box-sizing: border-box; width: 100%; height: var(--frontline-tile-height); min-height: var(--frontline-tile-height); padding: 1px 4px; }
+.gpm-frontline-slot-name { color: white; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 11px/12px var(--font-display); }
+.gpm-frontline-slot-status { color: var(--text-2); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 10px/10px var(--font-display); }
 .gpm-frontline-slot [data-slot-state="filled"] .gpm-frontline-slot-name { width: calc(100% - 17px); justify-self: start; text-align: center; }
 .gpm-frontline-slot button[aria-pressed="true"] { outline: 2px solid var(--frontline-color, #82ddf9); outline-offset: -2px; }
 .gpm-frontline-slot [data-gpm-frontline-slot][data-slot-state="empty"] { background: #35383e; color: #a4a7ac; }
 .gpm-frontline-slot [data-gpm-frontline-slot][data-slot-state="empty"] .gpm-frontline-slot-name { color: #b8bbc2; }
-.gpm-frontline-portrait { display: block; width: 36px; height: 42px; border-radius: 3px; object-fit: cover; object-position: top; }
+.gpm-frontline-portrait { display: block; width: var(--frontline-face-width); height: var(--frontline-face-height); border-radius: 3px; object-fit: cover; object-position: top; }
 .gpm-frontline-portrait-empty { background: #666a73; opacity: .42; }
 .gpm-frontline-slot [data-gpm-frontline-remove-army] { position: absolute; z-index: 1; right: 3px; top: 3px; height: 16px; min-height: 16px; width: 16px; padding: 0; border: 1px solid #9e3139; border-radius: 3px; background: #67282e; color: #fff0f1; font: 700 13px/14px var(--font-display); cursor: pointer; }
 .gpm-frontline-slot [data-gpm-frontline-remove-army]:hover { background: #ab3845; }
-.gpm-frontline-add-slot { flex: 0 0 48px; box-sizing: border-box; height: 76px; min-height: 76px; font-size: 21px; }
+.gpm-frontline-add-slot { flex: 0 0 var(--frontline-add-width); box-sizing: border-box; height: var(--frontline-tile-height); min-height: var(--frontline-tile-height); font-size: 18px; }
 .gpm-frontline-army-meta { display: grid; gap: var(--gap-2); }
 .gpm-frontline-army-meta label { display: grid; gap: 2px; min-width: 0; }
 .gpm-frontline-army-meta :is(input,select) { width: 100%; box-sizing: border-box; }
@@ -116,9 +129,11 @@ async function gpmOpenFrontline(ui, session) {
 
 function gpmMountFrontline(ui, session, warId) {
   const registry = K("war-registry");
+  const frame = K("mil-frame");
+  const consoleHost = K("war-console");
   const globe = ui.globe;
   const canvas = globe?.renderer?.domElement;
-  if (!registry || !canvas) return;
+  if (!registry || !frame || !canvas || !consoleHost || consoleHost.parentElement !== frame) return;
   gpmFrontlineMountStyle();
   const host = document.createElement("section");
   host.className = "gpm-frontline gpm-frontline-dock";
@@ -126,11 +141,11 @@ function gpmMountFrontline(ui, session, warId) {
   host.setAttribute("data-gpm-frontline-panel", "");
   host.setAttribute("aria-label", "Frontline planner");
   registry.append(host);
-  const state = ui._gpmFrontline = { session, ui, playerKey: session.playerKey, warId, host, registry, globe, canvas,
+  const state = ui._gpmFrontline = { session, ui, playerKey: session.playerKey, warId, host, registry, frame, globe, canvas,
     events: new AbortController(), data: null, draft: null, drawing: null, selectedSlot: null, selectedArmyId: null,
     feedback: "", meshes: [], request: 0 };
   const options = { signal: state.events.signal };
-  gpmMountFrontlineRoster(state, options);
+  gpmMountFrontlineRoster(state, options, consoleHost);
   host.addEventListener("click", event => gpmFrontlineClick(state, event), options);
   host.addEventListener("input", event => {
     const input = event.target.closest("[data-gpm-frontline-army-name]");
@@ -182,7 +197,7 @@ function gpmCloseFrontline(ui) {
   state.roster?.remove();
   state.labelLayer?.remove();
   state.selectionLayer?.remove();
-  document.body.classList.remove("gpm-frontline-planning");
+  state.frame.classList.remove("gpm-frontline-planning");
   state.registry.classList.remove("gpm-frontline-open");
   state.canvas.classList.remove("gpm-frontline-crosshair");
   gpmClearFrontlinePaths(state);
@@ -253,7 +268,7 @@ function gpmKeepFrontlineDraft(state) {
   return true;
 }
 
-function gpmMountFrontlineRoster(state, options) {
+function gpmMountFrontlineRoster(state, options, consoleHost) {
   state.slots = 2;
   const roster = state.roster = document.createElement("nav");
   roster.className = "gpm-frontline-roster-bar";
@@ -264,8 +279,9 @@ function gpmMountFrontlineRoster(state, options) {
   layer.setAttribute("aria-hidden", "true");
   const selection = state.selectionLayer = layer.cloneNode(false);
   state.formationMarks = new Map();
-  document.body.append(layer, selection, roster);
-  document.body.classList.add("gpm-frontline-planning");
+  document.body.append(layer, selection);
+  consoleHost.before(roster);
+  state.frame.classList.add("gpm-frontline-planning");
   roster.addEventListener("click", event => {
     if (state.busy || state.drawing?.validating || state.data?.status !== "active") return;
     const remove = event.target.closest("[data-gpm-frontline-remove-army]");
@@ -340,7 +356,7 @@ function gpmPaintFrontlineRoster(state) {
         ? `[data-gpm-frontline-remove-army="${CSS.escape(active.gpmFrontlineRemoveArmy)}"]`
         : active?.gpmFrontlineAddSlot != null ? "[data-gpm-frontline-add-slot]" : null;
     state.rosterHtml = html;
-    state.roster.style.setProperty("--frontline-slot-width", `clamp(64px, calc((100vw - 64px) / ${state.slots}), 102px)`);
+    state.roster.style.setProperty("--frontline-slot-width", `clamp(56px, calc((100vw - 64px) / ${state.slots}), var(--frontline-max-slot-width))`);
     state.roster.innerHTML = html;
     if (focus) state.roster.querySelector(focus)?.focus({ preventScroll: true });
   }
