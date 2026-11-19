@@ -62,6 +62,8 @@ const style = `
 .gpm-frontline-editor details > .gpm-frontline-color { margin-top: var(--gap-2); }
 .gpm-frontline-arrow-labels { position: fixed; inset: 0; pointer-events: none; z-index: 44; overflow: hidden; }
 .gpm-frontline-arrow-label { position: absolute; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; border-radius: 2px; color: white; background: var(--frontline-color); font: var(--fw-semi) 10px/13px var(--font-display); text-shadow: 0 0 2px #000, 0 1px 2px #000; }
+.gpm-frontline-objective-dot { position: absolute; box-sizing: border-box; width: 7px; height: 7px; transform: translate(-50%, -50%); border: 1px solid #151c26; border-radius: 50%; background: var(--frontline-color); box-shadow: 0 0 0 1px #151c26a6; }
+.gpm-frontline-objective-dot.is-muted { width: 5px; height: 5px; }
 .gpm-frontline-formation-mark { position: absolute; width: 34px; height: 34px; transform: translate(-50%, -50%); border: 2px solid var(--frontline-color); border-radius: 7px; box-shadow: 0 0 0 1px #111a24, inset 0 0 0 1px #111a24; box-sizing: border-box; }
 .gpm-frontline-contact-keyboard { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }
 .gpm-frontline-formation-state { display: grid; gap: 5px; margin: 0; }
@@ -970,20 +972,23 @@ function gpmFrontlineError(reason) {
   return labels[reason] || "The order was declined. Check the group and its objective.";
 }
 
+function gpmDisposeFrontlineMesh(state, mesh) {
+  state.globe.scene.remove(mesh);
+  mesh.geometry.dispose();
+  mesh.material.dispose();
+  const lineMaterials = state.globe._lineMats;
+  const index = lineMaterials?.indexOf(mesh.material) ?? -1;
+  if (index >= 0) lineMaterials.splice(index, 1);
+}
+
 function gpmClearFrontlinePaths(state) {
-  for (const mesh of state.meshes) {
-    state.globe.scene.remove(mesh);
-    mesh.geometry.dispose();
-    mesh.material.dispose();
-    const lineMaterials = state.globe._lineMats;
-    const index = lineMaterials?.indexOf(mesh.material) ?? -1;
-    if (index >= 0) lineMaterials.splice(index, 1);
-  }
+  for (const mesh of state.meshes) gpmDisposeFrontlineMesh(state, mesh);
   state.meshes.length = 0;
+  state.objectives = [];
   state.globe._frameGate?.invalidate?.();
 }
 
-function gpmFrontlineObjectiveBoundary(geometry, arrow) {
+function gpmFrontlineObjectiveBoundary(geometry, arrow, emphasized) {
   const tip = arrow?.at(-1);
   if (!tip?.every(Number.isFinite)) return null;
   const polygons = geometry?.type === "Polygon" ? [geometry.coordinates] :
@@ -1054,7 +1059,8 @@ function gpmFrontlineObjectiveBoundary(geometry, arrow) {
   if (!hit) return null;
   const { ring, index, point } = hit;
   const perimeter = ring.reduce((sum, a, i) => sum + distance(a, ring[(i + 1) % ring.length]), 0);
-  const span = Math.min(perimeter * .16, Math.min(52, 29 + hit.distance * .14));
+  const span = emphasized ? Math.min(perimeter * .22, 260) :
+    Math.min(perimeter * .16, Math.min(52, 29 + hit.distance * .14));
   if (span <= .01) return null;
 
   const walk = direction => {
@@ -1074,7 +1080,98 @@ function gpmFrontlineObjectiveBoundary(geometry, arrow) {
     }
     return path;
   };
-  return [...walk(-1).reverse(), point, ...walk(1)].map(unproject);
+  return { center: unproject(point), sides: [walk(-1).map(unproject), walk(1).map(unproject)] };
+}
+
+function gpmAddFrontlineObjective(state, arrow, objective, color, opacity, emphasis) {
+  const radius = dt * 1.007;
+  const world = ([lon, lat]) => ct(lat, lon, radius);
+  const tip = arrow.at(-1);
+  const dot = document.createElement("span");
+  dot.className = "gpm-frontline-objective-dot" + (emphasis ? "" : " is-muted");
+  dot.setAttribute("data-gpm-frontline-objective-dot", objective);
+  dot.dataset.lon = tip[0];
+  dot.dataset.lat = tip[1];
+  dot.hidden = true;
+  dot.style.setProperty("--frontline-color", `#${color.toString(16).padStart(6, "0")}`);
+  dot.style.opacity = opacity;
+  state.labelLayer.append(dot);
+  const geometry = state.globe.world?.provByKey?.get(objective)?.geometry;
+  const arc = gpmFrontlineObjectiveBoundary(geometry, arrow, emphasis);
+  const center = arc && world(arc.center);
+  const sides = arc?.sides.map(side => side.map(world));
+  const probes = sides?.map(side => side.find(point => point.distanceTo(center) >= radius * .004) || side.at(-1));
+  state.objectives.push({ dot, tip: world(tip), center, sides, probes, objective, color, opacity, emphasis, meshes: [] });
+}
+
+function gpmFrontlineScreenBoundary(marker, origin, project) {
+  const walk = side => {
+    const path = [];
+    const limit = marker.emphasis ? 26 : 16;
+    let length = 0, previous = marker.center, from = origin;
+    for (const point of side) {
+      const to = project(point);
+      if (!to) break;
+      const step = Math.hypot(to[0] - from[0], to[1] - from[1]);
+      if (step + length > limit) {
+        const end = previous.clone().lerp(point, (limit - length) / step).normalize();
+        path.push(end);
+        length = limit;
+        break;
+      }
+      path.push(point);
+      length += step;
+      previous = point;
+      from = to;
+    }
+    return { path, length };
+  };
+  const [left, right] = marker.sides.map(walk);
+  return {
+    points: [...left.path.reverse(), marker.center, ...right.path].map(point => {
+      const [lat, lon] = n2(point);
+      return [lon, lat];
+    }),
+    pixels: left.length + right.length,
+  };
+}
+
+function gpmTickFrontlineObjectives(state, project) {
+  const viewport = window.innerWidth + "x" + window.innerHeight;
+  for (const marker of state.objectives || []) {
+    const tip = project(marker.tip);
+    marker.dot.hidden = !tip || tip[0] < 0 || tip[0] >= window.innerWidth || tip[1] < 0 || tip[1] >= window.innerHeight;
+    if (!marker.dot.hidden) Object.assign(marker.dot.style, { left: tip[0].toFixed(1) + "px", top: tip[1].toFixed(1) + "px" });
+    if (!marker.center) continue;
+
+    const origin = project(marker.center);
+    const scale = origin && Math.max(0, ...marker.probes.map(point => {
+      const p = point && project(point);
+      return p && Math.hypot(p[0] - origin[0], p[1] - origin[1]) || 0;
+    }));
+    if (!scale) {
+      if (marker.scale != null) {
+        for (const mesh of marker.meshes) mesh.visible = false;
+        state.globe._frameGate?.invalidate?.();
+      }
+      marker.scale = null;
+      continue;
+    }
+    // Preserve the arrow and border mesh during panning or imperceptible zoom updates.
+    if (marker.viewport === viewport && Math.abs(scale - marker.scale) < marker.scale * .13) continue;
+    marker.viewport = viewport;
+    marker.scale = scale;
+    for (const mesh of marker.meshes) {
+      gpmDisposeFrontlineMesh(state, mesh);
+      const index = state.meshes.indexOf(mesh);
+      if (index >= 0) state.meshes.splice(index, 1);
+    }
+    const { points, pixels } = gpmFrontlineScreenBoundary(marker, origin, project);
+    marker.meshes = pixels >= 5 && points.length >= 2
+      ? gpmAddFrontlinePath(state, points, marker.color, false, marker.opacity, marker.emphasis, marker.objective, pixels) || []
+      : [];
+    state.globe._frameGate?.invalidate?.();
+  }
 }
 
 function gpmPaintFrontlinePaths(state) {
@@ -1109,11 +1206,7 @@ function gpmPaintFrontlinePaths(state) {
     if (!path || path.length < 2) continue;
     gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis);
     if (arrow && name) gpmAddFrontlineLabel(state, path, color, opacity, name);
-    if (objective) {
-      const geometry = state.globe.world?.provByKey?.get(objective)?.geometry;
-      const boundary = gpmFrontlineObjectiveBoundary(geometry, path);
-      if (boundary) gpmAddFrontlinePath(state, boundary, color, false, opacity, emphasis, objective);
-    }
+    if (objective) gpmAddFrontlineObjective(state, path, objective, color, opacity, emphasis);
   }
   gpmTickFrontlineLabels(state.ui);
   state.globe._frameGate?.invalidate?.();
@@ -1151,7 +1244,7 @@ function gpmAddFrontlineLabel(state, path, color, opacity, name) {
 
 function gpmTickFrontlineLabels(ui) {
   const state = ui._gpmFrontline;
-  if (!state || !state.labels?.length && state.selectedSlot == null && !state.formationMarks.size) return;
+  if (!state || !state.labels?.length && !state.objectives?.length && state.selectedSlot == null && !state.formationMarks.size) return;
   const { camera, sphere } = state.globe;
   const radius = sphere.geometry.parameters.radius;
   camera.updateMatrixWorld();
@@ -1161,6 +1254,7 @@ function gpmTickFrontlineLabels(ui) {
     const point = world.clone().project(camera);
     return point.z >= -1 && point.z <= 1 ? [(point.x * .5 + .5) * window.innerWidth, (.5 - point.y * .5) * window.innerHeight] : null;
   };
+  gpmTickFrontlineObjectives(state, project);
   for (const { element, spans, textWidth } of state.labels || []) {
     let visible = null;
     for (const span of spans) {
@@ -1214,7 +1308,7 @@ function gpmTickFrontlineFormationMarks(state) {
   }
 }
 
-function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, objective = null) {
+function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, objective = null, pixels = 0) {
   const segments = [];
   const radius = dt * (arrow || objective ? 1.007 : 1.0012);
   const add = (a, b) => segments.push(a.x, a.y, a.z, b.x, b.y, b.z);
@@ -1248,7 +1342,10 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, o
     const geometry = new ys();
     geometry.setPositions(segments);
     const style = { color: ink, linewidth, transparent: true, opacity: alpha, depthTest: true, depthWrite: false };
-    if (objective) Object.assign(style, { dashed: true, dashSize: length * .096, gapSize: length * .059 });
+    if (objective) {
+      const dashes = Math.max(2, Math.min(5, Math.round(pixels / 10.5)));
+      Object.assign(style, { dashed: true, dashSize: length * .64 / dashes, gapSize: length * .36 / dashes });
+    }
     const material = new Uc(style);
     material.resolution.set(window.innerWidth, window.innerHeight);
     (state.globe._lineMats ||= []).push(material);
@@ -1262,11 +1359,15 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, o
     }
     state.globe.scene.add(mesh);
     state.meshes.push(mesh);
+    return mesh;
   };
   if (objective) {
     if (length < 1e-7) return;
-    addMesh(0x111923, emphasis ? 5.7 : 4.8, opacity * .9, 26, "gpm-frontline-objective-boundary-casing");
-    addMesh(color, emphasis ? 3.1 : 2.5, opacity, 27, "gpm-frontline-objective-boundary");
+    const core = pixels < 17 ? 1.7 : emphasis ? 2.4 : 2;
+    return [
+      addMesh(0x111923, core + 1.6, opacity * .92, 26, "gpm-frontline-objective-boundary-casing"),
+      addMesh(color, core, opacity, 27, "gpm-frontline-objective-boundary"),
+    ];
   } else addMesh(color, arrow ? 1.9 : emphasis ? 5.4 : 4.5, opacity, 28);
 }
 
@@ -1277,7 +1378,8 @@ function patchFrontlineRenderer(source, replaceOnce) {
     gpmPaintFrontline, gpmEditFrontlineDraft, gpmFrontlineClick, gpmFrontlineSetDraw, gpmFrontlineDistance, gpmFrontlineMidpoint,
     gpmFrontlineContactParams, gpmFrontlineScreenPoint, gpmPickFrontlineContact, gpmFrontlineContactSection, gpmBindFrontlineDraw, gpmFinishFrontlineDraw,
     gpmFrontlineSelectionRect, gpmSelectFrontlineFormations, gpmTraceFrontline, gpmClipFrontlinePreview, gpmRouteFrontlineArrow,
-    gpmSendFrontline, gpmFrontlineError, gpmClearFrontlinePaths, gpmFrontlineObjectiveBoundary, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
+    gpmSendFrontline, gpmFrontlineError, gpmDisposeFrontlineMesh, gpmClearFrontlinePaths, gpmFrontlineObjectiveBoundary,
+    gpmAddFrontlineObjective, gpmFrontlineScreenBoundary, gpmTickFrontlineObjectives, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
     gpmAddFrontlineLabel, gpmTickFrontlineLabels, gpmTickFrontlineFormationMarks, gpmAddFrontlinePath];
   const insertion = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, insertion, `\nconst gpmFrontlineStyle = ${JSON.stringify(style)};\nconst gpmFrontlinePalette = ${JSON.stringify(palette)};\n${functions.join("\n")}${insertion}`);
