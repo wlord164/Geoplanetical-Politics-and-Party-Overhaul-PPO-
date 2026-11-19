@@ -1104,7 +1104,53 @@ function gpmAddFrontlineObjective(state, arrow, objective, color, opacity, empha
   state.objectives.push({ dot, tip: world(tip), center, sides, probes, objective, color, opacity, emphasis, meshes: [] });
 }
 
-function gpmFrontlineScreenBoundary(marker, origin, project) {
+function gpmExtendFrontlineObjective(globe, local, opposite, center, start, axis, span, project) {
+  const outer = local.at(-1).clone().normalize();
+  const radius = center.length();
+  const directionFrom = point => {
+    const inner = point.clone().normalize();
+    return outer.clone().multiplyScalar(inner.dot(outer)).addScaledVector(inner, -1).normalize();
+  };
+  const offset = ([x, y]) => [x - start[0], y - start[1]];
+  const advance = ([x, y]) => x * axis[0] + y * axis[1];
+  // A little of the local course smooths fine border zigzags. If it bends back
+  // inward, use the outward axis of the central stretch instead of looping.
+  const reference = local.findLast(point => {
+    const screen = project(point);
+    return screen && Math.hypot(...offset(screen)) >= Math.min(8, span * .24);
+  });
+  const localDirection = directionFrom(reference || center);
+  const steer = project(outer.clone().addScaledVector(localDirection, .001).normalize().multiplyScalar(radius));
+  const vector = steer && offset(steer);
+  const heading = vector && advance(vector) > Math.hypot(...vector) * .68
+    ? localDirection : directionFrom(opposite);
+  const pointAt = angle => outer.clone().multiplyScalar(Math.cos(angle))
+    .addScaledVector(heading, Math.sin(angle)).multiplyScalar(radius);
+  const points = [];
+  let previous = start, progress = 0, pixels = 0;
+  const step = .0008;
+  for (let angle = step; angle <= .12; angle += step) {
+    let point = pointAt(angle), screen = project(point);
+    if (!screen) break;
+    const next = advance(offset(screen));
+    if (next <= progress + .0001) break;
+    if (next >= span) {
+      point = pointAt(angle - step + step * (span - progress) / (next - progress));
+      screen = project(point);
+      if (!screen) break;
+    }
+    const [lat, lon] = n2(point);
+    if (globe._provinceAt(lon, lat) < 0) break;
+    points.push(point);
+    pixels += Math.hypot(screen[0] - previous[0], screen[1] - previous[1]);
+    if (next >= span) break;
+    previous = screen;
+    progress = next;
+  }
+  return { points, pixels };
+}
+
+function gpmFrontlineScreenBoundary(marker, origin, project, globe) {
   const walk = side => {
     const path = [];
     const limit = marker.emphasis ? 26 : 16;
@@ -1127,12 +1173,27 @@ function gpmFrontlineScreenBoundary(marker, origin, project) {
     return { path, length };
   };
   const [left, right] = marker.sides.map(walk);
+  let ends = [{ points: [], pixels: 0 }, { points: [], pixels: 0 }];
+  const leftEnd = left.path.at(-1), rightEnd = right.path.at(-1);
+  if (leftEnd && rightEnd && globe?._provinceAt) {
+    const radius = marker.center.length();
+    const starts = [leftEnd, rightEnd].map(point => project(point.clone().normalize().multiplyScalar(radius)));
+    if (starts.every(Boolean)) {
+      const chord = [starts[1][0] - starts[0][0], starts[1][1] - starts[0][1]];
+      const span = Math.hypot(...chord);
+      if (span >= 3) {
+        const axis = chord.map(value => value / span);
+        ends = [gpmExtendFrontlineObjective(globe, left.path, rightEnd, marker.center, starts[0], axis.map(value => -value), span, project),
+          gpmExtendFrontlineObjective(globe, right.path, leftEnd, marker.center, starts[1], axis, span, project)];
+      }
+    }
+  }
   return {
-    points: [...left.path.reverse(), marker.center, ...right.path].map(point => {
+    points: [...ends[0].points.reverse(), ...left.path.reverse(), marker.center, ...right.path, ...ends[1].points].map(point => {
       const [lat, lon] = n2(point);
       return [lon, lat];
     }),
-    pixels: left.length + right.length,
+    pixels: left.length + right.length + ends[0].pixels + ends[1].pixels,
   };
 }
 
@@ -1169,7 +1230,7 @@ function gpmTickFrontlineObjectives(state, project) {
       const index = state.meshes.indexOf(mesh);
       if (index >= 0) state.meshes.splice(index, 1);
     }
-    const { points, pixels } = gpmFrontlineScreenBoundary(marker, origin, project);
+    const { points, pixels } = gpmFrontlineScreenBoundary(marker, origin, project, state.globe);
     marker.meshes = pixels >= 5 && points.length >= 2
       ? gpmAddFrontlinePath(state, points, marker.color, false, marker.opacity, marker.emphasis, marker.objective, pixels) || []
       : [];
@@ -1346,7 +1407,7 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, o
     geometry.setPositions(segments);
     const style = { color: ink, linewidth, transparent: true, opacity: alpha, depthTest: true, depthWrite: false };
     if (objective) {
-      const dashes = Math.max(2, Math.min(5, Math.round(pixels / 10.5)));
+      const dashes = Math.max(2, Math.min(15, Math.round(pixels / 10.5)));
       Object.assign(style, { dashed: true, dashSize: length * .64 / dashes, gapSize: length * .36 / dashes });
     }
     const material = new Uc(style);
@@ -1382,7 +1443,7 @@ function patchFrontlineRenderer(source, replaceOnce) {
     gpmFrontlineContactParams, gpmFrontlineScreenPoint, gpmPickFrontlineContact, gpmFrontlineContactSection, gpmBindFrontlineDraw, gpmFinishFrontlineDraw,
     gpmFrontlineSelectionRect, gpmSelectFrontlineFormations, gpmTraceFrontline, gpmClipFrontlinePreview, gpmRouteFrontlineArrow,
     gpmSendFrontline, gpmFrontlineError, gpmDisposeFrontlineMesh, gpmClearFrontlinePaths, gpmFrontlineObjectiveBoundary,
-    gpmAddFrontlineObjective, gpmFrontlineScreenBoundary, gpmTickFrontlineObjectives, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
+    gpmAddFrontlineObjective, gpmExtendFrontlineObjective, gpmFrontlineScreenBoundary, gpmTickFrontlineObjectives, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
     gpmAddFrontlineLabel, gpmTickFrontlineLabels, gpmTickFrontlineFormationMarks, gpmAddFrontlinePath];
   const insertion = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, insertion, `\nconst gpmFrontlineStyle = ${JSON.stringify(style)};\nconst gpmFrontlinePalette = ${JSON.stringify(palette)};\n${functions.join("\n")}${insertion}`);

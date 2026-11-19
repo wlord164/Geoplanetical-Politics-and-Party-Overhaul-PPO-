@@ -45,6 +45,12 @@ const previousStock = [{
 // An upgrade profile must use the same stock build as currentStock.
 const previousPpo = [
   {
+    archive: "30f4f0a1607d04ab0e7042bdf47191038803c01227f1764f448ea58642fe7511",
+    worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
+    renderer: "0c028319b2327e961b767a2d1539b6451ccc31a45f1f6905e22fa94bbc713b8e",
+    executable: "25b5ea86441d54727f7da998f6d0009159c9f73cbfd327f5084fdbd4a7636a63",
+  },
+  {
     archive: "4b4ffa7c97933f23761e268bbc99cc8077b8ad7f1a46287bd0c03a624ea8ad86",
     worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
     renderer: "783286fb75b1ccec2311c43aecd6d7cba7ffcf58128dca404eee825635489db0",
