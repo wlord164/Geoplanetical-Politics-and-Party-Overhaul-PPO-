@@ -28,7 +28,7 @@ Select an army above the command console or press **+** to group divisions from 
 
 Choose **Save & Hold** to defend the assigned line. To attack, select **Set objective**, pick a province, review the arrow, and choose **Save & Advance**. For an army already at the front, **Hold** stops its push while it continues defending. **Advance** resumes its saved objective when the route is valid. The army's order shows its activity and any reason it is waiting.
 
-The dot at the arrowhead marks the selected destination. The dashed line follows the far edge of the target province and adjusts its length and spacing as you zoom.
+The dashed line follows the far edge of the target province and adjusts its length and spacing as you zoom. A small dot sits between the arrowhead and the dashed border.
 
 Armies can run orders in parallel. Queue a follow-on order to start after the current objective is secured. When an advance finishes, its arrow disappears and the army takes up the connected front nearest the objective. A queued order starts from that front. Saved campaigns retain the armies, colors, postures, and queued orders.
 

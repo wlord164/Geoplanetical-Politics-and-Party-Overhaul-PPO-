@@ -62,7 +62,7 @@ const style = `
 .gpm-frontline-editor details > .gpm-frontline-color { margin-top: var(--gap-2); }
 .gpm-frontline-arrow-labels { position: fixed; inset: 0; pointer-events: none; z-index: 44; overflow: hidden; }
 .gpm-frontline-arrow-label { position: absolute; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; border-radius: 2px; color: white; background: var(--frontline-color); font: var(--fw-semi) 10px/13px var(--font-display); text-shadow: 0 0 2px #000, 0 1px 2px #000; }
-.gpm-frontline-objective-dot { position: absolute; box-sizing: border-box; width: 7px; height: 7px; transform: translate(-50%, -50%); border: 1px solid #151c26; border-radius: 50%; background: var(--frontline-color); box-shadow: 0 0 0 1px #151c26a6; }
+.gpm-frontline-objective-dot { position: absolute; box-sizing: border-box; width: 7px; height: 7px; transform: translate(-50%, -50%) scale(.6667); border: 1px solid #151c26; border-radius: 50%; background: var(--frontline-color); box-shadow: 0 0 0 1px #151c26a6; }
 .gpm-frontline-objective-dot.is-muted { width: 5px; height: 5px; }
 .gpm-frontline-formation-mark { position: absolute; width: 34px; height: 34px; transform: translate(-50%, -50%); border: 2px solid var(--frontline-color); border-radius: 7px; box-shadow: 0 0 0 1px #111a24, inset 0 0 0 1px #111a24; box-sizing: border-box; }
 .gpm-frontline-contact-keyboard { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }
@@ -1137,14 +1137,17 @@ function gpmFrontlineScreenBoundary(marker, origin, project) {
 }
 
 function gpmTickFrontlineObjectives(state, project) {
-  const viewport = window.innerWidth + "x" + window.innerHeight;
+  const { innerWidth, innerHeight } = window;
+  const viewport = innerWidth + "x" + innerHeight;
+  const inView = point => point && point[0] >= 0 && point[0] < innerWidth && point[1] >= 0 && point[1] < innerHeight;
   for (const marker of state.objectives || []) {
     const tip = project(marker.tip);
-    marker.dot.hidden = !tip || tip[0] < 0 || tip[0] >= window.innerWidth || tip[1] < 0 || tip[1] >= window.innerHeight;
-    if (!marker.dot.hidden) Object.assign(marker.dot.style, { left: tip[0].toFixed(1) + "px", top: tip[1].toFixed(1) + "px" });
+    const origin = marker.center && project(marker.center);
+    const dotPosition = inView(tip) && inView(origin) ? [(tip[0] + origin[0]) / 2, (tip[1] + origin[1]) / 2] : tip;
+    marker.dot.hidden = !inView(dotPosition);
+    if (!marker.dot.hidden) Object.assign(marker.dot.style, { left: dotPosition[0].toFixed(1) + "px", top: dotPosition[1].toFixed(1) + "px" });
     if (!marker.center) continue;
 
-    const origin = project(marker.center);
     const scale = origin && Math.max(0, ...marker.probes.map(point => {
       const p = point && project(point);
       return p && Math.hypot(p[0] - origin[0], p[1] - origin[1]) || 0;
