@@ -736,5 +736,29 @@
       "role": "Viv Ansanm coalition leader identified by the U.S. Department of Justice",
       "source": "https://www.justice.gov/opa/pr/haitian-gang-leader-barbecue-indicted-conspiracy-violate-us-sanctions"
     }
+  },
+  "ucdp-actor-130": {
+    "flag": {
+      "name": "Flag of the Islamic Emirate of Afghanistan (de facto authorities)",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Taliban_(3-2).svg",
+      "credit": "Taliban official flag design, vector by Lexicon and Sangjinhwa, Wikimedia Commons. PNG rendering.",
+      "license": "Public domain",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "evidence": "https://mfa.gov.af/en/flag-and-symbol/",
+      "ratio": 1.5,
+      "file": "historical-identity-assets/register-afghanistan-de-facto-flag.png"
+    }
+  },
+  "ucdp-actor-1051": {
+    "leader": {
+      "name": "Ibrahim Bakura Doro",
+      "role": "Reported JAS leader (imam)",
+      "source": "https://www.euaa.europa.eu/nigeria-security-situation/113-non-state-armed-actors",
+      "corroboration": [
+        "https://www.cgrs.be/sites/default/files/rapporten/euaa_coi_report_nigeria._security_situation_20251103.pdf",
+        "https://ctc.westpoint.edu/kachallas-and-kinship-understanding-jihadi-expansion-and-diffusion-in-nigeria/",
+        "https://issafrica.org/iss-today/time-to-double-down-after-security-strikes-against-boko-haram-leaders"
+      ]
+    }
   }
 }

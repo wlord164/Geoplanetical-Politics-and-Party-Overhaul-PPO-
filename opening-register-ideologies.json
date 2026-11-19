@@ -3062,6 +3062,32 @@
       "sources": [
         "https://doi.org/10.7910/DVN/WMGTNS"
       ]
+    },
+    "gpm-818-egyptian-social-democratic-p-1303104": {
+      "preset": "socialDemocrat",
+      "scope": "party_self_description",
+      "program": "The party explicitly advocates social democracy, a civic state, equality and social justice.",
+      "sources": [
+        "https://egysdp.org/?p=16447"
+      ]
+    },
+    "gpm-818-justice-party-881b921": {
+      "preset": "mixedEconomyCentre",
+      "scope": "official_party_programme_proxy",
+      "program": "The social-liberal party combines a productive competitive economy with social provision and protections for the middle class and vulnerable citizens.",
+      "sources": [
+        "https://eladlparty.com/",
+        "https://eladlparty.com/party-porgram/"
+      ]
+    },
+    "gpm-818-al-nour-party-804a093": {
+      "preset": "islamicDemocracy",
+      "scope": "official_party_programme_proxy",
+      "program": "The party's published program combines an Islamic legal framework with electoral competition, rotation of power and an elected legislature. The PPO preset is a closest institutional match.",
+      "sources": [
+        "https://alnourpartyeg.com/ar/info/program",
+        "https://alnourpartyeg.com/ar/32-بيان-حزب-النور-حول-وثيقة-المبادئ-الدستورية"
+      ]
     }
   },
   "826": {
@@ -3236,6 +3262,220 @@
       "sources": [
         "https://doi.org/10.7910/DVN/WMGTNS"
       ]
+    }
+  },
+  "484": {
+    "MOR": {
+      "preset": "socialDemocrat",
+      "scope": "official_party_programme_proxy",
+      "program": "Closest PPO equivalent for left, anti-neoliberal mixed-economy platform: public provision and strategic-sector regulation alongside private and social production under an extensive welfare agenda.",
+      "sources": [
+        "https://www.ine.mx/wp-content/uploads/2024/12/ine-deppp-morena-declaracion-de-principios-2024.pdf",
+        "https://dof.gob.mx/2025/PRESREP/PND%202025-2030.pdf"
+      ]
+    },
+    "PAN": {
+      "preset": "liberalConservative",
+      "scope": "official_party_programme_proxy",
+      "program": "Approximation for the party's political humanism, family and community emphasis, constitutional checks, private property and a regulated social market economy.",
+      "sources": [
+        "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/151604/CGex202304-28-rp-16-a1.pdf",
+        "https://pan.org.mx/secretarias/comision-de-doctrina"
+      ]
+    },
+    "PVE": {
+      "preset": "green",
+      "scope": "party_self_description",
+      "program": "The party identifies conservation and ecological policy as its defining political tendency. PPO's Green preset approximates the stated program.",
+      "sources": [
+        "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/150609/CGex202303-27-rp-9-a1.pdf"
+      ]
+    },
+    "PT": {
+      "preset": "democraticSocialist",
+      "scope": "party_self_description",
+      "program": "The declaration describes the desired social order as socialist, democratic, equal and emancipatory. The preset reflects this combination of goals.",
+      "sources": [
+        "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/152759/CGex202308-18-rp-1-3-a1.pdf"
+      ]
+    },
+    "PRI": {
+      "preset": "socialDemocrat",
+      "scope": "party_self_description",
+      "program": "The 2024 declaration explicitly defines the party as socially democratic and describes an egalitarian liberalism. This is a program-based fit for the current party.",
+      "sources": [
+        "https://pri.org.mx/ElPartidoDeMexico/Documentos/2024/DeclaraciondePrincipios.pdf"
+      ]
+    },
+    "MC": {
+      "preset": "socialDemocrat",
+      "scope": "party_self_description",
+      "program": "The current official declaration explicitly embraces social democracy, a welfare state, redistribution and individual equality and freedom.",
+      "sources": [
+        "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/183297/CGex202505-22-rp-3-a1.pdf"
+      ]
+    }
+  },
+  "578": {
+    "AP": {
+      "preset": "socialDemocrat",
+      "rmsDistance": 20.881,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3501",
+      "surveyYear": 2024,
+      "sourceParty": "Ap",
+      "sourceFamily": "5"
+    },
+    "FRP": {
+      "preset": "nationalConservative",
+      "rmsDistance": 42.199,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3502",
+      "surveyYear": 2024,
+      "sourceParty": "FrP",
+      "sourceFamily": "1"
+    },
+    "H": {
+      "preset": "liberalConservative",
+      "rmsDistance": 38.12,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3503",
+      "surveyYear": 2024,
+      "sourceParty": "H",
+      "sourceFamily": "2"
+    },
+    "SV": {
+      "preset": "democraticSocialist",
+      "rmsDistance": 22.037,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3504",
+      "surveyYear": 2024,
+      "sourceParty": "SV",
+      "sourceFamily": "6"
+    },
+    "V": {
+      "preset": "liberalCentre",
+      "rmsDistance": 35.608,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3507",
+      "surveyYear": 2024,
+      "sourceParty": "V",
+      "sourceFamily": "3"
+    },
+    "MDG": {
+      "preset": "green",
+      "rmsDistance": 15.504,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3508",
+      "surveyYear": 2024,
+      "sourceParty": "MDG",
+      "sourceFamily": "7"
+    },
+    "R": {
+      "preset": "democraticSocialist",
+      "rmsDistance": 9.983,
+      "scope": "ches_estimate",
+      "program": "Closest existing PPO preset to 2024 Chapel Hill Expert Survey party positions. The cutoff mapping uses survey economics, social policy, executive and judicial checks, and nationalism, with established party-family restrictions.",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/"
+      ],
+      "sourceRow": "3509",
+      "surveyYear": 2024,
+      "sourceParty": "R",
+      "sourceFamily": "6"
+    }
+  },
+  "410": {
+    "DPK": {
+      "preset": "mixedEconomyCentre",
+      "program": "The party's December 2025 basic-society policy combines an income floor and social protection with inclusive technology-led growth. The mixed-economy preset captures the two central commitments.",
+      "sources": [
+        "https://theminjoo.kr/main/sub/news/view.php?brd=11&post=1216312&search=&sno=0"
+      ],
+      "scope": "official_party_programme_proxy"
+    },
+    "PPP": {
+      "preset": "liberalConservative",
+      "program": "Its programme supports competitive markets, constitutional divisions of power, an independent judiciary, national security, and welfare for people needing support. The choice represents its stated programme rather than individual officeholders.",
+      "sources": [
+        "https://www.peoplepowerparty.kr/about/preamble",
+        "https://www.peoplepowerparty.kr/news/comment_view/BBSDD0042/106634"
+      ],
+      "scope": "official_party_programme_proxy"
+    },
+    "gpm-410-rebuilding-korea-party": {
+      "preset": "socialDemocrat",
+      "program": "The party constitution prioritizes social rights, lower inequality, solidarity, climate justice and regional autonomy. Social Democracy is a broad policy approximation.",
+      "sources": [
+        "https://rebuildingkoreaparty.kr/about/platform-policy",
+        "https://api.rebuildingkoreaparty.kr/api/download/STFGeHNnNVpOMlpXaWFQRUppb0ltZHBQSUFoOExCWTVEeU9ZbVJ3QTZ1M2Rjby9BKzVBaWVxUFIxL3prR3BKcnhYaVlqVnhYaFphK2t6UHZKdSt0SEE9PQ"
+      ],
+      "scope": "official_party_programme_proxy"
+    },
+    "gpm-410-progressive-party": {
+      "preset": "democraticSocialist",
+      "program": "The 2025 party programme favors labor-centered politics, direct democracy, curbing conglomerate power, and universal public services. The preset captures its redistributive and participatory programme. The party's Korean sovereignty policies are documented separately.",
+      "sources": [
+        "https://www.jinboparty.com/pages/?introduce=rules&p=320"
+      ],
+      "scope": "official_party_programme_proxy"
+    },
+    "gpm-410-reform-party": {
+      "preset": "classicalLiberal",
+      "program": "Its 2025 pledges pair lower corporate taxes and a smaller central administration with separation of powers, judicial independence and limits on presidential authority. The preset approximates this combination.",
+      "sources": [
+        "https://reformparty.kr/news/press/361-press-379",
+        "https://reformparty.kr/news/press/376-press-496"
+      ],
+      "scope": "official_party_programme_proxy"
+    },
+    "gpm-410-basic-income-party": {
+      "preset": "socialDemocrat",
+      "program": "The party's campaign uses universal income redistribution, public participation, and a social protection floor. Social Democracy is the nearest broad redistribution preset and lacks the unconditional income policy as a separate mechanic.",
+      "sources": [
+        "https://basicincomeparty.kr/bikr/press/8948?page=33"
+      ],
+      "scope": "official_party_programme_proxy"
+    },
+    "gpm-410-social-democratic-party": {
+      "preset": "socialDemocrat",
+      "program": "The party explicitly identifies as social democratic and prioritizes the welfare state, civil equality, and a just transition.",
+      "sources": [
+        "https://www.samindang.kr/introduction/code",
+        "https://img.nec.go.kr/common/board/Download.do?bcIdx=227220&cbIdx=1086&streFileNm=23c46dcc-2163-4941-86e5-bbdd0e4d9647.pdf"
+      ],
+      "scope": "party_self_description"
     }
   }
 }

@@ -739,7 +739,7 @@ function patchRenderer(bytes) {
   js = patchFactionPeopleRenderer(js, replaceOnce);
   js = require("./frontline-ui.cjs").patchFrontlineRenderer(js, replaceOnce);
   js = patchOpeningRegisterRenderer(js, replaceOnce);
-  js = patchRegisterPeopleRenderer(js, replaceOnce);
+  js = patchRegisterPeopleRenderer(js, replaceOnce, openingRegister);
   return Buffer.from(patchPartyDomesticRenderer(js, replaceOnce));
 }
 

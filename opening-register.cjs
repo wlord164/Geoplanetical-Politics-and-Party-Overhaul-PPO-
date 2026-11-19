@@ -164,7 +164,11 @@ function patchOpeningRegisterRenderer(source, replaceOnce) {
   js = replaceOnce(js, "p=e.parties.filter(h=>h.id!==s&&(n[h.id]||0)>0)", "p=gpmEligible.filter(h=>h.id!==s&&(n[h.id]||0)>0)");
   const partyGrid = "function fFe(e,t){";
   js = replaceOnce(js, partyGrid, gpmOpeningVacancyHtml + "\n" + gpmAssemblyPartyName + "\n" + gpmOpenAssemblyParty + "\n" + partyGrid);
-  js = replaceOnce(js, "coalition:c||[],held:u", "coalition:c||[],held:u,assemblyNamesOnly:true");
+  js = replaceOnce(js, "coalition:c||[],held:u",
+    "coalition:c||[],held:u,assemblyNamesOnly:true,showCoalition:!!c||u!=null");
+  js = replaceOnce(js,
+    '${o("pol.absoluteMajority")} : <b>${R}</b> \\xB7 ${o("pol.coalition")} : <b>${M}</b>',
+    '${o("pol.absoluteMajority")} : <b>${R}</b>${a.showCoalition===false?"":` · ${o("pol.coalition")} : <b>${M}</b>`}');
   js = replaceOnce(js, 'for(let L of c){let I=Pl(i(L)),A=r.has(L)?" gov":"";',
     'for(let L of c){let gpmName=a.assemblyNamesOnly?gpmAssemblyPartyName(i(L)):"",I=a.assemblyNamesOnly&&!gpmName?"#657383":Pl(i(L)),A=r.has(L)?" gov":"";');
   js = replaceOnce(js, 'r="${k.toFixed(1)}" fill="${I}"/>',
@@ -174,6 +178,11 @@ function patchOpeningRegisterRenderer(source, replaceOnce) {
   js = replaceOnce(js, 'this._wireHemicycle(e),this._wireParl(e),',
     'this._wireHemicycle(e),e.querySelector(".pa-panel")?.addEventListener("click",event=>gpmOpenAssemblyParty(event,e)),this._wireParl(e),');
   js = replaceOnce(js, "n=a.parties.filter(i=>i.legal!==!1).sort(", "n=a.parties.filter(i=>i.legal!==!1&&gpmAssemblyPartyName(i)).sort(");
+  js = replaceOnce(js, "u=t[i.id]||0,d=Number.isFinite(i.support)?",
+    "gpmChambers=a.chambers.filter(chamber=>chamber.composition?.[i.id]>0)," +
+    "u=t[i.id]||gpmChambers.reduce((sum,chamber)=>sum+chamber.composition[i.id],0),d=Number.isFinite(i.support)?");
+  js = replaceOnce(js, '<span class="pa-number"><b>${u}</b><small>${o("pol.seats")}</small></span>',
+    '<span class="pa-number"${gpmChambers.length?` data-tip="${b(gpmChambers.map(chamber=>so(chamber)+" "+chamber.composition[i.id]).join(" · "))}"`:""}><b>${u}</b><small>${o("pol.seats")}</small></span>');
   js = replaceOnce(js, '<summary><span class="sh-idline pa-identity"><span class="pa-party-tag"',
     '<summary style="grid-template-columns:minmax(0,1fr) 54px auto"><span class="sh-idline pa-identity"><span class="pa-party-tag"');
   js = replaceOnce(js, '<span class="pa-party-tag" style="--pa-color:${s}">${b(y||"")}</span>',

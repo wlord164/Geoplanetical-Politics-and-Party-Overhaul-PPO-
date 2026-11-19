@@ -1202,12 +1202,174 @@
           "rosterSource": "https://www.senado.gob.ar/votaciones/detalleActa/2607",
           "seatBasis": "verified_complete_ledger",
           "rosterDate": "2026-01-01"
+        },
+        "cd": {
+          "id": "AR-LC01",
+          "name": "Chamber of Deputies",
+          "statutorySeats": 257,
+          "rosterEvidence": "estimated_cutoff",
+          "rosterSource": "https://votaciones.diputados.gob.ar/votacion/5821",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2025-12-18",
+          "rows": [
+            {
+              "id": "LLA",
+              "name": "La Libertad Avanza (LLA)",
+              "seats": 95,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-032-karinamilei",
+                "reg-032-gabrielbornoroni"
+              ]
+            },
+            {
+              "id": "UXP",
+              "name": "Unión por la Patria",
+              "seats": 93,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-provincias-unidas-dce1921",
+              "name": "Provincias Unidas",
+              "seats": 17,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "PRO",
+              "name": "Propuesta Republicana (PRO)",
+              "seats": 12,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-032-mauriciomacri"
+              ]
+            },
+            {
+              "id": "gpm-032-innovacion-federal",
+              "name": "Innovación Federal",
+              "seats": 7,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "UCR",
+              "name": "Unión Cívica Radical (UCR)",
+              "seats": 6,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-032-leonelchiarella"
+              ]
+            },
+            {
+              "id": "FIT",
+              "name": "Frente de Izquierda y de Trabajadores – Unidad",
+              "seats": 4,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-pais-federal",
+              "name": "País Federal",
+              "seats": 3,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-elijo-catamarca",
+              "name": "Elijo Catamarca",
+              "seats": 3,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-independencia-ca57fab",
+              "name": "Independencia",
+              "seats": 3,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-mid",
+              "name": "Movimiento de Integración y Desarrollo (MID)",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-coalicion-civica",
+              "name": "Coalición Cívica",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-032-maximilianoferraro"
+              ]
+            },
+            {
+              "id": "gpm-032-encuentro-federal",
+              "name": "Encuentro Federal",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-produccion-y-trabajo",
+              "name": "Producción y Trabajo",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-adelante-buenos-aires",
+              "name": "Adelante Buenos Aires",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-defendamos-cordoba",
+              "name": "Defendamos Córdoba",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-primero-san-luis",
+              "name": "Primero San Luis",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-por-santa-cruz",
+              "name": "Por Santa Cruz",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-032-la-neuquinidad-5f380d0",
+              "name": "La Neuquinidad",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": []
+            },
+            {
+              "id": "gpm-vacant",
+              "name": "Córdoba seat pending oath",
+              "seats": 1,
+              "kind": "vacancy",
+              "source": "https://www3.hcdn.gob.ar/dependencias/dtaquigrafos/diarios/periodo-143/diario_2026021221.pdf",
+              "heads": []
+            }
+          ]
         }
       },
       "executive": {
         "headOfState": "reg-032-javiermilei",
         "headOfGovernment": "reg-032-javiermilei"
-      }
+      },
+      "governmentPartyId": "LLA"
     },
     "051": {
       "chambers": {
@@ -4426,9 +4588,7 @@
               "seats": 6,
               "kind": "documented_group",
               "heads": [
-                "reg-818-abdelsanadyamama",
-                "reg-818-bahaaeldinabushoka",
-                "reg-818-monirfakhriabdelnur"
+                "reg-818-abdelsanadyamama"
               ]
             },
             {
@@ -4473,7 +4633,7 @@
               "seats": 2,
               "kind": "documented_group",
               "heads": [
-                "reg-818-younesmakhioun"
+                "reg-818-mohamedibrahimmansour"
               ]
             },
             {
@@ -7647,11 +7807,205 @@
           "rosterSource": "https://www.shugiin.go.jp/internet/itdb_annai.nsf/html/statics/ugoki/r7ugoki33.pdf/%24File/r7ugoki33.pdf",
           "seatBasis": "verified_complete_ledger",
           "rosterDate": "2026-01-01"
+        },
+        "upper": {
+          "id": "JP-UC01",
+          "name": "House of Councillors",
+          "statutorySeats": 248,
+          "rosterEvidence": "reconstructed_cutoff",
+          "rosterSource": "https://www.sangiin.go.jp/japanese/giin/old_kaiha/219kaiha.htm",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2026-01-01",
+          "rows": [
+            {
+              "id": "LDP",
+              "name": "Liberal Democratic Party (LDP)",
+              "seats": 100,
+              "kind": "parliamentary bloc",
+              "relatedLowerHouseActorIds": [
+                "gpm-392-liberal-democratic-party-and-b945ab7"
+              ],
+              "heads": [
+                "reg-392-sanaetakaichi"
+              ]
+            },
+            {
+              "id": "CDP",
+              "name": "Constitutional Democrats, Social Democrats and Independents (caucus)",
+              "seats": 42,
+              "kind": "parliamentary bloc",
+              "relatedLowerHouseActorIds": [
+                "gpm-392-constitutional-democratic-pa-8e83e1b"
+              ],
+              "heads": [
+                "reg-392-yoshihikonoda"
+              ]
+            },
+            {
+              "id": "DPP",
+              "name": "Democratic Party for the People and Shin-Ryokufukai (caucus)",
+              "seats": 25,
+              "kind": "parliamentary bloc",
+              "relatedLowerHouseActorIds": [
+                "gpm-392-democratic-party-for-the-peo-22a2fe3"
+              ],
+              "heads": [
+                "reg-392-yuichirotamaki"
+              ]
+            },
+            {
+              "id": "KOM",
+              "name": "Komeito",
+              "seats": 21,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-tetsuosaito"
+              ]
+            },
+            {
+              "id": "gpm-392-nippon-ishin-japan-innovatio-aa38a71",
+              "name": "Nippon Ishin (Japan Innovation Party)",
+              "seats": 19,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-hirofumiyoshimura",
+                "reg-392-fumitakefujita"
+              ]
+            },
+            {
+              "id": "SAN",
+              "name": "Sanseito",
+              "seats": 15,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-soheikamiya"
+              ]
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-takahiro-anno",
+              "name": "Takahiro Anno",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "安野貴博",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-tomomi-otsuji",
+              "name": "Tomomi Otsuji",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "尾辻朋実",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-kenichiro-saito",
+              "name": "Kenichirō Saitō",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "齊藤健一郎",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-masakazu-sekiguchi",
+              "name": "Masakazu Sekiguchi",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "関口昌一",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-shizuka-terata",
+              "name": "Shizuka Terata",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "寺田静",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-takako-nagae",
+              "name": "Takako Nagae",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "ながえ孝子",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-sachiko-hirayama",
+              "name": "Sachiko Hirayama",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "平山佐知子",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-tetsuro-fukuyama",
+              "name": "Tetsurō Fukuyama",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "福山哲郎",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "gpm-392-councillors-unaffiliated-yoshio-mochizuki",
+              "name": "Yoshio Mochizuki",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "望月良男",
+              "source": "https://www.sangiin.go.jp/japanese/touhyoulist/219/219-1216-v002.htm",
+              "heads": []
+            },
+            {
+              "id": "JCP",
+              "name": "Japanese Communist Party (JCP)",
+              "seats": 7,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-tomokotamura"
+              ]
+            },
+            {
+              "id": "REI",
+              "name": "Reiwa Shinsengumi",
+              "seats": 6,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-taroyamamoto"
+              ]
+            },
+            {
+              "id": "gpm-392-conservative-party-of-japan",
+              "name": "Conservative Party of Japan",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-naokihyakuta"
+              ]
+            },
+            {
+              "id": "gpm-392-okinawa-wind",
+              "name": "Okinawa Wind (caucus)",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-392-yoichiiha"
+              ]
+            }
+          ]
         }
       },
       "executive": {
-        "headOfState": "reg-392-naruhito"
-      }
+        "headOfState": "reg-392-naruhito",
+        "headOfGovernment": "reg-392-sanaetakaichi"
+      },
+      "governmentPartyId": "gpm-392-liberal-democratic-party-and-b945ab7"
     },
     "832": {
       "chambers": {
@@ -8661,7 +9015,194 @@
       }
     },
     "484": {
-      "chambers": {},
+      "governmentPartyId": "MOR",
+      "chambers": {
+        "dip": {
+          "id": "MX-LC01",
+          "name": "Chamber of Deputies",
+          "statutorySeats": 500,
+          "rows": [
+            {
+              "id": "MOR",
+              "name": "Morena",
+              "seats": 253,
+              "kind": "party",
+              "heads": [
+                "reg-484-luisamariaalcaldelujan",
+                "reg-484-ricardomonrealavila"
+              ],
+              "officialName": "Movimiento Regeneración Nacional"
+            },
+            {
+              "id": "PAN",
+              "name": "National Action Party",
+              "seats": 70,
+              "kind": "party",
+              "heads": [
+                "reg-484-jorgeromeroherrera",
+                "reg-484-joseeliaslixaabimerhi"
+              ],
+              "officialName": "Partido Acción Nacional"
+            },
+            {
+              "id": "PVE",
+              "name": "Ecologist Green Party of Mexico",
+              "seats": 62,
+              "kind": "party",
+              "heads": [
+                "reg-484-karencastrejontrujillo",
+                "reg-484-carlosalbertopuentesalas"
+              ],
+              "officialName": "Partido Verde Ecologista de México"
+            },
+            {
+              "id": "PT",
+              "name": "Labor Party",
+              "seats": 49,
+              "kind": "party",
+              "heads": [
+                "reg-484-albertoanayagutierrez",
+                "reg-484-reginaldosandovalflores"
+              ],
+              "officialName": "Partido del Trabajo"
+            },
+            {
+              "id": "PRI",
+              "name": "Institutional Revolutionary Party",
+              "seats": 37,
+              "kind": "party",
+              "heads": [
+                "reg-484-alejandromorenocardenas",
+                "reg-484-rubenignaciomoreiravaldez"
+              ],
+              "officialName": "Partido Revolucionario Institucional"
+            },
+            {
+              "id": "MC",
+              "name": "Citizens' Movement",
+              "seats": 28,
+              "kind": "party",
+              "heads": [
+                "reg-484-jorgealvarezmaynez",
+                "reg-484-ivonnearacelyortegapacheco"
+              ],
+              "officialName": "Movimiento Ciudadano"
+            },
+            {
+              "id": "gpm-mx-dip-ind-guadalupe-mendoza-arias",
+              "name": "Guadalupe Araceli Mendoza Arias",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "heads": []
+            }
+          ],
+          "rosterEvidence": "reconstructed_cutoff",
+          "rosterSource": "https://www.sec.gov/Archives/edgar/data/101368/000119312526001546/d22760d424b2.htm",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2026-01-01",
+          "rosterBasisDate": "2026-01-02",
+          "rosterSources": [
+            "https://www.sec.gov/Archives/edgar/data/101368/000119312526001546/d22760d424b2.htm",
+            "https://gaceta.diputados.gob.mx/PDF/InfoDip/66/737-20251212-I.pdf",
+            "https://www.sec.gov/Archives/edgar/data/101368/000119312525162257/d88820dex991.htm",
+            "https://sitl.diputados.gob.mx/LXVI_leg/movimientos_de_diputadosnplxvi.php?pert=6",
+            "https://sitl.diputados.gob.mx/LXVI_leg/movimientos_de_diputadosnplxvi.php?pert=7",
+            "https://sitl.diputados.gob.mx/LXVI_leg/album_foto_tc.pdf"
+          ]
+        },
+        "upper": {
+          "id": "MX-UC01",
+          "name": "Senate",
+          "statutorySeats": 128,
+          "rows": [
+            {
+              "id": "MOR",
+              "name": "Morena",
+              "seats": 67,
+              "kind": "party",
+              "heads": [
+                "reg-484-luisamariaalcaldelujan",
+                "reg-484-adanaugustolopezhernandez"
+              ],
+              "officialName": "Movimiento Regeneración Nacional"
+            },
+            {
+              "id": "PAN",
+              "name": "National Action Party",
+              "seats": 21,
+              "kind": "party",
+              "heads": [
+                "reg-484-jorgeromeroherrera",
+                "reg-484-ricardoanayacortes"
+              ],
+              "officialName": "Partido Acción Nacional"
+            },
+            {
+              "id": "PVE",
+              "name": "Ecologist Green Party of Mexico",
+              "seats": 14,
+              "kind": "party",
+              "heads": [
+                "reg-484-karencastrejontrujillo",
+                "reg-484-manuelvelascocoello"
+              ],
+              "officialName": "Partido Verde Ecologista de México"
+            },
+            {
+              "id": "PRI",
+              "name": "Institutional Revolutionary Party",
+              "seats": 13,
+              "kind": "party",
+              "heads": [
+                "reg-484-alejandromorenocardenas",
+                "reg-484-manuelanorvebanos"
+              ],
+              "officialName": "Partido Revolucionario Institucional"
+            },
+            {
+              "id": "PT",
+              "name": "Labor Party",
+              "seats": 6,
+              "kind": "party",
+              "heads": [
+                "reg-484-albertoanayagutierrez"
+              ],
+              "officialName": "Partido del Trabajo"
+            },
+            {
+              "id": "MC",
+              "name": "Citizens' Movement",
+              "seats": 6,
+              "kind": "party",
+              "heads": [
+                "reg-484-jorgealvarezmaynez",
+                "reg-484-clementecastanedahoeflich"
+              ],
+              "officialName": "Movimiento Ciudadano"
+            },
+            {
+              "id": "gpm-mx-sen-ind-erik-jaimes-archundia",
+              "name": "Erik Iván Jaimes Archundia",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "heads": []
+            }
+          ],
+          "rosterEvidence": "reconstructed_cutoff",
+          "rosterSource": "https://www.sec.gov/Archives/edgar/data/101368/000119312526001546/d22760d424b2.htm",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2026-01-01",
+          "rosterBasisDate": "2026-01-02",
+          "rosterSources": [
+            "https://www.sec.gov/Archives/edgar/data/101368/000119312526001546/d22760d424b2.htm",
+            "https://www.sec.gov/Archives/edgar/data/101368/000119312525162257/d88820dex991.htm",
+            "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-08-27-1/assets/documentos/Ofic_Sen_Nestor_Medina_Separarse_GP_PRI.pdf",
+            "https://sil.gobernacion.gob.mx/Archivos/Documentos/2025/09/asun_4921372_20250909_1757443119.pdf",
+            "https://sil.gobernacion.gob.mx/ModulosSIL/index.php?CveSesion=4999073",
+            "https://sil.gobernacion.gob.mx/Librerias/pp_ComposicionComisiones.php?Presentador=5006436&Referencia=2085611"
+          ]
+        }
+      },
       "executive": {
         "headOfState": "reg-484-claudiasheinbaum",
         "headOfGovernment": "reg-484-claudiasheinbaum"
@@ -9872,10 +10413,105 @@
       }
     },
     "578": {
-      "chambers": {},
+      "chambers": {
+        "leg": {
+          "id": "NO-LC01",
+          "name": "Storting",
+          "statutorySeats": 169,
+          "rosterEvidence": "reconstructed_cutoff",
+          "rosterSource": "https://www.stortinget.no/no/stortinget-og-demokratiet/organene/partigruppene/",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2026-01-01",
+          "rows": [
+            {
+              "id": "AP",
+              "name": "Arbeiderpartiet (Ap)",
+              "seats": 53,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-jonasgahrstore"
+              ]
+            },
+            {
+              "id": "FRP",
+              "name": "Fremskrittspartiet (FrP)",
+              "seats": 47,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-sylvilisthaug"
+              ]
+            },
+            {
+              "id": "H",
+              "name": "Høyre (H)",
+              "seats": 24,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-ernasolberg"
+              ]
+            },
+            {
+              "id": "SV",
+              "name": "Sosialistisk Venstreparti (SV)",
+              "seats": 9,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-kirstibergsto"
+              ]
+            },
+            {
+              "id": "SP",
+              "name": "Senterpartiet (Sp)",
+              "seats": 9,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-trygveslagsvoldvedum"
+              ]
+            },
+            {
+              "id": "R",
+              "name": "Rødt (R)",
+              "seats": 9,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-mariesnevemartinussen"
+              ]
+            },
+            {
+              "id": "MDG",
+              "name": "Miljøpartiet De Grønne (MDG)",
+              "seats": 8,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-arildhermstad"
+              ]
+            },
+            {
+              "id": "KRF",
+              "name": "Kristelig Folkeparti (KrF)",
+              "seats": 7,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-dagingeulstein"
+              ]
+            },
+            {
+              "id": "V",
+              "name": "Venstre (V)",
+              "seats": 3,
+              "kind": "documented_group",
+              "heads": [
+                "reg-578-gurimelby"
+              ]
+            }
+          ]
+        }
+      },
       "executive": {
-        "headOfState": "reg-578-haraldv"
-      }
+        "headOfState": "reg-578-haraldv",
+        "headOfGovernment": "reg-578-jonasgahrstore"
+      },
+      "governmentPartyId": "AP"
     },
     "586": {
       "chambers": {},
@@ -12296,11 +12932,157 @@
       }
     },
     "410": {
-      "chambers": {},
+      "chambers": {
+        "na": {
+          "id": "KR-LC01",
+          "name": "National Assembly",
+          "statutorySeats": 300,
+          "rosterEvidence": "reconstructed_cutoff",
+          "rosterSource": "https://dl.nanet.go.kr/detail/PROC2025N053871",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2026-01-01",
+          "rows": [
+            {
+              "id": "DPK",
+              "name": "Democratic Party of Korea",
+              "seats": 166,
+              "kind": "documented_group",
+              "nativeName": "더불어민주당",
+              "heads": [
+                "reg-410-jungchungrae",
+                "reg-410-moonjinseok"
+              ]
+            },
+            {
+              "id": "PPP",
+              "name": "People Power Party",
+              "seats": 107,
+              "kind": "documented_group",
+              "nativeName": "국민의힘",
+              "heads": [
+                "reg-410-jangdonghyeok",
+                "reg-410-songeonseok"
+              ]
+            },
+            {
+              "id": "gpm-410-rebuilding-korea-party",
+              "name": "Rebuilding Korea Party",
+              "seats": 12,
+              "kind": "documented_group",
+              "nativeName": "조국혁신당",
+              "heads": [
+                "reg-410-chokuk",
+                "reg-410-seowangjin"
+              ]
+            },
+            {
+              "id": "gpm-410-progressive-party",
+              "name": "Progressive Party",
+              "seats": 4,
+              "kind": "documented_group",
+              "nativeName": "진보당",
+              "heads": [
+                "reg-410-kimjaeyeon",
+                "reg-410-yoonjongoh"
+              ]
+            },
+            {
+              "id": "gpm-410-reform-party",
+              "name": "Reform Party",
+              "seats": 3,
+              "kind": "documented_group",
+              "nativeName": "개혁신당",
+              "heads": [
+                "reg-410-leejunseok",
+                "reg-410-chunharam"
+              ]
+            },
+            {
+              "id": "gpm-410-basic-income-party",
+              "name": "Basic Income Party",
+              "seats": 1,
+              "kind": "documented_group",
+              "nativeName": "기본소득당",
+              "heads": [
+                "reg-410-yonghyein"
+              ]
+            },
+            {
+              "id": "gpm-410-social-democratic-party",
+              "name": "Social Democratic Party",
+              "seats": 1,
+              "kind": "documented_group",
+              "nativeName": "사회민주당",
+              "heads": [
+                "reg-410-hanchangmin"
+              ]
+            },
+            {
+              "id": "gpm-410-unaffiliated-kim-jong-min",
+              "name": "Kim Jong-min",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "김종민",
+              "source": "https://watch.peoplepower21.org/Session?meeting_id=1339",
+              "heads": []
+            },
+            {
+              "id": "gpm-410-unaffiliated-woo-won-shik",
+              "name": "Woo Won-shik",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "우원식",
+              "source": "https://watch.peoplepower21.org/Session?meeting_id=1339",
+              "heads": []
+            },
+            {
+              "id": "gpm-410-unaffiliated-lee-chun-seok",
+              "name": "Lee Chun-seok",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "이춘석",
+              "source": "https://watch.peoplepower21.org/Session?meeting_id=1339",
+              "heads": []
+            },
+            {
+              "id": "gpm-410-unaffiliated-choi-hyuk-jin",
+              "name": "Choi Hyuk-jin",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "nativeName": "최혁진",
+              "source": "https://watch.peoplepower21.org/Session?meeting_id=1339",
+              "heads": []
+            },
+            {
+              "id": "gpm-vacant",
+              "name": "Vacancies",
+              "seats": 2,
+              "kind": "vacancy",
+              "source": "https://goodlaw.org/storage/guide/notice/MABNz2Q9TQeh6Y6aKsbb8k292B0exE9yzCasyTWk.pdf",
+              "seatsIndividually": [
+                {
+                  "district": "Incheon, Gyeyang B",
+                  "priorMember": "Lee Jae Myung",
+                  "vacantSince": "2025-06-04",
+                  "cause": "Assumed the presidency"
+                },
+                {
+                  "district": "Asan B",
+                  "priorMember": "Kang Hoon-sik",
+                  "vacantSince": "2025-06-04",
+                  "cause": "Resigned to become chief of staff to the President"
+                }
+              ],
+              "heads": []
+            }
+          ]
+        }
+      },
       "executive": {
         "headOfState": "reg-410-leejaemyung",
-        "headOfGovernment": "reg-410-leejaemyung"
-      }
+        "headOfGovernment": "reg-410-kimminseok"
+      },
+      "governmentPartyId": "DPK"
     },
     "728": {
       "chambers": {},
@@ -13562,8 +14344,300 @@
       }
     },
     "792": {
-      "chambers": {},
-      "executive": {},
+      "chambers": {
+        "tbmm": {
+          "id": "TR-LC01",
+          "name": "Grand National Assembly of Türkiye",
+          "statutorySeats": 600,
+          "rosterEvidence": "reconstructed_cutoff",
+          "rosterSource": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+          "seatBasis": "verified_complete_ledger",
+          "rosterDate": "2026-01-01",
+          "rows": [
+            {
+              "id": "AKP",
+              "name": "Justice and Development Party (Ak Party)",
+              "seats": 272,
+              "kind": "documented_group",
+              "nativeName": "AK PARTİ",
+              "heads": [
+                "reg-792-receptayyiperdogan"
+              ]
+            },
+            {
+              "id": "CHP",
+              "name": "Republican People's Party (CHP)",
+              "seats": 138,
+              "kind": "documented_group",
+              "nativeName": "CHP",
+              "heads": [
+                "reg-792-ozgurozel"
+              ]
+            },
+            {
+              "id": "DEM",
+              "name": "Peoples’ Equality and Democracy Party (DEM Party)",
+              "seats": 56,
+              "kind": "documented_group",
+              "nativeName": "DEM PARTİ",
+              "heads": [
+                "reg-792-tuncerbakrhan",
+                "reg-792-tulayhatimogullaroruc"
+              ]
+            },
+            {
+              "id": "MHP",
+              "name": "Nationalist Action Party (MHP)",
+              "seats": 47,
+              "kind": "documented_group",
+              "nativeName": "MHP",
+              "heads": [
+                "reg-792-devletbahceli"
+              ]
+            },
+            {
+              "id": "IYI",
+              "name": "İYİ Party (Good Party)",
+              "seats": 29,
+              "kind": "documented_group",
+              "nativeName": "İYİ PARTİ",
+              "heads": [
+                "reg-792-musavatdervisoglu"
+              ]
+            },
+            {
+              "id": "YOL",
+              "name": "Yeni Yol Party (New Path)",
+              "seats": 21,
+              "kind": "documented_group",
+              "nativeName": "YENİ YOL",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-ahmetzenbili",
+              "name": "Ahmet Zenbili",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-korayaydin",
+              "name": "Koray Aydın",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-burakdalgin",
+              "name": "Burak Dalğın",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-ismailakgul",
+              "name": "İsmail Akgül",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-edizun",
+              "name": "Ediz Ün",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-hasanbasrisonmez",
+              "name": "Hasan Basri Sönmez",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-isamesihsahin",
+              "name": "İsa Mesih Şahin",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-selimtemurci",
+              "name": "Selim Temurci",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-mustafayeneroglu",
+              "name": "Mustafa Yeneroğlu",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-mustafademir",
+              "name": "Mustafa Demir",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "gpm-792-independent-hasanufukcakir",
+              "name": "Hasan Ufuk Çakır",
+              "seats": 1,
+              "kind": "unaffiliated",
+              "source": "https://cdn.tbmm.gov.tr/TbmmWeb/Tutanak/28/4/39/Basilmis/b7954d72-112c-4f16-8b75-f67759cc1c77.pdf",
+              "heads": []
+            },
+            {
+              "id": "YRP",
+              "name": "New Welfare Party (YRP)",
+              "seats": 4,
+              "kind": "documented_group",
+              "nativeName": "YENİDEN REFAH",
+              "heads": [
+                "reg-792-fatiherbakan"
+              ]
+            },
+            {
+              "id": "gpm-792-huda-par",
+              "name": "Free Cause Party (HÜDA PAR)",
+              "seats": 4,
+              "kind": "documented_group",
+              "nativeName": "HÜDA PAR",
+              "heads": [
+                "reg-792-zekeriyayapcoglu"
+              ]
+            },
+            {
+              "id": "gpm-792-tip",
+              "name": "Workers’ Party of Türkiye (TİP)",
+              "seats": 3,
+              "kind": "documented_group",
+              "nativeName": "TİP",
+              "heads": [
+                "reg-792-erkanbas"
+              ]
+            },
+            {
+              "id": "gpm-792-dbp",
+              "name": "Democratic Regions Party (DBP)",
+              "seats": 2,
+              "kind": "documented_group",
+              "nativeName": "DBP",
+              "heads": [
+                "reg-792-cigdemklcgunucar",
+                "reg-792-keskinbayndr"
+              ]
+            },
+            {
+              "id": "gpm-792-emep",
+              "name": "Labour Party (EMEP)",
+              "seats": 2,
+              "kind": "documented_group",
+              "nativeName": "EMEP",
+              "heads": [
+                "reg-792-seyitaslan"
+              ]
+            },
+            {
+              "id": "gpm-792-saadet",
+              "name": "Felicity Party (SAADET)",
+              "seats": 1,
+              "kind": "documented_group",
+              "nativeName": "SAADET PARTİSİ",
+              "heads": [
+                "reg-792-mahmutarkan"
+              ]
+            },
+            {
+              "id": "gpm-792-dsp",
+              "name": "Democratic Left Party (DSP)",
+              "seats": 1,
+              "kind": "documented_group",
+              "nativeName": "DSP",
+              "heads": [
+                "reg-792-onderaksakal"
+              ]
+            },
+            {
+              "id": "gpm-792-dp",
+              "name": "Democrat Party (DP)",
+              "seats": 1,
+              "kind": "documented_group",
+              "nativeName": "DP",
+              "heads": [
+                "reg-792-gultekinuysal"
+              ]
+            },
+            {
+              "id": "gpm-vacant",
+              "name": "Vacancies",
+              "seats": 8,
+              "kind": "vacancy",
+              "seatsIndividually": [
+                {
+                  "formerMember": "Hasan Bitmez",
+                  "province": "Kocaeli",
+                  "cause": "Death"
+                },
+                {
+                  "formerMember": "Sırrı Süreyya Önder",
+                  "province": "İstanbul",
+                  "cause": "Death"
+                },
+                {
+                  "formerMember": "Şerafettin Can Atalay",
+                  "province": "Hatay",
+                  "cause": "Seat treated as vacant in TBMM records after removal"
+                },
+                {
+                  "formerMember": "Murat Kurum",
+                  "province": "İstanbul",
+                  "cause": "Cabinet appointment"
+                },
+                {
+                  "formerMember": "Burcu Köksal",
+                  "province": "Afyonkarahisar",
+                  "cause": "Resigned on becoming mayor"
+                },
+                {
+                  "formerMember": "Abdurrahman Tutdere",
+                  "province": "Adıyaman",
+                  "cause": "Resigned on becoming mayor"
+                },
+                {
+                  "formerMember": "Hasan Baltacı",
+                  "province": "Kastamonu",
+                  "cause": "Resigned on becoming mayor"
+                },
+                {
+                  "formerMember": "Ahmet Önal",
+                  "province": "Kırıkkale",
+                  "cause": "Resigned on becoming mayor"
+                }
+              ],
+              "heads": []
+            }
+          ]
+        }
+      },
+      "executive": {
+        "headOfState": "reg-792-receptayyiperdogan",
+        "headOfGovernment": "reg-792-receptayyiperdogan"
+      },
       "stockParties": {
         "CHP": {
           "name": "Republican People's Party (CHP)",
@@ -13592,7 +14666,8 @@
           "evidence": "confirmed_identity_from_partial_roster",
           "tag": "YRP"
         }
-      }
+      },
+      "governmentPartyId": "AKP"
     },
     "800": {
       "chambers": {
@@ -20902,21 +21977,55 @@
     },
     "reg-818-hazemomar": {
       "name": "Hazem Omar",
-      "role": "President",
-      "source": "https://en.wikipedia.org/w/index.php?oldid=1329036550",
-      "evidence": "representative_or_lead"
+      "role": "Party president",
+      "source": "https://www.presidency.eg/ar/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news19122023-1/",
+      "evidence": "documented_party_head",
+      "sources": [
+        "https://www.presidency.eg/ar/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news19122023-1/",
+        "https://elbaladtv.net/10-رؤساء-أحزاب-و4-نواب-ضمن-تعيينات-مجلس-الا"
+      ]
     },
     "reg-818-faridzahran": {
       "name": "Farid Zahran",
-      "role": "President",
-      "source": "https://en.wikipedia.org/w/index.php?oldid=1329703303",
-      "evidence": "representative_or_lead"
+      "role": "Party president",
+      "source": "https://egysdp.org/?p=16447",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-818-faridzahran.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:فريد_زهران.jpg",
+        "credit": "Faried zahran",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "photoDate": "2012-06-14",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided JPEG thumbnail",
+        "originalSha256": "92e7a2b2aecf40087a518f0f8e987739858449a25b7c1f24a0848e9d7424e801",
+        "packagedSha256": "92e7a2b2aecf40087a518f0f8e987739858449a25b7c1f24a0848e9d7424e801"
+      }
     },
     "reg-818-abdelsanadyamama": {
       "name": "Abdel-Sanad Yamama",
-      "role": "Leader",
-      "source": "https://en.wikipedia.org/w/index.php?oldid=1329545636",
-      "evidence": "representative_or_lead"
+      "role": "Party president",
+      "source": "https://www.alwafd.news/Upload/pdf/29-01-2025/1.pdf",
+      "evidence": "documented_party_head",
+      "sources": [
+        "https://www.alwafd.news/Upload/pdf/29-01-2025/1.pdf",
+        "https://www.youm7.com/story/2025/12/12/الدكتور-عبد-السند-يمامة-أدرس-خوض-انتخابات-رئاسة-حزب/7231573"
+      ],
+      "asset": "opening-register-portraits/reg-818-abdelsanadyamama.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:رئيس_حزب_الوفد.jpg",
+        "credit": "بلال البنهاوي",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2025-11-16",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided JPEG thumbnail",
+        "originalSha256": "6e1034733a774c47fd3baa075c55910bbf71e8b049fc535def9c2d88c93413a1",
+        "packagedSha256": "6e1034733a774c47fd3baa075c55910bbf71e8b049fc535def9c2d88c93413a1"
+      }
     },
     "reg-818-bahaaeldinabushoka": {
       "name": "Bahaa El-Din Abu Shoka",
@@ -20932,9 +22041,9 @@
     },
     "reg-818-abdelmoneimimam": {
       "name": "Abdel-Moneim Imam",
-      "role": "President",
-      "source": "https://en.wikipedia.org/w/index.php?oldid=1328876968",
-      "evidence": "representative_or_lead"
+      "role": "Party president",
+      "source": "https://eladlparty.com/عن-الحزب/",
+      "evidence": "documented_party_head"
     },
     "reg-818-mohamedanwarelsadat": {
       "name": "Mohamed Anwar El-Sadat",
@@ -21165,8 +22274,8 @@
     "reg-818-abdelfattahelsisi": {
       "name": "Abdel Fattah el-Sisi",
       "role": "President",
-      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/egypt/",
-      "evidence": "matched official archive; cutoff change check pending",
+      "source": "https://africa.sis.gov.eg/english/africa-today/african-news/pm-directed-all-ministries-to-expedite-completion-of-decent-life-initiative/",
+      "evidence": "documented_opening_executive",
       "asset": "opening-register-portraits/reg-818-abdelfattahelsisi.jpg",
       "portrait": {
         "kind": "documentary_reference",
@@ -21180,13 +22289,17 @@
         "originalSha256": "fa33381294502f04ff5ca4a811ce3bac84a815e44eafbb27d5c6ce5231d397fe",
         "packagedSha256": "a329226e13e156eca096d262f0a072d04bd64e54951a37e1c787aec4a0a98d76",
         "derivative": "thumbnail no larger than 240×320, JPEG"
-      }
+      },
+      "sources": [
+        "https://africa.sis.gov.eg/english/africa-today/african-news/pm-directed-all-ministries-to-expedite-completion-of-decent-life-initiative/",
+        "https://sis.gov.eg/en/media-center/news/president-el-sisi-meets-prime-minister-cbe-governor-and-minister-of-finance/"
+      ]
     },
     "reg-818-mostafamadbouly": {
       "name": "Mostafa Madbouly",
       "role": "Prime Minister",
-      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/egypt/",
-      "evidence": "matched official archive; cutoff change check pending",
+      "source": "https://africa.sis.gov.eg/english/africa-today/african-news/pm-directed-all-ministries-to-expedite-completion-of-decent-life-initiative/",
+      "evidence": "documented_opening_executive",
       "asset": "opening-register-portraits/reg-818-mostafamadbouly.jpg",
       "portrait": {
         "kind": "documentary_reference",
@@ -21200,7 +22313,11 @@
         "originalSha256": "80a1224136edbe7685860b0a83d228d83b42e7963285a0d3bd37fcbecd3c6ea8",
         "packagedSha256": "260a2a53bc3109ac3775f096dc5058c75dccc24d478cbbe68f5d579eb46df769",
         "derivative": "thumbnail no larger than 240×320, JPEG"
-      }
+      },
+      "sources": [
+        "https://africa.sis.gov.eg/english/africa-today/african-news/pm-directed-all-ministries-to-expedite-completion-of-decent-life-initiative/",
+        "https://sis.gov.eg/en/media-center/news/pm-chairs-1st-2026-cabinet-meet-pushes-for-telecom-manufacturing-localization/"
+      ]
     },
     "reg-222-xavierzablahbukele": {
       "name": "Xavier Zablah Bukele",
@@ -26514,7 +27631,7 @@
       "name": "Sanae Takaichi",
       "role": "Party president",
       "source": "https://o-ishin.jp/news/2025/images/624de5f22900f6e88e892abb49d3fc70ef3cac92.pdf",
-      "evidence": "documented_party_head",
+      "evidence": "documented_opening_executive",
       "asset": "opening-register-portraits/reg-392-sanaetakaichi.jpg",
       "portrait": {
         "kind": "documentary_reference",
@@ -26528,7 +27645,11 @@
         "originalSha256": "f7d4a7a1dc3736a9ad214c9a18b24213b937132a3b7c625161a3ba8f05305a88",
         "packagedSha256": "dc0089bd4030c09fd940338461cb2b50779d8434d09eafa0f79d2c4d921fd122",
         "derivative": "thumbnail no larger than 240×320, JPEG"
-      }
+      },
+      "sources": [
+        "https://www.kantei.go.jp/jp/104/statement/2026/0101nentou.html",
+        "https://o-ishin.jp/news/2025/images/624de5f22900f6e88e892abb49d3fc70ef3cac92.pdf"
+      ]
     },
     "reg-392-yoshihikonoda": {
       "name": "Yoshihiko Noda",
@@ -28105,10 +29226,10 @@
       "evidence": "matched official archive; cutoff change check pending"
     },
     "reg-484-claudiasheinbaum": {
-      "name": "Claudia Sheinbaum",
+      "name": "Claudia Sheinbaum Pardo",
       "role": "President",
-      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mexico/",
-      "evidence": "matched official archive; cutoff change check pending",
+      "source": "https://www.gob.mx/presidencia/es/articulos/version-estenografica-conferencia-de-prensa-de-la-presidenta-claudia-sheinbaum-pardo-del-02-de-enero-de-2026?idiom=es",
+      "evidence": "documented_opening_executive",
       "asset": "opening-register-portraits/reg-484-claudiasheinbaum.jpg",
       "portrait": {
         "kind": "documentary_reference",
@@ -33465,8 +34586,8 @@
     "reg-410-leejaemyung": {
       "name": "Lee Jae Myung",
       "role": "President",
-      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/korea-south/",
-      "evidence": "matched official archive; cutoff change check pending"
+      "source": "https://www.president.go.kr/briefings/aAW1OLXS",
+      "evidence": "documented_opening_executive"
     },
     "reg-728-salvakiirmayardit": {
       "name": "Salva Kiir Mayardit",
@@ -36936,6 +38057,659 @@
         "packagedSha256": "c60fc4b2e9790a6cbe7f7f8d02f9323d6bec23a1abe4a5581e6f101860b7ee2c",
         "convertedToJpeg": true
       }
+    },
+    "reg-484-luisamariaalcaldelujan": {
+      "name": "Luisa María Alcalde Luján",
+      "role": "National president",
+      "source": "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/178719/CGex202411-27-Acta.pdf",
+      "evidence": "documented_party_head",
+      "sources": [
+        "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/178719/CGex202411-27-Acta.pdf",
+        "https://gaceta.diputados.gob.mx/PDF/InfoDip/66/851-20250901-I.pdf"
+      ],
+      "asset": "opening-register-portraits/reg-484-luisamariaalcaldelujan.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Luisa_Alcalde_(cropped)_(b).jpg",
+        "credit": "EneasMx",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "photoDate": "2025-05-21",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "257a1fede98d1831f52882c7c7ffc53f26aec523ebdc69b013b8f6de6ac1c9c2",
+        "packagedSha256": "257a1fede98d1831f52882c7c7ffc53f26aec523ebdc69b013b8f6de6ac1c9c2"
+      }
+    },
+    "reg-484-ricardomonrealavila": {
+      "name": "Ricardo Monreal Ávila",
+      "role": "Chamber of Deputies caucus coordinator",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "asset": "opening-register-portraits/reg-484-ricardomonrealavila.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ricardo_Monreal_%C3%81vila_en_2021.jpg",
+        "credit": "EneasMx",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2021-09-17",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "b0543dff035a0850584a6d049361a22343681997dd08a32301f2557454c59eb9",
+        "packagedSha256": "b0543dff035a0850584a6d049361a22343681997dd08a32301f2557454c59eb9"
+      }
+    },
+    "reg-484-adanaugustolopezhernandez": {
+      "name": "Adán Augusto López Hernández",
+      "role": "Senate caucus coordinator",
+      "source": "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "sources": [
+        "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+        "https://www.pan.senado.gob.mx/2026/01/entrevista-al-senador-ricardo-anaya-cortes-al-termino-de-la-conferencia-del-cen-del-pan-ante-las-instalaciones-del-ine/"
+      ],
+      "asset": "opening-register-portraits/reg-484-adanaugustolopezhernandez.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ad%C3%A1n_Augusto_L%C3%B3pez_en_Morelia.jpg",
+        "credit": "EneasMx",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2023-06-02",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "c92546556a4c8c2a03120f50e8b40f4ee65d810886664cdd8b9a507e47a52666",
+        "packagedSha256": "c92546556a4c8c2a03120f50e8b40f4ee65d810886664cdd8b9a507e47a52666"
+      }
+    },
+    "reg-484-jorgeromeroherrera": {
+      "name": "Jorge Romero Herrera",
+      "role": "National president",
+      "source": "https://www.pan.org.mx/prensa/accion-nacional-primer-partido-en-certificarse-en-atencion-a-mujeres-victimas-de-violencia-de-genero",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-484-jorgeromeroherrera.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Jorge_Romero_Herrera.jpg",
+        "credit": "Ebailonr77",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2020-08-19",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "cf2a03eae5d8a24c9ea24e39f7f97eec954f8be27b89e07c255d13425b78b7fa",
+        "packagedSha256": "cf2a03eae5d8a24c9ea24e39f7f97eec954f8be27b89e07c255d13425b78b7fa"
+      }
+    },
+    "reg-484-joseeliaslixaabimerhi": {
+      "name": "José Elías Lixa Abimerhi",
+      "role": "Chamber of Deputies caucus coordinator",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-484-ricardoanayacortes": {
+      "name": "Ricardo Anaya Cortés",
+      "role": "Senate caucus coordinator",
+      "source": "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "asset": "opening-register-portraits/reg-484-ricardoanayacortes.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ricardo_Anaya_(cropped_3).jpg",
+        "credit": "U.S. Embassy Mexico",
+        "license": "Public domain (U.S. government work)",
+        "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "photoDate": "2015-02-23",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "94afc895f8901d20c208d4256306de658efb3b7873d156d90ffe1cb1d2d906d0",
+        "packagedSha256": "94afc895f8901d20c208d4256306de658efb3b7873d156d90ffe1cb1d2d906d0"
+      }
+    },
+    "reg-484-karencastrejontrujillo": {
+      "name": "Karen Castrejón Trujillo",
+      "role": "National spokesperson and political leader",
+      "source": "https://www.partidoverde.org.mx/representantes/organos",
+      "evidence": "documented_party_head",
+      "sources": [
+        "https://www.partidoverde.org.mx/representantes/organos",
+        "https://www.partidoverde.org.mx/prensa/cen/boletines/26434-primer-eco-asamblea-nacional-municipalista-2"
+      ]
+    },
+    "reg-484-carlosalbertopuentesalas": {
+      "name": "Carlos Alberto Puente Salas",
+      "role": "Chamber of Deputies caucus coordinator",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "asset": "opening-register-portraits/reg-484-carlosalbertopuentesalas.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Carlos_Puente.jpg",
+        "credit": "Narrador de relatos",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "photoDate": "2024-04-09",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "14c3036d12edc6a45f06a42e41e54fc87f651b2efb2355e111cd9fe46a5f8c75",
+        "packagedSha256": "14c3036d12edc6a45f06a42e41e54fc87f651b2efb2355e111cd9fe46a5f8c75"
+      }
+    },
+    "reg-484-manuelvelascocoello": {
+      "name": "Manuel Velasco Coello",
+      "role": "Senate caucus coordinator",
+      "source": "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "asset": "opening-register-portraits/reg-484-manuelvelascocoello.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Acciones_de_Apoyo_al_Empleo_en_el_marco_de_la_Estrategia_para_el_Desarrollo_del_Sur_de_M%C3%A9xico.jpg",
+        "credit": "Presidencia de la República Mexicana",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "photoDate": "2015-03-24",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "0c00686c4401afae1a06ff900e22a64ebeaa7d28c621898c815aa6c755eb595f",
+        "packagedSha256": "0c00686c4401afae1a06ff900e22a64ebeaa7d28c621898c815aa6c755eb595f"
+      }
+    },
+    "reg-484-albertoanayagutierrez": {
+      "name": "Alberto Anaya Gutiérrez",
+      "role": "National coordinator and Senate caucus coordinator",
+      "source": "https://partidodeltrabajo.com.mx/2026/01/16/pt-ratifica-su-compromiso-con-la-presidenta-claudia-sheinbaum-y-la-cuarta-transformacion/",
+      "evidence": "documented_party_head",
+      "sources": [
+        "https://partidodeltrabajo.com.mx/2026/01/16/pt-ratifica-su-compromiso-con-la-presidenta-claudia-sheinbaum-y-la-cuarta-transformacion/",
+        "https://www.partidodeltrabajo.com.mx/Transparencia/estrados_electronicos/Congreso-Nacional.pdf",
+        "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf"
+      ],
+      "asset": "opening-register-portraits/reg-484-albertoanayagutierrez.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Alberto_Anaya_Guti%C3%A9rrez_en_2024_(cropped).jpg",
+        "credit": "EneasMx",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "photoDate": "2024-05-28",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "c0ac749f6384280f7abb6f830127daef1726d1ba830eb99e5086a0f18b041ac8",
+        "packagedSha256": "c0ac749f6384280f7abb6f830127daef1726d1ba830eb99e5086a0f18b041ac8"
+      }
+    },
+    "reg-484-reginaldosandovalflores": {
+      "name": "Reginaldo Sandoval Flores",
+      "role": "Chamber of Deputies caucus coordinator",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-484-alejandromorenocardenas": {
+      "name": "Alejandro Moreno Cárdenas",
+      "role": "National president",
+      "source": "https://pri.org.mx/elpartidodemexico/NuestroPartido/Dirigentes.aspx",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-484-alejandromorenocardenas.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Alejandro_Alito_Moreno_(cropped).jpg",
+        "credit": "EneasMx",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "photoDate": "2024-10-23",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "3f48483ac42ae023058889f32277b84ef1ab8c76b95ffd11df04e4ef455c9527",
+        "packagedSha256": "3f48483ac42ae023058889f32277b84ef1ab8c76b95ffd11df04e4ef455c9527"
+      }
+    },
+    "reg-484-rubenignaciomoreiravaldez": {
+      "name": "Rubén Ignacio Moreira Valdez",
+      "role": "Chamber of Deputies caucus coordinator",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "asset": "opening-register-portraits/reg-484-rubenignaciomoreiravaldez.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ruben_Moreira_Valdez.jpg",
+        "credit": "Solmtz",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2022-11-17",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "00339d94870af45f7083d4dffe69e8e93db120f3b660c534e89ac96784237d44",
+        "packagedSha256": "00339d94870af45f7083d4dffe69e8e93db120f3b660c534e89ac96784237d44"
+      }
+    },
+    "reg-484-manuelanorvebanos": {
+      "name": "Manuel Añorve Baños",
+      "role": "Senate caucus coordinator",
+      "source": "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "asset": "opening-register-portraits/reg-484-manuelanorvebanos.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:AnorveBanos.jpg",
+        "credit": "Radicci",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2018-04-26",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "370e6f8c03b754ecb590930d9ca2612a8681a9a9be7595f1298fe4b6583b635b",
+        "packagedSha256": "370e6f8c03b754ecb590930d9ca2612a8681a9a9be7595f1298fe4b6583b635b"
+      }
+    },
+    "reg-484-jorgealvarezmaynez": {
+      "name": "Jorge Álvarez Máynez",
+      "role": "National coordinator",
+      "source": "https://movimientociudadano.mx/storage/magazines/pdfs/6015/Nobis-16-M4.pdf",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-484-jorgealvarezmaynez.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Jorge_%C3%81lvarez_M%C3%A1ynez_(cropped_2).jpg",
+        "credit": "EneasMx",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "photoDate": "2023-03-28",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "cc5c3fa22a31017dea92b7a1add7d6176cb259cfa6ce7501fe83c82460943d63",
+        "packagedSha256": "cc5c3fa22a31017dea92b7a1add7d6176cb259cfa6ce7501fe83c82460943d63"
+      }
+    },
+    "reg-484-ivonnearacelyortegapacheco": {
+      "name": "Ivonne Aracely Ortega Pacheco",
+      "role": "Chamber of Deputies caucus coordinator",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "sources": [
+        "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251210-II-6.pdf",
+        "https://movimientociudadano.mx/storage/magazines/pdfs/6015/Nobis-16-M4.pdf",
+        "https://sil.gobernacion.gob.mx/Reportes/Sesion/ResultadoSesiones2.php?Camara=2&CveSesion=4949484&Cve_Leg=66&Fec_fin=31%2F08%2F2027&Fec_ini=29%2F08%2F2024&Origen=BS"
+      ],
+      "asset": "opening-register-portraits/reg-484-ivonnearacelyortegapacheco.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ivonne_Aracelly_Ortega_Pacheco.jpg",
+        "credit": "Marsan88",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2016-10-28",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 250-pixel-wide JPEG thumbnail",
+        "originalSha256": "8c17aaa3223fb9a6907ccae914a7570a40180cc2462f25fb882fec0cfb6a2eea",
+        "packagedSha256": "8c17aaa3223fb9a6907ccae914a7570a40180cc2462f25fb882fec0cfb6a2eea"
+      }
+    },
+    "reg-484-clementecastanedahoeflich": {
+      "name": "Clemente Castañeda Hoeflich",
+      "role": "Senate caucus coordinator",
+      "source": "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "sources": [
+        "https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-03-04-1/assets/documentos/Acuerdo_JCP_04032025.pdf",
+        "https://movimientociudadano.mx/storage/magazines/pdfs/6015/Nobis-16-M4.pdf"
+      ],
+      "asset": "opening-register-portraits/reg-484-clementecastanedahoeflich.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Clemente_Casta%C3%B1eda_2018.jpg",
+        "credit": "Memorodriguez154",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "photoDate": "2018-09-12",
+        "reuseEvidence": "license_verified",
+        "derivative": "Wikimedia-provided 330-pixel-wide JPEG thumbnail",
+        "originalSha256": "910039498e55975102706abdb957c338387bb8264df5f4d27473dd02f3cad055",
+        "packagedSha256": "910039498e55975102706abdb957c338387bb8264df5f4d27473dd02f3cad055"
+      }
+    },
+    "reg-578-jonasgahrstore": {
+      "name": "Jonas Gahr Støre",
+      "role": "Prime Minister",
+      "source": "https://www.regjeringen.no/en/the-government/previous-governments/regjeringer-siden-1814/historiske-regjeringer/governments-since-1945/jonas-gahr-stores-government/id2877906/",
+      "evidence": "documented_opening_executive",
+      "asset": "opening-register-portraits/reg-578-jonasgahrstore.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Jonas_Gahr_St%C3%B8re_WH_2025_(cropped).jpg",
+        "credit": "Daniel Torok / The White House",
+        "license": "Public domain",
+        "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "photoDate": "2025-04-24 14:04:15",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "cfb9d20cc204a4d7ba0f33113794b4f7b2ad1b6b903ee67d44fcf8512a34abc5",
+        "packagedSha256": "cfb9d20cc204a4d7ba0f33113794b4f7b2ad1b6b903ee67d44fcf8512a34abc5"
+      }
+    },
+    "reg-578-sylvilisthaug": {
+      "name": "Sylvi Listhaug",
+      "role": "Party leader",
+      "source": "https://www.frp.no/nyheter/listhaug-gjenvalgt",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-sylvilisthaug.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Sylvi_Listhaug_-_2014-02-13_at_18-49-18.jpg",
+        "credit": "Kjetil Ree",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "photoDate": "2014-02-13 18:49:18",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "084ae02cc323f1f144717fcc58e31cb32743b104d244f72cc933980d8388dec3",
+        "packagedSha256": "084ae02cc323f1f144717fcc58e31cb32743b104d244f72cc933980d8388dec3"
+      }
+    },
+    "reg-578-ernasolberg": {
+      "name": "Erna Solberg",
+      "role": "Party leader at the cutoff",
+      "source": "https://hoyre.no/2026/02/14/enstemmig-valgt/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-ernasolberg.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Erna_Solberg,_Prime_Minister_of_Norway_(cropped).jpg",
+        "credit": "DFID - UK Department for International Development",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "photoDate": "2016-02-04 10:42:33",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "45f385bae8ca8d9fb13df062566f91a773bc476ad5f6d69b56ec9644b21b39e6",
+        "packagedSha256": "45f385bae8ca8d9fb13df062566f91a773bc476ad5f6d69b56ec9644b21b39e6"
+      }
+    },
+    "reg-578-kirstibergsto": {
+      "name": "Kirsti Bergstø",
+      "role": "Party leader",
+      "source": "https://www.sv.no/blog/2025/03/15/ny-partiledelse/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-kirstibergsto.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Kirsti_Bergst%C3%B8,_Finnmark_SV.jpg",
+        "credit": "Troms Arbeiderparti",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "photoDate": "2009-08-22 15:42:33",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "5cd23aaafd7fb5e5e072ae40f3314fd556e9d80269127b12362f3ec7a9be88cf",
+        "packagedSha256": "5cd23aaafd7fb5e5e072ae40f3314fd556e9d80269127b12362f3ec7a9be88cf"
+      }
+    },
+    "reg-578-trygveslagsvoldvedum": {
+      "name": "Trygve Slagsvold Vedum",
+      "role": "Party leader",
+      "source": "https://www.senterpartiet.no/landsmote-2025/pressemeldingar/pm-val-av-leiar",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-trygveslagsvoldvedum.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Trygve_Slagsvold_Vedum_in_2019_(cropped).jpg",
+        "credit": "Senterpartiet (Sp)",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "photoDate": "2019-10-28 10:13:49",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "1d0d5786e1703089ce924f50d2de49a334a2d3ee0a02b644a739f99a3cc6efba",
+        "packagedSha256": "1d0d5786e1703089ce924f50d2de49a334a2d3ee0a02b644a739f99a3cc6efba"
+      }
+    },
+    "reg-578-mariesnevemartinussen": {
+      "name": "Marie Sneve Martinussen",
+      "role": "Party leader",
+      "source": "https://roedt.no/marie-sneve-martinussen-gjenvalgt-som-rodt-leder",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-mariesnevemartinussen.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Marie_Sneve_Martinussen,_2024_(cropped_2).jpg",
+        "credit": "Ihne Pedersen / Rødt",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "photoDate": "2024-02-26 15:29:51",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "b3c2b66de126f3ef56eb7d7c3335dcf0c96b450b49a94b2e3236d3d044257575",
+        "packagedSha256": "b3c2b66de126f3ef56eb7d7c3335dcf0c96b450b49a94b2e3236d3d044257575"
+      }
+    },
+    "reg-578-arildhermstad": {
+      "name": "Arild Hermstad",
+      "role": "Party leader",
+      "source": "https://mdg.no/politikk/aktuelt/nyhet/arild-gjenvalg-lm26",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-arildhermstad.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Arild_Hermstad_in_October_2018_(cropped).jpg",
+        "credit": "Miljøpartiet De Grønne",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+        "photoDate": "2018-10-05 14:35:57",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "4479934559b9a6613dc190916380d24c68d09ac4cd249bca5e92e971016b52cb",
+        "packagedSha256": "4479934559b9a6613dc190916380d24c68d09ac4cd249bca5e92e971016b52cb"
+      }
+    },
+    "reg-578-dagingeulstein": {
+      "name": "Dag-Inge Ulstein",
+      "role": "Party leader",
+      "source": "https://krf.no/nyheter/dag-inge-ulstein-valgt-til-partileder/",
+      "evidence": "documented_party_head"
+    },
+    "reg-578-gurimelby": {
+      "name": "Guri Melby",
+      "role": "Party leader",
+      "source": "https://www.venstre.no/person/guri-melby/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-578-gurimelby.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Guri_Melby_-_51255715385_(cropped).jpg",
+        "credit": "venstre.no",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+        "photoDate": "2021-06-05 11:50:33",
+        "reuseEvidence": "license_verified",
+        "derivative": "Existing planning-register portrait is a resize of the documented source or derivative. Retain crop/resizing notice and maintain source license for ShareAlike assets.",
+        "originalSha256": "351f9d98b990c89dcc56b95ce2b2ce843f340fa07b03c32d9a85912439c61a74",
+        "packagedSha256": "351f9d98b990c89dcc56b95ce2b2ce843f340fa07b03c32d9a85912439c61a74"
+      }
+    },
+    "reg-392-naokihyakuta": {
+      "name": "Naoki Hyakuta",
+      "role": "Party leader",
+      "source": "https://hoshuto.jp/contents/wp-content/uploads/2025/12/hoshuto-2026-newyear.pdf",
+      "evidence": "documented_party_head"
+    },
+    "reg-392-yoichiiha": {
+      "name": "Yōichi Iha",
+      "role": "House of Councillors caucus representative",
+      "source": "https://www.sangiin.go.jp/japanese/aramashi/ayumi/sankaikyo/r4/pdf/r7kyougikai_houkoku-2.pdf",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-032-maximilianoferraro": {
+      "name": "Maximiliano Ferraro",
+      "role": "National party president",
+      "source": "https://www.hcdn.gob.ar/diputados/mferraro",
+      "evidence": "documented_party_head"
+    },
+    "reg-818-mohamedibrahimmansour": {
+      "name": "Mohamed Ibrahim Mansour",
+      "role": "Party chair",
+      "source": "https://alnourpartyeg.com/ar/category/party-leader-activity",
+      "evidence": "documented_party_head"
+    },
+    "reg-032-gabrielbornoroni": {
+      "name": "Gabriel Bornoroni",
+      "role": "Chamber of Deputies bloc president",
+      "source": "https://www.hcdn.gob.ar/prensa/noticia/MARTIN-MENEM-ENCABEZO-UNA-REUNION-CON-DIPUTADOS-Y-REPRESENTANTES-DEL-GOBIERNO-NACIONAL/",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-410-kimminseok": {
+      "name": "Kim Min-seok",
+      "role": "Prime Minister",
+      "source": "https://www.president.go.kr/briefings/aAW1OLXS",
+      "evidence": "documented_opening_executive"
+    },
+    "reg-410-jungchungrae": {
+      "name": "Jung Chung-rae",
+      "role": "Party leader",
+      "source": "https://www.theminjoo.kr/main/sub/news/view.php?brd=230&post=1216376&search=&sno=20",
+      "evidence": "documented_party_head"
+    },
+    "reg-410-moonjinseok": {
+      "name": "Moon Jin-seok",
+      "role": "Acting floor leader",
+      "source": "https://www.theminjoo.kr/main/sub/news/view.php?brd=230&post=1216343&search=&sno=300",
+      "evidence": "documented_parliamentary_caucus_lead",
+      "sources": [
+        "https://www.theminjoo.kr/main/sub/news/view.php?brd=230&post=1216343&search=&sno=300",
+        "https://theminjoo.kr/uploads_file/party_member_rule_file/%E2%98%852025.12.18.%20%EB%8D%94%EB%B6%88%EC%96%B4%EB%AF%BC%EC%A3%BC%EB%8B%B9%20%EA%B0%95%EB%A0%B9%EB%8B%B9%ED%97%8C%EB%8B%B9%EA%B7%9C.pdf",
+        "https://www.theminjoo.kr/main/sub/news/view.php?brd=230&post=1216440&search=&sno=300"
+      ]
+    },
+    "reg-410-jangdonghyeok": {
+      "name": "Jang Dong-hyeok",
+      "role": "Party leader",
+      "source": "https://www.peoplepowerparty.kr/news/issue_photo_view/111620?page=12",
+      "evidence": "documented_party_head"
+    },
+    "reg-410-songeonseok": {
+      "name": "Song Eon-seok",
+      "role": "Floor leader",
+      "source": "https://www.peoplepowerparty.kr/news/issue_photo_view/111620?page=12",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-410-chokuk": {
+      "name": "Cho Kuk",
+      "role": "Party leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_party_head"
+    },
+    "reg-410-seowangjin": {
+      "name": "Seo Wang-jin",
+      "role": "Floor leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-410-kimjaeyeon": {
+      "name": "Kim Jae-yeon",
+      "role": "Party leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_party_head"
+    },
+    "reg-410-yoonjongoh": {
+      "name": "Yoon Jong-oh",
+      "role": "Floor leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-410-leejunseok": {
+      "name": "Lee Jun-seok",
+      "role": "Party leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_party_head"
+    },
+    "reg-410-chunharam": {
+      "name": "Chun Ha-ram",
+      "role": "Floor leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_parliamentary_caucus_lead"
+    },
+    "reg-410-yonghyein": {
+      "name": "Yong Hye-in",
+      "role": "Party leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_party_head"
+    },
+    "reg-410-hanchangmin": {
+      "name": "Han Chang-min",
+      "role": "Party leader",
+      "source": "https://www.president.go.kr/briefings/d0FzmJE3",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-receptayyiperdogan": {
+      "name": "Recep Tayyip Erdoğan",
+      "role": "President",
+      "source": "https://tccb.gov.tr/basin-aciklamalari/365/163617/yeni-yil-mesaji",
+      "evidence": "documented_opening_executive"
+    },
+    "reg-792-tuncerbakrhan": {
+      "name": "Tuncer Bakırhan",
+      "role": "Party co-chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-tulayhatimogullaroruc": {
+      "name": "Tülay Hatimoğulları Oruç",
+      "role": "Party co-chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-musavatdervisoglu": {
+      "name": "Müsavat Dervişoğlu",
+      "role": "Party chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-zekeriyayapcoglu": {
+      "name": "Zekeriya Yapıcıoğlu",
+      "role": "Party chair",
+      "source": "https://hudapar.org/baskan",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-erkanbas": {
+      "name": "Erkan Baş",
+      "role": "Party chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-cigdemklcgunucar": {
+      "name": "Çiğdem Kılıçgün Uçar",
+      "role": "Party co-chair",
+      "source": "https://dbp.org.tr/parti/parti-yonetimi",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-keskinbayndr": {
+      "name": "Keskin Bayındır",
+      "role": "Party co-chair",
+      "source": "https://dbp.org.tr/parti/parti-yonetimi",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-seyitaslan": {
+      "name": "Seyit Aslan",
+      "role": "Party chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-mahmutarkan": {
+      "name": "Mahmut Arıkan",
+      "role": "Party chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-onderaksakal": {
+      "name": "Önder Aksakal",
+      "role": "Party chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
+    },
+    "reg-792-gultekinuysal": {
+      "name": "Gültekin Uysal",
+      "role": "Party chair",
+      "source": "https://chp.org.tr/haberler/chp-genel-baskani-ozgur-ozelden-meclis-baskani-kurtulmus-ve-siyasi-partilerin-genel-baskanlarina-yeni-yil-telefonu",
+      "evidence": "documented_party_head"
     }
   }
 }

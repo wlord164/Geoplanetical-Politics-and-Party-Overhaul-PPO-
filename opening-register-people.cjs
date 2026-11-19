@@ -75,7 +75,8 @@ function gpmOpeningRegisterPartyCards(view, party) {
   const kind = party.nameDesc?.gpmOpeningKind;
   if (kind === "aggregate") return "";
   const bench = view.player.partyBench?.[party.id] || [];
-  const render = people => people.map(person => pm(view, person, "", "")).join("");
+  const render = people => people.map(person =>
+    pm(view, person, gpmOpeningRegisterRoles[person.gpmHistoricalPerson] || "")).join("");
   const benchPeople = ids => ids.map(id => view.people.get(id)).filter(Boolean);
   if (!kind) return render(benchPeople(bench.slice(0, 2)));
 
@@ -154,10 +155,18 @@ function patchRegisterPeopleWorker(source, replaceOnce, data) {
   return replaceOnce(patched, capture, "!o&&gpmAssignOpeningRegisterPeople(b)," + capture);
 }
 
-function patchRegisterPeopleRenderer(source, replaceOnce) {
+function patchRegisterPeopleRenderer(source, replaceOnce, data) {
   const partyCard = 'function pm(e,t,a,n=""){';
+  const roles = {};
+  for (const [id, person] of Object.entries(data.people)) {
+    const label = person.role?.split(/ · |\. /u, 1)[0]
+      .replace(/ at (?:the )?cutoff(?:,.*)?$/iu, "").trim();
+    if (label && !/[{}|]|\blisted\b|\bper electoral register\b|\breported in\b/iu.test(label)) roles[id] = label;
+  }
   const patched = replaceOnce(source, partyCard,
-    `const gpmOpeningRegisterPartyIndexes = new WeakMap();\n${gpmOpeningRegisterPartyCards}\n${gpmOpeningRegisterGovernmentCards}\n${partyCard}`);
+    `const gpmOpeningRegisterPartyIndexes = new WeakMap();\n` +
+    `const gpmOpeningRegisterRoles = ${JSON.stringify(roles)};\n` +
+    `${gpmOpeningRegisterPartyCards}\n${gpmOpeningRegisterGovernmentCards}\n${partyCard}`);
   const partyBench = 'g=(e.player.partyBench?.[i.id]||[]).slice(0,2).map(v=>e.people.get(v)).filter(Boolean).map(v=>pm(e,v,"","")).join("")';
   const withCards = replaceOnce(patched, partyBench, "g=gpmOpeningRegisterPartyCards(e,i)");
   const government = '${h&&h.id!==g?pm(t,h,o("role."+DK(a.constitution)+(h.g==="f"?".f":""))):""}';
