@@ -7,6 +7,24 @@ function gpmOpeningNonparty(party) {
   return ["aggregate", "unaffiliated", "affiliation-unverified"].includes(party?.nameDesc?.gpmOpeningKind);
 }
 
+function gpmOpeningBallotEligible(party) {
+  const kind = party?.nameDesc?.gpmOpeningKind;
+  return kind !== "aggregate" && kind !== "affiliation-unverified";
+}
+
+function gpmOpeningBallotShares(parties, shares) {
+  let ballot = null;
+  for (const party of parties || []) {
+    if (gpmOpeningBallotEligible(party) || !Object.hasOwn(shares, party.id)) continue;
+    ballot ??= { ...shares };
+    delete ballot[party.id];
+  }
+  if (!ballot) return shares;
+  const total = Object.values(ballot).reduce((sum, share) => sum + Math.max(0, share), 0);
+  if (total > 0) for (const id of Object.keys(ballot)) ballot[id] /= total;
+  return ballot;
+}
+
 function gpmOpeningGoverningParties(parties) {
   const eligible = parties.filter(party => !gpmOpeningNonparty(party));
   return eligible.length ? eligible : parties;
@@ -198,11 +216,44 @@ function patchOpeningRegisterRenderer(source, replaceOnce) {
 
 function patchOpeningRegisterWorker(source, replaceOnce) {
   const setup = "function gFa(e,t=2026){";
-  let js = replaceOnce(source, setup, seedDeclaration() + setup);
+  let js = replaceOnce(source, setup,
+    seedDeclaration() + gpmOpeningBallotEligible + "\n" + gpmOpeningBallotShares + "\n" + setup);
   js = replaceOnce(js, "Xho(a,n),lga(n,yte(a))",
     "Xho(a,n),lga(n,yte(a)),gpmOpeningRegisterPreset(a,n,cga,{culture:Js(a),baseSeed:Ma(a)})");
   js = replaceOnce(js, 'i.seatsBasis==="reform"||K0(i)?.seats!=null',
     '(i.seatsBasis==="reform"||i.seatsBasis==="opening-register")||K0(i)?.seats!=null');
+  // Seat-ledger buckets can finish their current terms without entering a later ballot.
+  js = replaceOnce(js, "for(let n of t.pol.parties){let i=n.campaigns[o];",
+    "for(let n of t.pol.parties){if(!gpmOpeningBallotEligible(n))continue;let i=n.campaigns[o];");
+  js = replaceOnce(js, "for(let r of t.pol.parties){if(r.campaigns[a.id]?.electionDay===a.nextDay)",
+    "for(let r of t.pol.parties){if(!gpmOpeningBallotEligible(r)||r.campaigns[a.id]?.electionDay===a.nextDay)");
+  js = replaceOnce(js, "function WO(e,t,a,r=null){return Object.values(t?.campaigns||{})",
+    "function WO(e,t,a,r=null){if(!gpmOpeningBallotEligible(t))return null;return Object.values(t?.campaigns||{})");
+  js = replaceOnce(js, "for(let l of t.pol.parties){let c=o?l.campaigns?.[o]||null:WO(t,l,0)",
+    "for(let l of t.pol.parties){if(!gpmOpeningBallotEligible(l))continue;let c=o?l.campaigns?.[o]||null:WO(t,l,0)");
+  js = replaceOnce(js, "for(let i of t.pol?.parties||[]){let s=Math.max(0,a?.[i.id]||0)",
+    "for(let i of t.pol?.parties||[]){if(!gpmOpeningBallotEligible(i))continue;let s=Math.max(0,a?.[i.id]||0)");
+  js = replaceOnce(js, "i-s.day<Y4o)return s;let c=g5(",
+    "i-s.day<Y4o&&!t.pol.parties.some(p=>!gpmOpeningBallotEligible(p)&&Object.hasOwn(s.values||{},p.id)))return s;let c=g5(");
+  js = replaceOnce(js, "u=t.pol.parties.map(m=>{let f=WO(",
+    "u=t.pol.parties.filter(gpmOpeningBallotEligible).map(m=>{let f=WO(");
+  // Regional allocation falls back to current support for omitted IDs. Restrict that electorate too.
+  js = replaceOnce(js, "shares:U6a(e.parties,m,{rulingIds:o,perf:n,sigma:i,partyPerf:s})",
+    "shares:U6a(a?e.parties.filter(gpmOpeningBallotEligible):e.parties,m,{rulingIds:o,perf:n,sigma:i,partyPerf:s})");
+  js = replaceOnce(js, "{rulingId:r,integrity:o=1,polity:n=null,electoralMap:i=null}={}){let s=G6a(e);",
+    "{rulingId:r,integrity:o=1,polity:n=null,electoralMap:i=null}={}){" +
+      'if(n&&e.selectMode!=="appointed"&&e.selectMode!=="hereditary"){' +
+        "t=gpmOpeningBallotShares(n.parties,t);if(r&&n.parties.some(p=>p.id===r&&!gpmOpeningBallotEligible(p)))r=null;" +
+      "}let s=G6a(e);");
+  // An election with no eligible party candidate must leave the existing officeholder in place.
+  js = replaceOnce(js, 'x,R;if(d==="electoral-college"){let ee=mho(e,t,C);',
+    'x,R;if(!M.length)return{ok:!1,reason:"winner_party_required"};' +
+    'if(d==="electoral-college"){let ee=mho(e,t,C,M.some(ee=>ee.id===s)?s:M[0].id);');
+  js = replaceOnce(js, "function mho(e,t,a){", "function mho(e,t,a,gpmFallback=Kt(t)){");
+  js = replaceOnce(js, "v=g?g.lead:Kt(t);c[h.__provId]", "v=g?.lead??gpmFallback;c[h.__provId]");
+  js = replaceOnce(js, "d[0].id:f.id:Kt(t),evByParty:u", "d[0].id:f.id:gpmFallback,evByParty:u");
+  js = replaceOnce(js, "F={};for(let ee of r.parties){let J=U(ee.id);",
+    "F={};for(let ee of r.parties){if(!gpmOpeningBallotEligible(ee))continue;let J=U(ee.id);");
   const coalition = "n=Object.entries(r).sort((m,f)=>f[1]-m[1]),i=a&&r[a]?a:n.length?n[0][0]:SC(e)";
   js = replaceOnce(js, coalition,
     "gpmEligible=gpmOpeningGoverningParties(e.parties),gpmIds=new Set(gpmEligible.map(p=>p.id))," +

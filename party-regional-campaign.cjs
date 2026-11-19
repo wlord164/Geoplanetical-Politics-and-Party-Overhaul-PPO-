@@ -302,7 +302,7 @@ function partyRegionalNationalForecast(sim, country, map, partyId) {
     .sort((a, b) => a.nextDay - b.nextDay)[0];
   const chamber = directChambers.find(item => election?.targetOrganId === "chamber:" + item.id) || directChambers[0];
   const base = election ? LO(sim, country, { kind: "legislative", contestId: election.id, election })
-    : Object.fromEntries(polity.parties.map(party => [party.id, party.support || 0]));
+    : gpmOpeningBallotShares(polity.parties, Object.fromEntries(polity.parties.map(party => [party.id, party.support || 0])));
   const supports = g5(polity, base);
   const estimates = bAe(polity, map, supports, false);
   const totalsByDay = new Map();
@@ -344,7 +344,7 @@ function partyCampaignChamberRules(chamber) {
 function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints = 0, { day, base, projectedPolity, local = false } = {}) {
   const contest = lt(country)?.contests?.[contestId];
   const party = AL(country, partyId);
-  if (!contest || !Number.isFinite(contest.nextDay) || !party?.organization) return null;
+  if (!contest || !Number.isFinite(contest.nextDay) || !party?.organization || !gpmOpeningBallotEligible(party)) return null;
   const context = zNa(country, contest);
   const active = party.campaigns?.[contestId];
   const campaign = active?.electionDay === contest.nextDay && (active.kind || "presidential") === context.kind ? active : null;

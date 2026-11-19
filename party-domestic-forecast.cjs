@@ -93,7 +93,7 @@ function gpmProjectedOrganization(sim, country, party, through) {
 
 function gpmPartyElectionRecap(sim, country, chamber, votes, previous, day, contestId) {
   const polity = country.pol;
-  const eligible = g5(polity, votes);
+  const eligible = g5(polity, gpmOpeningBallotShares(polity.parties, votes));
   const totals = partyRegionalNationalShares(polity, tD(sim, country), eligible);
   return {
     ...partyCampaignChamberRules(chamber), day, contestId,
@@ -101,7 +101,7 @@ function gpmPartyElectionRecap(sim, country, chamber, votes, previous, day, cont
     totalSeats: chamber.seats,
     parties: polity.parties.filter(party => totals[party.id] > 0 || chamber.composition[party.id] || previous[party.id])
       .map(party => ({
-        id: party.id, label: party.nameDesc?.gpmName || party.id,
+        id: party.id, label: party.nameDesc?.gpmName || party.nameDesc?.gpmOpeningName || party.id,
         votes: totals[party.id] || 0, seats: chamber.composition[party.id] || 0, previousSeats: previous[party.id] || 0,
       })).sort((a, b) => b.seats - a.seats || b.votes - a.votes || a.id.localeCompare(b.id)),
   };
@@ -113,10 +113,18 @@ function gpmStorePartyElectionRecap(country, recap) {
 
 function gpmPartyElectionRecapView(country, partyId, contestId = null) {
   const recaps = country.gpmPartyElectionRecaps || {};
-  const recap = contestId ? recaps[contestId] : Object.values(recaps)
-    .sort((a, b) => b.day - a.day || a.contestId.localeCompare(b.contestId))[0];
+  const legacy = recaps["[object Object]"];
+  const legacyChamberId = legacy?.contestId?.id;
+  const legacyContestId = typeof legacyChamberId === "string" ? "election:chamber:" + legacyChamberId : null;
+  const recap = contestId ? recaps[contestId] || (contestId === legacyContestId ? legacy : null) : Object.values(recaps)
+    .sort((a, b) => b.day - a.day || String(a.contestId).localeCompare(String(b.contestId)))[0];
   if (!recap) return null;
   const party = recap.parties.find(row => row.id === partyId);
+  // Older builds saved the chamber object as the key and seat counts in the vote field.
+  if (recap === legacy) return {
+    ...recap, contestId: legacyContestId, parties: recap.parties.map(row => ({ ...row, votes: null })),
+    seats: party?.seats ?? 0, beforeSeats: party?.previousSeats ?? 0, voteShare: null,
+  };
   return { ...recap, seats: party?.seats ?? 0, beforeSeats: party?.previousSeats ?? 0, voteShare: party?.votes ?? 0 };
 }
 

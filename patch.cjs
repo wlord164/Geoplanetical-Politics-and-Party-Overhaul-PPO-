@@ -878,7 +878,7 @@ function patchWorker(bytes) {
   worker = replaceOnce(worker, ',situation:jUe(e,a),space:e.space?hXo(e,a.key):null,pressures:yXo(e,a),technology:',
     ',situation:jUe(e,a),gpmDomesticAgenda:gpmDomesticAgenda(e,a,yn(a)),space:e.space?hXo(e,a.key):null,pressures:yXo(e,a),technology:');
   worker = replaceOnce(worker, 'e._onLegislative(t,s,m,v,p,S)?.electionResolved===!0?e._politicalCampaigns.delete(d):s.composition=m',
-    '(()=>{const recap=gpmPartyElectionRecap(e,t,s,m,m,p,s);if(e._onLegislative(t,s,m,v,p,S)?.electionResolved===!0){e._politicalCampaigns.delete(d);gpmStorePartyElectionRecap(t,recap)}else s.composition=m})()');
+    '(()=>{const recap=gpmPartyElectionRecap(e,t,s,f,m,p,l);if(e._onLegislative(t,s,m,v,p,S)?.electionResolved===!0){e._politicalCampaigns.delete(d);gpmStorePartyElectionRecap(t,recap)}else s.composition=m})()');
   worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,...a})',
     '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...a})');
   worker = patchFactionPeopleWorker(worker, replaceOnce);

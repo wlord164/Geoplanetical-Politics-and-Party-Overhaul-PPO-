@@ -177,7 +177,7 @@ function gpmDomesticRecap(result, ui, state = {}) {
     <thead><tr><th scope="col">Party</th><th scope="col">Vote share</th><th scope="col">Seats</th><th scope="col">Change</th></tr></thead>
     <tbody>${rows.map(row => {
       const change = row.seats - row.previousSeats;
-      return `<tr><th scope="row">${b(names.get(row.id) || row.label || row.id)}</th><td>${b(gpmRegionalPercent(row.votes))}</td>
+      return `<tr><th scope="row">${b(names.get(row.id) || row.label || row.id)}</th><td>${Number.isFinite(row.votes) ? b(gpmRegionalPercent(row.votes)) : "—"}</td>
         <td>${b(row.seats)}</td><td>${Number.isInteger(change) ? b(`${change > 0 ? "+" : ""}${change}`) : "—"}</td></tr>`;
     }).join("")}</tbody></table></details>` : "";
   return `<h4>Election recap</h4><small>${b([chamber || "Legislative election", Number.isFinite(day) && ui.gameDate(day)].filter(Boolean).join(" · "))}</small>
