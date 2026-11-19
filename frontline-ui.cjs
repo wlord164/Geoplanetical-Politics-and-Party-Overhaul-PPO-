@@ -26,11 +26,11 @@ const style = `
 .gpm-frontline-crosshair { cursor: crosshair !important; touch-action: none; }
 .gpm-frontline-selection-box { position: fixed; z-index: 990; pointer-events: none; border: 1px solid #82ddf9; background: #82ddf926; box-shadow: 0 0 0 1px #0a1d3099; }
 .gpm-frontline-roster-bar { position: fixed; z-index: 46; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; padding: 4px 6px 0; gap: 5px; max-width: calc(100vw - 26px); overflow-x: auto; box-sizing: border-box; }
-body.gpm-frontline-planning #war-console { margin-bottom: calc(var(--pad) + 96px); }
+body.gpm-frontline-planning #war-console { margin-bottom: calc(var(--pad) + 116px); }
 .gpm-frontline-slot { flex: 0 0 var(--frontline-slot-width, 98px); min-width: 0; position: relative; }
-.gpm-frontline-slot > button[data-gpm-frontline-slot] { display: grid; grid-template-rows: 16px 52px; align-content: center; justify-items: center; gap: 0; box-sizing: border-box; width: 100%; height: 76px; min-height: 76px; padding: 3px 5px; }
+.gpm-frontline-slot > button[data-gpm-frontline-slot] { display: grid; grid-template: 16px 52px / minmax(0, 1fr); align-content: center; justify-items: center; gap: 0; box-sizing: border-box; width: 100%; height: 76px; min-height: 76px; padding: 3px 5px; }
 .gpm-frontline-slot-name { color: white; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 11px/14px var(--font-display); }
-.gpm-frontline-slot [data-slot-state="filled"] .gpm-frontline-slot-name { max-width: calc(100% - 28px); }
+.gpm-frontline-slot [data-slot-state="filled"] .gpm-frontline-slot-name { width: calc(100% - 17px); justify-self: start; text-align: center; }
 .gpm-frontline-slot [data-gpm-frontline-slot][data-slot-state="empty"] { background: #35383e; color: #a4a7ac; }
 .gpm-frontline-slot [data-gpm-frontline-slot][data-slot-state="empty"] .gpm-frontline-slot-name { color: #b8bbc2; }
 .gpm-frontline-portrait { display: block; width: 42px; height: 52px; border-radius: 3px; object-fit: cover; object-position: top; }
@@ -773,6 +773,10 @@ function gpmPaintFrontlinePaths(state) {
   state.globe._frameGate?.invalidate?.();
 }
 
+function gpmFrontlineHeadSize(angle) {
+  return Math.min(.017, angle * .42, Math.max(.0025, angle * .26));
+}
+
 function gpmAddFrontlineLabel(state, path, color, opacity, name) {
   const element = document.createElement("span");
   element.className = "gpm-frontline-arrow-label";
@@ -786,12 +790,17 @@ function gpmAddFrontlineLabel(state, path, color, opacity, name) {
   const spans = vectors.slice(1).map((b, index) => {
     const a = vectors[index];
     const tipSegment = index === vectors.length - 2;
-    const clip = tipSegment ? Math.min(.37, .023 / Math.max(.003, a.angleTo(b))) : .07;
-    return { start: a.clone().lerp(b, .09).normalize().multiplyScalar(radius), end: a.clone().lerp(b, 1 - clip).normalize().multiplyScalar(radius),
-      center: a.clone().lerp(b, (.09 + 1 - clip) / 2).normalize().multiplyScalar(radius), length: a.angleTo(b) };
+    const length = a.angleTo(b);
+    const start = .035;
+    const end = tipSegment && length ? 1 - Math.atan(gpmFrontlineHeadSize(length)) / length - .035 : .965;
+    return { start: a.clone().lerp(b, start).normalize().multiplyScalar(radius), end: a.clone().lerp(b, end).normalize().multiplyScalar(radius),
+      center: a.clone().lerp(b, (start + end) / 2).normalize().multiplyScalar(radius), length };
   }).sort((a, b) => b.length - a.length).slice(0, 24);
   state.labelLayer.append(element);
-  state.labels.push({ element, spans });
+  const measure = state.labelMeasure ||= document.createElement("canvas").getContext("2d");
+  const font = getComputedStyle(element);
+  if (measure) measure.font = `${font.fontWeight} 10px ${font.fontFamily}`;
+  state.labels.push({ element, spans, textWidth: measure?.measureText(name).width || 1 });
 }
 
 function gpmTickFrontlineLabels(ui) {
@@ -805,7 +814,7 @@ function gpmTickFrontlineLabels(ui) {
     const point = world.clone().project(camera);
     return point.z >= -1 && point.z <= 1 ? [(point.x * .5 + .5) * window.innerWidth, (.5 - point.y * .5) * window.innerHeight] : null;
   };
-  for (const { element, spans } of state.labels) {
+  for (const { element, spans, textWidth } of state.labels) {
     let visible = null;
     for (const span of spans) {
       const a = project(span.start);
@@ -822,8 +831,10 @@ function gpmTickFrontlineLabels(ui) {
     element.hidden = !visible;
     if (visible) {
       const { center, width, angle } = visible;
-      Object.assign(element.style, { left: `${center[0].toFixed(1)}px`, top: `${center[1].toFixed(1)}px`, maxWidth: `${Math.floor(width - 8)}px`,
-        fontSize: width < 72 ? "9px" : "10px", transform: `translate(-50%, -50%) rotate(${angle.toFixed(4)}rad)` });
+      const available = Math.floor(width - 3);
+      const size = Math.min(10, Math.max(7, (available - 7) / textWidth * 10));
+      Object.assign(element.style, { left: `${center[0].toFixed(1)}px`, top: `${center[1].toFixed(1)}px`, maxWidth: `${available}px`,
+        fontSize: `${size.toFixed(2)}px`, transform: `translate(-50%, -50%) rotate(${angle.toFixed(4)}rad)` });
     }
   }
 }
@@ -849,7 +860,7 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity) {
     const previous = points.at(-2);
     const back = previous.clone().addScaledVector(tip, -previous.dot(tip)).normalize();
     const side = tip.clone().cross(back).normalize();
-    const size = Math.min(.022, Math.max(.004, tip.angleTo(previous) * .38));
+    const size = gpmFrontlineHeadSize(tip.angleTo(previous));
     for (const sign of [-1, 1]) {
       const corner = tip.clone().addScaledVector(back, size).addScaledVector(side, sign * size * .28).normalize().multiplyScalar(radius);
       add(tip.clone().multiplyScalar(radius), corner);
@@ -873,7 +884,8 @@ function patchFrontlineRenderer(source, replaceOnce) {
     gpmMountFrontlineRoster, gpmFrontlineArmySlots, gpmFrontlinePortrait, gpmPaintFrontlineRoster, gpmPaintFrontline, gpmEditFrontlineDraft, gpmFrontlineClick,
     gpmFrontlineSetDraw, gpmFrontlineDistance, gpmFrontlineMidpoint, gpmNearestFrontlineStation, gpmBindFrontlineDraw, gpmFinishFrontlineDraw,
     gpmFrontlineSelectionRect, gpmSelectFrontlineFormations, gpmTraceFrontline, gpmClipFrontlinePreview, gpmRouteFrontlineArrow,
-    gpmSendFrontline, gpmFrontlineError, gpmClearFrontlinePaths, gpmPaintFrontlinePaths, gpmAddFrontlineLabel, gpmTickFrontlineLabels, gpmAddFrontlinePath];
+    gpmSendFrontline, gpmFrontlineError, gpmClearFrontlinePaths, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
+    gpmAddFrontlineLabel, gpmTickFrontlineLabels, gpmAddFrontlinePath];
   const insertion = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, insertion, `\nconst gpmFrontlineStyle = ${JSON.stringify(style)};\nconst gpmFrontlinePalette = ${JSON.stringify(palette)};\n${functions.join("\n")}${insertion}`);
   const translate = 'if(e==="gpm.historicalConflicts.title")return "Historical Conflicts";';
