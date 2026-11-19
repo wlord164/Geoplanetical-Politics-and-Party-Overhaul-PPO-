@@ -75,8 +75,8 @@ function partyMovementDemandFit(party, movement, group) {
   return 1;
 }
 
-function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList = yke(country)) {
-  const party = sL(country, partyId);
+function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList = uAe(country)) {
+  const party = AL(country, partyId);
   const record = party?.gpmOrganizing;
   if (!party?.organization || party.legal === false) {
     return { ok: false, reason: "party" };
@@ -94,10 +94,10 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
   const terms = gpmOrganizingTerms;
   const discount = meeting ? terms.meetingDiscount *
     partyOrganizingTaper(party, terms.fullDiscountAt, terms.noDiscountAt) : 0;
-  const regularCash = iL(meeting ? .02 + .12 * totalShare : .012 + .025 * totalShare);
-  const regularActivists = iL(meeting ? .15 + 1.4 * totalShare : .2 + .9 * totalShare);
+  const regularCash = kL(meeting ? .02 + .12 * totalShare : .012 + .025 * totalShare);
+  const regularActivists = kL(meeting ? .15 + 1.4 * totalShare : .2 + .9 * totalShare);
   const cash = Math.round(regularCash * (1 - discount) * 1e6) / 1e6;
-  const activistsK = iL(regularActivists * (1 - discount));
+  const activistsK = kL(regularActivists * (1 - discount));
   const influence = meeting ? 2 : 4;
   const previous = record?.lastAction;
   const lastBlocMeeting = record?.lastMeetingByBloc?.[targetId] ??
@@ -143,14 +143,14 @@ function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList =
 function applyPartyOrganizing(sim, country, partyId, kind, targetId) {
   const quote = partyOrganizingQuote(sim, country, partyId, kind, targetId);
   if (!quote.ok) return quote;
-  const party = sL(country, partyId);
+  const party = AL(country, partyId);
   const day = sim.day || 0;
   const record = party.gpmOrganizing ||= { version: 2, groups: {}, day, backed: [], projects: [], lastMeetingByBloc: {} };
   decayPartyOrganizing(party, day, gpmCampaignRulesFor(sim));
   party.organization.treasuryM = partyForeignFundingTreasury(party,
     Math.round((party.organization.treasuryM - quote.cash) * 1e6) / 1e6);
-  party.organization.influence = iL(party.organization.influence - quote.influence);
-  party.organization.activistsK = iL(party.organization.activistsK - quote.activistsK);
+  party.organization.influence = kL(party.organization.influence - quote.influence);
+  party.organization.activistsK = kL(party.organization.activistsK - quote.activistsK);
   record.projects.push({ kind, targetId, startDay: day, endDay: quote.endDay, workedThrough: day,
     activistsK: quote.activistsK, domesticMembership: true,
     ...(kind === "movement" ? { participation: quote.participation, groupShare: quote.groupShare, fullTurnout: quote.fullTurnout } : {}),
@@ -178,7 +178,7 @@ function partyOrganizingMovementRate(country, project, movement, groups) {
 
 function creditPartyOrganizingContacts(sim, country, party, effect, amount, day) {
   party.outreach ??= { networks: {}, project: null, lastDay: day, lastStartedDay: null };
-  jct(sim, country, party);
+  n1t(sim, country, party);
   const strength = party.outreach.networks[effect.id] || 0;
   const gain = Math.max(0, Math.min(effect.contactCap - strength, amount));
   if (gain > 0) party.outreach.networks[effect.id] = strength + gain;
@@ -194,12 +194,12 @@ function advancePartyOrganizing(sim, country, party, groups = null) {
     decayPartyOrganizing(party, day, rules);
     return;
   }
-  const existingGroups = groups || new Map(yke(country).map(group => [group.id, group]));
+  const existingGroups = groups || new Map(uAe(country).map(group => [group.id, group]));
   const finalize = (project, finishedDay, reason = null) => {
     record.projects = record.projects.filter(item => item !== project);
     const available = party.organization.activistsK;
-    party.organization.activistsK = iL(Math.min(1e5, available + project.activistsK));
-    const returned = iL(party.organization.activistsK - available);
+    party.organization.activistsK = kL(Math.min(1e5, available + project.activistsK));
+    const returned = kL(party.organization.activistsK - available);
     gpmDomesticReceipt(sim, country, party, "activists-returned", { activistsK: returned, details: project.kind });
     if (project.domesticMembership && !reason && project.effects.some(effect => effect.earned > 0 || effect.contactsEarned > 0)) {
       gpmDomesticEarnMembers(sim, country, party, project.kind, project.activistsK, finishedDay);
@@ -256,14 +256,14 @@ function advancePartyOrganizing(sim, country, party, groups = null) {
 
 function registerPartyOrganizing() {
   for (const [verb, kind] of [["gpm.party.meeting", "meeting"], ["gpm.party.backMovement", "movement"]]) {
-    J7t(verb, {
+    gvt(verb, {
       validate(sim, country, input) {
-        if (country.key !== sim.playerKey || fn(country) !== input.partyId) return { ok: false, reason: "party" };
+        if (country.key !== sim.playerKey || yn(country) !== input.partyId) return { ok: false, reason: "party" };
         const quote = partyOrganizingQuote(sim, country, input.partyId, kind, input.targetId);
         return quote.ok ? true : quote;
       },
       apply(sim, country, input) {
-        if (country.key !== sim.playerKey || fn(country) !== input.partyId) return { ok: false, reason: "party" };
+        if (country.key !== sim.playerKey || yn(country) !== input.partyId) return { ok: false, reason: "party" };
         return applyPartyOrganizing(sim, country, input.partyId, kind, input.targetId);
       },
     });
@@ -273,11 +273,11 @@ function registerPartyOrganizing() {
 function partyOrganizingForecast(sim, country, party, quote, through = quote.endDay + 14, context = null) {
   const blocs = context?.blocs ?? sim._voterBlocs?.(country);
   if (!blocs?.length || !quote.effects?.length || through <= sim.day) return null;
-  const groups = context?.groups ?? new Map(yke(country).map(group => [group.id, group]));
-  const governor = N0(sim, country, "head_of_gov");
-  const charisma = governor ? TO(1 + (governor.traits.charisma - .5) * .3 +
+  const groups = context?.groups ?? new Map(uAe(country).map(group => [group.id, group]));
+  const governor = j0(sim, country, "head_of_gov");
+  const charisma = governor ? FF(1 + (governor.traits.charisma - .5) * .3 +
     (governor.traits.notoriety || 0) * .12, .5, 1.7) : 1;
-  const options = { blocs, salience: country.pol.salience, charisma, growthGainPct: lme(sim, country) };
+  const options = { blocs, salience: country.pol.salience, charisma, growthGainPct: ume(sim, country) };
   // Project with the shared earnings and native weekly support functions in a private simulation clock.
   const clock = { day: sim.day, gpmCampaignRules: gpmCampaignRulesFor(sim), playerKey: null, gpmDomesticForecast: true };
   const copy = member => ({
@@ -306,13 +306,13 @@ function partyOrganizingForecast(sim, country, party, quote, through = quote.end
     if (tick % 7) continue;
     for (const member of baseline.parties) {
       advancePartyOrganizing(clock, country, member, groups);
-      jct(clock, country, member);
+      n1t(clock, country, member);
     }
-    jct(clock, country, withProject);
+    n1t(clock, country, withProject);
     alternate = baseline.parties.map((member, index) => index === partyIndex
       ? { ...withProject, support: withSupport } : { ...member, support: alternate[index].support });
-    eut(baseline, {}, 7, options);
-    eut({ ...baseline, parties: alternate }, {}, 7, options);
+    y1t(baseline, {}, 7, options);
+    y1t({ ...baseline, parties: alternate }, {}, 7, options);
     withSupport = alternate[partyIndex].support;
   }
   const before = Object.fromEntries(baseline.parties.map(member => [member.id, member.support]));
@@ -321,9 +321,9 @@ function partyOrganizingForecast(sim, country, party, quote, through = quote.end
 }
 
 function partyOrganizingView(sim, country, partyId) {
-  const party = sL(country, partyId);
+  const party = AL(country, partyId);
   if (!party) return null;
-  const groups = yke(country);
+  const groups = uAe(country);
   const context = { blocs: sim._voterBlocs?.(country), groups: new Map(groups.map(group => [group.id, group])) };
   const preview = (kind, targetId) => {
     const quote = partyOrganizingQuote(sim, country, partyId, kind, targetId, groups);
@@ -359,8 +359,8 @@ function partyOrganizingDetail(quote, ui) {
   };
   const contacts = quote.effects.some(effect => effect.contacts > 0)
     ? "<li>Builds Outreach contacts.</li>" : "";
-  const cash = Nr(quote.cash * 1e6 * WR(), ZR());
-  const activists = Math.round(quote.activistsK * 1e3).toLocaleString(Es());
+  const cash = Or(quote.cash * 1e6 * xC(), RC());
+  const activists = Math.round(quote.activistsK * 1e3).toLocaleString(Ds());
   const costs = `${cash} · ${quote.influence} influence · ${activists} activists`;
   const discount = quote.discount ? ` · ${Math.round(quote.discount * 100)}% small-party discount` : "";
   const projection = quote.forecast
@@ -368,13 +368,13 @@ function partyOrganizingDetail(quote, ui) {
   const gains = quote.effects.map(effect => {
     const headroom = Math.max(0, .5 - effect.present);
     const points = (Math.min(effect.increase, headroom) * 100).toFixed(1);
-    return `<li>${v(ri(effect.id))} · +${v(points)} points of voting weight</li>`;
+    return `<li>${b(jr(effect.id))} · +${b(points)} points of voting weight</li>`;
   }).join("");
   return `
-    ${reasons[quote.reason] ? `<small><strong>${v(reasons[quote.reason])}</strong></small>` : ""}
-    <small>${v(costs + discount)}</small>
-    <small>${v(`Finishes ${ui.gameDate(quote.endDay)} if started today (${quote.durationDays} days)`)}</small>
-    ${projection ? `<small>${v(projection)}</small>` : ""}
+    ${reasons[quote.reason] ? `<small><strong>${b(reasons[quote.reason])}</strong></small>` : ""}
+    <small>${b(costs + discount)}</small>
+    <small>${b(`Finishes ${ui.gameDate(quote.endDay)} if started today (${quote.durationDays} days)`)}</small>
+    ${projection ? `<small>${b(projection)}</small>` : ""}
     ${gains || contacts ? `<details><summary>Expected local gains</summary><ul>${gains}${contacts}</ul></details>` : ""}`;
 }
 
@@ -383,15 +383,15 @@ function renderPartyOrganizing(view, ui) {
   if (!data) return "";
   const selected = data.meetings.find(item => item.id === ui._gpmMeetingBloc) || data.meetings.find(item => item.quote.ok) || data.meetings[0];
   const rows = data.movements.map(item => `<div class="gpm-organizing-action">
-    <div><strong>${v(o("domestic.demand." + item.demandId))}</strong> · ${v(Math.round(item.participantsM * 1e6).toLocaleString(Es()))} participants
-      ${item.strikeWorkersM > 0 ? ` · ${v(Math.round(item.strikeWorkersM * 1e6).toLocaleString(Es()))} striking workers` : ""}</div>
+    <div><strong>${b(o("domestic.demand." + item.demandId))}</strong> · ${b(Math.round(item.participantsM * 1e6).toLocaleString(Ds()))} participants
+      ${item.strikeWorkersM > 0 ? ` · ${b(Math.round(item.strikeWorkersM * 1e6).toLocaleString(Ds()))} striking workers` : ""}</div>
     ${partyOrganizingDetail(item.quote, ui)}
-    <button class="k" type="button" data-gpm-back-movement="${v(item.id)}" ${item.quote.ok ? "" : "disabled"}>Back mobilization</button>
+    <button class="k" type="button" data-gpm-back-movement="${b(item.id)}" ${item.quote.ok ? "" : "disabled"}>Back mobilization</button>
   </div>`).join("");
-  const options = data.meetings.map(item => `<option value="${v(item.id)}" ${item.id === selected?.id ? "selected" : ""}>${v(ri(item.id))}</option>`).join("");
+  const options = data.meetings.map(item => `<option value="${b(item.id)}" ${item.id === selected?.id ? "selected" : ""}>${b(jr(item.id))}</option>`).join("");
   const projects = (data.projects || []).map(project => `<div class="gpm-organizing-action">
-    <strong>${project.kind === "meeting" ? "Public meeting" : "Mobilization backing"} · ${v(project.effects.map(effect => ri(effect.id)).join(", "))}</strong>
-    <small>${v(Math.round(project.activistsK * 1e3).toLocaleString(Es()))} activists assigned until ${v(ui.gameDate(project.endDay))} · ${v(project.workedThrough - project.startDay)} of ${v(project.endDay - project.startDay)} days worked</small>
+    <strong>${project.kind === "meeting" ? "Public meeting" : "Mobilization backing"} · ${b(project.effects.map(effect => jr(effect.id)).join(", "))}</strong>
+    <small>${b(Math.round(project.activistsK * 1e3).toLocaleString(Ds()))} activists assigned until ${b(ui.gameDate(project.endDay))} · ${b(project.workedThrough - project.startDay)} of ${b(project.endDay - project.startDay)} days worked</small>
   </div>`).join("");
   const decay = data.organizingHalfLife > 0
     ? `Bonuses halve every ${data.organizingHalfLife} days.` : "Bonuses persist under these campaign rules.";
@@ -400,16 +400,16 @@ function renderPartyOrganizing(view, ui) {
     const status = project.reason ? "ended early" : "completed";
     const reasons = { movement: "The mobilization ceased to qualify.", group: "The participating bloc changed.",
       party: "The party lost legal status." };
-    const gains = project.effects.map(effect => `${ri(effect.id)} +${(effect.earned * 100).toFixed(1)} points of voting weight`
+    const gains = project.effects.map(effect => `${jr(effect.id)} +${(effect.earned * 100).toFixed(1)} points of voting weight`
       + (effect.contactsEarned ? ` and +${(effect.contactsEarned * 100).toFixed(1)} Outreach points` : "")).join(" · ");
-    const returned = Math.round(project.activistsK * 1e3).toLocaleString(Es());
-    return `<div class="gpm-organizing-action"><strong>${v(kind)} ${v(status)} ${v(ui.gameDate(project.finishedDay))}</strong>
-      <small>${v(gains)} · ${v(returned)} activists returned ${v(reasons[project.reason] || "")}</small></div>`;
+    const returned = Math.round(project.activistsK * 1e3).toLocaleString(Ds());
+    return `<div class="gpm-organizing-action"><strong>${b(kind)} ${b(status)} ${b(ui.gameDate(project.finishedDay))}</strong>
+      <small>${b(gains)} · ${b(returned)} activists returned ${b(reasons[project.reason] || "")}</small></div>`;
   });
   return `<section class="mcard wide gpm-organizing" aria-label="Party organizing">
     <h3 class="mc-title">Party organizing</h3>
-    <small>${v(Math.round(data.activistsK * 1e3).toLocaleString(Es()))} activists available.
-    Meetings and mobilizations share a +50% voting-weight limit per bloc. ${v(decay)}</small>
+    <small>${b(Math.round(data.activistsK * 1e3).toLocaleString(Ds()))} activists available.
+    Meetings and mobilizations share a +50% voting-weight limit per bloc. ${b(decay)}</small>
     ${projects ? `<h4>Projects underway</h4>${projects}` : ""}
     ${recent[0] || ""}
     ${recent.length > 1 ? `<details><summary>Earlier organizing results</summary>${recent.slice(1).join("")}</details>` : ""}

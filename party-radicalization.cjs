@@ -9,7 +9,7 @@ function gpmPoliticalCrisisSignals(sim, country) {
   const unemployment = country.unemployment;
   const inflation = country.inflation;
   const normalInflation = Math.max(4, (country.inflationObserved0 || 0) + 2);
-  const health = Pi(sim, country.key)?.status;
+  const health = _i(sim, country.key)?.status;
   return {
     jobs: Math.max(unit((unemployment - 9) / 14), unit((unemployment - country.unemployment0 - 2) / 8),
       unit((-country.growth - .7) / 8)),
@@ -59,7 +59,7 @@ function gpmPoliticalCrisisAppeal(party, pressure) {
 
 function gpmPoliticalCrisisUpdate(sim, country, day = sim.day) {
   const polity = country.pol;
-  const groups = yke(country);
+  const groups = uAe(country);
   if (!polity?.parties?.length || !groups.length || !Number.isFinite(day)) return null;
   const current = gpmPoliticalCrisisSignals(sim, country);
   const { failure, ...issues } = current;
@@ -67,8 +67,8 @@ function gpmPoliticalCrisisUpdate(sim, country, day = sim.day) {
   const prior = polity.gpmPoliticalCrisis;
   if (prior?.lastDay >= day) return prior.weights || null;
   if (!prior && (acute <= .22 || failure <= .24)) return null;
-  const ruling = PXr(polity);
-  const government = Et(country);
+  const ruling = oao(polity);
+  const government = Kt(country);
   const handover = prior && prior.government !== government;
   const weeks = Math.min(2, Math.max(1, Math.round((day - (prior?.lastDay ?? day)) / 7)));
   const smooth = (before, now) => now + ((before || 0) - now) * (now > before ? .79 : .72) ** weeks;
@@ -119,16 +119,16 @@ function patchPoliticalCrisisWorker(source, replaceOnce) {
     gpmPoliticalCrisisAppeal, gpmPoliticalCrisisUpdate, gpmPoliticalCrisisRecruitment, gpmPoliticalCrisisView].join("\n");
   const changes = [
     ['registerPartyOrganizing();', declarations + '\nregisterPartyOrganizing();'],
-    ['EWa(e,t),Hct(e,t);let r={approval:', 'EWa(e,t),Hct(e,t);let gpmCrisisWeights=gpmPoliticalCrisisUpdate(e,t),r={approval:'],
-    ['growthGainPct:lme(e,t)})}else eut', 'growthGainPct:lme(e,t),crisisWeights:gpmCrisisWeights})}else eut'],
-    ['growthGainPct:r.growthGainPct})', 'growthGainPct:r.growthGainPct,crisisWeights:r.crisisWeights})'],
-    ['I*=Lct(b,p.id)*partyOrganizingWeight(b,p.id)',
-      'I*=Lct(b,p.id)*partyOrganizingWeight(b,p.id)*(a.crisisWeights?.[b.id]??1)'],
-    ['_electorateBreakdown(t){return CWa(this,t)}', '_electorateBreakdown(t,gpmIncludeCrisis=true){return CWa(this,t,gpmIncludeCrisis)}'],
-    ['function CWa(e,t){', 'function CWa(e,t,gpmIncludeCrisis=true){'],
-    ['let u=IWa(a,c,n),d=Object.entries(u)', 'let u=IWa(a,c,n,gpmIncludeCrisis?a.gpmPoliticalCrisis?.weights:null),d=Object.entries(u)'],
-    ['function IWa(e,t,a){return Pke', 'function IWa(e,t,a,gpmCrisisWeights=null){return Pke'],
-    ['charisma:1,growthGainPct:a})}function _Wa', 'charisma:1,growthGainPct:a,crisisWeights:gpmCrisisWeights})}function _Wa'],
+    ['Gqa(e,t),i1t(e,t);let{signals:r,options:o}=fme(e,t);', 'Gqa(e,t),i1t(e,t),gpmPoliticalCrisisUpdate(e,t);let{signals:r,options:o}=fme(e,t);'],
+    ['growthGainPct:ume(e,t)}}}function txa', 'growthGainPct:ume(e,t),crisisWeights:t.pol?.gpmPoliticalCrisis?.weights}}}function txa'],
+    ['growthGainPct:a.growthGainPct})', 'growthGainPct:a.growthGainPct,crisisWeights:a.crisisWeights})'],
+    ['I*=t1t(b,p.id)*partyOrganizingWeight(b,p.id)',
+      'I*=t1t(b,p.id)*partyOrganizingWeight(b,p.id)*(a.crisisWeights?.[b.id]??1)'],
+    ['_electorateBreakdown(t){return Dqa(this,t)}', '_electorateBreakdown(t,gpmIncludeCrisis=true){return Dqa(this,t,gpmIncludeCrisis)}'],
+    ['function Dqa(e,t){', 'function Dqa(e,t,gpmIncludeCrisis=true){'],
+    ['let u=Kqa(a,c,n),d=Object.entries(u)', 'let u=Kqa(a,c,n,gpmIncludeCrisis?a.gpmPoliticalCrisis?.weights:null),d=Object.entries(u)'],
+    ['function Kqa(e,t,a){return gAe', 'function Kqa(e,t,a,gpmCrisisWeights=null){return gAe'],
+    ['charisma:1,growthGainPct:a})}function xqa', 'charisma:1,growthGainPct:a,crisisWeights:gpmCrisisWeights})}function xqa'],
   ];
   return changes.reduce((bundle, [before, after]) => replaceOnce(bundle, before, after), source);
 }

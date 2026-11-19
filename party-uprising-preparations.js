@@ -75,13 +75,13 @@ function gpmUprisingHeadquartersQuote(sim, country, party, row) {
 }
 
 function gpmUprisingCashQuote(party, cash, reason) {
-  reason ||= cw(party.organization.treasuryM) < cw(cash) ? "budget" : null;
+  reason ||= Iw(party.organization.treasuryM) < Iw(cash) ? "budget" : null;
   return { ok: !reason, reason, cash };
 }
 
 function gpmUprisingSpend(party, cash) {
   party.organization.treasuryM = partyForeignFundingTreasury(party,
-    (cw(party.organization.treasuryM) - cw(cash)) / Vu);
+    (Iw(party.organization.treasuryM) - Iw(cash)) / Xu);
 }
 
 function gpmUprisingInvestmentQuote(sim, party, row, eligible) {
@@ -158,7 +158,7 @@ function gpmUprisingRecruitmentQuote(sim, party, plan, type, kit) {
   const days = model.days + packageTerms.extraDays;
   const deliveryDay = sim.day + (packageTerms.deliveryDays ?? days);
   const creditCost = state?.credits > 0 ? 1 : 0;
-  const cash = (cw(model.cash) + cw(packageTerms.extraCash) - creditCost * cw(uprisingPreparationRules.aidDiscount)) / Vu;
+  const cash = (Iw(model.cash) + Iw(packageTerms.extraCash) - creditCost * Iw(uprisingPreparationRules.aidDiscount)) / Xu;
   const reason = !state?.wing ? "wing" : state.training ? "active" :
     !plan.headquarters?.eligible ? "headquarters_required" :
     gpmUprisingRoster(state).length >= gpmUprisingCapacity(plan) ? "division_limit" :
@@ -313,7 +313,7 @@ function gpmUprisingPreparationView(sim, country, party, plan) {
 }
 
 function gpmUprisingPrepare(sim, country, input, action) {
-  const party = rP(country, fn(country));
+  const party = yP(country, yn(country));
   if (country.key !== sim.playerKey || !party || input.partyId !== party.id)
     return { ok: false, reason: "founder_control" };
   const reason = gpmUprisingEligibility(sim, country, party);
@@ -334,7 +334,7 @@ function gpmUprisingPrepare(sim, country, input, action) {
     if (!quote.ok) return quote;
     gpmUprisingSpend(party, quote.cash);
     state.credits -= quote.creditCost;
-    party.organization.activistsK = iL(party.organization.activistsK - quote.activistsK);
+    party.organization.activistsK = kL(party.organization.activistsK - quote.activistsK);
     gpmUprisingMigrateStockpile(state);
     state.training = { type: divisionType, kit: equipmentKit, activistsK: quote.activistsK, endDay: quote.endDay,
       equipment: gpmUprisingKitInventory(divisionType, equipmentKit), deliveryDay: quote.deliveryDay, delivered: false };
@@ -369,9 +369,9 @@ function gpmUprisingRefreshStaffing(formation) {
 function gpmUprisingDeployPreparations(sim, child, headquarters, divisions, stockpile) {
   const definitions = divisions.map(({ type }) => gn.formationTypes[type]);
   const total = definitions.reduce((sum, definition) => sum + definition.manpowerK, 0);
-  const personnel = Sg(child);
+  const personnel = Eg(child);
   if (!personnel) return [];
-  ant(child, Math.max(0, total - personnel.replacementK), sim);
+  git(child, Math.max(0, total - personnel.replacementK), sim);
   const manpower = Math.min(total, personnel.replacementK);
   const cadres = divisions.map(({ activistsK }, index) =>
     Math.min(definitions[index].manpowerK, Math.max(0, Number(activistsK) || 0)));
@@ -379,7 +379,7 @@ function gpmUprisingDeployPreparations(sim, child, headquarters, divisions, stoc
   const availableCadres = Math.min(requestedCadres, manpower);
   const otherPersonnel = manpower - availableCadres;
   const otherRequirement = total - requestedCadres;
-  const bases = bCe(sim, child);
+  const bases = mke(sim, child);
   const slots = {};
   const deployed = [];
   for (const [index, { type, kit, equipment }] of divisions.entries()) {
@@ -392,13 +392,13 @@ function gpmUprisingDeployPreparations(sim, child, headquarters, divisions, stoc
     const equip = { ...equipment };
     for (const [id, units] of Object.entries(equip)) {
       stockpile[id] -= units;
-      U$(child.forces, id, units);
+      gZ(child.forces, id, units);
     }
-    const formation = _K(sim, child, type, definition, equip, ZM({ equip }, definition), definition.manpowerK,
-      bases, slots, JQr(sim, child, type), headquarters.__provKey);
+    const formation = zK(sim, child, type, definition, equip, yC({ equip }, definition), definition.manpowerK,
+      bases, slots, Deo(sim, child, type), headquarters.__provKey);
     formation.manpowerK = 0;
-    Twe(child, formation, assigned);
-    formation.ammunitionUnitsPerDay = $Ie(formation.equip, formation.manpowerK);
+    RIe(child, formation, assigned);
+    formation.ammunitionUnitsPerDay = U_e(formation.equip, formation.manpowerK);
     formation.supply.ammoDays = 14;
     formation.location = { type: "province", provKey: headquarters.__provKey };
     const understrength = formation.manpowerK < formation.maxManpowerK - 1e-9;
@@ -412,8 +412,8 @@ function gpmUprisingDeployPreparations(sim, child, headquarters, divisions, stoc
       requiredK: formation.maxManpowerK, understrength }));
   }
   for (const [id, units] of Object.entries(stockpile)) {
-    if (units > 0) U$(child.forces, id, units);
+    if (units > 0) gZ(child.forces, id, units);
   }
-  b9(sim, child);
+  x9(sim, child);
   return deployed;
 }

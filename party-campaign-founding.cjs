@@ -14,15 +14,15 @@ function gpmFoundingSupportSeed(politics, rules) {
 
 function gpmFoundingSeatPlan(country, party, requested) {
   const politics = country.pol;
-  const institution = st(country);
-  const canStand = Object.hasOwn(zg(politics, { [party.id]: party.support }), party.id);
+  const institution = lt(country);
+  const canStand = Object.hasOwn(g5(politics, { [party.id]: party.support }), party.id);
   if (!canStand || !institution || party.legal === false) return { seats: 0, reason: "party-ineligible" };
 
   const chamber = (politics.chambers || []).filter(candidate => {
-    const selection = Ia(country, "chamber:" + candidate.id)?.selection;
+    const selection = Aa(country, "chamber:" + candidate.id)?.selection;
     return selection?.method === "election" && !["appointed", "hereditary", "delegated"].includes(selection.selectMode);
   }).sort((left, right) => {
-    const order = id => Ia(country, "chamber:" + id)?.order || 0;
+    const order = id => Aa(country, "chamber:" + id)?.order || 0;
     return order(left.id) - order(right.id);
   })[0];
   if (!chamber) return { seats: 0, reason: "no-elected-chamber" };
@@ -33,7 +33,7 @@ function gpmFoundingSeatPlan(country, party, requested) {
       counts.reduce((total, seats) => total + seats, 0) !== chamber.seats ||
       composition[party.id] > 0) return { seats: 0, reason: "unsupported-composition" };
 
-  const government = xya(politics);
+  const government = B6a(politics);
   const legal = new Set(politics.parties.filter(member => member.legal !== false && member.id !== party.id).map(member => member.id));
   const donors = Object.keys(composition).filter(id => legal.has(id));
   const majority = Math.floor(chamber.seats / 2) + 1;
@@ -95,8 +95,8 @@ function gpmCommitCampaignFounding(sim, country, party, rules, draft) {
   if (!requested) return { seats: 0, regionKeys };
   const plan = gpmFoundingSeatPlan(country, party, requested);
   if (!plan.seats) return { seats: 0, regionKeys, seatReason: plan.reason };
-  const institution = st(country);
-  const result = $0(sim, country, {
+  const institution = lt(country);
+  const result = tc(sim, country, {
     intent: "constitution.reconcile",
     transitionId: "gpm.founding.seats:" + country.key + ":" + party.id,
     expectedRevision: institution.revision,

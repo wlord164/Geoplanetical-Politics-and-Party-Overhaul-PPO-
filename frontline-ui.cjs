@@ -88,7 +88,7 @@ function gpmRefreshFrontlineEntry(ui) {
   host.frontlineLastRequest = performance.now();
   const status = host.querySelector("[data-gpm-frontline-entry-status]");
   const wars = host.querySelector("[data-gpm-frontline-wars]");
-  void Xe(session, "gpm.frontline", {}).then(result => {
+  void Je(session, "gpm.frontline", {}).then(result => {
     if (!host.isConnected || ui.sim !== session) return;
     if (!Array.isArray(result?.wars)) throw new Error("Frontline wars unavailable");
     host.frontlineRevision = revision;
@@ -183,7 +183,7 @@ function gpmCloseFrontline(ui) {
 function gpmRefreshFrontlineMap(ui) {
   const state = ui._gpmFrontline;
   const session = ui.sim;
-  const view = session && xi(session);
+  const view = session && Ci(session);
   const key = view && ui._activeWarKey();
   const warId = view?.wars?.[key]?.id;
   if (state && (!ui.militaryModeActive || !warId || state.warId !== warId || session !== state.session ||
@@ -202,7 +202,7 @@ async function gpmLoadFrontline(state, force = false) {
   state.pending = true;
   state.lastRequest = performance.now();
   try {
-    const result = await Xe(state.session, "gpm.frontline", { warId: state.warId });
+    const result = await Je(state.session, "gpm.frontline", { warId: state.warId });
     if (state.ui._gpmFrontline !== state || request !== state.request) return;
     if (!Array.isArray(result?.wars)) throw new Error("Unexpected Frontline view");
     const wasWaiting = state.drawing?.kind === "line" && !state.data?.contacts?.length;
@@ -280,8 +280,8 @@ function gpmFrontlineArmySlots(plans) {
 function gpmFrontlinePortrait(state, id) {
   const person = state.data?.generals?.find(item => String(item.id) === String(id));
   const year = state.data?.year || new Date().getUTCFullYear();
-  const url = person && loe(person, year, "militaire");
-  return url ? `<img class="gpm-frontline-portrait" alt="${v(person.name)}" src="${v(url)}">`
+  const url = person && yse(person, year, "militaire");
+  return url ? `<img class="gpm-frontline-portrait" alt="${b(person.name)}" src="${b(url)}">`
     : '<span class="gpm-frontline-portrait gpm-frontline-portrait-empty" aria-hidden="true"></span>';
 }
 
@@ -299,9 +299,9 @@ function gpmPaintFrontlineRoster(state) {
     const name = plan?.name || `Army ${slot}`;
     const enabled = state.data?.status === "active" && !state.busy && !state.drawing?.validating;
     return `<div class="gpm-frontline-slot">
-      <button type="button" class="k" data-gpm-frontline-slot="${slot}" data-army-id="${v(plan?.id || "")}" data-slot-state="${plan ? "filled" : "empty"}" aria-pressed="${state.selectedSlot === slot}" aria-label="${v(plan ? `Select ${name}` : `Create ${name}`)}" title="${v(name)}" style="--frontline-color:${gpmFrontlineColor(plan?.color)}"${enabled ? "" : " disabled"}>
-        <span class="gpm-frontline-slot-name">${plan ? v(name) : "Empty"}</span>${gpmFrontlinePortrait(state, plan?.generalId)}
-      </button>${plan ? `<button type="button" data-gpm-frontline-remove-army="${v(plan.id)}" title="${v(`Disband ${name}`)}" aria-label="${v(`Disband ${name}`)}"${enabled ? "" : " disabled"}>×</button>` : ""}
+      <button type="button" class="k" data-gpm-frontline-slot="${slot}" data-army-id="${b(plan?.id || "")}" data-slot-state="${plan ? "filled" : "empty"}" aria-pressed="${state.selectedSlot === slot}" aria-label="${b(plan ? `Select ${name}` : `Create ${name}`)}" title="${b(name)}" style="--frontline-color:${gpmFrontlineColor(plan?.color)}"${enabled ? "" : " disabled"}>
+        <span class="gpm-frontline-slot-name">${plan ? b(name) : "Empty"}</span>${gpmFrontlinePortrait(state, plan?.generalId)}
+      </button>${plan ? `<button type="button" data-gpm-frontline-remove-army="${b(plan.id)}" title="${b(`Disband ${name}`)}" aria-label="${b(`Disband ${name}`)}"${enabled ? "" : " disabled"}>×</button>` : ""}
     </div>`;
   }).join("") + '<button type="button" class="k gpm-frontline-add-slot" data-gpm-frontline-add-slot aria-label="Add army slot" title="Add army slot">+</button>';
   if (state.rosterHtml !== html) {
@@ -369,23 +369,23 @@ function gpmPaintFrontline(state) {
   const canDraft = canEdit && !busy && !state.drawing?.validating;
   const disabled = canDraft ? "" : " disabled";
   const opt = (action, title, extra = "") => `<button type="button" class="k" data-gpm-frontline-action="${action}" ${extra}>${title}</button>`;
-  const command = (mode, label, plan) => `<button type="button" class="k" data-gpm-frontline-mode="${mode}" data-gpm-fl-focus="${v(plan.id)}-${mode}" aria-pressed="${plan.mode === mode}"${disabled}${mode === "advance" && !plan.arrow?.length ? " disabled" : ""}>${label}</button>`;
+  const command = (mode, label, plan) => `<button type="button" class="k" data-gpm-frontline-mode="${mode}" data-gpm-fl-focus="${b(plan.id)}-${mode}" aria-pressed="${plan.mode === mode}"${disabled}${mode === "advance" && !plan.arrow?.length ? " disabled" : ""}>${label}</button>`;
   const focusKey = document.activeElement?.getAttribute("data-gpm-fl-focus");
   const rosterScroll = host.querySelector(".gpm-frontline-roster")?.scrollTop || 0;
   const fixedRoster = draft && (draft.afterId || nextBy.has(draft.id));
   const allGenerals = data?.generals || [];
   const otherGenerals = new Set(roots.filter(plan => plan.id !== draft?.id).map(plan => String(plan.generalId)));
   const armyMeta = draft && !draft.afterId ? `<div class="gpm-frontline-army-meta">
-    <label>Army name<input class="k" type="text" maxlength="80" data-gpm-frontline-army-name data-gpm-fl-focus="army-name" value="${v(draft.name)}"${disabled}></label>
+    <label>Army name<input class="k" type="text" maxlength="80" data-gpm-frontline-army-name data-gpm-fl-focus="army-name" value="${b(draft.name)}"${disabled}></label>
     <label>General<select class="k" data-gpm-frontline-general data-gpm-fl-focus="army-general"${disabled}>
       <option value=""${!draft.generalId ? " selected" : ""}>Unassigned</option>
-      ${allGenerals.map(general => `<option value="${v(general.id)}"${draft.generalId === String(general.id) ? " selected" : ""}${otherGenerals.has(String(general.id)) ? " disabled" : ""}>${v(general.name)}</option>`).join("")}
+      ${allGenerals.map(general => `<option value="${b(general.id)}"${draft.generalId === String(general.id) ? " selected" : ""}${otherGenerals.has(String(general.id)) ? " disabled" : ""}>${b(general.name)}</option>`).join("")}
     </select></label>
   </div>` : "";
   const contacts = data?.contacts || [];
   const keyboard = state.drawing?.kind === "line" && contacts.length ? `<div class="gpm-frontline-contact-keyboard">
     <label>Choose a front <select class="k" data-gpm-frontline-contact data-gpm-fl-focus="contact"${disabled}>
-      <option value="">Select</option>${contacts.map((contact, index) => `<option value="${v(contact.id)}"${state.drawing.keyboard?.id === contact.id ? " selected" : ""}>Front ${index + 1}</option>`).join("")}
+      <option value="">Select</option>${contacts.map((contact, index) => `<option value="${b(contact.id)}"${state.drawing.keyboard?.id === contact.id ? " selected" : ""}>Front ${index + 1}</option>`).join("")}
     </select></label>${opt("assign-contact", "Use entire front", !state.drawing.keyboard || !canDraft ? "disabled" : "")}
   </div>` : "";
   const editing = draft && `<section class="gpm-frontline-editor" aria-label="Edit army">
@@ -395,7 +395,7 @@ function gpmPaintFrontline(state) {
     <div class="gpm-frontline-roster" role="group" aria-label="Ground formations">${(data?.formations || []).map(formation => {
       const taken = ownedBy.get(formation.id) && ownedBy.get(formation.id) !== draft.id;
       const note = taken ? "Assigned to another army" : formation.eligible === false ? "Unavailable" : formation.posture === "resupply" ? "Resupplying" : "";
-      return `<label><input type="checkbox" data-gpm-frontline-formation data-gpm-fl-focus="${v(formation.id)}" value="${v(formation.id)}"${draft.ids.has(formation.id) ? " checked" : ""}${disabled}${(taken || formation.eligible === false) && !draft.ids.has(formation.id) ? " disabled" : ""}><span>${v(formation.name || formation.id)}${note ? `<small>${note}</small>` : ""}</span></label>`;
+      return `<label><input type="checkbox" data-gpm-frontline-formation data-gpm-fl-focus="${b(formation.id)}" value="${b(formation.id)}"${draft.ids.has(formation.id) ? " checked" : ""}${disabled}${(taken || formation.eligible === false) && !draft.ids.has(formation.id) ? " disabled" : ""}><span>${b(formation.name || formation.id)}${note ? `<small>${note}</small>` : ""}</span></label>`;
     }).join("") || '<p>No eligible ground formations are available.</p>'}</div>`}
     <label class="gpm-frontline-color">Color <span class="gpm-frontline-swatch" style="--frontline-color:${gpmFrontlineColor(draft.color)}"></span>
       <select class="k" data-gpm-frontline-color data-gpm-fl-focus="group-color"${disabled}>${Object.keys(gpmFrontlinePalette).map(color => `<option value="${color}"${draft.color === color ? " selected" : ""}>${color[0].toUpperCase() + color.slice(1)}</option>`).join("")}</select>
@@ -416,9 +416,9 @@ function gpmPaintFrontline(state) {
     const units = root.formationIds.map(id => (data.formations || []).find(row => row.id === id)).filter(Boolean);
     const sequence = [];
     for (let next = root; next && sequence.length < plans.length; next = nextBy.get(next.id)) sequence.push(next);
-    return `<section class="gpm-frontline-group"><h4>${v(root.name || `Army ${root.slot || index + 1}`)}</h4>
-      ${units.length ? `<details open><summary>${units.length} ${units.length === 1 ? "formation" : "formations"}</summary><dl class="gpm-frontline-formation-state">${units.map(unit => `<div data-gpm-frontline-unit="${v(unit.id)}" data-status="${v(unit.execution?.status || "")}" data-received="${Boolean(unit.execution?.received)}"><dt>${v(unit.name || unit.id)}</dt><dd>${v(gpmFrontlineFormationState(unit))}</dd></div>`).join("")}</dl></details>` : ""}
-      <div>${opt("metadata", "Edit army", `data-gpm-army-id="${v(root.id)}"${disabled}`)}</div>
+    return `<section class="gpm-frontline-group"><h4>${b(root.name || `Army ${root.slot || index + 1}`)}</h4>
+      ${units.length ? `<details open><summary>${units.length} ${units.length === 1 ? "formation" : "formations"}</summary><dl class="gpm-frontline-formation-state">${units.map(unit => `<div data-gpm-frontline-unit="${b(unit.id)}" data-status="${b(unit.execution?.status || "")}" data-received="${Boolean(unit.execution?.received)}"><dt>${b(unit.name || unit.id)}</dt><dd>${b(gpmFrontlineFormationState(unit))}</dd></div>`).join("")}</dl></details>` : ""}
+      <div>${opt("metadata", "Edit army", `data-gpm-army-id="${b(root.id)}"${disabled}`)}</div>
       ${sequence.map((plan, order) => {
         const completed = plan.status === "completed";
         const unassigned = plan.status === "unassigned";
@@ -426,9 +426,9 @@ function gpmPaintFrontline(state) {
         const unavailable = completed && plan.reason === "no_connected_front";
         const lostRoute = plan.status === "blocked" && ["water", "no_land_route"].includes(plan.reason);
         const objective = gpmFrontlineObjective(state, plan);
-        return `<article class="gpm-frontline-order" data-gpm-frontline-plan="${v(plan.id)}" data-mode="${v(plan.mode)}" data-status="${v(plan.status)}">
-        <strong class="gpm-frontline-order-label"><span class="gpm-frontline-swatch" style="--frontline-color:${gpmFrontlineColor(plan.color)}"></span>${sequence.length > 1 ? `Order ${order + 1} · ` : ""}${v(gpmFrontlineStatus(plan))}${completed && tail && !unavailable ? " · Holding" : ""}</strong>
-        ${objective ? `<small>${v(objective)}</small>` : ""}
+        return `<article class="gpm-frontline-order" data-gpm-frontline-plan="${b(plan.id)}" data-mode="${b(plan.mode)}" data-status="${b(plan.status)}">
+        <strong class="gpm-frontline-order-label"><span class="gpm-frontline-swatch" style="--frontline-color:${gpmFrontlineColor(plan.color)}"></span>${sequence.length > 1 ? `Order ${order + 1} · ` : ""}${b(gpmFrontlineStatus(plan))}${completed && tail && !unavailable ? " · Holding" : ""}</strong>
+        ${objective ? `<small>${b(objective)}</small>` : ""}
         ${unavailable ? "<small>No connected front near the objective.</small>" : ""}
         ${lostRoute ? "<small>No reachable land route. Edit the order to choose another objective.</small>" : ""}
         <div class="gpm-frontline-actions">
@@ -442,8 +442,8 @@ function gpmPaintFrontline(state) {
     </section>`;
   }).join("");
   const html = `<header><h3 class="mc-title">Army orders</h3>${opt("close", "Deselect")}</header>
-    ${currentWar ? `<p>${v(currentWar.name || currentWar.id)}</p>` : ""}
-    <p class="gpm-frontline-feedback" data-gpm-frontline-feedback role="status">${v(state.feedback ||
+    ${currentWar ? `<p>${b(currentWar.name || currentWar.id)}</p>` : ""}
+    <p class="gpm-frontline-feedback" data-gpm-frontline-feedback role="status">${b(state.feedback ||
       (data && !canEdit ? "This war is unavailable for new orders." : state.selectedArmyId && !draft ? "Hold and Advance apply to this army." : ""))}</p>
     ${groups}${editing || (!state.selectedArmyId && canEdit ? `<div>${opt("new", "New army", disabled)}</div>` : "")}`;
   if (state.html !== html) {
@@ -555,7 +555,7 @@ function gpmFrontlineMidpoint(line) {
       const angle = from.angleTo(to);
       const vector = from.clone().multiplyScalar(Math.sin((1 - fraction) * angle)).addScaledVector(to, Math.sin(fraction * angle));
       if (vector.lengthSq() < 1e-12) return line[index];
-      const [lat, lon] = Gg(vector);
+      const [lat, lon] = n2(vector);
       return [lon, lat];
     }
     remaining -= distance;
@@ -778,7 +778,7 @@ async function gpmTraceFrontline(state, draw, contact) {
   gpmPaintFrontline(state);
   const current = () => state.ui._gpmFrontline === state && state.draft === draft && state.drawing === draw;
   try {
-    const result = await Xe(state.session, "gpm.frontline.line", { warId: state.warId, afterId: draft.afterId, ...contact });
+    const result = await Je(state.session, "gpm.frontline.line", { warId: state.warId, afterId: draft.afterId, ...contact });
     if (!current()) return;
     if (!result?.ok || !Array.isArray(result.line) || result.line.length < 2) {
       if (result?.reason === "front_changed") await gpmLoadFrontline(state, true);
@@ -807,7 +807,7 @@ function gpmClipFrontlinePreview(globe, from, to) {
   const steps = Math.max(1, Math.ceil(gpmFrontlineDistance(from, to) / 5));
   let last = null;
   for (let step = 1; step <= steps; step++) {
-    const [lat, lon] = Gg(fromVector.clone().lerp(toVector, step / steps).normalize());
+    const [lat, lon] = n2(fromVector.clone().lerp(toVector, step / steps).normalize());
     if (globe._provinceAt(lon, lat) < 0) break;
     last = [lon, lat];
   }
@@ -821,7 +821,7 @@ async function gpmRouteFrontlineArrow(state, draw, arrow) {
   gpmPaintFrontline(state);
   const current = () => state.ui._gpmFrontline === state && state.draft === draft && state.drawing === draw;
   try {
-    const result = await Xe(state.session, "gpm.frontline.route", { warId: state.warId, line: draft.contact ? undefined : draft.line, afterId: draft.afterId,
+    const result = await Je(state.session, "gpm.frontline.route", { warId: state.warId, line: draft.contact ? undefined : draft.line, afterId: draft.afterId,
       validateArrow: arrow, ...gpmFrontlineContactParams(draft.contact) });
     if (!current()) return;
     if (!result?.ok || !Array.isArray(result.arrow) || result.arrow.length < 2) {
@@ -946,7 +946,7 @@ function gpmAddFrontlineLabel(state, path, color, opacity, name) {
   element.hidden = true;
   element.style.setProperty("--frontline-color", `#${color.toString(16).padStart(6, "0")}`);
   element.style.opacity = opacity;
-  const radius = ht * 1.007;
+  const radius = dt * 1.007;
   const vectors = path.map(([lon, lat]) => ct(lat, lon, 1).normalize());
   const spans = vectors.slice(1).map((b, index) => {
     const a = vectors[index];
@@ -1031,7 +1031,7 @@ function gpmTickFrontlineFormationMarks(state) {
 
 function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0) {
   const segments = [];
-  const radius = ht * (arrow ? 1.007 : 1.0012);
+  const radius = dt * (arrow ? 1.007 : 1.0012);
   const add = (a, b) => segments.push(a.x, a.y, a.z, b.x, b.y, b.z);
   const points = path.map(([lon, lat]) => ct(lat, lon, 1).normalize());
   for (let index = 1; index < points.length; index++) {
@@ -1056,12 +1056,12 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0) {
       add(tip.clone().multiplyScalar(radius), corner);
     }
   }
-  const geometry = new ds();
+  const geometry = new ys();
   geometry.setPositions(segments);
-  const material = new zc({ color, linewidth: arrow ? 1.9 : emphasis ? 5.4 : 4.5, transparent: true, opacity, depthTest: true, depthWrite: false });
+  const material = new Uc({ color, linewidth: arrow ? 1.9 : emphasis ? 5.4 : 4.5, transparent: true, opacity, depthTest: true, depthWrite: false });
   material.resolution.set(window.innerWidth, window.innerHeight);
   (state.globe._lineMats ||= []).push(material);
-  const mesh = new cd(geometry, material);
+  const mesh = new fd(geometry, material);
   mesh.renderOrder = 28 + emphasis;
   mesh.frustumCulled = false;
   state.globe.scene.add(mesh);

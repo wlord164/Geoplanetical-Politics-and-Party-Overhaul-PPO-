@@ -1,8 +1,8 @@
 const gpmFrontlineContactCache = new WeakMap();
 
 function gpmFrontlineTracePoints(input) {
-  if (!Array.isArray(input) || input.length < 2 || !input.every($Z)) return null;
-  return input.some(point => Bi(input[0], point) > 1) ? input.map(point => point.slice()) : null;
+  if (!Array.isArray(input) || input.length < 2 || !input.every(_Q)) return null;
+  return input.some(point => qi(input[0], point) > 1) ? input.map(point => point.slice()) : null;
 }
 
 function gpmFrontlineContactChains(war) {
@@ -11,13 +11,13 @@ function gpmFrontlineContactChains(war) {
   const cached = gpmFrontlineContactCache.get(field);
   if (cached && Object.is(cached.generation, field._gen) && (Number.isFinite(field._gen) || cached.tick === field._tick)) return cached.chains;
   const source = field._frontGeometryCache?.gen === field._gen && field._frontGeometryCache;
-  const geometry = source || Yho(field, field._phiGen === field._gen && field._phiDeg ||
+  const geometry = source || B8o(field, field._phiGen === field._gen && field._phiDeg ||
     Float32Array.from(field.control, side => side ? 1 : -1));
   const chains = geometry.chains.map((keys, index) => {
     const vertices = keys.map(key => geometry.pt.get(key)).filter(Boolean);
     const points = vertices.map(({ lon, lat }) => [((lon + 180) % 360 + 360) % 360 - 180, lat]);
     const distances = [0];
-    for (let index = 1; index < points.length; index++) distances.push(distances.at(-1) + Bi(points[index - 1], points[index]));
+    for (let index = 1; index < points.length; index++) distances.push(distances.at(-1) + qi(points[index - 1], points[index]));
     return { id: `contact:${field._gen ?? field._tick ?? 0}:${index}:${keys[0]}`, points, distances,
       span: distances.at(-1), closed: keys[0] === keys.at(-1) };
   }).filter(chain => chain.span > 1);
@@ -33,10 +33,10 @@ function gpmFrontlineContactAt(war, position, reachable = null) {
       const a = chain.points[index - 1];
       const b = chain.points[index];
       const segmentKm = chain.distances[index] - chain.distances[index - 1];
-      if (Bi(a, position) > maxDistance + segmentKm) continue;
-      const projection = CK(a, b, position, maxDistance);
+      if (qi(a, position) > maxDistance + segmentKm) continue;
+      const projection = VK(a, b, position, maxDistance);
       if (!projection) continue;
-      const point = projection.ll || WM(a, b, segmentKm ? projection.alongKm / segmentKm : 0);
+      const point = projection.ll || oC(a, b, segmentKm ? projection.alongKm / segmentKm : 0);
       if (reachable && !reachable(point)) continue;
       maxDistance = projection.distanceKm;
       nearest = { chain, measure: chain.distances[index - 1] + projection.alongKm, position: point };
@@ -50,7 +50,7 @@ function gpmFrontlineChainPoint(chain, measure) {
   if (measure >= chain.span) return chain.points.at(-1);
   const index = chain.distances.findIndex(distance => distance >= measure);
   const step = chain.distances[index] - chain.distances[index - 1];
-  return step ? WM(chain.points[index - 1], chain.points[index], (measure - chain.distances[index - 1]) / step) : chain.points[index];
+  return step ? oC(chain.points[index - 1], chain.points[index], (measure - chain.distances[index - 1]) / step) : chain.points[index];
 }
 
 function gpmFrontlineChainSlice(chain, from, to) {
@@ -68,7 +68,7 @@ function gpmFrontlineTrace(war, line) {
   const end = gpmFrontlineContactAt(war, line.at(-1));
   if (!start || !end || start.chain !== end.chain) return null;
   const chain = start.chain;
-  if (chain.closed && Bi(line[0], line.at(-1)) < 1 && gpmFrontlineTraceWidth(line) > chain.span * .8) {
+  if (chain.closed && qi(line[0], line.at(-1)) < 1 && gpmFrontlineTraceWidth(line) > chain.span * .8) {
     return gpmFrontlineTracePoints(chain.points);
   }
   const from = Math.min(start.measure, end.measure);
@@ -85,7 +85,7 @@ function gpmFrontlineTrace(war, line) {
 }
 
 function gpmFrontlineTraceWidth(line) {
-  return line.slice(1).reduce((length, point, index) => length + Bi(line[index], point), 0);
+  return line.slice(1).reduce((length, point, index) => length + qi(line[index], point), 0);
 }
 
 function gpmFrontlineTraceWindow(war, position, width, reachable = null) {

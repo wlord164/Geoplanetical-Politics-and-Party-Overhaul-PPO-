@@ -1,22 +1,22 @@
 function gpmRetireBreakawayFlag(sim, child, successor = null) {
   const flags = sim.flags;
-  const from = zw(child.a2);
-  const to = zw(successor?.a2);
+  const from = iI(child.a2);
+  const to = iI(successor?.a2);
   if (!flags || !from || from === to) return false;
   let transferred = false;
   if (to) {
     for (const kind of ["custom", "hist", "image"]) {
       const choice = flags[kind]?.[from];
       if (!choice) continue;
-      Pqe(flags, to);
+      OFe(flags, to);
       flags[kind][to] = kind === "hist" && !choice.includes("/") ? from + "/" + choice : choice;
       transferred = true;
       break;
     }
   }
-  Pqe(flags, from);
+  OFe(flags, from);
   delete flags.library[from];
-  w5e(flags);
+  sye(flags);
   return transferred;
 }
 
@@ -37,39 +37,39 @@ function gpmUprisingCase(sim, key = sim.playerKey) {
 function gpmUprisingStatus(sim) {
   const { parent, state } = gpmUprisingCase(sim);
   const parentKey = parent?.key;
-  const founderId = state?.founderId || fn(parent);
+  const founderId = state?.founderId || yn(parent);
   const child = sim.countries.get(state?.childKey);
-  const founder = rP(parent, founderId);
-  const branchFounder = rP(child, founderId);
+  const founder = yP(parent, founderId);
+  const branchFounder = yP(child, founderId);
   const war = state && sim.conflicts?.get(state.warId);
-  const control = yn(sim);
-  const owned = key => d5(sim, key)?.provinceKeys || [];
+  const control = Ho(sim);
+  const owned = key => y5(sim, key)?.provinceKeys || [];
   return {
     day: sim.day,
-    campaignActive: Lc(sim),
+    campaignActive: Hc(sim),
     noOccupation: sim.world.provinces.every(province => !province.__occupier ||
       ![parentKey, state?.childKey].includes(province.__occupier)),
     warCount: sim.wars?.size || 0,
     state,
     control: { countryKey: control.countryKey, partyId: control.partyId,
       campaignId: control.campaignId, controlsExecutive: control.controlsExecutive },
-    parent: { key: parent?.key, name: uo(sim, parent), lead: st(parent)?.government?.leadPartyId,
+    parent: { key: parent?.key, name: po(sim, parent), lead: lt(parent)?.government?.leadPartyId,
       founder: founder ? { legal: founder.legal, bannedYear: founder.bannedYear,
         treasury: founder.organization?.treasuryM, activists: founder.organization?.activistsK,
         influence: founder.organization?.influence, support: founder.support,
-        electionEligible: Object.hasOwn(zg(parent.pol, { [founderId]: 0.5 }), founderId),
+        electionEligible: Object.hasOwn(g5(parent.pol, { [founderId]: 0.5 }), founderId),
         ppoKeys: Object.keys(founder).filter(key => key.startsWith("gpm") && key !== "gpmUprisingShell").sort() } : null,
-      owned: owned(parentKey), regime: Ku(parent.pol.constitution),
+      owned: owned(parentKey), regime: Bu(parent.pol.constitution),
       ceremonial: !!parent.pol.constitution.organs.head_of_state.ceremonial,
       legalParties: parent.pol.parties.filter(party => party.legal !== false).map(party => party.id),
       chambers: parent.pol.chambers.map(chamber => chamber.composition), laws: parent.laws },
-    child: child ? { key: child.key, name: child.name, lead: st(child)?.government?.leadPartyId,
+    child: child ? { key: child.key, name: child.name, lead: lt(child)?.government?.leadPartyId,
       treasury: branchFounder?.organization?.treasuryM, owned: owned(child.key),
-      regime: Ku(child.pol.constitution), ceremonial: !!child.pol.constitution.organs.head_of_state.ceremonial, legalParties: child.pol.parties.filter(party => party.legal !== false).map(party => party.id), laws: child.laws } : null,
+      regime: Bu(child.pol.constitution), ceremonial: !!child.pol.constitution.organs.head_of_state.ceremonial, legalParties: child.pol.parties.filter(party => party.legal !== false).map(party => party.id), laws: child.laws } : null,
     war: war ? { id: war.id, status: war.status, mode: war.mode, day: war.startDay,
       sideA: war.sideAKey, sideB: war.sideBKey, participants: Object.keys(war.participants || {}).sort(),
-      registered: sim.wars.get(parentKey) === war, scope: lBe(sim, war)?.scope } : null,
-    activeHostilities: child ? ha(sim, child.key, parentKey) : false,
+      registered: sim.wars.get(parentKey) === war, scope: dNe(sim, war)?.scope } : null,
+    activeHostilities: child ? ba(sim, child.key, parentKey) : false,
   };
 }
 
@@ -84,11 +84,11 @@ function gpmUprisingPartyShell(party) {
 }
 
 function gpmUprisingInstallGovernment(sim, country, partyId, status) {
-  const office = Ve(country, "head_of_gov");
-  const candidate = C4o(sim, country, partyId, office)
-    || f5o(sim, country, office, partyId);
-  const institution = st(country);
-  const transition = $0(sim, country, {
+  const office = Xe(country, "head_of_gov");
+  const candidate = yho(sim, country, partyId, office)
+    || r6o(sim, country, office, partyId);
+  const institution = lt(country);
+  const transition = tc(sim, country, {
     intent: "government.install",
     transitionId: "gpm.uprising.government:" + country.key + ":" + institution.revision,
     expectedRevision: institution.revision,
@@ -101,7 +101,7 @@ function gpmUprisingInstallGovernment(sim, country, partyId, status) {
     status,
   });
   if (!transition.ok) throw new Error("Government transition failed: " + JSON.stringify(transition));
-  gf(sim, country);
+  kf(sim, country);
 }
 
 function gpmUprisingCharter(country, party, year = 2026) {
@@ -111,23 +111,23 @@ function gpmUprisingCharter(country, party, year = 2026) {
   // Resolve dependent settings after their enabling law changes.
   for (let pass = 0; pass < 3; pass++) {
     let changed = false;
-    for (const law of l1) {
+    for (const law of p1) {
       const from = country.laws?.[law.id];
-      if (from == null || !Uht(draft, law).ok)
+      if (from == null || !ygt(draft, law).ok)
         continue;
       const commitment = gpmIdeologyLawTarget(platform, law.id, from, year);
       if (commitment !== undefined) {
-        if (!fo(draft.laws[law.id], commitment)) {
+        if (!yo(draft.laws[law.id], commitment)) {
           draft.laws[law.id] = or(commitment);
           changed = true;
         }
-        if (!fo(from, commitment)) changes.set(law.id, { lawId: law.id, value: or(commitment), choiceId: "platform" });
+        if (!yo(from, commitment)) changes.set(law.id, { lawId: law.id, value: or(commitment), choiceId: "platform" });
         continue;
       }
       if (!Object.values(law.doctrine?.axes || {}).some(weight => Number.isFinite(weight) && weight !== 0)) continue;
-      const distance = value => Zze(party, law, value, draft, null);
+      const distance = value => lVe(party, law, value, draft, null);
       const baseline = distance(from);
-      const ceiling = Boe(law, country);
+      const ceiling = pne(law, country);
       let best = null;
       let bestDistance = baseline;
       let seed = from;
@@ -135,7 +135,7 @@ function gpmUprisingCharter(country, party, year = 2026) {
       const steps = law.schema.type === "object" && !Number.isFinite(ceiling) ? 6 : 1;
       for (let step = 0; step < steps; step++) {
         let next = null;
-        const choices = w6(law, draft, seed);
+        const choices = E6(law, draft, seed);
         // From a disabled benefit, the rate and duration must be introduced together.
         if (law.id === "unemployment_insurance" && seed.maxMonths === 0 && seed.replacementPct === 0) {
           const rate = choices.find(choice => choice.id === "rate_plus_10");
@@ -169,9 +169,9 @@ function gpmUprisingCharter(country, party, year = 2026) {
         seed = next.value;
       }
       if (baseline - bestDistance <= 2) best = null;
-      if (best) LNa(law, oGa, nGa, country);
+      if (best) qWa(law, nLa, iLa, country);
       const target = best?.value ?? from;
-      if (!fo(draft.laws[law.id], target)) {
+      if (!yo(draft.laws[law.id], target)) {
         draft.laws[law.id] = target;
         changed = true;
       }
@@ -180,23 +180,23 @@ function gpmUprisingCharter(country, party, year = 2026) {
     }
     if (!changed) break;
   }
-  return { assessed: l1.length, changes: [...changes.values()] };
+  return { assessed: p1.length, changes: [...changes.values()] };
 }
 
 function gpmApplyUprisingCharter(sim, country, charter) {
   const remaining = [...charter.changes];
   const applied = [];
   while (remaining.length) {
-    const index = remaining.findIndex(item => Uht(country, Ra(item.lawId)).ok);
+    const index = remaining.findIndex(item => ygt(country, Ka(item.lawId)).ok);
     if (index < 0) break;
     const [item] = remaining.splice(index, 1);
-    const law = Ra(item.lawId);
-    if (fo(country.laws[law.id], item.value)) continue;
-    kfo(sim, country, law, item.value, { procedure: {
+    const law = Ka(item.lawId);
+    if (yo(country.laws[law.id], item.value)) continue;
+    kyo(sim, country, law, item.value, { procedure: {
       id: "gpm.uprising.charter:" + country.key + ":" + law.id + ":" + sim.day,
-      kind: S3(law), passed: true, resolutionMode: "founding_charter",
+      kind: _3(law), passed: true, resolutionMode: "founding_charter",
     } });
-    Afo(country, item);
+    Ayo(country, item);
     applied.push(item);
   }
   return applied;
@@ -204,7 +204,7 @@ function gpmApplyUprisingCharter(sim, country, charter) {
 
 function gpmUprisingReform(country, profile) {
   const chamber = country.pol.chambers[0];
-  const draft = _bt(country, chamber, profile);
+  const draft = jSt(country, chamber, profile);
   draft.constitution.organs.head_of_state.ceremonial = profile.ceremonial;
   return draft;
 }
@@ -220,28 +220,28 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
       chamber.composition = { [partyId]: chamber.seats };
     } else if (transitional) {
       const governing = Math.floor(chamber.seats / 2) + 1;
-      chamber.composition = { ...yj(weights, chamber.seats - governing), [partyId]: governing };
+      chamber.composition = { ...Bj(weights, chamber.seats - governing), [partyId]: governing };
     } else {
       chamber.composition = Object.fromEntries(Object.entries(chamber.composition || {})
         .filter(([id, count]) => rivals.some(party => party.id === id) && count > 0));
     }
-    rk(chamber);
+    wk(chamber);
   }
 
-  const folded = Ve(country, "head_of_gov") === Ve(country, "head_of_state");
+  const folded = Xe(country, "head_of_gov") === Xe(country, "head_of_state");
   const status = transitional || profile.singleParty || !profile.ceremonial ? "installed" : "minority";
   gpmUprisingInstallGovernment(sim, country, partyId, status);
-  const head = mt(country, "head_of_gov");
+  const head = ft(country, "head_of_gov");
   const hereditary = profile.headSelection === "hereditary";
   const reigning = hereditary ? sim.people.get(country.monarchId) : null;
   const sovereign = hereditary && reigning?.alive && reigning.countryKey === country.key ? reigning : null;
   const headOfState = !profile.headGovExists ? head : (sovereign ||
-    b0(sim, { countryKey: country.key, party: hereditary ? null : partyId, role: draft.constitution.organs.head_of_state.role,
+    C0(sim, { countryKey: country.key, party: hereditary ? null : partyId, role: draft.constitution.organs.head_of_state.role,
       born: sim._simYear - 45, since: sim._simYear })).id;
   const officeholder = personId => ({ personId, partyId, controllerRef: { kind: "party", id: partyId } });
   // Unfolding needs distinct, explicit officeholders even in a one-party parent.
-  const institution = st(country);
-  const transition = $0(sim, country, {
+  const institution = lt(country);
+  const transition = tc(sim, country, {
     intent: "constitution.reconcile",
     transitionId: "gpm.uprising.constitution:" + country.key + ":" + institution.revision,
     expectedRevision: institution.revision, constitutionRevision: institution.constitutionRevision + 1,
@@ -252,13 +252,13 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
       : officeholder(headOfState),
     ...(folded && profile.headGovExists ? { unfoldHead: officeholder(head) } : {}),
   });
-  if (!transition.ok || to(country) !== partyId)
+  if (!transition.ok || Ur(country) !== partyId)
     throw new Error("Uprising constitution failed: " + JSON.stringify(transition));
   if (hereditary) {
     const monarch = sim.people.get(headOfState);
-    if (!sim.dynasties.has(monarch.dynastyId)) pq(sim, country, monarch);
+    if (!sim.dynasties.has(monarch.dynastyId)) Oq(sim, country, monarch);
   }
-  GTa(country);
+  WNa(country);
   Object.assign(country.pol.regime, draft.polity.regime);
   if (profile.singleParty) {
     for (const party of country.pol.parties) {
@@ -269,9 +269,9 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
     }
   }
   country.pol.campaignPolls = {};
-  M5(sim, country, sim._simYear);
-  if (sim.playerKey === country.key) oP(sim, country);
-  g3e(sim, country);
+  E5(sim, country, sim._simYear);
+  if (sim.playerKey === country.key) hP(sim, country);
+  afe(sim, country);
   sim._reclassRegime(country, true);
 }
 
@@ -291,9 +291,9 @@ function gpmUprisingCaptureStartingIdentities(sim) {
 }
 
 function gpmUprisingTerritoryPlan(sim, parent, founder) {
-  const owned = Qh(sim, parent.key);
+  const owned = o6(sim, parent.key);
   const population = owned.reduce((sum, province) => sum + (province.__pop || 0), 0);
-  const support = new Map(wke(parent.pol, DO(sim, parent)).map(region =>
+  const support = new Map(bAe(parent.pol, tD(sim, parent)).map(region =>
     [region.key, region.shares[founder.id] || 0]));
   const rows = owned.map(province => ({
     province,
@@ -337,7 +337,7 @@ function gpmUprisingTerritoryPlan(sim, parent, founder) {
       return sum + (unit && unit.type !== "reserve" ? unit.manpowerK || 0 : 0);
     }, 0);
   const availableK = parent.forces ? share * replacementK + (parent.employment ?
-    share * Math.max(0, (parent.employment.workingAgeM || 0) - Q2(parent)) * 1000 : requiredK) : 0;
+    share * Math.max(0, (parent.employment.workingAgeM || 0) - rp(parent)) * 1000 : requiredK) : 0;
   const manpower = { requiredK, availableK: Math.min(requiredK, availableK) };
   const minimumK = requiredK / Math.max(...staffing) * .001;
   return { reason: availableK < minimumK ? "division_manpower" : reason, province, joining, rows, headquarters, manpower };
@@ -349,15 +349,15 @@ function gpmUprisingEligibility(sim, parent, founder) {
     return "founder_control";
   const parentKey = parent.key;
   const founderId = founder.id;
-  const territory = d5(sim, parentKey);
-  if (!st(parent) || !parent.pol.chambers?.length || territory?.sovereignKey !== parentKey ||
+  const territory = y5(sim, parentKey);
+  if (!lt(parent) || !parent.pol.chambers?.length || territory?.sovereignKey !== parentKey ||
       territory.primaryDefenseAuthorityKey !== parentKey || territory.primaryDiplomacyAuthorityKey !== parentKey ||
       parent.pol.constitution.organs.head_of_state.source === "sovereign")
     return "scope";
-  const incumbent = Et(parent);
-  const incumbentParty = incumbent && rP(parent, incumbent);
+  const incumbent = Kt(parent);
+  const incumbentParty = incumbent && yP(parent, incumbent);
   if (!incumbentParty || incumbentParty.legal === false) return "incumbent_required";
-  if (xya(parent.pol).has(founderId)) return "unsupported_party_roles";
+  if (B6a(parent.pol).has(founderId)) return "unsupported_party_roles";
   return null;
 }
 
@@ -374,7 +374,7 @@ function gpmUprisingWithdrawnProvinces(sim, war, countryKey) {
 
 function gpmUprisingVoluntaryAid(sim, countryKey) {
   return [...(sim.militarySupportPrograms?.values() || [])].filter(program =>
-    program.sourceTypeId === "voluntary" && program.donorKey === countryKey && g5.has(program.statusId));
+    program.sourceTypeId === "voluntary" && program.donorKey === countryKey && w5.has(program.statusId));
 }
 
 function gpmUprisingMissionInvolves(sim, mission, owner, countryKey) {
@@ -387,35 +387,35 @@ function gpmUprisingMissionInvolves(sim, mission, owner, countryKey) {
 
 function gpmInheritedPeaceTerms(sim, parent, record, entry) {
   const { war, definition, row, summaryStatus } = entry;
-  const name = key => uo(sim, sim.countries.get(key)) || key;
+  const name = key => po(sim, sim.countries.get(key)) || key;
   const countryKey = parent.key;
   const side = war?.participants[countryKey]?.side;
   const other = side === "A" ? "B" : "A";
   const catalogSide = war ? -1 : definition.sides.findIndex(actors =>
     actors.some(id => gpmHistoricalActorRepresents(sim, id, countryKey)));
-  const opponents = war ? We(war, other) : definition.sides[1 - catalogSide] || [];
-  const allies = war ? We(war, side).filter(key => key !== countryKey) : [];
+  const opponents = war ? Le(war, other) : definition.sides[1 - catalogSide] || [];
+  const allies = war ? Le(war, side).filter(key => key !== countryKey) : [];
   const stays = war ? allies : (definition.sides[catalogSide] || [])
     .filter(id => !gpmHistoricalActorRepresents(sim, id, countryKey));
-  const opponent = war ? C8t(war, other) : null;
+  const opponent = war ? H7t(war, other) : null;
   const opponentCountry = sim.countries.get(opponent);
   const counterparties = war ? [name(opponent)] : opponents.map(id => gpmHistoricalShortName(gpmHistoricalViewActor(sim, id)) || id);
-  const stance = war ? kP(sim, war, other) : null;
+  const stance = war ? LP(sim, war, other) : null;
   const advantage = stance?.scoreAdvantage ?? (catalogSide === 0 ? row.advantage : -row.advantage) ?? 0;
   const quiet = summaryStatus !== "active";
   const exhaustion = stance?.exhaustion01 ?? Math.min(1, (row.weeksActive || 0) / 35);
   const refusing = !quiet && exhaustion < .65 && (advantage >= 55 ||
     advantage >= 25 && stance?.hasOffensiveObjectives && !stance.offensiveObjectivesComplete && stance.objectiveProgress01 >= .7);
   const terms = !refusing && war && !allies.length && opponents.length === 1 && (advantage >= 20 || stance?.offensiveObjectivesComplete)
-    ? zF(sim, war, opponent, countryKey).filter(term => term.type === "territorial_transfer") : [];
-  const territory = terms.length && hja(sim, war, opponent, countryKey, terms);
+    ? fU(sim, war, opponent, countryKey).filter(term => term.type === "territorial_transfer") : [];
+  const territory = terms.length && Iza(sim, war, opponent, countryKey, terms);
   const transfers = territory?.ok && !territory.totalAnnexation ? terms : [];
   const released = war ? (stays.length ? gpmUprisingWithdrawnProvinces(sim, war, countryKey) : Object.keys(war.occupationCredit || {})) : [];
   const ceded = transfers.flatMap(term => term.provinceKeys);
   const releases = released.filter(key => !ceded.includes(key));
   const wantsPayment = !refusing && !!war && !transfers.length && advantage >= 24 && exhaustion < .8;
-  const payment = wantsPayment ? ae(Math.max(.0001, (parent.gdp || 0) * (advantage >= 40 ? .002 : .001)), "floor") : 0;
-  const payable = !payment || (opponentCountry && LH(sim, parent, opponentCountry, payment,
+  const payment = wantsPayment ? te(Math.max(.0001, (parent.gdp || 0) * (advantage >= 40 ? .002 : .001)), "floor") : 0;
+  const payable = !payment || (opponentCountry && dz(sim, parent, opponentCountry, payment,
     { allowFinancing: false, purposeId: "peace_reparations" }).ok);
   const rejectReason = !opponents.length ? "There is no opposing side available to negotiate." :
     refusing ? "The opposing side believes it can gain more by continuing to fight." :
@@ -428,7 +428,7 @@ function gpmInheritedPeaceTerms(sim, parent, record, entry) {
   if (!transfers.length) consequences.push("Legal borders stay the same.");
   if (payment) {
     const amount = new Intl.NumberFormat("en-US", { maximumFractionDigits: 3 }).format(payment * 1000);
-    const treasuryShare = Math.round(100 * payment / Math.max(Ka(sim, parent), 1e-9));
+    const treasuryShare = Math.round(100 * payment / Math.max(Ba(sim, parent), 1e-9));
     consequences.push(`Your state treasury pays ${name(opponent)} US$${amount} million in reparations once${payable ? `, about ${treasuryShare}% of current state cash` : ""}.`);
   }
   if (allies.length) consequences.push(`Relations with ${allies.map(name).join(", ")} worsen when you make a separate peace.`);
@@ -448,7 +448,7 @@ function gpmInheritedPeaceView(sim, parent, record, entry) {
 function gpmUprisingInheritedWars(sim) {
   const { parent, state } = gpmUprisingCase(sim);
   if (state?.result !== "breakaway" || sim.playerKey !== parent?.key ||
-      fn(parent) !== state.founderId || !sim.playerControlsGovernment(parent)) return null;
+      yn(parent) !== state.founderId || !sim.playerControlsGovernment(parent)) return null;
   const current = gpmDirectWars(sim, parent.key);
   const wars = (state.inheritedWars || []).map(record => {
     const entry = current.find(candidate => candidate.key === record.key && gpmUprisingWarStamp(candidate) === record.startDay);
@@ -458,7 +458,7 @@ function gpmUprisingInheritedWars(sim) {
   });
   const voluntaryAid = gpmUprisingVoluntaryAid(sim, parent.key).map(program => {
     const war = sim.conflicts.get(program.conflictId);
-    const name = key => uo(sim, sim.countries.get(key)) || key;
+    const name = key => po(sim, sim.countries.get(key)) || key;
     return { id: program.id, recipient: name(program.recipientKey), warName:
       war ? name(war.sideAKey) + " / " + name(war.sideBKey) : null };
   });
@@ -477,20 +477,20 @@ function gpmUprisingDemoteWar(sim, war) {
   }
   Object.assign(war, { mode: "strategic", enemyKey: null, enemyName: null,
     score: war._score?.total ?? war.score ?? 0, a: war.sideAKey, b: war.sideBKey,
-    aName: uo(sim, sim.countries.get(war.sideAKey)), bName: uo(sim, sim.countries.get(war.sideBKey)) });
+    aName: po(sim, sim.countries.get(war.sideAKey)), bName: po(sim, sim.countries.get(war.sideBKey)) });
   strategicWars.set(war.id, war);
 }
 
 function gpmUprisingLeaveNativeWar(sim, war, country) {
   const countryKey = country.key;
   const { side } = war.participants[countryKey];
-  const remaining = We(war, side).filter(key => key !== countryKey);
+  const remaining = Le(war, side).filter(key => key !== countryKey);
   const opponent = side === "A" ? "B" : "A";
-  const opposing = We(war, opponent);
+  const opposing = Le(war, opponent);
   const closed = !remaining.length || !opposing.length;
   if (closed) {
-    Og(war).outcomeId = "uprising_peace";
-    Av(sim, war);
+    Ug(war).outcomeId = "uprising_peace";
+    Lv(sim, war);
     gpmHistoricalCloseNative(sim, war, "Peace settlement signed");
     for (const key of [...remaining, ...opposing]) {
       const actor = sim.countries.get(key);
@@ -500,24 +500,24 @@ function gpmUprisingLeaveNativeWar(sim, war, country) {
     const released = gpmUprisingWithdrawnProvinces(sim, war, countryKey);
     for (const key of released) {
       const province = sim.world.provByKey.get(key);
-      aP(sim, war, key, null);
+      fP(sim, war, key, null);
       war.occupied?.delete(province.__provId);
       war.lost?.delete(province.__provId);
       if (war.occupationCivil) delete war.occupationCivil[key];
     }
     for (const program of sim.militarySupportPrograms?.values() || []) {
       if (program.conflictId === war.id && (program.recipientKey === countryKey || program.donorKey === countryKey) &&
-          g5.has(program.statusId)) {
-        h5(sim, program.id, "withdrawn");
+          w5.has(program.statusId)) {
+        P5(sim, program.id, "withdrawn");
       }
     }
     for (const call of sim.militaryCalls?.values() || []) {
       if (call.warId === war.id && (call.memberKey === countryKey || call.defenderKey === countryKey ||
-          call.aggressorKey === countryKey)) XQ(sim, call.id, "withdrawn");
+          call.aggressorKey === countryKey)) EJ(sim, call.id, "withdrawn");
     }
     // Abort sorties involving the departing country, then withdraw just its assigned formations.
-    zpt(sim, war, sim.day, "withdrawn", countryKey);
-    pct(sim, war.id, null, countryKey);
+    l3t(sim, war, sim.day, "withdrawn", countryKey);
+    kut(sim, war.id, null, countryKey);
     const coalition = war.coalitions[side];
     const principalLeft = coalition.principalKey === countryKey;
     if (principalLeft) {
@@ -545,7 +545,7 @@ function gpmUprisingLeaveNativeWar(sim, war, country) {
         goal.status = "abandoned";
       }
     }
-    const settlement = Og(war);
+    const settlement = Ug(war);
     for (const proposal of settlement.proposals) {
       if (proposal.status === "pending" && (principalLeft || proposal.proposedByKey === countryKey)) {
         Object.assign(proposal, { status: "rejected", respondedDay: sim.day });
@@ -553,11 +553,11 @@ function gpmUprisingLeaveNativeWar(sim, war, country) {
     }
     settlement.revision++;
     gpmUprisingDemoteWar(sim, war);
-    llt(sim, war);
-    DJ(sim);
-    FW(sim);
+    I0t(sim, war);
+    dX(sim);
+    uL(sim);
   }
-  Jce(sim, countryKey);
+  Oue(sim, countryKey);
   if (!country.atWar) country.warScore = 0;
   return { ok: true, closed };
 }
@@ -596,11 +596,11 @@ function gpmReviewInheritedPeace(sim, parent, state) {
 function gpmSignInheritedPeace(sim, country, record, entry, offer) {
   const { war } = entry;
   if (offer.transfers.length) {
-    const transferred = tD(sim, war, offer.opponent, country.key, offer.transfers);
+    const transferred = PD(sim, war, offer.opponent, country.key, offer.transfers);
     if (!transferred.ok) return { ok: false, reason: "war_peace_changed" };
   }
   if (offer.payment) {
-    const payment = Qc(sim, country, sim.countries.get(offer.opponent), offer.payment, {
+    const payment = tu(sim, country, sim.countries.get(offer.opponent), offer.payment, {
       id: `gpm:peace:${country.key}:${record.key}:${record.startDay}`, allowFinancing: false,
       purposeId: "peace_reparations", refs: { conflictId: record.key },
     });
@@ -609,8 +609,8 @@ function gpmSignInheritedPeace(sim, country, record, entry, offer) {
   const result = war ? gpmUprisingLeaveNativeWar(sim, war, country) : gpmLeaveCatalogWar(sim, entry, country.key);
   if (!result.ok) return result;
   for (const key of offer.allies) {
-    xa(sim, key, country.key, -8);
-    H0(sim, sim.countries.get(key), country.key, "betrayal", .15);
+    Na(sim, key, country.key, -8);
+    Q0(sim, sim.countries.get(key), country.key, "betrayal", .15);
   }
   record.choice = "peace";
   record.decidedDay = sim.day;
@@ -622,14 +622,14 @@ function gpmSignInheritedPeace(sim, country, record, entry, offer) {
 function gpmUprisingWarDecision(sim, country, input) {
   const { parent, state } = gpmUprisingCase(sim);
   if (!parent || country?.key !== parent.key || state?.result !== "breakaway" ||
-      sim.playerKey !== parent.key || fn(parent) !== state.founderId || !sim.playerControlsGovernment(parent)) {
+      sim.playerKey !== parent.key || yn(parent) !== state.founderId || !sim.playerControlsGovernment(parent)) {
     return { ok: false, reason: "war_authority" };
   }
   if (input.choice === "endAid") {
     if (!gpmUprisingVoluntaryAid(sim, parent.key).some(program => program.id === input.id)) {
       return { ok: false, reason: "war_stale" };
     }
-    const result = h7a(sim, input.id, parent.key);
+    const result = Sva(sim, input.id, parent.key);
     return result.ok ? { ok: true } : { ok: false, reason: result.reasonId };
   }
   const record = state.inheritedWars?.find(entry => entry.key === input.id);
@@ -688,7 +688,7 @@ function gpmUprisingSeatTransfers(polity, founderId, incumbent) {
     if (!weights.some(([, weight]) => weight > 0)) weights = [[incumbent, 1]];
     // The largest remaining party wins ties in the native D'Hondt allocation.
     weights.sort(([idA, a], [idB, b]) => b - a || K(idA, idB));
-    const gains = Tya(weights.map(([, weight]) => weight), vacated);
+    const gains = W6a(weights.map(([, weight]) => weight), vacated);
     const recipients = weights.map(([id], index) => [id, gains[index]]).filter(([, gain]) => gain > 0);
     transfers.push({ chamberId: chamber.id, vacated, recipients });
   }
@@ -700,7 +700,7 @@ function gpmUprisingProposal(sim, parent, founder) {
   if (reason) return { reason };
   const parentKey = parent.key;
   const founderId = founder.id;
-  const incumbent = Et(parent);
+  const incumbent = Kt(parent);
   const territoryPlan = gpmUprisingTerritoryPlan(sim, parent, founder);
   const { province } = territoryPlan;
   if (territoryPlan.reason) return { reason: territoryPlan.reason, territoryPlan };
@@ -715,7 +715,7 @@ function gpmUprisingProposal(sim, parent, founder) {
   catch { return { reason: "constitution", territoryPlan }; }
   const parentName = sim.customNames?.[parentKey] || gpmUprisingOfficialNames[parentKey] || parent.name;
   const seed = parentKey === "422" && founder.nameDesc?.gpmTag === "ASBP" ? undefined :
-    Aa(JSON.stringify([sim.rngSeed0, yn(sim).campaignId, parentKey, founderId, profile.regime]));
+    Ma(JSON.stringify([sim.rngSeed0, Ho(sim).campaignId, parentKey, founderId, profile.regime]));
   const starting = parent.gpmUprisingStartingIdentity ||
     (!parent.__born ? gpmUprisingStartingIdentity(parent) : null);
   const restoresOriginalName = !!starting && starting.system === gpmUprisingSystemFromProfile(profile);
@@ -723,7 +723,7 @@ function gpmUprisingProposal(sim, parent, founder) {
     ? { name: gpmUprisingRevolutionaryName(parentKey, starting.name) }
     : gpmUprisingIdentity(parentKey, parentName, profile, seed);
   const names = [identity.name, ...(identity.alternatives || [])]
-    .filter((name, index, list) => tHe(name) === name && name && list.indexOf(name) === index);
+    .filter((name, index, list) => mze(name) === name && name && list.indexOf(name) === index);
   if (!names.length) return { reason: "name", territoryPlan };
   const victorySupport = Math.min(1, founderSupport + victoryGain);
   const charter = gpmUprisingCharter(parent, founder, sim._simYear);
@@ -731,16 +731,16 @@ function gpmUprisingProposal(sim, parent, founder) {
   const vacatedSeats = seatTransfers.reduce((total, transfer) => total + transfer.vacated, 0);
   const quoteId = JSON.stringify([sim.day, parentKey, founderId, [...territoryPlan.joining], divisions, stockpile, incumbent, founderSupport,
     territoryPlan.manpower,
-    Aa(JSON.stringify([profile, names, charter.changes, restoresOriginalName ? starting : null, seatTransfers]))]);
+    Ma(JSON.stringify([profile, names, charter.changes, restoresOriginalName ? starting : null, seatTransfers]))]);
   return { province, territoryPlan, divisions, stockpile, incumbent, founderSupport, victorySupport, charter, quoteId, names, profile, parentName,
     restoration: restoresOriginalName ? starting : null, seatTransfers, vacatedSeats };
 }
 
 function gpmUprisingView(sim) {
-  const control = yn(sim);
+  const control = Ho(sim);
   const { parent, state } = gpmUprisingCase(sim);
   const child = state && sim.countries.get(state.childKey);
-  const founder = rP(child || parent, state?.founderId || fn(parent));
+  const founder = yP(child || parent, state?.founderId || yn(parent));
   const proposal = state ? {} : gpmUprisingProposal(sim, parent, founder);
   const phase = state?.phase || (proposal.reason ? "unavailable" : "ready");
   const war = state && sim.conflicts.get(state.warId);
@@ -777,7 +777,7 @@ function gpmUprisingView(sim) {
 function gpmUprisingOpen(sim, country, input) {
   const { parent, state } = gpmUprisingCase(sim);
   if (state) return { ok: false, reason: "case_exists" };
-  const founder = rP(parent, fn(parent));
+  const founder = yP(parent, yn(parent));
   const proposal = gpmUprisingProposal(sim, parent, founder);
   if (proposal.reason) return { ok: false, reason: proposal.reason };
   if (input.quoteId !== proposal.quoteId) return { ok: false, reason: "stale" };
@@ -786,28 +786,28 @@ function gpmUprisingOpen(sim, country, input) {
   const breakawayName = input.name ?? names[0];
   if (!names.includes(breakawayName)) return { ok: false, reason: "name" };
   const flag = input.flag ?? null;
-  if (flag !== null && !Nwt(flag)) return { ok: false, reason: "flag" };
+  if (flag !== null && !S_t(flag)) return { ok: false, reason: "flag" };
   const parentKey = parent.key;
   const founderId = founder.id;
   const provinceKey = province.__provKey;
   const childKey = childPrefix + parentKey + "-" + sim.day;
   const priorOperationalWar = sim.wars?.get(parentKey);
-  if (priorOperationalWar && !Oo(priorOperationalWar, parentKey)) {
+  if (priorOperationalWar && !Do(priorOperationalWar, parentKey)) {
     return { ok: false, reason: "war_stale" };
   }
   const plan = { create: [{ key: childKey, parentKey, provIds: [...territoryPlan.joining],
-    a2: childKey, feature: HRo(childKey), name: breakawayName, hostile: true, gpmUprisingFounderId: founderId }] };
-  const goal = HJ(sim, { actorKey: childKey, targetCountryKey: parentKey, casusBelliId: "coercion" });
-  const validation = N8t(sim, plan);
+    a2: childKey, feature: iDo(childKey), name: breakawayName, hostile: true, gpmUprisingFounderId: founderId }] };
+  const goal = wX(sim, { actorKey: childKey, targetCountryKey: parentKey, casusBelliId: "coercion" });
+  const validation = a9t(sim, plan);
   if (!validation.ok || !goal.ok) return { ok: false, reason: validation.reasonId || goal.reasonId };
-  const split = _w(sim, plan);
+  const split = Gw(sim, plan);
   if (!split.ok) throw new Error("Unable to create the breakaway: " + split.reasonId);
   const child = sim.countries.get(childKey);
 
   // Use one organization across the split. Native country creation clones every party.
   parent.pol.parties = parent.pol.parties.map(party => party.id === founderId
     ? gpmUprisingPartyShell(party) : party);
-  hRa(sim, parent);
+  JOe(sim, parent);
   child.gpmUprisingParentKey = parentKey;
   child.pol.parties = child.pol.parties.map(party => {
     if (party.id === founderId) return founder;
@@ -825,28 +825,28 @@ function gpmUprisingOpen(sim, country, input) {
   const handoff = sim.switchPlayerControl({ countryKey: childKey, partyId: founderId });
   if (!handoff.ok || !handoff.current.controlsExecutive) throw new Error("Breakaway control failed");
   for (const outsideWar of [...(sim.wars?.values() || [])]) {
-    if (!Oo(outsideWar, parentKey) || Oo(outsideWar, childKey)) continue;
-    zpt(sim, outsideWar, sim.day, "strategic");
-    F4a(sim, outsideWar.id);
+    if (!Do(outsideWar, parentKey) || Do(outsideWar, childKey)) continue;
+    l3t(sim, outsideWar, sim.day, "strategic");
+    Vya(sim, outsideWar.id);
     gpmUprisingDemoteWar(sim, outsideWar);
   }
 
   // Completed preparations enter the native roster. Unfinished projects end at declaration.
-  b9(sim, child);
+  x9(sim, child);
   const deployed = gpmUprisingDeployPreparations(sim, child, province, divisions, stockpile);
   delete founder.gpmUprisingPreparations;
-  const target = d5(sim, parentKey);
-  const war = VUa(sim, parent, { id: sim.conflicts?.has("player:" + parentKey) ? "player:" + childKey : undefined,
+  const target = y5(sim, parentKey);
+  const war = tza(sim, parent, { id: sim.conflicts?.has("player:" + parentKey) ? "player:" + childKey : undefined,
     selectedTargetActorKey: parentKey,
     targetDefenseAuthorityKeys: target.defenseAuthorityKeys,
     targetDiplomacyAuthorityKeys: target.diplomacyAuthorityKeys,
     targetProvinceKeys: target.provinceKeys, enemyPop0: parent.pop,
     enemyProvTotal0: target.provinceKeys.length, cb: "coercion",
     campaign: { scope: "full_war", doctrine: "balanced" },
-    warGoals: { A: [goal.goal], B: [I2e(parentKey, childKey, sim.day)] } });
-  if (!war || sim.conflicts.get(war.id) !== war || !ha(sim, childKey, parentKey))
+    warGoals: { A: [goal.goal], B: [rpe(parentKey, childKey, sim.day)] } });
+  if (!war || sim.conflicts.get(war.id) !== war || !ba(sim, childKey, parentKey))
     throw new Error("Civil war was not registered");
-  P8t(sim, war);
+  L7t(sim, war);
   H(sim, "war.player_declared", { warId: war.id, playerKey: childKey, enemyKey: parentKey,
     selectedTargetActorKey: parentKey, casusBelli: "coercion" }, { category: "guerre", severity: "danger" });
   for (const { chamberId, recipients } of seatTransfers) {
@@ -862,7 +862,7 @@ function gpmUprisingOpen(sim, country, input) {
     defectingRegions: [...territoryPlan.joining].map(id => sim.world.provinces[id].__provKey),
     parentName, breakawayName, victoryName: restoration?.name || breakawayName,
     restoresOriginalName: !!restoration, restoreCustomName: !!restoration?.custom, profile,
-    ...(flag && !x0r(sim, child.a2, flag) ? { flag: { src: flag.src, ratio: flag.ratio } } : {}) };
+    ...(flag && !d1r(sim, child.a2, flag) ? { flag: { src: flag.src, ratio: flag.ratio } } : {}) };
   return { ok: true, ...gpmUprisingView(sim) };
 }
 
@@ -887,29 +887,29 @@ function gpmUprisingIntegrateArmy(sim, child, parent, headquartersKey) {
     formation.owner === child.key && formation.domain === "land" && formation.type !== "reserve");
   if (!army.length) return 0;
   // Reconcile the original roster's secession-era inventory before adding the breakaway formations.
-  b9(sim, parent);
+  x9(sim, parent);
   const units = new Set(army.map(formation => formation.id));
   for (const formation of army) {
     // Take the actual surviving equipment and existing personnel with the unit.
     for (const [id, quantity] of Object.entries(formation.equip)) {
-      n9(parent.forces, id, X3(child.forces, id, quantity));
+      v9(parent.forces, id, lf(child.forces, id, quantity));
     }
     child.forces.active -= formation.manpowerK;
     parent.forces.active += formation.manpowerK;
     const position = Ce(sim, formation);
-    const province = sim.world.provByKey.get(Z4a(sim, formation) || (position && tf(position[0], position[1])));
+    const province = sim.world.provByKey.get(aha(sim, formation) || (position && uf(position[0], position[1])));
     const provKey = province && [child.key, parent.key].includes(Re(province))
       ? province.__provKey : headquartersKey;
-    qg(sim, formation.id);
+    Qg(sim, formation.id);
     formation.owner = parent.key;
-    formation.ord = JQr(sim, parent, formation.type);
+    formation.ord = Deo(sim, parent, formation.type);
     formation.location = { type: "province", provKey };
     formation.pos = null;
     formation.homeBaseId = null;
     formation.assignment = null;
     formation.order = null;
     formation.baseDeployment = null;
-    u4a(formation);
+    gya(formation);
     parent.formations.push(formation.id);
   }
   child.formations = child.formations.filter(id => !units.has(id));
@@ -921,14 +921,14 @@ function gpmUprisingSettleCase(sim, parent, state) {
   const founderId = state.founderId;
   const result = state.nativeOutcome === "victory" ? "breakaway" : "government";
   const child = sim.countries.get(state.childKey);
-  const founder = rP(child, founderId);
-  const incumbent = rP(parent, to(parent)) || rP(parent, Et(parent));
+  const founder = yP(child, founderId);
+  const incumbent = yP(parent, Ur(parent)) || yP(parent, Kt(parent));
   const targetParty = result === "breakaway" ? founder : incumbent;
   if (!child || sim.conflicts.has(state.warId) || !targetParty || targetParty.legal === false ||
-      !rP(parent, founderId)?.gpmUprisingShell)
+      !yP(parent, founderId)?.gpmUprisingShell)
     throw new Error("Civil war succession has inconsistent parties or territory");
-  const plan = { moves: [{ provIds: d5(sim, child.key).provinceIds, to: parentKey }] };
-  const validation = N8t(sim, plan);
+  const plan = { moves: [{ provIds: y5(sim, child.key).provinceIds, to: parentKey }] };
+  const validation = a9t(sim, plan);
   if (!validation.ok) throw new Error("Civil war reunification cannot proceed: " + validation.reasonId);
 
   // Native combat has closed the war. Transfer control before retiring the breakaway.
@@ -943,20 +943,20 @@ function gpmUprisingSettleCase(sim, parent, state) {
         ? party.support / otherSupport : 1 / otherParties.length);
     }
     parent.pol.parties = parent.pol.parties.map(party => party.id === founderId ? founder : party);
-    hRa(sim, parent);
+    JOe(sim, parent);
     state.profile ||= gpmUprisingProfile(founder);
     state.breakawayName ||= child.name;
     gpmUprisingGovernment(sim, parent, founder, state.profile, false);
     state.victoryName ||= state.breakawayName;
     // The normal display path supplies PPO's scenario title when the native override is empty.
     if (state.restoresOriginalName && !state.restoreCustomName) {
-      _At(sim, parentKey, "");
-    } else if (!_At(sim, parentKey, state.victoryName)) {
+      $Rt(sim, parentKey, "");
+    } else if (!$Rt(sim, parentKey, state.victoryName)) {
       throw new Error("Uprising country name is invalid");
     }
     state.appliedLaws = gpmApplyUprisingCharter(sim, parent, state.charter);
   } else {
-    rP(parent, founderId).bannedYear = sim._simYear || 2026;
+    yP(parent, founderId).bannedYear = sim._simYear || 2026;
   }
   if (sim.playerKey === child.key || sim.playerKey === parentKey) {
     const handoff = sim.switchPlayerControl({ countryKey: parentKey, partyId: targetParty.id });
@@ -965,15 +965,15 @@ function gpmUprisingSettleCase(sim, parent, state) {
   if (result === "breakaway") {
     state.integratedDivisions = gpmUprisingIntegrateArmy(sim, child, parent, state.provinceKey);
   }
-  const returned = _w(sim, plan);
+  const returned = Gw(sim, plan);
   if (!returned.ok || sim.countries.has(child.key)) throw new Error("Postwar reunification failed");
   const flagTransferred = gpmRetireBreakawayFlag(sim, child, result === "breakaway" ? parent : null);
-  if (!flagTransferred && result === "breakaway" && state.flag && parent.a2 && !x0r(sim, parent.a2, state.flag)) {
+  if (!flagTransferred && result === "breakaway" && state.flag && parent.a2 && !d1r(sim, parent.a2, state.flag)) {
     state.flagRetained = true;
   }
   if (state.integratedDivisions) {
-    b9(sim, parent);
-    no(parent);
+    x9(sim, parent);
+    io(parent);
   }
   if (result === "breakaway") {
     state.inheritedWars = gpmDirectWars(sim, parentKey)
@@ -996,7 +996,7 @@ function gpmUprisingSettle(sim) {
   }
   const { parent, state } = gpmUprisingCase(sim);
   if (state?.result === "breakaway" && parent.key === sim.playerKey &&
-      fn(parent) === state.founderId && sim.playerControlsGovernment(parent)) {
+      yn(parent) === state.founderId && sim.playerControlsGovernment(parent)) {
     gpmReviewInheritedPeace(sim, parent, state);
   }
 }
@@ -1020,16 +1020,16 @@ function gpmUprisingFlags(sim) {
 function gpmUprisingClearLegacyFlag(sim, key) {
   const country = sim.player;
   const { state } = gpmUprisingCase(sim);
-  if (state && zw(country?.a2) === zw(key) && (country.key === state.childKey || state.flagRetained)) {
+  if (state && iI(country?.a2) === iI(key) && (country.key === state.childKey || state.flagRetained)) {
     delete state.flag;
     delete state.flagRetained;
   }
 }
 
-J7t("gpm.party.uprising.declare", { apply: gpmUprisingOpen });
-J7t("gpm.party.uprising.warDecision", { apply: gpmUprisingWarDecision });
+gvt("gpm.party.uprising.declare", { apply: gpmUprisingOpen });
+gvt("gpm.party.uprising.warDecision", { apply: gpmUprisingWarDecision });
 for (const action of ["form", "headquarters", "invest", "recruit", "aidRequest", "aidAccept", "aidDecline"]) {
-  J7t("gpm.party.uprising." + action, {
+  gvt("gpm.party.uprising." + action, {
     apply: (sim, country, input) => gpmUprisingPrepare(sim, country, input, action),
   });
 }

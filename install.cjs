@@ -6,17 +6,23 @@ const { createHash } = require("node:crypto");
 const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
 const { withInstallerTransaction } = require("./installer-transaction.cjs");
-// Windows Steam depot 940231, manifest 6518859217795271965.
+// Windows Steam depot 940231, manifest 4613876637531523744.
 const currentStock = {
   version,
-  build: 26734764,
+  build: 26784265,
+  archive: "37f3278a01385a9269669e30b05a848792791f1aaff4c61212db4974efe6e70e",
+  payload: "2bb7f22a54945e789c24dcf66370b7831f7c736ea7d1675c7c33f7b05c442652",
+  executable: "f1aaa8e2872b4a91ec2c6ed5f3dd86ae3181d71bd2a40b5c26a909c33a832fd7",
+  worker: "88e16be58ec635a78681a3c94fcd50606426e36d030edbee36e66805eee65fa5",
+  renderer: "fb8bc4ff2b916fbd781af393f87a63120b6ee839c9bc8dc179a444ffb0373227",
+};
+const previousStock = [{
+  version: "1.1.5",
   archive: "fe485532947956a4e5ffc19a49725b04658c9343c5fc5439573eac1f4b7558ef",
   payload: "b1b2d2e8157c4ed8d894cde85e655e65be383daecee484e86666d7907f8a6d0e",
   executable: "8aceeeaa664cecf7d6d845994dd1db20fd20a9c22a41bb65e2eb037642ce4b13",
   worker: "de9c2d4ecfd8d214bbef2a14d1fc1f92e80d7e0b001b8a61a9d3c5e726c94534",
-  renderer: "11d9822c3aa59d0abeafd377efdf46fd789b575f8f6323751aa38b995acfd859",
-};
-const previousStock = [{
+}, {
   version: "1.1.4",
   archive: "3546fb0a84f279a4dfdb0dac55bedb53849a2e88073887e8a121e4c6ce6ad2bd",
   payload: "1350bfc579b9578e92591deffe774654c83c237ebc211bd05a37aec8bd779138",
@@ -36,28 +42,8 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
-const previousPpoWorker = "0a19e1f66ac9d5bff7368221741a18eeea6bc2794206b1e68531132f7517f3a8";
-const previousPpo = [{ // PPO 1.1.5 Frontline prototype
-  archive: "7c37d73e154baa1accd005684783b067d2d686e926f8fd3a22e0ff288194abcf",
-  worker: "3765e5f74af6a2cc43e31a6a48ce471f7741401977ac9787ac143c912282ee95",
-  renderer: "2893d1051615fd8ae09bd9be20609f39219fc0d9295b614c29232310961311e2",
-  executable: "2e444128165fc724afd24b78e6a96d894a92558c516fb0198e27e8eae8c35545",
-}, { // PPO 1.1.5 Cleanup and Installer Fix
-  archive: "2bbd0fd658fe2528f78312cae617dd00d8fdca14bcf1abb1ef7506844d60e256",
-  worker: "edfeb8bbafbb4c82229368207be09ac1c497e961aaa25c2b232c7e125a8799c4",
-  renderer: "62a9e2841ec4c3b9b6200229f8982e5a0712eb4030b3783973d05bcea8fd3895",
-  executable: "2717bb4db9a8185b379d20dec9913279520c75c11956c5356ea2ddb33ba65059",
-}, { // PPO 1.1.5 Compatibility Update
-  archive: "6de84dc5caab854cf1b328546200a1a8a59a012b3b3d174bd5d2388e24017092",
-  worker: previousPpoWorker,
-  renderer: "de8f9d0e155fc3b03a1db1d481b63830e9a3467ac1b738e4a8c0e0c62338d2e5",
-  executable: "556ce831498640c16ea790430042aded2c01a60fabc0b9279491eb8171adabb5",
-}, { // PPO 1.1.5 Map Performance Update
-  archive: "368509852895b8730b5ac1d3a1b6a1ed7aa6b488f417da4655bd7c5e82ba49d9",
-  worker: previousPpoWorker,
-  renderer: "ca9ee062ad6ef8baaf7d52ad0c35c5afb9a71d03d787c6d584df5a3392d047e6",
-  executable: "b25d0e92352eb0bdc8f747f75b6352ce58a56ad5309ae18f0ca8aaf83c02b72e",
-}];
+// An upgrade profile must use the same stock build as currentStock.
+const previousPpo = [];
 
 const backups = { archive: "backupArchive", worker: "backupWorker", executable: "backupExecutable" };
 

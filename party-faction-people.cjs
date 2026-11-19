@@ -37,7 +37,7 @@ function gpmFactionLeadershipCharter(sim, party, faction = null) {
 
 function gpmPersonRoleFacts(sim, person, organizationId) {
   const year = sim.date?.getUTCFullYear?.() ?? sim._simYear ?? 2026;
-  const age = person?.born == null ? null : qm(person, year, sim.date?.getUTCMonth?.());
+  const age = person?.born == null ? null : Ym(person, year, sim.date?.getUTCMonth?.());
   const facts = person?.gpmRoleQualifications?.[organizationId];
   return { person, age, memberStatus: facts?.memberStatus, heldPositions: facts?.heldPositions, attestations: facts?.attestations,
     date: sim.date?.toISOString?.().slice(0, 10) };
@@ -45,10 +45,10 @@ function gpmPersonRoleFacts(sim, person, organizationId) {
 
 function gpmFactionLeaderEligibility(sim, country, party, charter, person, usedLeaderIds) {
   const officeholder = charter.excludeOfficeholders && person?.id != null &&
-    ((country.cabinetIds || []).includes(person.id) || Object.values(st(country)?.offices || {}).some(office =>
+    ((country.cabinetIds || []).includes(person.id) || Object.values(lt(country)?.offices || {}).some(office =>
       office.principal?.personId === person.id || office.acting?.personId === person.id));
   const nativeAllowed = person?.alive === true && !person.inExileFrom && person.party === party.id &&
-    String(person.countryKey) === String(country.key) && l8(sim, person) && !usedLeaderIds.has(person.id) && !officeholder;
+    String(person.countryKey) === String(country.key) && h8(sim, person) && !usedLeaderIds.has(person.id) && !officeholder;
   const binding = gpmPartyRoleBinding(country, party);
   if (charter.authorityId) binding.authorityId = charter.authorityId;
   const facts = gpmPersonRoleFacts(sim, person, binding.organizationId);
@@ -58,7 +58,7 @@ function gpmFactionLeaderEligibility(sim, country, party, charter, person, usedL
 }
 
 function gpmNativeCandidateAllowed(sim, country, partyId, person, positionId) {
-  const party = rP(country, partyId);
+  const party = yP(country, partyId);
   if (!party?.gpmCharter?.roleRules?.length) return true;
   const binding = gpmPartyRoleBinding(country, party);
   const facts = gpmPersonRoleFacts(sim, person, binding.organizationId);
@@ -76,27 +76,27 @@ function gpmPublicRoleEligibility(sim, country, person, role, positionId) {
 
 function gpmNativeOfficeAllowed(sim, country, person, positionId) {
   if (!country.pol?.gpmPublicRoleCharter) return true;
-  const selection = Ia(country, positionId)?.selection;
+  const selection = Aa(country, positionId)?.selection;
   const role = selection?.method === "designation" && selection.by === "clergy" ? "clericalOffice" : "executiveOffice";
   return gpmPublicRoleEligibility(sim, country, person, role, positionId);
 }
 
 function gpmPublicOfficeTransition(sim, country, target) {
   if (!country.pol?.gpmPublicRoleCharter) return;
-  const current = st(country)?.offices || {};
-  for (const [positionId, office] of Object.entries(st(target)?.offices || {})) {
+  const current = lt(country)?.offices || {};
+  for (const [positionId, office] of Object.entries(lt(target)?.offices || {})) {
     for (const category of ["principal", "acting"]) {
       const incoming = office?.[category]?.personId;
       if (!incoming || current[positionId]?.[category]?.personId === incoming) continue;
       const person = sim.people?.get(incoming);
-      if (person && !gpmNativeOfficeAllowed(sim, target, person, positionId)) fa("role_ineligible", positionId);
+      if (person && !gpmNativeOfficeAllowed(sim, target, person, positionId)) ga("role_ineligible", positionId);
     }
   }
 }
 
 function gpmRolePolicySnapshot(sim) {
   const country = sim.player;
-  const party = country && sL(country, fn(country));
+  const party = country && AL(country, yn(country));
   return party ? gpmPartyRolePolicyView(sim, country, party) : null;
 }
 
@@ -113,12 +113,12 @@ function gpmCreateFactionLeader(sim, country, party, faction, charter, usedLeade
   if (existing) return existing.gpmFactionGenerated &&
     gpmFactionLeaderEligibility(sim, country, party, charter, existing, usedLeaderIds).eligible ? existing : null;
   const year = sim.date?.getUTCFullYear?.() ?? sim._simYear ?? 2026;
-  const firstGender = (Lu(basis) >>> 8) % 2 ? "f" : "m";
+  const firstGender = (Hu(basis) >>> 8) % 2 ? "f" : "m";
   for (const gender of [firstGender, firstGender === "f" ? "m" : "f"]) {
-    const seed = Lu(`${basis}:${gender}`);
+    const seed = Hu(`${basis}:${gender}`);
     const profile = { countryKey: country.key, party: party.id, seed, g: gender, born: year - 36 - (seed >>> 8) % 23 };
     if (!gpmFactionLeaderEligibility(sim, country, party, charter, { ...profile, alive: true }, usedLeaderIds).eligible) continue;
-    const person = b0(sim, { ...profile, factionPersonId, role: "party_figure", since: year, ideal: faction.ideology || party.ideology });
+    const person = C0(sim, { ...profile, factionPersonId, role: "party_figure", since: year, ideal: faction.ideology || party.ideology });
     person.gpmFactionGenerated = true;
     return person;
   }
@@ -214,48 +214,48 @@ function gpmFactionLeaderView(sim, faction) {
 }
 
 function gpmFactionPeopleRandom(sim, person, month, draw) {
-  if (!person.gpmFactionGenerated && !person.gpmFactionDetached) return X9(sim);
-  let seed = Lu(`${person._seed}:${month}:${draw}`);
+  if (!person.gpmFactionGenerated && !person.gpmFactionDetached) return dv(sim);
+  let seed = Hu(`${person._seed}:${month}:${draw}`);
   seed = Math.imul(seed ^ seed >>> 16, 0x85ebca6b);
   return ((seed ^ seed >>> 13) >>> 0) / 4294967296;
 }
 
 function patchFactionPeopleWorker(source, replaceOnce) {
-  let patched = replaceOnce(source, 'c=F_a(e,a),u=X0e(r,X7(e,r),t.traits)',
-    'c=t.factionPersonId||F_a(e,a),u=X0e(r,X7(e,r),t.traits)');
+  let patched = replaceOnce(source, 'c=zCa(e,a),u=Dce(r,p9(e,r),t.traits)',
+    'c=t.factionPersonId||zCa(e,a),u=Dce(r,p9(e,r),t.traits)');
   patched = replaceOnce(patched, 'if(!(s.alive||r.has(i)||o.has(i)&&l<=150||n.has(i)))',
     'if(!(s.alive||s.gpmFactionCareer?.length||r.has(i)||o.has(i)&&l<=150||n.has(i)))');
-  patched = replaceOnce(patched, 'for(let[r,o]of[...e.people])!o.alive||t.has(r)||(wmt(e,r,o),e.people.delete(r))',
-    'for(let[r,o]of[...e.people]){if(!o.alive)continue;if(t.has(r)){delete o.gpmFactionDetached;continue}if(o.gpmFactionCareer?.length){o.gpmFactionDetached=true;continue}wmt(e,r,o),e.people.delete(r)}');
-  patched = replaceOnce(patched, 'filter(l=>l.alive!==!1&&l.countryKey===t.key&&(a==null||l.party===a)&&!n.has(l.id)&&(!r||O7(t,r,l.id).eligible))',
-    'filter(l=>!l.gpmFactionGenerated&&!l.gpmFactionDetached&&l.alive!==!1&&l.countryKey===t.key&&(a==null||l.party===a)&&!n.has(l.id)&&(!r||O7(t,r,l.id).eligible&&gpmNativeOfficeAllowed(e,t,l,r)))');
-  patched = replaceOnce(patched, '_partyCandidate(t,a,r=null){let o=r?Ve(t,r):null,n=i=>!o||O7(t,o,i.id).eligible;if(o&&B0(t,o)===a){let i=N0(this,t,o);if(i?.alive!==!1&&(!i||n(i)))return i}return gq(this,t,a,o)[0]||null}',
-    '_partyCandidate(t,a,r=null){let o=r?Ve(t,r):null,n=i=>!o||O7(t,o,i.id).eligible&&gpmNativeOfficeAllowed(this,t,i,o),gpmCandidate=i=>!o||gpmNativeCandidateAllowed(this,t,a,i,o);if(o&&B0(t,o)===a){let i=N0(this,t,o);if(i?.alive!==!1&&(!i||n(i)&&gpmCandidate(i)))return i}return gq(this,t,a,o).find(gpmCandidate)||null}');
-  patched = replaceOnce(patched, 'let n=Amt(e,t,a);if(n?.id===r.id)return r.id;if((t.cabinetIds||[]).includes(r.id))',
-    'let n=Amt(e,t,a);if(n?.id===r.id)return r.id;if(!gpmPublicRoleEligibility(e,t,r,"cabinetAppointment",a))return null;if((t.cabinetIds||[]).includes(r.id))');
-  patched = replaceOnce(patched, 'D2e(c),PKe(f),R3(e,f);let S=r.socialMind?',
-    'D2e(c),PKe(f),R3(e,f),gpmPublicOfficeTransition(e,r,f);let S=r.socialMind?');
-  patched = replaceOnce(patched, 'return PKe(s),R3(e,s),a.nextSocialMind&&w4',
-    'return PKe(s),R3(e,s),gpmPublicOfficeTransition(e,r,s),a.nextSocialMind&&w4');
+  patched = replaceOnce(patched, 'for(let[r,o]of[...e.people])!o.alive||t.has(r)||(G3t(e,r,o),e.people.delete(r))',
+    'for(let[r,o]of[...e.people]){if(!o.alive)continue;if(t.has(r)){delete o.gpmFactionDetached;continue}if(o.gpmFactionCareer?.length){o.gpmFactionDetached=true;continue}G3t(e,r,o),e.people.delete(r)}');
+  patched = replaceOnce(patched, 'filter(l=>l.alive!==!1&&l.countryKey===t.key&&(a==null||l.party===a)&&!n.has(l.id)&&(!r||z7(t,r,l.id).eligible))',
+    'filter(l=>!l.gpmFactionGenerated&&!l.gpmFactionDetached&&l.alive!==!1&&l.countryKey===t.key&&(a==null||l.party===a)&&!n.has(l.id)&&(!r||z7(t,r,l.id).eligible&&gpmNativeOfficeAllowed(e,t,l,r)))');
+  patched = replaceOnce(patched, '_partyCandidate(t,a,r=null){let o=r?Xe(t,r):null,n=i=>!o||z7(t,o,i.id).eligible;if(o&&U0(t,o)===a){let i=j0(this,t,o);if(i?.alive!==!1&&(!i||n(i)))return i}return Gq(this,t,a,o)[0]||null}',
+    '_partyCandidate(t,a,r=null){let o=r?Xe(t,r):null,n=i=>!o||z7(t,o,i.id).eligible&&gpmNativeOfficeAllowed(this,t,i,o),gpmCandidate=i=>!o||gpmNativeCandidateAllowed(this,t,a,i,o);if(o&&U0(t,o)===a){let i=j0(this,t,o);if(i?.alive!==!1&&(!i||n(i)&&gpmCandidate(i)))return i}return Gq(this,t,a,o).find(gpmCandidate)||null}');
+  patched = replaceOnce(patched, 'let n=j3t(e,t,a);if(n?.id===r.id)return r.id;if((t.cabinetIds||[]).includes(r.id))',
+    'let n=j3t(e,t,a);if(n?.id===r.id)return r.id;if(!gpmPublicRoleEligibility(e,t,r,"cabinetAppointment",a))return null;if((t.cabinetIds||[]).includes(r.id))');
+  patched = replaceOnce(patched, 'fpe(c),vxe(f),D3(e,f);let S=r.socialMind?',
+    'fpe(c),vxe(f),D3(e,f),gpmPublicOfficeTransition(e,r,f);let S=r.socialMind?');
+  patched = replaceOnce(patched, 'return vxe(s),D3(e,s),a.nextSocialMind&&K4',
+    'return vxe(s),D3(e,s),gpmPublicOfficeTransition(e,r,s),a.nextSocialMind&&K4');
   patched = replaceOnce(patched, 'a==="gpm.historicalMap"?', 'a==="gpm.partyRolePolicy"?gpmRolePolicySnapshot(r):a==="gpm.historicalMap"?');
-  const mortalityStart = 'function iMa(e,t,a,r=1/12){';
-  const mortalityEnd = 'function sMa(e,t){';
+  const mortalityStart = 'function uka(e,t,a,r=1/12){';
+  const mortalityEnd = 'function dka(e,t){';
   const start = patched.indexOf(mortalityStart);
   const end = patched.indexOf(mortalityEnd, start + mortalityStart.length);
   const original = patched.slice(start, end);
   if (start < 0 || end < 0 || patched.indexOf(mortalityStart, start + 1) >= 0 ||
-      patched.indexOf(mortalityEnd, end + 1) >= 0 || original.split('X9(e)').length !== 5) {
+      patched.indexOf(mortalityEnd, end + 1) >= 0 || original.split('dv(e)').length !== 5) {
     throw new Error("Faction leader lifecycle patch target changed");
   }
-  const mortality = replaceOnce(original, 'if(!s.alive)continue;let l=qm(s,t,a);',
-    'if(!s.alive)continue;let gpmPeopleDraw=0,l=qm(s,t,a);');
-  return replaceOnce(patched, original, mortality.replaceAll('X9(e)', 'gpmFactionPeopleRandom(e,s,i,gpmPeopleDraw++)'));
+  const mortality = replaceOnce(original, 'if(!s.alive)continue;let l=Ym(s,t,a);',
+    'if(!s.alive)continue;let gpmPeopleDraw=0,l=Ym(s,t,a);');
+  return replaceOnce(patched, original, mortality.replaceAll('dv(e)', 'gpmFactionPeopleRandom(e,s,i,gpmPeopleDraw++)'));
 }
 
 function patchFactionPeopleRenderer(source, replaceOnce) {
   return replaceOnce(source, 'return!e.alive&&e.diedYear!=null&&a.push({y:e.diedYear,txt:o("fiche.life.died")})',
     `for (const period of e.gpmFactionCareer || []) {
-      const name = v(period.factionName);
+      const name = b(period.factionName);
       if (Number.isInteger(period.sinceYear)) {
         const position = period.status === "acting" ? "acting faction leader" : "faction leader";
         a.push({ y: period.sinceYear, txt: "Became " + position + " for " + name });

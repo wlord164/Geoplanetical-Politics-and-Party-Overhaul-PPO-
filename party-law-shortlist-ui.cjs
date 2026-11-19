@@ -24,22 +24,22 @@ function gpmRenderPartyLaws() {
 }
 
 function gpmPartyLawRows(laws, country) {
-  const formatGain = new Intl.NumberFormat(Es(), { maximumFractionDigits: 1 });
+  const formatGain = new Intl.NumberFormat(Ds(), { maximumFractionDigits: 1 });
   return laws.map((law, index) => {
-    const definition = Ys(law.lawId);
-    const name = Vn(law.lawId);
-    const value = definition ? Ei(definition, law.value, country) : "";
+    const definition = nl(law.lawId);
+    const name = Jn(law.lawId);
+    const value = definition ? Oi(definition, law.value, country) : "";
     const vote = law.total > 0
       ? `${law.yes} of ${law.total} yes${Number.isFinite(law.requiredVotes) ? ` · ${law.requiredVotes} needed` : ""}`
       : "Chamber vote unavailable";
     const risks = [law.vetoRisk && "Veto risk", law.courtRisk && "Court risk"].filter(Boolean);
     return `<li><div>
-      <strong>${v(name)}</strong>
-      ${value ? `<small>${v(value)}</small>` : ""}
-      <small>${v(law.programme ? `Congress programme · ${vote}` :
+      <strong>${b(name)}</strong>
+      ${value ? `<small>${b(value)}</small>` : ""}
+      <small>${b(law.programme ? `Congress programme · ${vote}` :
         law.priority ? `Party priority · ${vote}` : `+${formatGain.format(law.gain)} points toward your platform · ${vote}`)}</small>
-      <small>${v([law.passes ? "Likely to pass" : "Unlikely to pass", ...risks].join(" · "))}</small>
-      </div><button class="k" type="button" data-gpm-law-review="${index}" aria-label="${v("Review proposal for " + name)}">Review proposal</button></li>`;
+      <small>${b([law.passes ? "Likely to pass" : "Unlikely to pass", ...risks].join(" · "))}</small>
+      </div><button class="k" type="button" data-gpm-law-review="${index}" aria-label="${b("Review proposal for " + name)}">Review proposal</button></li>`;
   }).join("");
 }
 
@@ -89,7 +89,7 @@ function gpmBindPartyLaws(profile, view, ui) {
     state.error = "";
     state.paint();
     try {
-      const data = await Xe(session, "gpm.partyLawShortlist", {});
+      const data = await Je(session, "gpm.partyLawShortlist", {});
       if (!isCurrent()) return;
       if (data?.partyId !== partyId || !Array.isArray(data.laws)) {
         state.error = "Law forecasts are unavailable for this party.";

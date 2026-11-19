@@ -9,13 +9,13 @@ function gpmFrontlineArmyRoot(plans, plan) {
 }
 
 function gpmFrontlineGenerals(sim, owner) {
-  const culture = xl(owner);
+  const culture = Js(owner);
   return Array.from({ length: 8 }, (_, index) => {
-    const seed = Lu(`${owner}:gpm-frontline-general:${sim.rngSeed0}:${index}`) >>> 0 || 1;
+    const seed = Hu(`${owner}:gpm-frontline-general:${sim.rngSeed0}:${index}`) >>> 0 || 1;
     const g = (seed >>> 5) % 9 === 0 ? "f" : "m";
-    const person = _A(culture, g, seed);
+    const person = UA(culture, g, seed);
     return { id: `gpm-general:${owner}:${index}`, name: person.name, countryKey: owner, g,
-      born: 1970 + seed % 13, culture: typeof culture === "string" ? culture : Mj(culture, seed), _seed: seed, _station: "militaire" };
+      born: 1970 + seed % 13, culture: typeof culture === "string" ? culture : zj(culture, seed), _seed: seed, _station: "militaire" };
   });
 }
 
@@ -68,8 +68,8 @@ function gpmFrontlineSameGroup(a, b) {
 
 function gpmFrontlineWar(sim, war, owner = sim.playerKey) {
   const participant = war?.participants?.[owner];
-  return war?.mode === "operational" && war.status !== "ended" && war.campaign?.scope !== L1 &&
-    Y0(sim, owner) && participant && ["principal", "cobelligerent"].includes(participant.role || "principal");
+  return war?.mode === "operational" && war.status !== "ended" && war.campaign?.scope !== z1 &&
+    X0(sim, owner) && participant && ["principal", "cobelligerent"].includes(participant.role || "principal");
 }
 
 function gpmFrontlineActivePlans(war, owner) {
@@ -98,13 +98,13 @@ function gpmFrontlineObjectiveState(sim, war, owner, arrow, key) {
   const field = war.field;
   const cell = gpmFrontlineCell(field, ...endpoint);
   const nativeProvince = field?.terrain[cell] ? sim.world.provinces[field.prov[cell]] : null;
-  const province = key == null ? nativeProvince || (m2(...endpoint) === "land" ? sim.world.provByKey.get(tf(...endpoint)) : null)
+  const province = key == null ? nativeProvince || (S2(...endpoint) === "land" ? sim.world.provByKey.get(uf(...endpoint)) : null)
     : sim.world.provByKey.get(key);
   if (!province?.__provKey || (key != null && nativeProvince && province !== nativeProvince)) return { reason: "objective" };
   const side = war.participants[owner]?.side;
   const provinceSide = war.participants[province.__countryKey]?.side;
   const occupierSide = war.participants[province.__occupier]?.side;
-  if (!side || !provinceSide || !Oo(war, province.__countryKey) || j2a(sim, province.__provKey, war.id)) return { reason: "objective" };
+  if (!side || !provinceSide || !Do(war, province.__countryKey) || Jma(sim, province.__provKey, war.id)) return { reason: "objective" };
   const controlled = nativeProvince ? field.control[cell] === (side === "A" ? 1 : 0) : (occupierSide || provinceSide) === side;
   if (controlled) return { key: province.__provKey, controlled };
   if (provinceSide !== side && !gpmHistoricalCheckOccupation(sim, war, province)) return { reason: "regional_scope" };
@@ -115,9 +115,9 @@ function gpmFrontlineRoute(points, location) {
   let nearest = { distanceKm: Infinity, alongKm: 0 };
   let total = 0;
   for (let i = 1; i < points.length; i++) {
-    const point = CK(points[i - 1], points[i], location, Infinity);
+    const point = VK(points[i - 1], points[i], location, Infinity);
     if (point && point.distanceKm < nearest.distanceKm) nearest = { distanceKm: point.distanceKm, alongKm: total + point.alongKm };
-    total += Bi(points[i - 1], points[i]);
+    total += qi(points[i - 1], points[i]);
   }
   return { ...nearest, total };
 }
@@ -127,7 +127,7 @@ function gpmFrontlineStations(war) {
   const stations = new Map();
   for (const side of ["A", "B"]) {
     for (const slot of Object.values(war?.frontSlots?.[side] || {})) {
-      if (!slot?.stationId || !$Z(slot.ll)) continue;
+      if (!slot?.stationId || !_Q(slot.ll)) continue;
       stations.set(slot.stationId, { id: slot.stationId, lon: slot.ll[0], lat: slot.ll[1] });
     }
   }
@@ -147,9 +147,9 @@ function gpmFrontlinePlanLine(war, line, parent) {
 }
 
 function gpmFrontlineFormationReason(sim, war, owner, formation) {
-  if (!formation || formation.owner !== owner || formation.domain !== "land" || formation.type === "reserve" || v2(formation) <= 0) return "formation";
+  if (!formation || formation.owner !== owner || formation.domain !== "land" || formation.type === "reserve" || C2(formation) <= 0) return "formation";
   if (formation.state === "forming") return "forming";
-  return ZW(formation, war.id).reason || hP(sim, formation, war) || null;
+  return RQ(formation, war.id).reason || RP(sim, formation, war) || null;
 }
 
 function gpmFrontlinePrepare(sim, country, input, operation) {
@@ -226,7 +226,7 @@ function gpmFrontlinePrepare(sim, country, input, operation) {
 function gpmFrontlineFreezeLine(sim, war, plan) {
   const side = war.participants[plan.owner]?.side;
   const slots = war.frontSlots?.[side];
-  const positions = plan.formationIds.map(id => slots?.[id]?.ll).filter($Z);
+  const positions = plan.formationIds.map(id => slots?.[id]?.ll).filter(_Q);
   plan.holdLine = gpmFrontlineTrackedLine(war, plan, positions) || plan.holdLine;
 }
 
@@ -299,7 +299,7 @@ function gpmFrontlineChange(sim, country, input, operation) {
 }
 
 function registerFrontlinePlans() {
-  for (const operation of ["upsert", "mode", "remove", "army"]) Tt(`gpm.frontline.${operation}`, {
+  for (const operation of ["upsert", "mode", "remove", "army"]) Bt(`gpm.frontline.${operation}`, {
     competencyDomains: ["defense"],
     validate: (sim, country, input) => {
       const result = gpmFrontlinePrepare(sim, country, input, operation);
@@ -345,7 +345,7 @@ function gpmFrontlineView(sim, input) {
       plans.find(plan => !plan.line.length && plan.formationIds.includes(unit.id));
     const reason = gpmFrontlineFormationReason(sim, war, owner, unit);
     return { id: unit.id, name: unit.name || `${unit.type} ${unit.ord ?? ""}`.trim(), position: Ce(sim, unit) || null,
-      org: unit.org ?? Math.round(mu(unit) * 100), ammoDays: unit.supply?.ammoDays ?? null, planId: assigned?.id ?? null,
+      org: unit.org ?? Math.round(vu(unit) * 100), ammoDays: unit.supply?.ammoDays ?? null, planId: assigned?.id ?? null,
       armyId: assigned ? gpmFrontlineArmyRoot(plans, assigned)?.id ?? null : null,
       posture: unit._stance || unit.order?.kind || null, eligible: !reason, reason,
       ...gpmFrontlineTelemetry(sim, war, unit, assigned, reason) };
@@ -357,7 +357,7 @@ function gpmFrontlineView(sim, input) {
       const { owner: countryKey, ...summary } = plan;
       const army = gpmFrontlineArmyRoot(plans, plan);
       const slots = war.frontSlots?.[side];
-      const positions = active.includes(plan) ? plan.formationIds.map(id => slots?.[id]?.ll).filter($Z) : [];
+      const positions = active.includes(plan) ? plan.formationIds.map(id => slots?.[id]?.ll).filter(_Q) : [];
       const tracked = (Object.is(war._gpmFrontlineLiveLineGeneration, war.field?._gen) && war._gpmFrontlineLiveLines?.get(plan.id)) ||
         gpmFrontlineTrackedLine(war, plan, positions);
       return { ...summary, armyId: army.id, name: army.name, slot: army.slot, generalId: army.generalId,
@@ -401,18 +401,18 @@ function gpmFrontlineRank(plan, stations) {
 
 function gpmFrontlineDestination(sim, formation, enemy) {
   if (formation?.owner !== sim.playerKey) return null;
-  const war = A4a(sim, formation) || sim.wars?.get(enemy);
+  const war = Tya(sim, formation) || sim.wars?.get(enemy);
   const plan = gpmFrontlineOrders(sim, war, formation);
   if (!plan || war.status !== "active") return null;
   const side = war.participants[plan.owner].side;
   const ranked = gpmFrontlineRank(plan, gpmFrontlineStations(war));
   for (const { station } of ranked) {
     const point = [station.lon, station.lat];
-    const contact = QFa(sim, war, side, point);
-    const key = contact && Rg(contact.nodeId);
-    if (!key || Bi(point, [contact.lon, contact.lat]) > 90) continue;
+    const contact = nHa(sim, war, side, point);
+    const key = contact && Wg(contact.nodeId);
+    if (!key || qi(point, [contact.lon, contact.lat]) > 90) continue;
     return { assignmentPatch: { warKey: enemy, sectorProvKey: key, gpmFrontlinePlanId: plan.id,
-      gpmFrontlineReceivedDay: sim.day ?? 0, gpmFrontlineRevision: plan.revision || 0 }, goalProvId: Ap(sim, key),
+      gpmFrontlineReceivedDay: sim.day ?? 0, gpmFrontlineRevision: plan.revision || 0 }, goalProvId: Dp(sim, key),
       destLL: [contact.lon, contact.lat], dest: { type: "front", warKey: enemy, provKey: key } };
   }
   return { goalProvId: -1, destLL: null, dest: { type: "front", warKey: enemy, provKey: null } };
@@ -428,11 +428,11 @@ function gpmFrontlineHeldContour(sim, war, plan, endpoint) {
   const side = war.participants[plan.owner].side;
   const origins = plan.formationIds.map(id => sim.formations.get(id))
     .filter(unit => unit?.owner === plan.owner && unit.assignment?.conflictId === war.id && unit.location?.type === "front")
-    .map(unit => Ce(sim, unit)).filter($Z);
+    .map(unit => Ce(sim, unit)).filter(_Q);
   if (!origins.length) return null;
   const reachable = point => origins.some(origin => {
-    const contact = JFa(sim, war, side, origin, point);
-    return contact && Bi(point, [contact.lon, contact.lat]) <= 30;
+    const contact = iHa(sim, war, side, origin, point);
+    return contact && qi(point, [contact.lon, contact.lat]) <= 30;
   });
   return gpmFrontlineTraceWindow(war, endpoint, gpmFrontlineTraceWidth(plan.line), reachable);
 }
@@ -500,14 +500,14 @@ function gpmFrontlineSlots(sim, war, side, units, stations, defaultSlots, staffO
       const line = plan.holdLine || plan.line;
       ranked = ranked.map(entry => ({ ...entry, along: gpmFrontlineRoute(line, [entry.station.lon, entry.station.lat]).alongKm }))
         .sort((a, b) => a.along - b.along || a.score - b.score);
-      const spread = new Set(o6o(ranked.map(entry => entry.station), group.length).map(station => station.id));
+      const spread = new Set(Y8o(ranked.map(entry => entry.station), group.length).map(station => station.id));
       ranked = ranked.filter(entry => spread.has(entry.station.id));
     }
     const remaining = ranked.slice(0, group.length);
     for (const formation of group) {
       if (!remaining.length) break;
       const current = defaultSlots?.[formation.id]?.ll || Ce(sim, formation) || plan.line[0];
-      remaining.sort((a, b) => Bi(current, [a.station.lon, a.station.lat]) - Bi(current, [b.station.lon, b.station.lat]));
+      remaining.sort((a, b) => qi(current, [a.station.lon, a.station.lat]) - qi(current, [b.station.lon, b.station.lat]));
       const { station, index } = remaining.shift();
       const point = [station.lon, station.lat];
       if (defaultSlots?.[formation.id]?.stationId !== station.id) formation._frontNodeRoute = null;
@@ -521,7 +521,7 @@ function gpmFrontlineSlots(sim, war, side, units, stations, defaultSlots, staffO
         plan.holdLineUnavailable = false;
       }
     }
-    const positions = group.map(unit => plannedSlots[unit.id]?.ll).filter($Z);
+    const positions = group.map(unit => plannedSlots[unit.id]?.ll).filter(_Q);
     const tracked = gpmFrontlineTrackedLine(war, plan, positions);
     war._gpmFrontlineLiveLines.set(plan.id, tracked || []);
   }
@@ -532,8 +532,8 @@ function gpmFrontlineSlots(sim, war, side, units, stations, defaultSlots, staffO
   }
   const remainingUnits = ordinary.filter(unit => !plannedSlots[unit.id]);
   if (available.size && remainingUnits.length) {
-    const objective = sim.world.provByKey.get(BF(sim, war, staffOwner))?.__centroid || null;
-    const remainder = n6o(sim, war, side, remainingUnits, stations.filter(station => available.has(station.id)), objective);
+    const objective = sim.world.provByKey.get(oU(sim, war, staffOwner))?.__centroid || null;
+    const remainder = V8o(sim, war, side, remainingUnits, stations.filter(station => available.has(station.id)), objective);
     Object.assign(plannedSlots, remainder);
   }
   war.frontSlots[side] = plannedSlots;
@@ -546,13 +546,13 @@ function gpmFrontlineOrderKind(sim, war, formation, fallback) {
   const side = war.participants[plan.owner].side;
   if (plan.mode !== "advance" || plan.completed || plan.resumeRequired || war.status !== "active" ||
       formation.assignment?.conflictId !== war.id || formation.location?.type !== "front" || !war.frontSlots?.[side]?.[formation.id] ||
-      sk(formation) <= .3 || (formation.supply?.ammoDays ?? 0) < 3) return "hold";
+      Ck(formation) <= .3 || (formation.supply?.ammoDays ?? 0) < 3) return "hold";
   const objective = gpmFrontlineObjectiveState(sim, war, plan.owner, plan.arrow, plan.objectiveProvinceKey);
   return objective.reason || objective.controlled ? "hold" : "attack";
 }
 
 function gpmFrontlineCombatStance(sim, war, formation, fallback, resupply) {
-  const stance = cUa(formation, fallback, sim.day || 0, resupply);
+  const stance = gHa(formation, fallback, sim.day || 0, resupply);
   if (!gpmFrontlineOrders(sim, war, formation) || !["attack", "hold"].includes(stance)) return stance;
   return stance === "attack" && gpmFrontlineOrderKind(sim, war, formation, "hold") === "hold" ? "hold" : stance;
 }
@@ -591,11 +591,11 @@ function gpmFrontlinePressureFilter(sim, war) {
     if (!provinceSide) return false;
     if (provinceSide !== side) {
       if (!provinceAllowed.has(province.__provKey)) provinceAllowed.set(province.__provKey,
-        gpmHistoricalCheckOccupation(sim, war, province) && !j2a(sim, province.__provKey, war.id));
+        gpmHistoricalCheckOccupation(sim, war, province) && !Jma(sim, province.__provKey, war.id));
       if (!provinceAllowed.get(province.__provKey)) return false;
     }
     const target = gpmFrontlineRoute(plan.arrow, [lon, lat]);
     return target.distanceKm <= gpmFrontlineArrowKm && target.alongKm >= route.alongKm - 15 &&
-      (target.alongKm < target.total - 1 || Bi(plan.arrow.at(-1), [lon, lat]) <= 14);
+      (target.alongKm < target.total - 1 || qi(plan.arrow.at(-1), [lon, lat]) <= 14);
   };
 }

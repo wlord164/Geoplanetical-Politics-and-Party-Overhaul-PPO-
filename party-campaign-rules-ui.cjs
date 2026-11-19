@@ -33,9 +33,9 @@ function gpmCampaignRuleValues() {
 function gpmCampaignFoundingRegions() {
   const key = ye._suSel?.__key;
   if (key == null) return [];
-  return (br?.provinces || []).filter(province => String(province.__countryKey) === String(key) && province.__provKey)
-    .map(province => ({ key: province.__provKey, name: Ut(province.__provKey, province.__name) }))
-    .sort((a, b) => a.name.localeCompare(b.name, Es()));
+  return (_r?.provinces || []).filter(province => String(province.__countryKey) === String(key) && province.__provKey)
+    .map(province => ({ key: province.__provKey, name: Vt(province.__provKey, province.__name) }))
+    .sort((a, b) => a.name.localeCompare(b.name, Ds()));
 }
 
 function gpmCampaignRulesForStart() {
@@ -49,20 +49,20 @@ function gpmCampaignFoundingSummary() {
   const summary = [gpmCampaignRulesUI.presets[rules.preset]?.label || "Custom", `Up to ${rules.startingSupport}% starting support`,
     rules.startingSeats > 0 ? `Up to ${rules.startingSeats} starting ${rules.startingSeats === 1 ? "seat" : "seats"}` : "Zero starting seats",
     "No government office"];
-  if (rules.startingCash !== null) summary.push(`$${Number(rules.startingCash).toLocaleString(Es())} founding cash`);
+  if (rules.startingCash !== null) summary.push(`$${Number(rules.startingCash).toLocaleString(Ds())} founding cash`);
   if (rules.startingPresence > 0 && rules.startingRegions.length) {
     summary.push(`${rules.startingPresence}% presence in ${rules.startingRegions.length} selected ${rules.startingRegions.length === 1 ? "region" : "regions"}`);
   }
-  return v(summary.join(" · "));
+  return b(summary.join(" · "));
 }
 
 function gpmCampaignRuleField(field, value) {
-  const attributes = `name="${v(field.id)}" data-campaign-rule="${v(field.id)}"`;
+  const attributes = `name="${b(field.id)}" data-campaign-rule="${b(field.id)}"`;
   const options = field.options;
   let control;
   if (Array.isArray(options)) {
     control = `<select ${attributes}>${options.map(([key, label]) =>
-      `<option value="${v(String(key))}" ${String(key) === String(value) ? "selected" : ""}>${v(label)}</option>`).join("")}</select>`;
+      `<option value="${b(String(key))}" ${String(key) === String(value) ? "selected" : ""}>${b(label)}</option>`).join("")}</select>`;
   } else if (["boolean", "checkbox"].includes(field.type)) {
     control = `<input type="checkbox" ${attributes} ${value ? "checked" : ""}>`;
   } else {
@@ -71,7 +71,7 @@ function gpmCampaignRuleField(field, value) {
     control = `<input type="number" ${attributes}${range} value="${Number.isFinite(value) ? value : ""}" ${
       field.nullable ? 'placeholder="Game default"' : "required"}>`;
   }
-  return `<label>${v(field.label)}${control}${field.help ? `<small>${v(field.help)}</small>` : ""}</label>`;
+  return `<label>${b(field.label)}${control}${field.help ? `<small>${b(field.help)}</small>` : ""}</label>`;
 }
 
 function gpmShowCampaignRules(entry) {
@@ -88,7 +88,7 @@ function gpmShowCampaignRules(entry) {
     <header><h2 id="gpm-campaign-rules-title">Campaign Rules</h2></header>
     <div data-campaign-fields>
       <label>Preset <select data-campaign-preset>${Object.entries(presets).map(([id, preset]) =>
-        `<option value="${v(id)}">${v(preset.label)}</option>`).join("")}<option value="custom">Custom</option></select></label>
+        `<option value="${b(id)}">${b(preset.label)}</option>`).join("")}<option value="custom">Custom</option></select></label>
       <small data-campaign-preset-description></small>
       <p>Founding settings apply when you create a party. The remaining rules apply to the entire campaign.</p>
       <div data-campaign-sections></div>
@@ -115,11 +115,11 @@ function gpmShowCampaignRules(entry) {
       const hasPresence = fields.some(field => field.id === "startingPresence");
       const extra = hasPresence ? `<div data-campaign-regions hidden>${regions.length ? `<label>Starting regions <input type="search" data-campaign-region-search placeholder="Find a region"></label>
           <small data-campaign-region-count role="status"></small><div class="gpm-campaign-region-list" role="group" aria-label="Starting regions">
-          ${regions.map(region => `<label data-campaign-region><input type="checkbox" value="${v(region.key)}" ${
-            draft.startingRegions.includes(region.key) ? "checked" : ""}>${v(region.name)}</label>`).join("")}</div>`
+          ${regions.map(region => `<label data-campaign-region><input type="checkbox" value="${b(region.key)}" ${
+            draft.startingRegions.includes(region.key) ? "checked" : ""}>${b(region.name)}</label>`).join("")}</div>`
           : "<small>Choose a country with eligible regions to assign local presence.</small>"}</div>` : "";
       return `<details data-section="${index}" ${(opened.get(String(index)) ?? index < 2) ? "open" : ""}>
-        <summary>${v(title)}</summary><div class="gpm-campaign-fields">${fields.filter(field => field.id !== "startingRegions")
+        <summary>${b(title)}</summary><div class="gpm-campaign-fields">${fields.filter(field => field.id !== "startingRegions")
           .map(field => gpmCampaignRuleField(field, draft[field.id])).join("")}${extra}</div></details>`;
     }).join("");
     renderContext();
@@ -136,9 +136,9 @@ function gpmShowCampaignRules(entry) {
   sectionsElement.addEventListener("input", event => {
     const input = event.target;
     if (input.matches("[data-campaign-region-search]")) {
-      const search = input.value.trim().toLocaleLowerCase(Es());
+      const search = input.value.trim().toLocaleLowerCase(Ds());
       for (const row of sectionsElement.querySelectorAll("[data-campaign-region]")) {
-        row.hidden = !row.textContent.toLocaleLowerCase(Es()).includes(search);
+        row.hidden = !row.textContent.toLocaleLowerCase(Ds()).includes(search);
       }
       return;
     }

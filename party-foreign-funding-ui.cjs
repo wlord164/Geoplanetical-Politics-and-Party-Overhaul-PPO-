@@ -23,12 +23,12 @@ function gpmRenderForeignFunding() {
 }
 
 function gpmForeignFundingMoney(amountM) {
-  return Nr(amountM * 1e6 * WR(), ZR());
+  return Or(amountM * 1e6 * xC(), RC());
 }
 
 function gpmForeignFundingDonorName(donor) {
-  const country = j({ key: donor.countryKey, name: donor.countryName, customName: donor.customName });
-  const party = Ma({ id: donor.partyId, countryKey: donor.countryKey, nameDesc: donor.nameDesc });
+  const country = G({ key: donor.countryKey, name: donor.countryName, customName: donor.customName });
+  const party = ba({ id: donor.partyId, countryKey: donor.countryKey, nameDesc: donor.nameDesc });
   return party + " · " + country;
 }
 
@@ -62,14 +62,14 @@ function gpmForeignFundingReceipt(last, ui) {
   }[last.status];
   if (!text) return "";
   const penalty = last.credibilityLost > 0 ? ` Credibility fell by ${last.credibilityLost} points.` : "";
-  return `<small>${v(ui.gameDate(last.day))} · ${v(gpmForeignFundingDonorName(last.donor))}<br>${v(text + penalty)}</small>`;
+  return `<small>${b(ui.gameDate(last.day))} · ${b(gpmForeignFundingDonorName(last.donor))}<br>${b(text + penalty)}</small>`;
 }
 
 function gpmForeignFundingQuoteDetail(donor, state, ui, percent) {
   const factors = donor.factors;
   let breakdown = "";
   if (factors) {
-    const points = new Intl.NumberFormat(Es(), { signDisplay: "exceptZero", maximumFractionDigits: 1 });
+    const points = new Intl.NumberFormat(Ds(), { signDisplay: "exceptZero", maximumFractionDigits: 1 });
     const items = [
       ["Base chance", factors.baseline],
       ["Ideological alignment", factors.ideology],
@@ -77,25 +77,25 @@ function gpmForeignFundingQuoteDetail(donor, state, ui, percent) {
       ["Voter support and seats", factors.traction],
     ];
     breakdown = `<dl class="gpm-funding-factors">${items.map(([label, value]) =>
-      `<dt>${label}</dt><dd>${v(points.format(value * 100))} pp</dd>`).join("")}
-      <dt>Chance before limits</dt><dd>${v(percent.format(factors.uncappedChance))}</dd></dl>`;
+      `<dt>${label}</dt><dd>${b(points.format(value * 100))} pp</dd>`).join("")}
+      <dt>Chance before limits</dt><dd>${b(percent.format(factors.uncappedChance))}</dd></dl>`;
   }
   const treasury = (factors?.fundsAvailable ?? donor.chance > 0)
     ? `The donor can offer up to ${gpmForeignFundingMoney(donor.limitM)} and may offer less than you ask for.`
     : "The donor cannot afford the minimum grant.";
   const date = Number.isFinite(state.quotesDay) ? ui.gameDate(state.quotesDay) : "";
   const stale = date && state.quotesDay !== state.data.day;
-  return `<div class="sh-inset gpm-funding-detail"><b>${v(gpmForeignFundingDonorName(donor))}</b>
-    <small>${v(percent.format(donor.chance))} chance of an offer · ${v(percent.format(donor.match))} platform match</small>
-    <small>${v(treasury)}</small>
+  return `<div class="sh-inset gpm-funding-detail"><b>${b(gpmForeignFundingDonorName(donor))}</b>
+    <small>${b(percent.format(donor.chance))} chance of an offer · ${b(percent.format(donor.match))} platform match</small>
+    <small>${b(treasury)}</small>
     <details><summary>How this is estimated</summary>
-    <small>${v(Object.entries(donor.alignment).map(([axis, delta]) => {
+    <small>${b(Object.entries(donor.alignment).map(([axis, delta]) => {
       const names = { econ: "Economy", social: "Social", gov: "Governance", nat: "National" };
       const score = Math.round(delta * 100);
       return names[axis] + " " + (score > 0 ? "+" : "") + score;
     }).join(" · "))} relative to your platform</small>
     ${breakdown}</details>
-    ${date ? `<small>Quote as of ${v(date)}.${stale ? " Refresh the directory to update." : ""}</small>` : ""}
+    ${date ? `<small>Quote as of ${b(date)}.${stale ? " Refresh the directory to update." : ""}</small>` : ""}
   </div>`;
 }
 
@@ -107,13 +107,13 @@ function gpmForeignFundingRequestFields(state, ui) {
   }
   if (!state.countries.length) return `<p>No foreign parties are available.</p>${refresh}`;
   const countryOptions = state.countries.map(country =>
-    `<option value="${v(country.key)}"${state.countryKey === country.key ? " selected" : ""}>${v(j(country))}</option>`).join("");
-  const donorOptions = (state.donors || []).map(donor => `<option value="${v(donor.partyId)}"${state.donorId === donor.partyId ? " selected" : ""}>
-    ${v(Ma({ id: donor.partyId, countryKey: donor.countryKey, nameDesc: donor.nameDesc }))}</option>`).join("");
+    `<option value="${b(country.key)}"${state.countryKey === country.key ? " selected" : ""}>${b(G(country))}</option>`).join("");
+  const donorOptions = (state.donors || []).map(donor => `<option value="${b(donor.partyId)}"${state.donorId === donor.partyId ? " selected" : ""}>
+    ${b(ba({ id: donor.partyId, countryKey: donor.countryKey, nameDesc: donor.nameDesc }))}</option>`).join("");
   const donor = state.donors?.find(entry => entry.partyId === state.donorId);
-  const percent = new Intl.NumberFormat(Es(), { style: "percent", maximumFractionDigits: 0 });
+  const percent = new Intl.NumberFormat(Ds(), { style: "percent", maximumFractionDigits: 0 });
   const amounts = (state.data.amountOptions || [.04, .10, .20]).map(amount =>
-    `<option value="${amount}"${state.amountM === amount ? " selected" : ""}>${v(gpmForeignFundingMoney(amount))}</option>`).join("");
+    `<option value="${amount}"${state.amountM === amount ? " selected" : ""}>${b(gpmForeignFundingMoney(amount))}</option>`).join("");
   const visibility = state.visibility === "private" ? " selected" : "";
   const detail = donor ? gpmForeignFundingQuoteDetail(donor, state, ui, percent) : "";
   return `<div class="gpm-funding-fields">
@@ -133,39 +133,39 @@ function gpmForeignFundingRequestFields(state, ui) {
 function gpmForeignFundingPanel(state, ui) {
   const data = state.data;
   const money = gpmForeignFundingMoney;
-  const donor = deal => v(gpmForeignFundingDonorName(deal.donor));
+  const donor = deal => b(gpmForeignFundingDonorName(deal.donor));
   const button = (action, label, disabled = false) =>
     `<button class="k" type="button" data-gpm-funding-action="${action}"${disabled || state.busy ? " disabled" : ""}>${label}</button>`;
   if (data.pending) {
-    return `<b>${donor(data.pending)}</b><p>Requested ${v(money(data.pending.amountM))}. Response expected by ${v(ui.gameDate(data.pending.responseDay))}.</p>`;
+    return `<b>${donor(data.pending)}</b><p>Requested ${b(money(data.pending.amountM))}. Response expected by ${b(ui.gameDate(data.pending.responseDay))}.</p>`;
   }
   if (data.offer) {
     const offer = data.offer;
     const privateGrant = offer.visibility === "private";
-    const risk = new Intl.NumberFormat(Es(), { style: "percent", maximumFractionDigits: 0 }).format(offer.risk);
-    return `<b>${donor(offer)}</b><p>${v(money(offer.amountM))} one-time grant${offer.amountM < offer.requestedM
-      ? ` · ${v(money(offer.requestedM))} requested` : ""}</p>
+    const risk = new Intl.NumberFormat(Ds(), { style: "percent", maximumFractionDigits: 0 }).format(offer.risk);
+    return `<b>${donor(offer)}</b><p>${b(money(offer.amountM))} one-time grant${offer.amountM < offer.requestedM
+      ? ` · ${b(money(offer.requestedM))} requested` : ""}</p>
       <div class="sh-inset gpm-funding-detail"><b>${privateGrant ? "Private backing" : "Declared backing"}</b>
-        <small>${privateGrant ? `${v(risk)} chance of exposure within 90 days. Exposure costs 4 credibility points. Keeping the money can cost 8 more.`
+        <small>${privateGrant ? `${b(risk)} chance of exposure within 90 days. Exposure costs 4 credibility points. Keeping the money can cost 8 more.`
           : "Public backing costs 2 credibility points on acceptance."}</small>
-        <small>Offer expires ${v(ui.gameDate(offer.expiresDay))}.</small></div>
+        <small>Offer expires ${b(ui.gameDate(offer.expiresDay))}.</small></div>
       <div class="gpm-funding-actions">${button("accept", "Accept Grant")}${button("decline", "Decline")}</div>`;
   }
   if (data.grant) {
     const grant = data.grant;
     return grant.exposed
-      ? `<b>Foreign funding exposed</b><p>${donor(grant)} · ${v(money(grant.amountM))} accepted</p>
-        <p>Credibility fell by ${v(grant.credibilityLost)} points. Returning the unspent grant reduces the additional loss.</p>
-        <small>${v(money(grant.returnableM))} available to return · Respond before ${v(ui.gameDate(grant.responseDay))}.</small>
+      ? `<b>Foreign funding exposed</b><p>${donor(grant)} · ${b(money(grant.amountM))} accepted</p>
+        <p>Credibility fell by ${b(grant.credibilityLost)} points. Returning the unspent grant reduces the additional loss.</p>
+        <small>${b(money(grant.returnableM))} available to return · Respond before ${b(ui.gameDate(grant.responseDay))}.</small>
         <div class="gpm-funding-actions">${button("return", "Return Unspent Funds", !(grant.returnableM > 0))}
           ${button("keep", "Keep Funds")}</div>`
-      : `<b>Private grant received</b><p>${donor(grant)} · ${v(money(grant.amountM))} accepted</p>
-        <small>${v(money(grant.unspentM))} unspent · Exposure period ends ${v(ui.gameDate(grant.closeDay))}.</small>`;
+      : `<b>Private grant received</b><p>${donor(grant)} · ${b(money(grant.amountM))} accepted</p>
+        <small>${b(money(grant.unspentM))} unspent · Exposure period ends ${b(ui.gameDate(grant.closeDay))}.</small>`;
   }
   const receipt = gpmForeignFundingReceipt(data.last, ui);
   if (data.enabled === false) return `${receipt}<p>Foreign party funding is off in this campaign.</p>`;
   if (data.day < data.nextRequestDay) {
-    return `${receipt}<p>Next approach available ${v(ui.gameDate(data.nextRequestDay))}.</p>`;
+    return `${receipt}<p>Next approach available ${b(ui.gameDate(data.nextRequestDay))}.</p>`;
   }
   return receipt + gpmForeignFundingRequestFields(state, ui);
 }
@@ -195,9 +195,9 @@ async function gpmLoadForeignFunding(panel, state, ui, refresh = false) {
   gpmPaintForeignFunding(panel, state, ui);
   try {
     if (refresh || !state.countries) {
-      const result = await Xe(state.session, "gpm.foreignFunding");
+      const result = await Je(state.session, "gpm.foreignFunding");
       if (!isCurrent()) return;
-      state.countries = [...(result?.countries || [])].sort((a, b) => j(a).localeCompare(j(b), Es()));
+      state.countries = [...(result?.countries || [])].sort((a, b) => G(a).localeCompare(G(b), Ds()));
       if (countryKey && !state.countries.some(country => country.key === countryKey)) {
         state.countryKey = "";
         state.donorId = "";
@@ -207,7 +207,7 @@ async function gpmLoadForeignFunding(panel, state, ui, refresh = false) {
       }
     }
     if (countryKey) {
-      const result = await Xe(state.session, "gpm.foreignFunding", { countryKey });
+      const result = await Je(state.session, "gpm.foreignFunding", { countryKey });
       if (!isCurrent()) return;
       state.donors = result?.donors || [];
       state.quotesDay = result?.day;
@@ -241,9 +241,9 @@ async function gpmSubmitForeignFunding(panel, state, ui, action) {
   try {
     const result = await Le(state.session, "applyPlayerAction", [{ ...state.actor, ...input, verb: "gpm.party.funding." + action }]);
     state.status = result?.ok ? "" : gpmForeignFundingReason(result?.reason);
-    const snapshot = await Xe(state.session, G.POLITICS);
+    const snapshot = await Je(state.session, j.POLITICS);
     if (state.session !== ui._mpSession) return;
-    const current = en(state.session, snapshot)?.party?.foreignFunding;
+    const current = Wa(state.session, snapshot)?.party?.foreignFunding;
     if (current?.partyId === data.partyId) state.data = current;
     ui.refreshHUD?.(state.session);
     ui.refreshTab?.(state.session);

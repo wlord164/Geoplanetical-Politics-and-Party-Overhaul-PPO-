@@ -11,7 +11,7 @@ function partyCongressOrganizationSize(sim, country, party) {
   const rules = gpmCampaignRulesFor(sim);
   let regions = 0;
   let totalRegions = 0;
-  for (const province of Qh(sim, country.key)) {
+  for (const province of o6(sim, country.key)) {
     const { __provId: id, __provKey: key } = province;
     if (!partyRegionalProvince(sim, country, id, key)) continue;
     totalRegions++;
@@ -22,7 +22,7 @@ function partyCongressOrganizationSize(sim, country, party) {
 }
 
 function partyCongressView(sim, country, partyId, electorate, people = sim.people?.values?.() || [], factionData = null, legacyProjection = false) {
-  const party = sL(country, partyId);
+  const party = AL(country, partyId);
   if (!party) return null;
 
   const saved = party.gpmCongressSizeState;
@@ -84,7 +84,7 @@ function partyCongressLegacyProfiles(sim, country, party, electorate, identity, 
   const supportPool = identity.congressDoctrine ? .38 : .45;
   const figurePool = .10;
   const blocInfluence = .70;
-  const blocIdeals = new Map(yke(country).map(group => [group.id, group.ideal]));
+  const blocIdeals = new Map(uAe(country).map(group => [group.id, group.ideal]));
   const votingPressure = country.pol?.gpmPoliticalCrisis?.weights;
   if (votingPressure && Object.keys(votingPressure).length) electorate = partyCongressPlanningData(sim, country).electorate;
   const support = partySupportBaseView(sim, country, party.id, electorate);
@@ -129,10 +129,10 @@ function retirePartyCongress(party) {
   const organization = party.organization;
   if (active && organization) {
     if (Number.isFinite(active.activistsK) && active.activistsK > 0) {
-      organization.activistsK = iL(Math.min(1e5, (organization.activistsK || 0) + active.activistsK));
+      organization.activistsK = kL(Math.min(1e5, (organization.activistsK || 0) + active.activistsK));
     }
     if (Number.isFinite(active.cash) && active.cash > 0) {
-      const treasury = Math.min(Kme, (organization.treasuryM || 0) + active.cash);
+      const treasury = Math.min(d3e, (organization.treasuryM || 0) + active.cash);
       organization.treasuryM = Math.round(treasury * 1e6) / 1e6;
     }
   }
@@ -187,7 +187,7 @@ function advancePartyCongressAI(sim, country, party, policy) {
       { programme: candidates[0].programme }, data);
   }
   if (canPrioritize && (party.organization.treasuryM >= .012 || (party.gpmRegional?.projects || []).length)) {
-    const electionIn = Object.values(st(country)?.contests || {}).reduce((days, contest) =>
+    const electionIn = Object.values(lt(country)?.contests || {}).reduce((days, contest) =>
       Number.isFinite(contest.nextDay) && contest.nextDay >= day ? Math.min(days, contest.nextDay - day) : days, Infinity);
     const order = electionIn <= 75 ? ["rally", "investment"] : ["investment", "rally"];
     const priority = order.find(kind => partyCongressPriorityVote(data, kind).passed);

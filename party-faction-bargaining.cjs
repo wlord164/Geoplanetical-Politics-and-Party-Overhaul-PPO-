@@ -212,8 +212,8 @@ function gpmFactionReview(sim, country, party) {
 }
 
 function gpmFactionPartyLeader(sim, country, party) {
-  const offices = vXr(sim, country, party.id) ? sim.playerControl?.controlledOfficeIds || [] : IW(country, party);
-  return Z2a(sim, country, party.id, gZ(country, party, offices).heldOfficeIds);
+  const offices = tao(sim, country, party.id) ? sim.playerControl?.controlledOfficeIds || [] : HW(country, party);
+  return o3a(sim, country, party.id, HZ(country, party, offices).heldOfficeIds);
 }
 
 function gpmFactionSeparatePartyLeader(sim, country, party) {
@@ -290,7 +290,7 @@ function gpmFactionView(sim, country, party) {
     day: sim.day,
     initialized: state?.nextReviewDay != null,
     nextReviewDay: party.gpmCongressSizeState?.pendingResize?.effectiveDay ?? state?.nextReviewDay ?? null,
-    partyLeader: partyLeader ? { id: partyLeader.id, name: rX(partyLeader) } : null,
+    partyLeader: partyLeader ? { id: partyLeader.id, name: DX(partyLeader) } : null,
     factions: Object.values(state?.factions || {}).map(({ id, label, seats, trust, priorities, redLines, leadership, organization, issuePriorities, doctrineId, positions }) => ({
       id, label, displayLabel: partyCongressFactionLabel(label), seats, trust, priorities, redLines, doctrineId, positions, leader: gpmFactionLeaderView(sim, { leadership }),
       organization, issuePriorities,
@@ -304,8 +304,8 @@ function gpmFactionView(sim, country, party) {
 }
 
 function gpmFactionCongressData(sim, country, partyId) {
-  const party = sL(country, partyId);
-  if (!party || fn(country) !== partyId) return null;
+  const party = AL(country, partyId);
+  if (!party || yn(country) !== partyId) return null;
   const congress = partyCongressView(sim, country, partyId, undefined, undefined, {
     bargaining: gpmFactionView(sim, country, party),
   });
@@ -321,7 +321,7 @@ function gpmFactionCashAvailable(sim, party, cashM, actor, subject) {
   if (actor !== "staff") return true;
   const state = party.gpmFactionPolitics;
   const mandate = gpmFactionMandate(state.mandate);
-  const month = xme(sim);
+  const month = p3e(sim);
   const paid = state.offers.reduce((sum, offer) => offer.acceptedBy === "staff" && offer.reservedMonth === month &&
     ["accepted", "delivered"].includes(offer.status) ? sum + offer.cashM : sum, 0);
   return mandate.subjects.includes(subject) && mandate.enabled && (!cashM ||
@@ -427,8 +427,8 @@ function gpmFactionSettleVote(sim, country, party, vote) {
 
 function gpmFactionAction(sim, country, party, input, actor = "player") {
   if (!partyCongressEligible(party)) return { ok: false, reason: "party" };
-  if (actor === "player" && (country.key !== sim.playerKey || fn(country) !== party.id)) return { ok: false, reason: "party" };
-  if (actor !== "player" && (actor === "staff") !== vXr(sim, country, party.id)) return { ok: false, reason: "party" };
+  if (actor === "player" && (country.key !== sim.playerKey || yn(country) !== party.id)) return { ok: false, reason: "party" };
+  if (actor !== "player" && (actor === "staff") !== tao(sim, country, party.id)) return { ok: false, reason: "party" };
   if (input.action === "review") return gpmFactionReview(sim, country, party);
   if (input.action === "mandate" && actor === "player") {
     const state = party.gpmFactionPolitics ??= { version: 1, factions: {}, offers: [], nextId: 1 };
@@ -474,7 +474,7 @@ function gpmFactionAction(sim, country, party, input, actor = "player") {
   if (!gpmFactionCashAvailable(sim, party, offer.cashM, actor, offer.subject)) return { ok: false, reason: "budget" };
   if (offer.cashM) party.organization.treasuryM = gpmDomesticMoney(party.organization.treasuryM - offer.cashM);
   Object.assign(offer, { status: "accepted", reason: offer.cashM ? "reserved" : "accepted", acceptedDay: sim.day,
-    reservedMonth: xme(sim), acceptedBy: actor });
+    reservedMonth: p3e(sim), acceptedBy: actor });
   gpmDomesticReceipt(sim, country, party, "faction-commitment", { cashM: -offer.cashM,
     details: gpmFactionPresentationTitle(sim, country, party, faction), staffDecision: true });
   return { ok: true, changed: true, offer: gpmFactionPublicOffer(offer) };
@@ -540,7 +540,7 @@ function gpmFactionDaily(sim, country, party, reviewResize = false) {
 }
 
 function gpmFactionAgenda(sim, country, partyId) {
-  const party = sL(country, partyId);
+  const party = AL(country, partyId);
   const state = party?.gpmFactionPolitics;
   const offers = (state?.offers || []).filter(offer => gpmFactionOpen(offer) && offer.deadlineDay > sim.day);
   if (!offers.length) return [];
@@ -554,8 +554,8 @@ function gpmFactionAgenda(sim, country, partyId) {
 }
 
 function registerPartyFactionBargaining() {
-  J7t("gpm.party.factionBargain", {
-    apply(sim, country, input) { return gpmFactionAction(sim, country, sL(country, input.partyId), input); },
+  gvt("gpm.party.factionBargain", {
+    apply(sim, country, input) { return gpmFactionAction(sim, country, AL(country, input.partyId), input); },
   });
 }
 

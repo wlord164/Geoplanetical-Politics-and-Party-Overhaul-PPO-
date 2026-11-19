@@ -26,8 +26,8 @@ function gpmRefreshViewTimeoutOnWork(client, work) {
 function patchSimulationViewTimeout(js, replaceOnce) {
   // The Worker handles requests in post order. Give each bounded request its
   // full budget once it reaches the front, including the renderer's clock pulse.
-  js = replaceOnce(js, 'var OF=class{constructor(t={}){',
-    `${gpmStartQueuedRequestTimeout}\n${gpmRefreshViewTimeoutOnWork}\nvar OF=class{constructor(t={}){`);
+  js = replaceOnce(js, 'var _j=class{constructor(t={}){',
+    `${gpmStartQueuedRequestTimeout}\n${gpmRefreshViewTimeoutOnWork}\nvar _j=class{constructor(t={}){`);
   js = replaceOnce(js, 'let p=l===1/0?null:setTimeout(()=>{if(!this.requests.has(i))return;',
     'const startTimeout=(delay=l)=>l===1/0?null:setTimeout(()=>{if(!this.requests.has(i))return;');
   js = replaceOnce(js, '},l);this.requests.set(i,{resolve:u,reject:d,command:t,timer:p,recoveryTimer:null,',

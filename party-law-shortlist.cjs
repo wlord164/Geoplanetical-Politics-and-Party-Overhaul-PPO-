@@ -3,37 +3,37 @@
 function partyLawShortlist(sim) {
   const day = sim.day || 0;
   if (!sim.player?.pol) return { day, partyId: null, rights: { ok: false, reason: "party" }, laws: [] };
-  const { querySim, country, partyId } = FUe(sim);
-  const reason = l6t(querySim, country, partyId);
+  const { querySim, country, partyId } = eHe(sim);
+  const reason = ugt(querySim, country, partyId);
   const party = country?.pol?.parties.find(item => item.id === partyId);
   const platform = gpmPresets[gpmActiveIdeologyPreset(party)];
   const active = partyCongressActiveProgramme(party, day);
   const programmeTargets = partyCongressProgrammes()[active?.kind]?.lawTargets || {};
-  const candidates = new Map(fWa(querySim, country, partyId, false).map(item => [item.law.id, item]));
+  const candidates = new Map(MLa(querySim, country, partyId, false).map(item => [item.law.id, item]));
   const authoredLaws = new Set([...Object.keys(platform?.laws || {}), ...Object.keys(programmeTargets)]);
   for (const lawId of authoredLaws) {
-    const law = Ra(lawId);
+    const law = Ka(lawId);
     const current = country.laws?.[lawId];
     const programme = Object.hasOwn(programmeTargets, lawId);
     const target = programme ? programmeTargets[lawId] : gpmIdeologyLawTarget(platform, lawId, current, querySim._simYear || 2026);
     if (!law || current == null || target === undefined) continue;
     candidates.delete(lawId);
-    if (fo(current, target) || (country.lawCooldown?.[lawId] || 0) > day ||
+    if (yo(current, target) || (country.lawCooldown?.[lawId] || 0) > day ||
         country.procedures?.some(procedure => procedure.kind === "law" && procedure.lawId === lawId)) continue;
     const distance = value => typeof target === "number" ? Math.abs(target - value) :
       typeof target === "object" ? Object.keys(target).filter(key => target[key] !== value?.[key]).length :
         Number(value !== target);
-    const choices = w6(law, country, current).filter(choice => distance(choice.value) < distance(current));
+    const choices = E6(law, country, current).filter(choice => distance(choice.value) < distance(current));
     choices.sort((a, b) => distance(a.value) - distance(b.value));
     if (choices.length) {
       const choice = choices[0];
-      const gain = Zze(party, law, current, country) - Zze(party, law, choice.value, country);
+      const gain = lVe(party, law, current, country) - lVe(party, law, choice.value, country);
       candidates.set(lawId, { law, choice, gain, priority: true, programme });
     }
   }
   const laws = [];
   for (const { law, choice, gain, priority, programme } of candidates.values()) {
-    if (!Uht(country, law).ok) continue;
+    if (!ygt(country, law).ok) continue;
     const forecast = querySim.forecastBillFor(country, law, choice.value, {
       sponsorKind: "party",
       sponsorPartyId: partyId,
@@ -42,9 +42,9 @@ function partyLawShortlist(sim) {
     if (!forecast.fc || !forecast.procedureKind) continue;
     const stages = { ...forecast.exec, completeHistory: true };
     querySim._procedurePasses(country.pol, forecast.procedureKind, forecast.fc.detail, stages);
-    const { requiredVotes, vetoRisk, courtRisk } = sOa(stages._res?.history);
+    const { requiredVotes, vetoRisk, courtRisk } = sTa(stages._res?.history);
     laws.push({
-      lawId: law.id, value: or(choice.value), choiceId: choice.id, gain: w8(gain, 2), ...(priority ? { priority } : {}),
+      lawId: law.id, value: or(choice.value), choiceId: choice.id, gain: A8(gain, 2), ...(priority ? { priority } : {}),
       ...(programme ? { programme } : {}),
       passes: forecast.passes, yes: forecast.fc.yes, total: forecast.fc.total,
       requiredVotes, vetoRisk, courtRisk,

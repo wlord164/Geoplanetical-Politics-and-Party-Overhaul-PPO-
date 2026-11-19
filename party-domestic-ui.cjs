@@ -71,14 +71,14 @@ function gpmRenderCampaignPlan() {
 
 function gpmDomesticMoney(value, signed = false) {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat(Es(), {
+  return new Intl.NumberFormat(Ds(), {
     style: "currency", currency: "USD", maximumFractionDigits: 0, signDisplay: signed ? "exceptZero" : "auto",
   }).format(Math.round(value * 1e6));
 }
 
 function gpmDomesticContestLabel(contest, ui) {
   const key = contest?.chamberNameKey;
-  const name = key && Je(key) ? o(key) : contest?.label || contest?.chamberName;
+  const name = key && Xe(key) ? o(key) : contest?.label || contest?.chamberName;
   const kind = contest?.kind === "presidential" ? "Executive election" : "Legislative election";
   return [name || kind, Number.isFinite(contest?.electionDay) && ui.gameDate(contest.electionDay)].filter(Boolean).join(" · ");
 }
@@ -87,15 +87,15 @@ function gpmDomesticAccount(state, ui) {
   const { data } = state;
   const reserve = data.reserve || {};
   const membership = data.membership;
-  const details = (pairs, label) => `<div class="gpm-domestic-summary"><h4>${v(label)}</h4><dl>${pairs.map(([key, value]) =>
-    `<div><dt>${v(key)}</dt><dd>${v(String(value))}</dd></div>`).join("")}</dl></div>`;
-  const counter = new Intl.NumberFormat(Es(), { maximumFractionDigits: 0 });
+  const details = (pairs, label) => `<div class="gpm-domestic-summary"><h4>${b(label)}</h4><dl>${pairs.map(([key, value]) =>
+    `<div><dt>${b(key)}</dt><dd>${b(String(value))}</dd></div>`).join("")}</dl></div>`;
+  const counter = new Intl.NumberFormat(Ds(), { maximumFractionDigits: 0 });
   return `<div class="gpm-domestic-grid">${details([
-    ["Treasury", gpmDomesticMoney(data.cashM)], ["Activists available", Number.isFinite(data.activistsK) ? Sr(data.activistsK) : "—"],
+    ["Treasury", gpmDomesticMoney(data.cashM)], ["Activists available", Number.isFinite(data.activistsK) ? fr(data.activistsK) : "—"],
     ["Influence", Number.isFinite(data.influence) ? counter.format(data.influence) : "—"],
     ["Spent this month", gpmDomesticMoney(data.monthlySpendM)],
   ], "Party resources")}${details([
-    ["Treasury", gpmDomesticMoney(reserve.cashM ?? 0)], ["Activists", Sr(reserve.activistsK ?? 0)],
+    ["Treasury", gpmDomesticMoney(reserve.cashM ?? 0)], ["Activists", fr(reserve.activistsK ?? 0)],
     ["Influence", counter.format(reserve.influence ?? 0)],
   ], "Staff reserve")}${membership ? details([
     ["Members", Number.isFinite(membership.members) ? counter.format(membership.members) : "—"],
@@ -108,9 +108,9 @@ function gpmDomesticAccount(state, ui) {
 
 function gpmDomesticFields(state, ui) {
   const contestOptions = state.contests.map(contest =>
-    `<option value="${v(contest.id)}">${v(gpmDomesticContestLabel(contest, ui))}</option>`).join("");
+    `<option value="${b(contest.id)}">${b(gpmDomesticContestLabel(contest, ui))}</option>`).join("");
   const regionOptions = state.regions.map(region =>
-    `<option value="${v(region.key)}">${v(gpmRegionalRegionName(region))}</option>`).join("");
+    `<option value="${b(region.key)}">${b(gpmRegionalRegionName(region))}</option>`).join("");
   const check = (name, label) => `<label class="gpm-domestic-check"><input type="checkbox" name="${name}" data-gpm-profile-focus="domestic-${name}"> ${label}</label>`;
   const money = (name, label) => `<label>${label}<input class="k" type="number" name="${name}" min="0" max="1000000000" step="1" data-gpm-profile-focus="domestic-${name}"></label>`;
   return `${check("enabled", "Let staff run this plan")}
@@ -146,14 +146,14 @@ function gpmDomesticForecastHtml(value, ui) {
         ["Share used for threshold", gpmRegionalPercent(snapshot.qualifyingShare)],
       margin && [district?.name ? `${gpmRegionalRegionName(district)} local margin` : "Closest local seat margin", margin],
     ].filter(Boolean);
-    return `<div class="gpm-domestic-summary"><h4>${v(title)}</h4><dl>${rows.map(([label, detail]) =>
-      `<div><dt>${v(label)}</dt>${detail ? `<dd>${v(detail)}</dd>` : ""}</div>`).join("")}</dl></div>`;
+    return `<div class="gpm-domestic-summary"><h4>${b(title)}</h4><dl>${rows.map(([label, detail]) =>
+      `<div><dt>${b(label)}</dt>${detail ? `<dd>${b(detail)}</dd>` : ""}</div>`).join("")}</dl></div>`;
   };
   const electionDate = Number.isFinite(value.electionDay) ? ui.gameDate(value.electionDay) : "Election day";
   const rules = [gpmRegionalSeatRules(value), gpmRegionalThresholdText(value)].filter(Boolean);
   const assumptions = Array.isArray(value.assumptions) ? value.assumptions.filter(item => typeof item === "string").join(" ") : value.assumptions;
   return `<div class="gpm-domestic-grid">${show(value.current, "Current estimate")}${show(value.election, electionDate)}</div>
-    <small>${v(rules.join(" · "))}</small>${typeof assumptions === "string" && assumptions ? `<small>${v(assumptions)}</small>` : ""}`;
+    <small>${b(rules.join(" · "))}</small>${typeof assumptions === "string" && assumptions ? `<small>${b(assumptions)}</small>` : ""}`;
 }
 
 function gpmDomesticRecap(result, ui, state = {}) {
@@ -164,7 +164,7 @@ function gpmDomesticRecap(result, ui, state = {}) {
   const vote = result.voteShare ?? result.support ?? result.after?.support;
   const projectedSeats = result.projectedSeats ?? result.forecast?.seats;
   const key = result.chamberNameKey;
-  const chamber = key && Je(key) ? o(key) : result.chamberName || result.label;
+  const chamber = key && Xe(key) ? o(key) : result.chamberName || result.label;
   const lines = [Number.isInteger(seats) && `${seats} ${seats === 1 ? "seat" : "seats"}` +
     (Number.isFinite(before) ? ` (${seats >= before ? "+" : ""}${seats - before})` : ""),
     Number.isFinite(vote) && `${gpmRegionalPercent(vote)} vote share`,
@@ -172,16 +172,16 @@ function gpmDomesticRecap(result, ui, state = {}) {
   ].filter(Boolean);
   if (!lines.length) return "";
   const rows = result.parties || [];
-  const names = new Map((state.view?.player?.pol?.parties || []).map(item => [item.id, Ma(item)]));
+  const names = new Map((state.view?.player?.pol?.parties || []).map(item => [item.id, ba(item)]));
   const table = rows.length ? `<details><summary>All party results</summary><table aria-label="Election results by party">
     <thead><tr><th scope="col">Party</th><th scope="col">Vote share</th><th scope="col">Seats</th><th scope="col">Change</th></tr></thead>
     <tbody>${rows.map(row => {
       const change = row.seats - row.previousSeats;
-      return `<tr><th scope="row">${v(names.get(row.id) || row.label || row.id)}</th><td>${v(gpmRegionalPercent(row.votes))}</td>
-        <td>${v(row.seats)}</td><td>${Number.isInteger(change) ? v(`${change > 0 ? "+" : ""}${change}`) : "—"}</td></tr>`;
+      return `<tr><th scope="row">${b(names.get(row.id) || row.label || row.id)}</th><td>${b(gpmRegionalPercent(row.votes))}</td>
+        <td>${b(row.seats)}</td><td>${Number.isInteger(change) ? b(`${change > 0 ? "+" : ""}${change}`) : "—"}</td></tr>`;
     }).join("")}</tbody></table></details>` : "";
-  return `<h4>Election recap</h4><small>${v([chamber || "Legislative election", Number.isFinite(day) && ui.gameDate(day)].filter(Boolean).join(" · "))}</small>
-    <p>${v(lines.join(" · "))}</p>${table}`;
+  return `<h4>Election recap</h4><small>${b([chamber || "Legislative election", Number.isFinite(day) && ui.gameDate(day)].filter(Boolean).join(" · "))}</small>
+    <p>${b(lines.join(" · "))}</p>${table}`;
 }
 
 function gpmDomesticProjectRows(state, ui) {
@@ -193,12 +193,12 @@ function gpmDomesticProjectRows(state, ui) {
   if (!projects.length) return "";
   return `<h4>Projects underway</h4><ul class="gpm-domestic-list">${projects.map(project => {
     const name = gpmRegionalActionName(project.kind) || "Party project";
-    const target = regions.get(project.key) || (project.kind === "meeting" && project.targetId ? ri(project.targetId) : "");
+    const target = regions.get(project.key) || (project.kind === "meeting" && project.targetId ? jr(project.targetId) : "");
     const duration = project.endDay - project.startDay;
     const details = [target, Number.isFinite(project.endDay) && `Due ${ui.gameDate(project.endDay)}`,
-      Number.isFinite(project.activistsK) && `${Sr(project.activistsK)} activists assigned`];
-    return `<li><strong>${v(name)}</strong><small>${v(details.filter(Boolean).join(" · "))}</small>` +
-      (Number.isFinite(project.startDay) && duration > 0 ? `<progress value="${Math.min(duration, Math.max(0, day - project.startDay))}" max="${duration}" aria-label="${v(name + " progress")}"></progress>` : "") + "</li>";
+      Number.isFinite(project.activistsK) && `${fr(project.activistsK)} activists assigned`];
+    return `<li><strong>${b(name)}</strong><small>${b(details.filter(Boolean).join(" · "))}</small>` +
+      (Number.isFinite(project.startDay) && duration > 0 ? `<progress value="${Math.min(duration, Math.max(0, day - project.startDay))}" max="${duration}" aria-label="${b(name + " progress")}"></progress>` : "") + "</li>";
   }).join("")}</ul>`;
 }
 
@@ -230,13 +230,13 @@ function gpmDomesticActivityTarget(state, ui, row) {
     const region = state.regions.find(item => item.key === target);
     return region ? gpmRegionalRegionName(region) : "";
   }
-  if (row.kind === "meeting" || row.kind === "outreach") return ri(target);
+  if (row.kind === "meeting" || row.kind === "outreach") return jr(target);
   if (row.kind === "movement") {
     const movement = state.view.party.organizing?.movements?.find(item => item.id === target);
     return movement ? o("domestic.demand." + movement.demandId) : "";
   }
-  if (row.kind.startsWith("agreement-")) return Vn(target);
-  if (row.kind.startsWith("foreign-funding-")) return md(target, target);
+  if (row.kind.startsWith("agreement-")) return Jn(target);
+  if (row.kind.startsWith("foreign-funding-")) return bd(target, target);
   if (row.kind === "activists-returned") return gpmDomesticActivityLabel(target);
   return target;
 }
@@ -255,7 +255,7 @@ function gpmDomesticStaffStatus(state, ui) {
   const action = latest ? ["Latest staff action", Number.isFinite(latest.day) && ui.gameDate(latest.day),
     gpmDomesticActivityLabel(latest.kind), gpmDomesticActivityTarget(state, ui, latest)].filter(Boolean).join(" · ")
     : enabled ? "No staff actions recorded yet." : "";
-  return [status, next, previous, action].filter(Boolean).map(line => `<small>${v(line)}</small>`).join("");
+  return [status, next, previous, action].filter(Boolean).map(line => `<small>${b(line)}</small>`).join("");
 }
 
 function gpmDomesticActivity(state, ui) {
@@ -263,11 +263,11 @@ function gpmDomesticActivity(state, ui) {
   if (!ledger.length) return "<small>No party activity recorded yet.</small>";
   return `<ul class="gpm-domestic-list">${ledger.map(row => {
     const details = [Number.isFinite(row.day) && ui.gameDate(row.day), row.cashM && gpmDomesticMoney(row.cashM, true),
-      row.activistsK && `${row.activistsK > 0 ? "+" : ""}${Sr(row.activistsK)} activists`,
+      row.activistsK && `${row.activistsK > 0 ? "+" : ""}${fr(row.activistsK)} activists`,
       row.influence && `${row.influence > 0 ? "+" : ""}${row.influence} influence`,
       gpmDomesticActivityTarget(state, ui, row)].filter(Boolean);
     const title = (row.staff === true ? "Staff · " : "") + gpmDomesticActivityLabel(row.kind);
-    return `<li><strong>${v(title)}</strong><small>${v(details.join(" · "))}</small></li>`;
+    return `<li><strong>${b(title)}</strong><small>${b(details.join(" · "))}</small></li>`;
   }).join("")}</ul>`;
 }
 
@@ -283,15 +283,15 @@ function gpmDomesticAgendaHtml(state, ui) {
     const contest = row.kind === "vote" ? state.contests.find(item => item.id === row.contestId) : null;
     const title = contest?.label ? `Election · ${contest.label}` : contest?.kind === "presidential" ? "Executive election"
       : row.kind === "vote" ? "Legislative election" : row.title;
-    return `<li><button class="k k-nav" type="button" ${gpmDomesticAgendaRoute(row)}>${v(title)}</button>
-      <small>${v([Number.isFinite(row.deadlineDay) && ui.gameDate(row.deadlineDay), row.status].filter(Boolean).join(" · "))}</small></li>`;
+    return `<li><button class="k k-nav" type="button" ${gpmDomesticAgendaRoute(row)}>${b(title)}</button>
+      <small>${b([Number.isFinite(row.deadlineDay) && ui.gameDate(row.deadlineDay), row.status].filter(Boolean).join(" · "))}</small></li>`;
   }).join("")}</ul>`;
 }
 
 function gpmDomesticAgendaRoute(row) {
   const isRecap = row.kind === "electionRecap" || row.kind === "election_recap";
-  return `data-gpm-domestic-link="${v(row.tab || "plan")}"` +
-    (row.contestId ? ` data-gpm-domestic-contest-id="${v(row.contestId)}"` : "") + (isRecap ? ' data-gpm-domestic-result="1"' : "");
+  return `data-gpm-domestic-link="${b(row.tab || "plan")}"` +
+    (row.contestId ? ` data-gpm-domestic-contest-id="${b(row.contestId)}"` : "") + (isRecap ? ' data-gpm-domestic-result="1"' : "");
 }
 
 function gpmDomesticSitroomRows(view, ui, recent = false) {
@@ -299,13 +299,13 @@ function gpmDomesticSitroomRows(view, ui, recent = false) {
   return gpmDomesticAgendaEntries(view.gpmDomesticAgenda).filter(row =>
     recent === (row.status === "completed")).map(row => {
     const days = Number.isFinite(row.deadlineDay) ? Math.max(0, Math.ceil(row.deadlineDay - view.day)) : null;
-    const measure = days === null ? "" : bc(days);
+    const measure = days === null ? "" : Mc(days);
     const date = recent && Number.isFinite(row.day) ? ui.gameDate(row.day) : "";
     const contest = row.kind === "vote" ? view.player?.pol?.contests?.[row.contestId] : null;
-    const title = contest ? P6t(view, contest) : row.title;
+    const title = contest ? Kbt(view, contest) : row.title;
     return { id: `gpm-party:${row.kind}:${row.id}${recent ? ":" + row.day : ""}`, den: recent ? "registre" : "dossier", sort: days ?? 1e6,
       sev: days !== null && days <= 7 ? "important" : "routine", hand: recent ? "none" : "you",
-      title: `${Uo("gov")}${v(title)}`, meta: v(date), outcome: contest ? "Open Campaign Plan" : recent ? "" : row.status || "", measure,
+      title: `${Wo("gov")}${b(title)}`, meta: b(date), outcome: contest ? "Open Campaign Plan" : recent ? "" : row.status || "", measure,
       contestId: contest?.id, gauge: null, gaugeTone: null, route: gpmDomesticAgendaRoute(row),
       aria: [title, date, measure].filter(Boolean).join(" · ") };
   }).filter(row => !recent || !dismissed?.has(row.id));
@@ -347,9 +347,9 @@ function gpmPaintDomestic(state, ui) {
   html("log", gpmDomesticActivity(state, ui));
   html("agenda", gpmDomesticAgendaHtml(state, ui));
   html("forecast", state.forecast ? gpmDomesticForecastHtml(state.forecast, ui) +
-    (Number.isFinite(state.forecast.day) ? `<small>Estimate as of ${v(ui.gameDate(state.forecast.day))}.</small>` : "") +
-    (state.forecastError ? `<small>${v(state.forecastError)}</small>` : "") :
-    `<small>${v(state.forecastPending ? "Checking the election outlook…" : state.forecastError || "No scheduled contest available.")}</small>`);
+    (Number.isFinite(state.forecast.day) ? `<small>Estimate as of ${b(ui.gameDate(state.forecast.day))}.</small>` : "") +
+    (state.forecastError ? `<small>${b(state.forecastError)}</small>` : "") :
+    `<small>${b(state.forecastPending ? "Checking the election outlook…" : state.forecastError || "No scheduled contest available.")}</small>`);
   const latest = state.data.recentResult;
   const result = latest?.contestId === state.recapContestId ? latest : state.forecast?.recentResult || latest;
   html("recap", gpmDomesticRecap(result, ui, state));
@@ -432,7 +432,7 @@ async function gpmRunDomesticForecast(state, ui) {
       const request = state.forecastRequest;
       let result, error;
       try {
-        result = await Xe(state.session, "gpm.partyCampaignPlanForecast", { contestId: request.id });
+        result = await Je(state.session, "gpm.partyCampaignPlanForecast", { contestId: request.id });
         if (result?.contestId !== request.id) error = "An estimate is unavailable for this contest.";
       } catch {
         error = "Could not refresh the estimate. Try again.";
@@ -512,7 +512,7 @@ function gpmBindCampaignPlan(profile, view, ui, refreshForecast = true) {
   const chambers = view.player?.pol?.chambers || [];
   state.contests = (data.contests || []).map(item => {
     const chamber = chambers.find(candidate => item.targetOrganId === `chamber:${candidate.id}`);
-    return chamber && !item.label ? { ...item, label: ro(chamber) } : item;
+    return chamber && !item.label ? { ...item, label: so(chamber) } : item;
   });
   if (!state.dirty && !state.saving && (state.planSavedAt == null || state.planSavedAt < view.day)) state.draft = data.plan;
   const requested = ui._gpmDomesticOpen;
@@ -538,7 +538,7 @@ function gpmBindCampaignPlan(profile, view, ui, refreshForecast = true) {
   state.fundingEnabled = view.party.foreignFunding?.enabled !== false;
   if (!state.dirty && !state.saving && !fields.contains(document.activeElement)) gpmFillDomesticDraft(form, state.draft);
   const contest = panel.querySelector("[data-gpm-domestic-contest]");
-  const options = state.contests.map(item => `<option value="${v(item.id)}">${v(gpmDomesticContestLabel(item, ui))}</option>`).join("");
+  const options = state.contests.map(item => `<option value="${b(item.id)}">${b(gpmDomesticContestLabel(item, ui))}</option>`).join("");
   if (contest._gpmOptions !== options) {
     contest.innerHTML = options;
     contest._gpmOptions = options;
@@ -586,13 +586,13 @@ function patchPartyDomesticRenderer(js, replaceOnce) {
     '  if (view.party.agreement) tabs.push(["agreement", "Support Agreement", renderPartyAgreement(view, party, ui)]);\n  tabs.push(["laws", "Law Shortlist", gpmRenderPartyLaws()]);');
   js = replaceOnce(js, '    if (tab.id === "gpm-tab-regional")',
     '    if (tab.id === "gpm-tab-plan") gpmBindCampaignPlan(profile, view, ui);\n    if (tab.id === "gpm-tab-agreement") {\n      const party = view.player?.pol?.parties.find(item => item.id === view.party.agreement.partyId);\n      bindPartyAgreement(profile, view, party, ui);\n    }\n    if (tab.id === "gpm-tab-regional")');
-  js = replaceOnce(js, 'n.push(...cC(t));let r=EVe(t)',
-    'const gpmDeadlines=gpmDomesticSitroomRows(t,e);const gpmNearestContest=M6t(t)?.contest?.id;' +
-    'n.push(...cC(t).filter(row=>row.id!=="elec"||!gpmNearestContest||!gpmDeadlines.some(entry=>entry.contestId===gpmNearestContest)),...gpmDeadlines);let r=EVe(t)');
-  js = replaceOnce(js, 'let p=_Bt(this,a),m=PBt(this,a,l)',
-    'let p=[...gpmDomesticSitroomRows(a,this,true),..._Bt(this,a)],m=PBt(this,a,l)');
-  js = replaceOnce(js, 'MVe(this._digest),this.refreshSitroom(this.sim);return',
-    'MVe(this._digest),gpmDismissDomesticRecent(this,$6(this.sim)),this.refreshSitroom(this.sim);return');
+  js = replaceOnce(js, 'n.push(...FC(t));let r=eZe(t)',
+    'const gpmDeadlines=gpmDomesticSitroomRows(t,e);const gpmNearestContest=Hbt(t)?.contest?.id;' +
+    'n.push(...FC(t).filter(row=>row.id!=="elec"||!gpmNearestContest||!gpmDeadlines.some(entry=>entry.contestId===gpmNearestContest)),...gpmDeadlines);let r=eZe(t)');
+  js = replaceOnce(js, 'let p=tFt(this,a),m=nFt(this,a,l)',
+    'let p=[...gpmDomesticSitroomRows(a,this,true),...tFt(this,a)],m=nFt(this,a,l)');
+  js = replaceOnce(js, 'VYe(this._digest),this.refreshSitroom(this.sim);return',
+    'VYe(this._digest),gpmDismissDomesticRecent(this,nv(this.sim)),this.refreshSitroom(this.sim);return');
   const navigation = 'let k=i.target.closest("[data-mod]");if(k&&this.sim){this.openModule(k.dataset.mod,k.dataset.sub||void 0);return}';
   return replaceOnce(js, navigation,
     'let gpmDomesticLink=i.target.closest("[data-gpm-domestic-link]");if(gpmDomesticLink&&this.sim){gpmOpenDomesticAgendaLink(this,gpmDomesticLink);return}' + navigation);

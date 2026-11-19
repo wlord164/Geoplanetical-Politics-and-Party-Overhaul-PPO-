@@ -2,16 +2,16 @@ const gpmFrontlineArrowPointLimit = 2048;
 const gpmFrontlineCoastSnapKm = 95;
 
 function gpmFrontlineArrowPoints(input) {
-  if (!Array.isArray(input) || input.length < 2 || input.length > gpmFrontlineArrowPointLimit || !input.every($Z)) return null;
-  return input.some(point => Bi(input[0], point) > 1) ? input.map(point => point.slice()) : null;
+  if (!Array.isArray(input) || input.length < 2 || input.length > gpmFrontlineArrowPointLimit || !input.every(_Q)) return null;
+  return input.some(point => qi(input[0], point) > 1) ? input.map(point => point.slice()) : null;
 }
 
 function gpmFrontlineMidpoint(line) {
-  const segments = line.slice(1).map((point, index) => Bi(line[index], point));
+  const segments = line.slice(1).map((point, index) => qi(line[index], point));
   let remaining = segments.reduce((sum, distance) => sum + distance, 0) / 2;
   for (let index = 0; index < segments.length; index++) {
     const distance = segments[index];
-    if (distance > 0 && remaining <= distance) return WM(line[index], line[index + 1], remaining / distance);
+    if (distance > 0 && remaining <= distance) return oC(line[index], line[index + 1], remaining / distance);
     remaining -= distance;
   }
   return line.at(-1).slice();
@@ -19,13 +19,13 @@ function gpmFrontlineMidpoint(line) {
 
 function gpmFrontlineLandPoint(sim, field, point) {
   if (field && !field.terrain[gpmFrontlineCell(field, ...point)]) return false;
-  return !!cb(sim, ...point);
+  return !!Sb(sim, ...point);
 }
 
 function gpmFrontlineLandSegment(sim, field, a, b) {
-  const samples = Math.max(1, Math.ceil(Bi(a, b) / 1.5));
+  const samples = Math.max(1, Math.ceil(qi(a, b) / 1.5));
   for (let index = 1; index < samples; index++) {
-    if (!gpmFrontlineLandPoint(sim, field, WM(a, b, index / samples))) return false;
+    if (!gpmFrontlineLandPoint(sim, field, oC(a, b, index / samples))) return false;
   }
   return true;
 }
@@ -48,7 +48,7 @@ function gpmFrontlineTerrain(sim, war, owner) {
     if (!legalProvinces.has(id)) {
       const province = sim.world.provinces[id];
       const provinceSide = war.participants[province?.__countryKey]?.side;
-      legalProvinces.set(id, !!provinceSide && Oo(war, province.__countryKey) && !j2a(sim, province.__provKey, war.id) &&
+      legalProvinces.set(id, !!provinceSide && Do(war, province.__countryKey) && !Jma(sim, province.__provKey, war.id) &&
         (provinceSide === side || gpmHistoricalCheckOccupation(sim, war, province)));
     }
     return legalProvinces.get(id);
@@ -76,7 +76,7 @@ function gpmFrontlineStartingCell(war, terrain, start, line) {
   for (let cell = 0; cell < war.field.terrain.length; cell++) {
     if (!war.field.terrain[cell]) continue;
     const position = terrain.center(cell);
-    const distance = Bi(start, position);
+    const distance = qi(start, position);
     if (distance >= score || line && gpmFrontlineRoute(line, position).distanceKm > gpmFrontlineSectorKm || !terrain.eligible(cell)) continue;
     score = distance;
     best = cell;
@@ -112,7 +112,7 @@ function gpmFrontlineGridPath(sim, war, owner, points, line) {
         remainingDistance = 0;
         break;
       }
-      const distance = Bi(position, goal);
+      const distance = qi(position, goal);
       if (distance < remainingDistance && terrain.eligible(cell)) { closest = cell; remainingDistance = distance; }
     }
     for (const next of gpmFrontlineGridNeighbors(field, cell)) {
@@ -128,7 +128,7 @@ function gpmFrontlineGridPath(sim, war, owner, points, line) {
   if (!gpmFrontlineLandStroke(sim, field, path)) {
     // Only cells on a candidate route pay for polygon and hole checks. If the raster
     // approximates a narrow bay, ask the native graph solver to avoid that vector gap.
-    const solve = Jda({ count: field.terrain.length, distance: (a, b) => Bi(terrain.center(a), terrain.center(b)),
+    const solve = ima({ count: field.terrain.length, distance: (a, b) => qi(terrain.center(a), terrain.center(b)),
       neighbors: current => gpmFrontlineGridNeighbors(field, current).filter(next => terrain.eligible(next) &&
         gpmFrontlineLandSegment(sim, field, terrain.center(current), terrain.center(next))) });
     const exact = solve(start, closest, terrain.eligible);
@@ -141,7 +141,7 @@ function gpmFrontlineGridPath(sim, war, owner, points, line) {
   for (let from = 0; from < path.length - 1;) {
     let to = Math.min(from + 12, path.length - 1);
     while (to > from + 1 && !gpmFrontlineLandSegment(sim, field, path[from], path[to])) to--;
-    if (Bi(route.at(-1), path[to]) > .001) route.push(path[to]);
+    if (qi(route.at(-1), path[to]) > .001) route.push(path[to]);
     from = to;
   }
   return gpmFrontlineArrowPoints(route);

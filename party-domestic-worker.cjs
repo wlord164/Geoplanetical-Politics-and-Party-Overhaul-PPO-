@@ -58,13 +58,13 @@ function gpmDomesticPlanFor(country, party) {
 function gpmDomesticPolicy(sim, country, party) {
   if (!gpmDomesticEligibleParty(country, party)) return null;
   const plan = gpmDomesticPlanFor(country, party);
-  if (vXr(sim, country, party.id)) return plan.enabled ? plan : null;
+  if (tao(sim, country, party.id)) return plan.enabled ? plan : null;
   return plan.enabled ? plan : { ...plan, enabled: true, allowForeignFunding: true, allowForeignDonations: true };
 }
 
 function gpmDomesticAllowsDonation(sim, country, party) {
   if (!gpmDomesticEligibleParty(country, party)) return false;
-  return vXr(sim, country, party.id)
+  return tao(sim, country, party.id)
     ? gpmDomesticNormalizePlan(party.gpmDomestic?.plan).allowForeignDonations
     : gpmDomesticPolicy(sim, country, party)?.allowForeignDonations === true;
 }
@@ -110,7 +110,7 @@ function gpmDomesticMoveMembers(source, target, share) {
 }
 
 function gpmDomesticWithStaff(sim, country, party, apply) {
-  if (!vXr(sim, country, party.id)) return apply(null);
+  if (!tao(sim, country, party.id)) return apply(null);
   const previous = gpmDomesticStaffScope.get(sim);
   const scope = { party, actions: 0 };
   gpmDomesticStaffScope.set(sim, scope);
@@ -138,7 +138,7 @@ function gpmDomesticReceipt(sim, country, party, kind, amount = {}) {
   ledger.unshift(entry);
   ledger.length = Math.min(ledger.length, 30);
   if (cashM >= 0 || kind === "membership-upkeep") return;
-  const month = xme(sim);
+  const month = p3e(sim);
   state.monthlySpendM = gpmDomesticMoney((month === state.spendMonth ? state.monthlySpendM || 0 : 0) - cashM);
   state.spendMonth = month;
 }
@@ -158,10 +158,10 @@ function gpmDomesticEarnMembers(sim, country, party, kind, activistsK, day = sim
 
 function gpmDomesticAssessMembership(sim, country, party) {
   const membership = party.gpmDomestic?.membership;
-  if (!membership || membership.reconciledMonth === xme(sim)) return;
+  if (!membership || membership.reconciledMonth === p3e(sim)) return;
   const terms = gpmDomesticMembershipTerms;
   const treasury = party.organization.treasuryM;
-  const duesM = gpmDomesticMoney(Math.min(Math.max(0, Kme - treasury), Math.min(terms.monthlyDuesCap, membership.members * terms.monthlyDues) / 1e6));
+  const duesM = gpmDomesticMoney(Math.min(Math.max(0, d3e - treasury), Math.min(terms.monthlyDuesCap, membership.members * terms.monthlyDues) / 1e6));
   const upkeepM = gpmDomesticMoney(duesM * terms.monthlyUpkeep / terms.monthlyDues);
   const netM = gpmDomesticMoney(duesM - upkeepM);
   party.organization.treasuryM = gpmDomesticMoney(treasury + netM);
@@ -171,16 +171,16 @@ function gpmDomesticAssessMembership(sim, country, party) {
   const previousMembers = membership.members;
   Object.assign(membership, {
     members: Math.floor(membership.members * retention), duesM, upkeepM, netM,
-    reconciledDay: sim.day, reconciledMonth: xme(sim),
+    reconciledDay: sim.day, reconciledMonth: p3e(sim),
   });
   if (typeof gpmCongressRetainMembers === "function") gpmCongressRetainMembers(party, previousMembers, membership.members);
 }
 
 function gpmDomesticCompleteOutreach(sim, country, party, project, eligible) {
   const before = party.organization.activistsK;
-  Iya(party);
+  A6a(party);
   gpmDomesticReceipt(sim, country, party, "activists-returned", {
-    activistsK: iL(party.organization.activistsK - before), details: "outreach",
+    activistsK: kL(party.organization.activistsK - before), details: "outreach",
   });
   if (eligible && project.domesticMembership) {
     gpmDomesticEarnMembers(sim, country, party, "outreach", project.activistsK, project.endDay);
@@ -189,10 +189,10 @@ function gpmDomesticCompleteOutreach(sim, country, party, project, eligible) {
 
 function gpmDomesticContestList(sim, country, policy = null) {
   const day = sim.day || 0;
-  const contests = Object.values(st(country)?.contests || {}).filter(contest => Number.isFinite(contest.nextDay) && contest.nextDay > day);
+  const contests = Object.values(lt(country)?.contests || {}).filter(contest => Number.isFinite(contest.nextDay) && contest.nextDay > day);
   return contests.sort((left, right) => {
     const target = Number(right.id === policy?.targetContestId) - Number(left.id === policy?.targetContestId);
-    const legislative = Number(zTa(country, right).kind === "legislative") - Number(zTa(country, left).kind === "legislative");
+    const legislative = Number(zNa(country, right).kind === "legislative") - Number(zNa(country, left).kind === "legislative");
     return target || (policy?.goal === "firstSeat" ? legislative : 0) || left.nextDay - right.nextDay || left.id.localeCompare(right.id);
   });
 }
@@ -201,7 +201,7 @@ function gpmDomesticFocusedContest(country, policy, contests) {
   const selected = contests.find(contest => contest.id === policy.targetContestId);
   if (selected || policy.goal !== "firstSeat") return selected;
   return contests.find(contest => {
-    const organ = Ia(country, contest.targetOrganId);
+    const organ = Aa(country, contest.targetOrganId);
     return organ?.legislative && organ.selection?.method === "election" &&
       !["appointed", "hereditary", "delegated", "indirect"].includes(organ.selection.selectMode);
   });
@@ -223,14 +223,14 @@ function gpmDomesticReserve(sim, country, party, policy, excludedContest = null)
   }
   return {
     cashM: Math.min(organization.treasuryM, gpmDomesticMoney(reserve.cashM)),
-    activistsK: Math.min(organization.activistsK, iL(reserve.activistsK)),
+    activistsK: Math.min(organization.activistsK, kL(reserve.activistsK)),
     influence: Math.min(organization.influence, reserve.influence),
   };
 }
 
 function gpmDomesticSpendThisMonth(sim, party) {
   const state = party.gpmDomestic;
-  return state && state.spendMonth === xme(sim) ? state.monthlySpendM || 0 : 0;
+  return state && state.spendMonth === p3e(sim) ? state.monthlySpendM || 0 : 0;
 }
 
 function gpmDomesticCanCommit(sim, country, party, cost, policy, { reserve = null, endDay = null } = {}) {
@@ -241,19 +241,19 @@ function gpmDomesticCanCommit(sim, country, party, cost, policy, { reserve = nul
   const returnsBeforeElection = endDay != null && (keep.activistsK || 0) > 0 &&
     gpmDomesticContestList(sim, country, policy).every(contest => endDay <= contest.nextDay - 60);
   const remainingCash = gpmDomesticMoney(organization.treasuryM - (keep.cashM ?? keep.cash ?? 0));
-  const remainingActivists = iL(organization.activistsK - (returnsBeforeElection ? 0 : keep.activistsK || 0));
+  const remainingActivists = kL(organization.activistsK - (returnsBeforeElection ? 0 : keep.activistsK || 0));
   return (cashM <= Math.max(0, remainingCash)) && (activistsK <= Math.max(0, remainingActivists)) &&
     influence <= Math.max(0, organization.influence - (keep.influence || 0)) &&
     (policy.monthlyBudgetM == null || gpmDomesticMoney(gpmDomesticSpendThisMonth(sim, party) + cashM) <= policy.monthlyBudgetM);
 }
 
 function gpmDomesticView(sim, country, partyId) {
-  const party = sL(country, partyId);
+  const party = AL(country, partyId);
   if (!party?.organization) return null;
   const state = party.gpmDomestic;
   const plan = gpmDomesticPlanFor(country, party);
   const contests = gpmDomesticContestList(sim, country, plan).map(contest => ({
-    id: contest.id, kind: zTa(country, contest).kind, targetOrganId: contest.targetOrganId, electionDay: contest.nextDay,
+    id: contest.id, kind: zNa(country, contest).kind, targetOrganId: contest.targetOrganId, electionDay: contest.nextDay,
   }));
   return {
     partyId, plan, contests, membership: { ...gpmDomesticMembership(party),
@@ -261,20 +261,20 @@ function gpmDomesticView(sim, country, partyId) {
     reserve: gpmDomesticReserve(sim, country, party, plan), cashM: party.organization.treasuryM,
     activistsK: party.organization.activistsK, influence: party.organization.influence,
     monthlySpendM: gpmDomesticSpendThisMonth(sim, party),
-    nextPlannerDay: plan.enabled ? DTa(sim) : null, lastReview: state?.lastReview || null,
+    nextPlannerDay: plan.enabled ? CTe(sim) : null, lastReview: state?.lastReview || null,
   };
 }
 
 function registerPartyDomestic() {
-  J7t("gpm.party.domestic.plan", {
+  gvt("gpm.party.domestic.plan", {
     validate(sim, country, input) {
-      const party = sL(country, input.partyId);
-      return gpmDomesticEligibleParty(country, party) && vXr(sim, country, party.id)
+      const party = AL(country, input.partyId);
+      return gpmDomesticEligibleParty(country, party) && tao(sim, country, party.id)
         ? true : { ok: false, reason: "party" };
     },
     apply(sim, country, input) {
-      const party = sL(country, input.partyId);
-      if (!gpmDomesticEligibleParty(country, party) || !vXr(sim, country, party.id)) return { ok: false, reason: "party" };
+      const party = AL(country, input.partyId);
+      if (!gpmDomesticEligibleParty(country, party) || !tao(sim, country, party.id)) return { ok: false, reason: "party" };
       const state = gpmDomesticState(party);
       state.plan = gpmDomesticNormalizePlan(input.plan);
       return { ok: true, changed: true, day: sim.day, plan: state.plan, campaignPlan: gpmDomesticView(sim, country, party.id) };
@@ -294,25 +294,25 @@ function patchDomesticWorker(source, replaceOnce) {
   source = replaceOnce(source, "registerPartyOrganizing();\nregisterPartyCongressSize();",
     declarations + "registerPartyOrganizing();\nregisterPartyCongressSize();");
   source = replaceOnce(source,
-    "function qWa(e,t){return Mya(e,t),pGa(e,t),e._reviewPartyParliamentAi(t)}",
-    "function qWa(e,t){return gpmBindCampaignPolity(e,t.pol),pGa(e,t),e._reviewPartyParliamentAi(t)}");
+    "function $qa(e,t){return E6a(e,t),WLa(e,t),e._reviewPartyParliamentAi(t)}",
+    "function $qa(e,t){return gpmBindCampaignPolity(e,t.pol),WLa(e,t),e._reviewPartyParliamentAi(t)}");
   source = replaceOnce(source,
-    '!(e.playerControlsParty?.(t,r.id)??(t.key===e.playerKey&&r.id===fn(t)))&&r.legal!==!1&&Jmo(e,t,r)}return Fyt(e,t),!0}',
-    'gpmDomesticEligibleParty(t,r)&&gpmDomesticAssessMembership(e,t,r)}return Fyt(e,t),advancePartyModAI(e,t),!0}');
-  source = replaceOnce(source, "L5t(()=>r3o(e,t,a)),a[0].election.nextDay", "L5t(()=>gpmDomesticContestAI(e,t,a)),a[0].election.nextDay");
-  source = replaceOnce(source, "o.lastFundraiseMonth=xme(e),{ok:!0,partyId:a,gainM:i,treasuryM:o.treasuryM}",
-    'o.lastFundraiseMonth=xme(e),gpmDomesticReceipt(e,t,r,"fundraise",{cashM:i}),{ok:!0,partyId:a,gainM:i,treasuryM:o.treasuryM}');
-  source = replaceOnce(source, "n.lastRecruitMonth=xme(e),{ok:!0,partyId:a,spendM:i,gainedK:l,activistsK:n.activistsK}",
-    'n.lastRecruitMonth=xme(e),gpmDomesticReceipt(e,t,o,"recruit",{cashM:-i,activistsK:l}),{ok:!0,partyId:a,spendM:i,gainedK:l,activistsK:n.activistsK}');
+    '!i&&r.legal!==!1?L4o(e,t,r):i&&o.autoFundraise===!0&&QNa(e,t,r)}return s6t(e,t),!0}',
+    'i&&o.autoFundraise===!0&&QNa(e,t,r),gpmDomesticEligibleParty(t,r)&&gpmDomesticAssessMembership(e,t,r)}return s6t(e,t),advancePartyModAI(e,t),!0}');
+  source = replaceOnce(source, "aht(()=>H4o(e,t,a)),a[0].election.nextDay", "aht(()=>gpmDomesticContestAI(e,t,a)),a[0].election.nextDay");
+  source = replaceOnce(source, "o.lastFundraiseMonth=p3e(e),{ok:!0,partyId:a,gainM:i,treasuryM:o.treasuryM}",
+    'o.lastFundraiseMonth=p3e(e),gpmDomesticReceipt(e,t,r,"fundraise",{cashM:i}),{ok:!0,partyId:a,gainM:i,treasuryM:o.treasuryM}');
+  source = replaceOnce(source, "n.lastRecruitMonth=p3e(e),{ok:!0,partyId:a,spendM:i,gainedK:l,activistsK:n.activistsK}",
+    'n.lastRecruitMonth=p3e(e),gpmDomesticReceipt(e,t,o,"recruit",{cashM:-i,activistsK:l}),{ok:!0,partyId:a,spendM:i,gainedK:l,activistsK:n.activistsK}');
   source = replaceOnce(source, "r.opsDone=(r.opsDone||0)+1,r.lastActionDay=e.day,{ok:!0,partyId:a,contestId:r.contestId,gain:c,score:r.score,spendM:s,activistsK:l}",
-    'r.opsDone=(r.opsDone||0)+1,r.lastActionDay=e.day,gpmDomesticReceipt(e,t,$u(t,a),"campaign",{cashM:-s,activistsK:-l,influence:-EDe,details:r.contestId}),{ok:!0,partyId:a,contestId:r.contestId,gain:c,score:r.score,spendM:s,activistsK:l}');
-  source = replaceOnce(source, 's.lastStartedDay=i,Fct(e,t,a,"started",r),{...o,applied:!0}',
-    's.project.domesticMembership=!0,s.lastStartedDay=i,Fct(e,t,a,"started",r),gpmDomesticReceipt(e,t,n,"outreach",{cashM:-o.cost.budgetM,activistsK:-o.cost.activistsK,influence:-o.cost.influence,details:r}),{...o,applied:!0}');
-  source = replaceOnce(source, 'Iya(r),Fct(e,t,a,"cancelled",o),{ok:!0}',
-    'gpmDomesticCompleteOutreach(e,t,r,r.outreach.project,!1),Fct(e,t,a,"cancelled",o),{ok:!0}');
-  return replaceOnce(source, 'Iya(a),Fct(e,t,a.id,o>=n.endDay?"completed":"cancelled",n.groupId)',
+    'r.opsDone=(r.opsDone||0)+1,r.lastActionDay=e.day,gpmDomesticReceipt(e,t,Uc(t,a),"campaign",{cashM:-s,activistsK:-l,influence:-xTe,details:r.contestId}),{ok:!0,partyId:a,contestId:r.contestId,gain:c,score:r.score,spendM:s,activistsK:l}');
+  source = replaceOnce(source, 's.lastStartedDay=i,r1t(e,t,a,"started",r),{...o,applied:!0}',
+    's.project.domesticMembership=!0,s.lastStartedDay=i,r1t(e,t,a,"started",r),gpmDomesticReceipt(e,t,n,"outreach",{cashM:-o.cost.budgetM,activistsK:-o.cost.activistsK,influence:-o.cost.influence,details:r}),{...o,applied:!0}');
+  source = replaceOnce(source, 'A6a(r),r1t(e,t,a,"cancelled",o),{ok:!0}',
+    'gpmDomesticCompleteOutreach(e,t,r,r.outreach.project,!1),r1t(e,t,a,"cancelled",o),{ok:!0}');
+  return replaceOnce(source, 'A6a(a),r1t(e,t,a.id,o>=n.endDay?"completed":"cancelled",n.groupId)',
     'gpmDomesticCompleteOutreach(e,t,a,n,o>=n.endDay&&s.has(n.groupId)&&a.legal!==!1),' +
-    'Fct(e,t,a.id,o>=n.endDay?"completed":"cancelled",n.groupId)');
+    'r1t(e,t,a.id,o>=n.endDay?"completed":"cancelled",n.groupId)');
 }
 
 module.exports = { patchDomesticWorker };

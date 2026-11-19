@@ -16,11 +16,11 @@ function gpmFrontlineFormationDestination(sim, formation, slot) {
   const location = formation.location;
   if (location?.type === "moving") {
     const last = location.wp?.at(-1);
-    return { kind: location.dest?.type || "transfer", position: $Z(last) ? last : null,
+    return { kind: location.dest?.type || "transfer", position: _Q(last) ? last : null,
       provinceKey: location.dest?.provKey ?? null, stationId: null,
-      progress: Number.isFinite(location.totalKm) && Number.isFinite(location.kmpd) ? Ufa(sim, location) : null };
+      progress: Number.isFinite(location.totalKm) && Number.isFinite(location.kmpd) ? Q5a(sim, location) : null };
   }
-  if (!slot || !$Z(slot.ll)) return null;
+  if (!slot || !_Q(slot.ll)) return null;
   const route = formation._frontNodeRoute;
   const point = formation._frontSlotLL || slot.ll;
   return { kind: "front", position: point, provinceKey: formation.assignment?.sectorProvKey ?? null,
@@ -49,7 +49,7 @@ function gpmFrontlineUnitStatus(war, unit, plan, seen) {
   if (unit.location?.type !== "front") return state("waiting", "deployment");
   if (!slot) return state("waiting", "no_slot");
   if (plan.mode === "advance" && (unit.supply?.ammoDays ?? 0) < 3) return state("blocked", "low_ammunition");
-  if (plan.mode === "advance" && sk(unit) <= .3) return state("blocked", "low_readiness");
+  if (plan.mode === "advance" && Ck(unit) <= .3) return state("blocked", "low_readiness");
   if (unit._frontAtSlot === true) return state(plan.mode === "hold" ? "holding" : "ready");
   return state("waiting", "awaiting_position");
 }

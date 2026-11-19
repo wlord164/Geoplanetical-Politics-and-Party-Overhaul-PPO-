@@ -179,26 +179,26 @@ const declaration = `const gpmHistoricalOpeningTopology = ${JSON.stringify(topol
 
 function patchHistoricalOpeningTopology(source, replaceOnce, target) {
   const renderer = target === "renderer";
-  const stock = renderer ? "NP" : "Dre";
-  const world = renderer ? "function Ahe(){let e=D4(sh,sh.objects.countries)," :
-    "function Vkt(){let e=Jye(mje,mje.objects.countries),";
+  const stock = renderer ? "sx" : "uoe";
+  const world = renderer ? "function Ffe(){let e=W4(vh,vh.objects.countries)," :
+    "function bRt(){let e=Ghe(MHe,MHe.objects.countries),";
   const stockCopy = `t={...${stock},objects:{...${stock}.objects,provinces:{...${stock}.objects.provinces,geometries:${stock}.objects.provinces.geometries.map(`;
   const openingCopy = stockCopy.replaceAll(stock, "openingTopology");
   let result = replaceOnce(source, world + stockCopy, declaration + world +
     `openingTopology=applyHistoricalOpeningTopology(${stock},gpmHistoricalOpeningTopology),` + openingCopy);
   if (renderer) {
     // Fill and borders must use the same vertices on both sides of a subdivided province.
-    result = replaceOnce(result, "p=(M,P=0)=>{let x=M;if(P)",
-      "p=(M,P=0,keepVertices=false)=>{let x=M;if(P)");
-    result = replaceOnce(result, "L*L+O*O<a||(_.push([C,R]),A=C,I=R)",
-      "(!keepVertices&&L*L+O*O<a)||(_.push([C,R]),A=C,I=R)");
-    result = replaceOnce(result, "R=[],L=[],O=[];m(p(T[0],C),C,R,L);for(let q=1;q<T.length;q++)T[q].length<4||(O.push(R.length/2),m(p(T[q],C),C,R,L))",
-      "R=[],L=[],O=[],keepVertices=!!(M.properties?.gpmOpeningSubdivision||M.properties?.gpmOpeningSourceProvince);m(p(T[0],C,keepVertices),C,R,L);for(let q=1;q<T.length;q++)T[q].length<4||(O.push(R.length/2),m(p(T[q],C,keepVertices),C,R,L))");
+    result = replaceOnce(result, "p=(_,P=0)=>{let R=_;if(P)",
+      "p=(_,P=0,keepVertices=false)=>{let R=_;if(P)");
+    result = replaceOnce(result, "N*N+O*O<a||(M.push([I,A]),x=I,C=A)",
+      "(!keepVertices&&N*N+O*O<a)||(M.push([I,A]),x=I,C=A)");
+    result = replaceOnce(result, "A=[],N=[],O=[];m(p(L[0],I),I,A,N);for(let B=1;B<L.length;B++)L[B].length<4||(O.push(A.length/2),m(p(L[B],I),I,A,N))",
+      "A=[],N=[],O=[],keepVertices=!!(_.properties?.gpmOpeningSubdivision||_.properties?.gpmOpeningSourceProvince);m(p(L[0],I,keepVertices),I,A,N);for(let B=1;B<L.length;B++)L[B].length<4||(O.push(A.length/2),m(p(L[B],I,keepVertices),I,A,N))");
   } else {
-    const validator = "function wMt(e,t){let a=t.sat?.territory";
+    const validator = "function HCt(e,t){let a=t.sat?.territory";
     result = replaceOnce(result, validator, gpmMigrateHistoricalOpeningOccupation.toString() + "\n" +
       gpmMigrateHistoricalOpeningTerritory.toString() +
-      "\nfunction wMt(e,t){gpmMigrateHistoricalOpeningTerritory(e.world,t);let a=t.sat?.territory");
+      "\nfunction HCt(e,t){gpmMigrateHistoricalOpeningTerritory(e.world,t);let a=t.sat?.territory");
   }
   return result;
 }

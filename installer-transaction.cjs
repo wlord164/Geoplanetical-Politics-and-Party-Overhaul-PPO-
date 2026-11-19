@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const lockPattern = /^\.party-mod-lock-(\d+)-[a-z0-9]+$/i;
-const legacyPattern = /^\.party-mod-previous-(?:1\.1\.[2345]|renderer)-[a-z0-9-]+$/i;
+const legacyPattern = /^\.party-mod-previous-(?:1\.1\.[23456]|renderer)-[a-z0-9-]+$/i;
 const legacyStages = new Set(["steam-1.1.2", "previous-originals"]);
 const stagedFiles = new Set([
   "app.asar", "app.bundle.js", "simulation-worker.bundle.js", "Geoplanetical.exe",

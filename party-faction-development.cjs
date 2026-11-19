@@ -64,17 +64,17 @@ function gpmFactionDelegateFactors(state) {
 }
 
 function gpmFactionObserveLaw(sim, country, procedure, before, after) {
-  if (!procedure?.id || !procedure.sponsorPartyId || fo(before, after)) return;
-  const party = sL(country, procedure.sponsorPartyId);
+  if (!procedure?.id || !procedure.sponsorPartyId || yo(before, after)) return;
+  const party = AL(country, procedure.sponsorPartyId);
   const state = party?.gpmFactionPolitics;
   const programme = state && partyCongressActiveProgramme(party, sim.day);
   if (!programme || !partyCongressProgrammeLawBonus(party, procedure.lawId, sim.day, after)) return;
   const issue = Object.keys(gpmFactionIssues).find(id => gpmFactionIssues[id].laws.includes(procedure.lawId));
   if (!issue) return;
 
-  const law = Ra(procedure.lawId);
+  const law = Ka(procedure.lawId);
   const choice = partyCongressProgrammes()[programme.kind];
-  if (!law || (!choice.lawTargets && Zze(party, law, before, country) <= Zze(party, law, after, country))) return;
+  if (!law || (!choice.lawTargets && lVe(party, law, before, country) <= lVe(party, law, after, country))) return;
   const outcomes = state.policyOutcomes ??= [];
   if (outcomes.some(outcome => outcome.id === procedure.id)) return;
   const programmeDay = party.gpmCongressSizeState.lastProgrammeVote?.day ?? programme.untilDay - 180;
@@ -88,8 +88,8 @@ function gpmFactionObserveLaw(sim, country, procedure, before, after) {
 }
 
 function patchFactionDevelopmentWorker(source, replaceOnce) {
-  return replaceOnce(source, 'SGa(t,a.id),l&&Fyt(e,t),{passes:l,vetoed:c,struck:u,decreed:d,',
-    'SGa(t,a.id),l&&Fyt(e,t),l&&!d&&gpmFactionObserveLaw(e,t,a,i,t.laws[a.lawId]),{passes:l,vetoed:c,struck:u,decreed:d,');
+  return replaceOnce(source, 'HLa(t,a.id),l&&s6t(e,t),{passes:l,vetoed:c,struck:u,decreed:d,',
+    'HLa(t,a.id),l&&s6t(e,t),l&&!d&&gpmFactionObserveLaw(e,t,a,i,t.laws[a.lawId]),{passes:l,vetoed:c,struck:u,decreed:d,');
 }
 
 module.exports = {

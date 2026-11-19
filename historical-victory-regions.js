@@ -3,7 +3,7 @@ const gpmHistoricalRegionalProfiles = new Set(["self_governing_territory", "auto
 function gpmHistoricalVictoryRegionPlan(sim, definition, actor, outcome) {
   const state = sim.gpmHistoricalState;
   if (!state || !["autonomy", "independence"].includes(outcome.scope)) return null;
-  if (!outcome.title || !outcome.regionalOnly && tHe(outcome.title) !== outcome.title) return null;
+  if (!outcome.title || !outcome.regionalOnly && mze(outcome.title) !== outcome.title) return null;
   const country = gpmHistoricalCountry(sim, outcome.countryKey);
   if (!country || !Array.isArray(outcome.regionKeys) || !outcome.regionKeys.length) return null;
   const parentKey = country.key;
@@ -13,8 +13,8 @@ function gpmHistoricalVictoryRegionPlan(sim, definition, actor, outcome) {
   if (existing) return { existing };
   const childKey = "gpm-historical-polity-" + actor.id;
   if (!outcome.regionalOnly && (!gpmHistoricalVictoryRegimes[outcome.regime] || !country.pol?.chambers[0] ||
-      Object.keys(outcome.laws || {}).some(lawId => !Ra(lawId)) || sim.countries.has(childKey) ||
-      sim.graveyard?.has(childKey) || En(sim, parentKey)?.kind === "domestic_polity")) return null;
+      Object.keys(outcome.laws || {}).some(lawId => !Ka(lawId)) || sim.countries.has(childKey) ||
+      sim.graveyard?.has(childKey) || xn(sim, parentKey)?.kind === "domestic_polity")) return null;
   const relationProfileId = outcome.relationProfileId || "self_governing_territory";
   if (outcome.scope === "autonomy" && !gpmHistoricalRegionalProfiles.has(relationProfileId)) return null;
   const overlap = new Map(gpmHistoricalDefinitions(state).map(row => [row.id, row]));
@@ -49,14 +49,14 @@ function gpmHistoricalInstallVictoryRegions(sim, definition, actor, outcome) {
   let government = null;
   if (!outcome.regionalOnly) {
     const change = { create: [{ key: childKey, parentKey, provIds: regions.map(row => row.province.__provId),
-      a2: childKey, feature: HRo(childKey), name: outcome.title }] };
-    const birth = _w(sim, change);
+      a2: childKey, feature: iDo(childKey), name: outcome.title }] };
+    const birth = Gw(sim, change);
     if (!birth.ok) return null;
     const child = sim.countries.get(childKey);
     if (!child) throw new Error("Historical regional outcome did not create " + childKey);
     government = gpmHistoricalInstallVictoryGovernment(sim, child, actor, outcome);
     if (outcome.scope === "autonomy") {
-      const autonomy = eNe(sim, childKey, { relationProfileId, sovereignKey: parentKey,
+      const autonomy = iGe(sim, childKey, { relationProfileId, sovereignKey: parentKey,
         administratorKey: childKey, securitySponsorKey: parentKey });
       if (!autonomy.ok) throw new Error("Could not assign historical autonomy to " + childKey + ": " + autonomy.reasonId);
     }
