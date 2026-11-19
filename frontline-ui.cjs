@@ -42,7 +42,7 @@ body.gpm-frontline-planning #war-console { margin-bottom: calc(var(--pad) + 116p
 .gpm-frontline-army-meta label { display: grid; gap: 2px; min-width: 0; }
 .gpm-frontline-army-meta :is(input,select) { width: 100%; box-sizing: border-box; }
 .gpm-frontline-arrow-labels { position: fixed; inset: 0; pointer-events: none; z-index: 44; overflow: hidden; }
-.gpm-frontline-arrow-label { position: absolute; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 3px; border-radius: 2px; color: white; background: var(--frontline-color); font: var(--fw-semi) 10px/13px var(--font-display); text-shadow: 0 0 2px #000, 0 1px 2px #000; }
+.gpm-frontline-arrow-label { position: absolute; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; border-radius: 2px; color: white; background: var(--frontline-color); font: var(--fw-semi) 10px/13px var(--font-display); text-shadow: 0 0 2px #000, 0 1px 2px #000; }
 `;
 
 const palette = { blue: 0x77a9ff, amber: 0xffb45f, green: 0x82dd87, violet: 0xc490fc, red: 0xff727b, cyan: 0x67d4fb };
@@ -831,8 +831,8 @@ function gpmTickFrontlineLabels(ui) {
     element.hidden = !visible;
     if (visible) {
       const { center, width, angle } = visible;
-      const available = Math.floor(width - 3);
-      const size = Math.min(10, Math.max(7, (available - 7) / textWidth * 10));
+      const available = Math.floor(width - 2);
+      const size = Math.min(10, Math.max(6.75, (available - 5) / textWidth * 10));
       Object.assign(element.style, { left: `${center[0].toFixed(1)}px`, top: `${center[1].toFixed(1)}px`, maxWidth: `${available}px`,
         fontSize: `${size.toFixed(2)}px`, transform: `translate(-50%, -50%) rotate(${angle.toFixed(4)}rad)` });
     }
