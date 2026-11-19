@@ -10,6 +10,8 @@ const { createHash } = require("node:crypto");
 const { readFileSync } = require("node:fs");
 const { join } = require("node:path");
 const officialCountryNames = require("./party-official-country-names.cjs");
+const { data: openingRegister, patchOpeningRegisterRenderer, patchOpeningRegisterWorker } = require("./opening-register.cjs");
+const { patchRegisterPeopleRenderer, patchRegisterPeopleWorker } = require("./opening-register-people.cjs");
 const { workerFunctions: organizingWorker, rendererFunctions: organizingRenderer } = require("./party-organizing.cjs");
 const { workerFunctions: congressWorker } = require("./party-congress-model.cjs");
 const { workerFunctions: congressCurrents } = require("./party-congress-currents.cjs");
@@ -136,16 +138,18 @@ function estimatePartyIdeology(ideology) {
 }
 
 function partyIdeologyLabel(party) {
-  const id = party?.nameDesc?.gpmDeclaredIdeology || party?.nameDesc?.gpmIdeologyPreset;
+  const id = party?.nameDesc?.gpmDeclaredIdeology || party?.nameDesc?.gpmIdeologyPreset || party?.nameDesc?.gpmOpeningIdeology;
   if (Object.hasOwn(gpmPresets, id)) return gpmPresets[id].label;
   return estimatePartyIdeology(party?.ideology) ?? o("pol.family." + mI(party));
 }
 
 function partyIdeologyBadge(party) {
-  const presetId = party.nameDesc?.gpmDeclaredIdeology || party.nameDesc?.gpmIdeologyPreset;
+  const opening = party.nameDesc?.gpmOpeningIdeology;
+  const presetId = party.nameDesc?.gpmDeclaredIdeology || party.nameDesc?.gpmIdeologyPreset || opening;
   const preset = Object.hasOwn(gpmPresets, presetId) ? gpmPresets[presetId] : null;
   const label = partyIdeologyLabel(party);
-  const tooltip = label !== preset?.label && estimatePartyIdeology(party.ideology) ? ' data-tip="Estimated from the party’s four current ideology scores."' : "";
+  const tooltip = opening && presetId === opening ? ' data-tip="Closest PPO equivalent from the opening register."' :
+    label !== preset?.label && estimatePartyIdeology(party.ideology) ? ' data-tip="Estimated from the party’s four current ideology scores."' : "";
   const historical = party.nameDesc?.gpmHistoricalIdeology;
   const historicalEquivalent = party.nameDesc?.gpmHistoricalIdeologyEquivalent;
   const founding = historical || historicalEquivalent
@@ -725,6 +729,8 @@ function patchRenderer(bytes) {
   js = patchHistoricalIdentityRenderer(js, replaceOnce);
   js = patchFactionPeopleRenderer(js, replaceOnce);
   js = require("./frontline-ui.cjs").patchFrontlineRenderer(js, replaceOnce);
+  js = patchOpeningRegisterRenderer(js, replaceOnce);
+  js = patchRegisterPeopleRenderer(js, replaceOnce);
   return Buffer.from(patchPartyDomesticRenderer(js, replaceOnce));
 }
 
@@ -878,6 +884,8 @@ function patchWorker(bytes) {
     `let c=Ho(e);
     if(!gpmActionMatchesActor(s,c))return{ok:false,reason:"stale_actor",message:"Player control changed. Refresh this view and try again."};
     return Te(e,e.player,{...s,speakerId:c.representativeId,partyId:c.partyId,roleId:c.parliamentaryRole})`);
+  worker = patchOpeningRegisterWorker(worker, replaceOnce);
+  worker = patchRegisterPeopleWorker(worker, replaceOnce, openingRegister);
   return Buffer.from(require("./frontline-worker.cjs").patchFrontlineWorker(worker, replaceOnce));
 }
 

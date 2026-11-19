@@ -169,6 +169,12 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
       [`${actorId}:${office}`, { asset: identity[office].portrait?.asset || null, role: identity[office].role,
         representative: !identity[office].portrait && identity.representative ?
           { name: identity.representative.name, role: identity.representative.role, asset: identity.representative.portrait.asset } : null }])));
+  for (const [id, entry] of Object.entries(require("./opening-register-data.json").people)) {
+    if (!entry.asset) continue;
+    const file = /^opening-register-portraits\/[a-z0-9][a-z0-9-]*\.(jpg|jpeg|png|webp)$/.exec(entry.asset);
+    if (!file) throw new Error("Invalid register portrait asset: " + id);
+    people[id] = { asset: readAsset(entry.asset, file[1], assets), role: entry.role };
+  }
   const portraitSelector = 'function pl(e,t,a){';
   let patched = replaceOnce(source, portraitSelector,
     `const gpmHistoricalPeople = ${JSON.stringify(people)};\n${gpmNativeHistoricalPortrait}\n` +

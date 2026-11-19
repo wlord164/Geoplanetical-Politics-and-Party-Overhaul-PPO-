@@ -1,0 +1,267 @@
+{
+  "376": {
+    "LIK": {
+      "preset": "nationalConservative",
+      "scope": "official_party_programme_proxy",
+      "program": "Likud combines the Revisionist Zionist tradition and Jewish national identity with private enterprise, Jewish heritage and social equality. Menachem Begin's Herut and the Liberal Party were leading components of its founding alliance. The relative weight on the gameplay axes is an approximation.",
+      "sources": [
+        "https://www.likud.org.il/en/about-the-likud"
+      ]
+    },
+    "YA": {
+      "preset": "liberalCentre",
+      "scope": "official_party_programme_proxy",
+      "program": "Yesh Atid's programme pairs civil liberties, pluralism and civil marriage with a centrist approach to the economy and public services. It is a secular liberal-centrist fit.",
+      "sources": [
+        "https://ru.yeshatid.org.il/program/",
+        "https://ru.yeshatid.org.il/wp-content/uploads/2021/02/%D7%A4%D7%A8%D7%A7-8-new.pdf"
+      ]
+    },
+    "SHAS": {
+      "preset": "religiousTraditionalist",
+      "scope": "platform_inference",
+      "program": "Shas explicitly represents the Sephardi Torah tradition associated with Rabbi Ovadia Yosef. Aryeh Deri's public platform adds an anti-poverty plan and expanded support for low-income households. The preset represents the religious tradition and does not resolve the party's separate welfare commitments.",
+      "sources": [
+        "https://main.knesset.gov.il/mk/government/pages/coalitionagreements.aspx",
+        "https://www.youtube.com/watch?v=uEuo516PyPQ",
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-ShasRoles.pdf"
+      ]
+    },
+    "NU": {
+      "preset": "mixedEconomyCentre",
+      "scope": "historical_party_document_proxy",
+      "program": "Benny Gantz's continuing Blue and White faction derives from National Unity, the alliance founded by Gantz's Blue and White and Gideon Sa'ar's New Hope in 2022, also joined by Gadi Eisenkot. Its founding platform balances security and civic equality with free enterprise, social justice and equal educational opportunity. New Hope's later departure warrants its own separate party row.",
+      "sources": [
+        "https://kachollavan.org.il/wp-content/uploads/2022/09/principles.pdf",
+        "https://m.knesset.gov.il/EN/mk/apps/faction/general/split-merge"
+      ]
+    },
+    "UTJ": {
+      "preset": "religiousTraditionalist",
+      "scope": "common_bloc_programme",
+      "program": "The common priorities of Agudat Yisrael and Degel HaTorah in their United Torah Judaism coalition agreement include Haredi schools, yeshivas and preservation of Orthodox arrangements in public life. This is the shared Ashkenazi Haredi tradition across the two member parties.",
+      "sources": [
+        "https://www.idi.org.il/media/18946/%D7%99%D7%94%D7%93%D7%95%D7%AA-%D7%94%D7%AA%D7%95%D7%A8%D7%94.pdf",
+        "https://m.knesset.gov.il/mk/government/Documents/CA35-Likud-YT-130520.pdf"
+      ]
+    },
+    "RZ": {
+      "preset": "nationalConservative",
+      "scope": "official_party_programme_proxy",
+      "program": "Bezalel Smotrich's Religious Zionism pairs a Jewish-national and Torah-oriented identity with expanded Israeli sovereignty and a programme for private enterprise and competition. The fit covers the parliamentary faction after Otzma and Noam separated.",
+      "sources": [
+        "https://zionutdatit.org.il/en/party-platform/",
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-RZ.pdf",
+        "https://hashiloach.org.il/israels-decisive-plan/"
+      ]
+    },
+    "YB": {
+      "preset": "liberalConservative",
+      "scope": "official_party_programme_proxy",
+      "program": "Avigdor Lieberman's Yisrael Beiteinu combines a secular nationalist security agenda with civil marriage, local autonomy over Sabbath opening and market-oriented economics. Liberal Conservatism is the existing PPO proxy. Its base social-conservatism score only partly reflects the party's secular stance.",
+      "sources": [
+        "https://en.idi.org.il/media/13926/%D7%99%D7%A9%D7%A8%D7%90%D7%9C-%D7%91%D7%99%D7%AA%D7%A0%D7%95.pdf",
+        "https://m.knesset.gov.il/mk/government/Documents/CA36-YB.pdf",
+        "https://beytenu.org.il/party-platform-israel-beytenu-next-government/"
+      ]
+    },
+    "OTZ": {
+      "preset": "electoralRadicalRight",
+      "scope": "official_party_programme_proxy",
+      "program": "Otzma Yehudit participates in electoral competition and advocates extending Israeli sovereignty throughout the Land of Israel, a strong Jewish national preference and removal of people it defines as enemies of the state. These commitments support the Electoral Radical Right game fit.",
+      "sources": [
+        "https://ozma-yeudit.com/the-platform-of-otzma-yehudit-jewish-strength/?lang=he",
+        "https://jewishvirtuallibrary.org/jsource/Politics/Otzma_political_platform.pdf",
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-Otzma.pdf"
+      ]
+    },
+    "gpm-il-united-arab-list": {
+      "preset": "islamicDemocracy",
+      "scope": "platform_inference",
+      "program": "Ra'am is the parliamentary party associated with the Southern Islamic Movement. Mansour Abbas pursued equitable public investment, improvements to Arab municipal services and civic participation through a formally negotiated coalition agreement. Islamic Democracy approximates the party's religious roots and actual parliamentary strategy.",
+      "sources": [
+        "https://www.washingtoninstitute.org/policy-analysis/arab-leader-israel-conversation-mansour-abbas",
+        "https://m.knesset.gov.il/mk/government/Documents/CA36-Raam.pdf"
+      ]
+    },
+    "gpm-il-hadash-ta-al": {
+      "preset": "democraticSocialist",
+      "scope": "alliance_programme_proxy",
+      "program": "Hadash, chaired by Ayman Odeh and rooted in the Communist Party of Israel and Jewish–Arab front politics, allied with Ahmad Tibi's Arab Movement for Renewal. The programme they defend together emphasizes civic equality, full democracy and opposition to occupation. Democratic Socialism is a front-level approximation that reflects Hadash's influence and leaves room for Ta'al's distinct civic-national orientation.",
+      "sources": [
+        "https://maki.org.il/en/?m=202210",
+        "https://maki.org.il/en/?p=30509",
+        "https://maki.org.il/en/?p=30925"
+      ]
+    },
+    "DEM": {
+      "preset": "socialDemocrat",
+      "scope": "party_alliance_proxy",
+      "program": "The Labor faction retained its parliamentary designation after Yair Golan led the 2024 Labor–Meretz partnership as The Democrats. The party programme combines liberal-democratic institutions, stronger public services, equality and social protection. Social Democracy captures the continuing common programme.",
+      "sources": [
+        "https://democrats.org.il/institutions/",
+        "https://democrats.org.il/en/home-2/",
+        "https://main.knesset.gov.il/News/PressReleases/pages/press25022025c.aspx"
+      ]
+    },
+    "gpm-il-new-hope": {
+      "preset": "liberalConservative",
+      "scope": "founder_and_coalition_programme_proxy",
+      "program": "Gideon Sa'ar's New Hope describes a center-right, Zionist and institutionally conservative alternative, including a market-oriented economy, relative support for decentralization and a strong security posture. The Liberal Conservative preset is a fit for its national-liberal tradition while New Hope is a separate faction.",
+      "sources": [
+        "https://www.washingtoninstitute.org/policy-analysis/new-leadership-israel-conversation-gideon-saar",
+        "https://m.knesset.gov.il/mk/government/Documents/CA36-NH.pdf",
+        "https://m.knesset.gov.il/EN/mk/apps/faction/general/split-merge"
+      ]
+    },
+    "gpm-il-noam": {
+      "preset": "religiousTraditionalist",
+      "scope": "party_coalition_programme_proxy",
+      "program": "Avi Maoz's Noam coalition agreement and the resulting Jewish National Identity Authority foreground religious education, traditional family policy and an Orthodox interpretation of Jewish public life. This is a religious-Zionist form of traditionalism separate from the Haredi parties.",
+      "sources": [
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-Noam.pdf",
+        "https://www.gov.il/BlobFolder/unit/freedom_of__information_law/he/report100225.pdf"
+      ]
+    }
+  },
+  "422": {
+    "HEZ": {
+      "preset": "islamicRepublican",
+      "scope": "lead-party",
+      "program": "Hezbollah, the lead party of Loyalty to the Resistance, combines Shi'a political Islam and the tradition of guardianship of the jurist with participation in Lebanon's parliamentary system. Islamic Republicanism is the closest PPO preset for the party, while its 2009 program describes consensual democracy for Lebanon.",
+      "sources": [
+        "https://translations.meforum.org/documents/hezbollah-political-document-2009/",
+        "https://kurzman.unc.edu/wp-content/uploads/sites/1410/2011/06/Hizbullah_2009_English.pdf"
+      ]
+    },
+    "LF": {
+      "preset": "liberalConservative",
+      "scope": "sponsoring_party_proxy",
+      "program": "Lebanese Forces' published programme supports a competitive private-sector economy with regulation and social protection. Its charter pairs sovereignty and plural communities with constitutional turnover. This is a game proxy for LF, not a claim about every Strong Republic bloc member.",
+      "sources": [
+        "https://www.lebanese-forces.com/2022/04/13/samir-geagea-1657/",
+        "https://www.lebanese-forces.com/2023/01/20/lebanese-forces-1637/"
+      ]
+    },
+    "AMAL": {
+      "preset": "mixedEconomyCentre",
+      "scope": "sponsoring_party_proxy",
+      "program": "Amal's official charter foregrounds assistance to deprived communities and rejects political sectarianism. Its public programme supports constitutional reform, competition rules and public investment. A social-protection/mixed-economy approximation fits better than inferring a religious state from its foundation; exact economy axis remains an approximation.",
+      "sources": [
+        "https://amal-movement.org/حركتنا/",
+        "https://amal-movement.org/2022/03/"
+      ]
+    },
+    "FPM": {
+      "preset": "secularRepublican",
+      "scope": "sponsoring_party_proxy",
+      "program": "FPM's charter explicitly seeks a secular democratic state governed by law, sovereign, plural and open to the Arab region and the world. This is tied to FPM's constitutional platform and does not extend to every Strong Lebanon allied deputy.",
+      "sources": [
+        "https://www.fpmlb.org/ar/charter/"
+      ]
+    },
+    "PSP": {
+      "preset": "democraticSocialist",
+      "scope": "sponsoring_party_proxy",
+      "program": "PSP identifies with the democratic socialist tradition through its formal Socialist International membership and participation. A label for the sponsoring PSP, not every Democratic Gathering ally. Do not read the preset's exact ownership axis as a documented January 2026 platform.",
+      "sources": [
+        "https://www.socialistinternational.org/about-us/members/",
+        "https://www.socialistinternational.org/fileadmin/uploads/si/Documents/Congresses/Lima/Lima_Congress_ssf.pdf"
+      ]
+    },
+    "KAT": {
+      "preset": "socialDemocrat",
+      "scope": "party_self_description",
+      "program": "The official general principles expressly call Kataeb the Lebanese Social Democratic Party and combine free enterprise, social justice and equal opportunity. Use present charter language rather than its historical founders' influences.",
+      "sources": [
+        "https://www.lebanesekataeb.com/المبادئ-العامة",
+        "https://en.kataeb.org/articles/kataeb-party-unveils-178-steps-electoral-program-"
+      ]
+    },
+    "gpm-lb-armenian-bloc": {
+      "preset": "democraticSocialist",
+      "scope": "sponsoring_party_proxy",
+      "program": "The sponsoring Tashnag/ARF identifies itself as national, democratic and socialist in its public programme. Use that sponsor tradition as a proxy; the quoted electoral programme is for Armenia and does not establish all local Armenian Bloc deputies' policy positions.",
+      "sources": [
+        "https://old.arfd.info/2017/03/27/arf-d-parliamentary-election-platform-published-in-english/",
+        "https://old.arfd.info/arf-dashnaktsutyun-policy-principles/"
+      ]
+    },
+    "gpm-lb-homeland-of-man-project-bloc": {
+      "preset": "marketCentre",
+      "scope": "sponsoring_party_proxy",
+      "program": "Project Watan's charter explicitly promotes a free economic system, enterprise and creativity alongside fair social protection and empowered civil institutions. A market-centre fit rather than a claim of unregulated markets.",
+      "sources": [
+        "https://projectwatan.com/ar/من-نحن"
+      ]
+    },
+    "gpm-lb-islamic-group": {
+      "preset": "islamicDemocracy",
+      "scope": "official_party_programme_proxy",
+      "program": "The official political programme combines an explicitly Islamic inspiration with current Lebanese parliamentary participation, dialogue with plural political actors, and accountable civil institutions. The political opening profile uses the nearest electoral preset without assigning every default law in the preset.",
+      "sources": [
+        "https://www.al-jamaa.org/%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A93/%D8%A7%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B3%D9%8A-%D9%84%D9%84%D8%AC%D9%85%D8%A7%D8%B9%D8%A9-%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9",
+        "https://www.al-jamaa.org/news2716/%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D9%86-%D8%A7%D9%84%D8%B9%D8%A7%D9%85-%D9%84%D9%84%D8%AC%D9%85%D8%A7%D8%B9%D8%A9-%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D9%85%D8%AD%D9%85%D8%AF-%D8%B7%D9%82%D9%88%D8%B4-%D8%A8%D8%B9%D8%AF-%D8%A7%D9%84%D8%A5%D8%AF%D9%84%D8%A7%D8%A1-%D8%A8%D8%B5%D9%88%D8%AA%D9%87-%D9%81%D9%8A-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D9%8A%D8%A9"
+      ]
+    },
+    "gpm-lb-popular-nasserist-organization": {
+      "preset": "nasserist",
+      "scope": "party_self_description",
+      "program": "The organization openly identifies with the July Revolution and Nasserist principles in its own published commemorative statement. A meeting host's primary report separately records discussion of maintaining the organization's Nasserist identity.",
+      "sources": [
+        "https://archive.lebanonfiles.com/2020/articles/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D9%85%D8%AD%D9%84%D9%8A%D9%91%D8%A9/%D8%A7%D9%84%D8%AA%D9%86%D8%B8%D9%8A%D9%85-%D8%A7%D9%84%D9%86%D8%A7%D8%B5%D8%B1%D9%8A-%D9%81%D9%8A-%D8%B0%D9%83%D8%B1%D9%89-%D8%AB%D9%88%D8%B1%D8%A9-23-%D8%AA%D9%85%D9%88%D8%B2-%D9%85%D8%A7-%D8%A3/",
+        "https://nuwat-lb.org/en/news/-1356"
+      ]
+    },
+    "gpm-lb-relebanon": {
+      "preset": "marketCentre",
+      "scope": "historical_direct_policy_survey_proxy",
+      "program": "The Policy Initiative's original survey of party respondents reports strong support for selected privatisations alongside a lean toward universal social protection. Market-centre is the closest economic proxy in its programme, with those dated survey origins acknowledged.",
+      "sources": [
+        "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
+      ]
+    },
+    "gpm-lb-tahalof-watani": {
+      "preset": "mixedEconomyCentre",
+      "scope": "historical_direct_policy_survey_proxy",
+      "program": "The original survey of Tahalof Watani records openness to bank nationalisation and universal social protection while distinguishing public water/telecom ownership from room for commercial airport participation. This is a mixed-economy fit from stated choices.",
+      "sources": [
+        "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
+      ]
+    },
+    "gpm-lb-lana": {
+      "preset": "socialDemocrat",
+      "scope": "party_self_description",
+      "program": "Lana calls itself a social democratic party. Its official principles prioritise equality, nondiscrimination and a sustainable economy with social justice.",
+      "sources": [
+        "https://lnalebanon.org/principles/",
+        "https://lnalebanon.org/political-paper/"
+      ]
+    },
+    "gpm-lb-taqaddom": {
+      "preset": "secularRepublican",
+      "scope": "platform_inference",
+      "program": "The documented programme explicitly seeks a civil, secular democratic state, accountable institutions, and equal rights. Original policy survey supports parliamentary participation and social equality. A constitutional approximation, mindful of the group's welfare commitments.",
+      "sources": [
+        "https://sawti.webflow.io/political-groups/taqqadom",
+        "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
+      ]
+    },
+    "gpm-lb-khat-ahmar": {
+      "preset": "marketCentre",
+      "scope": "historical_direct_policy_survey_proxy",
+      "program": "Original party-responses survey reports Khat Ahmar prefers privatisation of water and telecom, airport privatisation, and targeted rather than universal social assistance. Market-centre is the nearest economic programme fit, without inferring its positions on all other axes.",
+      "sources": [
+        "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
+      ]
+    },
+    "gpm-lb-union-party": {
+      "preset": "nasserist",
+      "scope": "historical_party_document_proxy",
+      "program": "The 12th congress political document and party leader's published account directly affirm a Nasserist identity and Arab nationalism. Appropriate as a doctrinal proxy; the congress source pre-dates the cutoff substantially.",
+      "sources": [
+        "https://archive.assafir.com/ssr/10195060.html"
+      ]
+    }
+  }
+}

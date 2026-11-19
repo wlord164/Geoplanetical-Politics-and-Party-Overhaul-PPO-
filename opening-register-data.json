@@ -1,0 +1,1278 @@
+{
+  "cutoff": "2026-01-01",
+  "countries": {
+    "422": {
+      "chambers": {
+        "parl": {
+          "id": "LB-LC01",
+          "name": "National Assembly",
+          "statutorySeats": 128,
+          "rows": [
+            {
+              "id": "OTH",
+              "name": "Other deputies listed individually in the consultations",
+              "seats": 16,
+              "kind": "aggregate",
+              "heads": []
+            },
+            {
+              "id": "LF",
+              "name": "Strong Republic (Lebanese Forces-led bloc)",
+              "seats": 19,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-samirgeagea",
+                "reg-422-camilledorychamoun"
+              ],
+              "tag": "LF"
+            },
+            {
+              "id": "AMAL",
+              "name": "Development and Liberation (Amal Movement-led bloc)",
+              "seats": 15,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-nabihberri"
+              ]
+            },
+            {
+              "id": "HEZ",
+              "name": "Loyalty to the Resistance (Hezbollah-led bloc)",
+              "seats": 15,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-naimqassem"
+              ]
+            },
+            {
+              "id": "FPM",
+              "name": "Strong Lebanon (Free Patriotic Movement-led bloc)",
+              "seats": 13,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-gebranbassil"
+              ],
+              "tag": "FPM"
+            },
+            {
+              "id": "PSP",
+              "name": "Democratic Gathering (Progressive Socialist Party-led bloc)",
+              "seats": 8,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-taymourjumblatt"
+              ],
+              "tag": "PSP"
+            },
+            {
+              "id": "gpm-lb-national-moderation",
+              "name": "National Moderation Bloc",
+              "seats": 6,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-sajihattieh"
+              ]
+            },
+            {
+              "id": "gpm-lb-national-accord",
+              "name": "National Accord Bloc (remaining member)",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-faisalkarami"
+              ]
+            },
+            {
+              "id": "gpm-lb-independent-consultative-gathering",
+              "name": "Independent Consultative Gathering",
+              "seats": 4,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-ibrahimkanaan"
+              ]
+            },
+            {
+              "id": "KAT",
+              "name": "Lebanese Kataeb Party",
+              "seats": 4,
+              "kind": "political party",
+              "heads": [
+                "reg-422-samygemayel"
+              ]
+            },
+            {
+              "id": "gpm-lb-change-alliance",
+              "name": "Change Alliance Bloc (remaining member)",
+              "seats": 1,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-markdaou"
+              ]
+            },
+            {
+              "id": "gpm-lb-independent-national-bloc",
+              "name": "Independent National Bloc",
+              "seats": 3,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-sleimanfrangieh"
+              ]
+            },
+            {
+              "id": "gpm-lb-renewal",
+              "name": "Renewal Bloc (Tajaddod)",
+              "seats": 3,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-michelmoawad"
+              ]
+            },
+            {
+              "id": "gpm-lb-armenian-bloc",
+              "name": "Armenian Bloc (Tashnag-led parliamentary bloc)",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-albertbalabanian"
+              ]
+            },
+            {
+              "id": "gpm-lb-homeland-of-man-project-bloc",
+              "name": "Homeland of Man project bloc",
+              "seats": 2,
+              "kind": "parliamentary bloc",
+              "heads": [
+                "reg-422-neematfrem"
+              ]
+            },
+            {
+              "id": "gpm-lb-islamic-group",
+              "name": "Islamic Group (Al-Jama’a al-Islamiyya)",
+              "seats": 1,
+              "kind": "political party",
+              "heads": [
+                "reg-422-mohammedtakkoush",
+                "reg-422-imadalhout"
+              ]
+            },
+            {
+              "id": "gpm-vacant",
+              "name": "Vacant Western Bekaa–Rashaya seat",
+              "seats": 1,
+              "kind": "vacancy",
+              "heads": []
+            },
+            {
+              "id": "gpm-lb-popular-nasserist-organization",
+              "name": "Popular Nasserist Organization",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-osamasaad"
+              ]
+            },
+            {
+              "id": "gpm-lb-relebanon",
+              "name": "RELebanon",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-cynthiazarazir"
+              ]
+            },
+            {
+              "id": "gpm-lb-tahalof-watani",
+              "name": "Tahalof Watani",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-paulayacoubian"
+              ]
+            },
+            {
+              "id": "gpm-lb-lana",
+              "name": "Lana (For Us)",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-halimekaakour"
+              ]
+            },
+            {
+              "id": "gpm-lb-beirut-tuqawem",
+              "name": "Beirut Tuqawem (Beirut Resists)",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-ibrahimmneimneh"
+              ]
+            },
+            {
+              "id": "gpm-lb-taharrar",
+              "name": "Taharrar (Liberation)",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-firashamdan"
+              ]
+            },
+            {
+              "id": "gpm-lb-sahlona-wal-jabal",
+              "name": "Sahlona Wal-Jabal",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-yassineyassine"
+              ]
+            },
+            {
+              "id": "gpm-lb-taqaddom",
+              "name": "Taqaddom",
+              "seats": 2,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-markdaou",
+                "reg-422-najataounsaliba"
+              ]
+            },
+            {
+              "id": "gpm-lb-khat-ahmar",
+              "name": "Khat Ahmar",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-waddahsadek"
+              ]
+            },
+            {
+              "id": "gpm-lb-projects-association-bloc",
+              "name": "Association of Islamic Charitable Projects (Al-Ahbash)",
+              "seats": 2,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-houssameddinekarakira",
+                "reg-422-adnantraboulsi",
+                "reg-422-tahanaji"
+              ]
+            },
+            {
+              "id": "gpm-lb-union-party",
+              "name": "Union Party",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-hassanmourad"
+              ]
+            },
+            {
+              "id": "gpm-lb-dignity-movement",
+              "name": "Dignity Movement",
+              "seats": 1,
+              "kind": "documented_group",
+              "heads": [
+                "reg-422-faisalkarami"
+              ]
+            }
+          ]
+        }
+      },
+      "executive": {
+        "headOfState": "reg-422-josephaoun",
+        "headOfGovernment": "reg-422-nawafsalam"
+      }
+    },
+    "376": {
+      "chambers": {
+        "knesset": {
+          "id": "IL-LC01",
+          "name": "Knesset",
+          "statutorySeats": 120,
+          "rows": [
+            {
+              "id": "LIK",
+              "name": "Likud",
+              "seats": 32,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-benjaminnetanyahu"
+              ]
+            },
+            {
+              "id": "YA",
+              "name": "Yesh Atid",
+              "seats": 24,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-yairlapid"
+              ]
+            },
+            {
+              "id": "SHAS",
+              "name": "Shas",
+              "seats": 11,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-aryehderi"
+              ]
+            },
+            {
+              "id": "NU",
+              "name": "Blue and White - National Unity",
+              "seats": 8,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-bennygantz"
+              ]
+            },
+            {
+              "id": "UTJ",
+              "name": "United Torah Judaism (Yahadut Hatorah)",
+              "seats": 7,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-yitzhakgoldknopf",
+                "reg-376-moshegafni"
+              ],
+              "tag": "UTJ"
+            },
+            {
+              "id": "RZ",
+              "name": "Religious Zionism",
+              "seats": 7,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-bezalelsmotrich"
+              ]
+            },
+            {
+              "id": "YB",
+              "name": "Yisrael Beiteinu",
+              "seats": 6,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-avigdorlieberman"
+              ]
+            },
+            {
+              "id": "OTZ",
+              "name": "Otzma Yehudit",
+              "seats": 6,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-itamarbengvir"
+              ]
+            },
+            {
+              "id": "gpm-il-united-arab-list",
+              "name": "United Arab List (Ra’am)",
+              "seats": 5,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-mansourabbas"
+              ]
+            },
+            {
+              "id": "gpm-il-hadash-ta-al",
+              "name": "Hadash–Ta’al",
+              "seats": 5,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-aymanodeh",
+                "reg-376-ahmadtibi"
+              ]
+            },
+            {
+              "id": "DEM",
+              "name": "Labor parliamentary faction",
+              "seats": 4,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-yairgolan"
+              ]
+            },
+            {
+              "id": "gpm-il-new-hope",
+              "name": "New Hope - The United Right",
+              "seats": 4,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-gideonsaar"
+              ]
+            },
+            {
+              "id": "gpm-il-noam",
+              "name": "Noam",
+              "seats": 1,
+              "kind": "parliamentary faction",
+              "heads": [
+                "reg-376-avimaoz"
+              ]
+            }
+          ]
+        }
+      },
+      "executive": {
+        "headOfState": "reg-376-isaacherzog",
+        "headOfGovernment": "reg-376-benjaminnetanyahu"
+      }
+    }
+  },
+  "people": {
+    "reg-422-samirgeagea": {
+      "name": "Samir Geagea",
+      "role": "Party president",
+      "source": "https://lf.lebanese-forces.com/the-party/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-samirgeagea.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Samir_Geagea_7_(cropped).jpg",
+        "credit": "U.S. Department of State",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2019-03-22 11:48:40",
+        "originalSha256": "547048ed7a780e3367ad55464f911263dff8cd81ce6feb03f7bbf84c5345fcb4",
+        "packagedSha256": "547048ed7a780e3367ad55464f911263dff8cd81ce6feb03f7bbf84c5345fcb4",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-camilledorychamoun": {
+      "name": "Camille Dory Chamoun",
+      "role": "Party president",
+      "source": "https://apnews.com/article/02e78554633b221559f0b7b96a0ce8c4",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-camilledorychamoun.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://today.lorientlejour.com/article/1456972/chamoun-aware-his-party-bought-weapons-from-israel-during-civil-war.html",
+        "credit": "L’Orient Today, April 2025, photographed subject captioned in article.",
+        "license": null,
+        "licenseUrl": null,
+        "reuseEvidence": "reuse_unverified",
+        "rightsStatus": "Planning reference · reuse unverified",
+        "photoDate": null,
+        "originalSha256": "fdfcc9c4f2b260cd0e6cc9d0e6bb6eabe9423ceeac0caf8dc86b27dc46ed7ebc",
+        "packagedSha256": "fdfcc9c4f2b260cd0e6cc9d0e6bb6eabe9423ceeac0caf8dc86b27dc46ed7ebc",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-nabihberri": {
+      "name": "Nabih Berri",
+      "role": "Movement leader",
+      "source": "https://apnews.com/article/07a5b8943835cde156ad1fb1067443f3",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-nabihberri.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Nabih_Berri,_Speaker_of_the_Lebanese_Parliament_-_2024.jpg",
+        "credit": "© European Union, 2026",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2024-05-02 09:57:49",
+        "originalSha256": "debaf8637c40de90035500622ca91c915e6ca5baa41b0bb8ac91a335481adb26",
+        "packagedSha256": "debaf8637c40de90035500622ca91c915e6ca5baa41b0bb8ac91a335481adb26",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-naimqassem": {
+      "name": "Naim Qassem",
+      "role": "Secretary-general",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=s%2F2025%2F625&t=pdf",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-naimqassem.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Naim_Qassem_Visits_Tasnim_Office_(3x4_cropped).jpg",
+        "credit": "Tasnim News Agency",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2014-09-12",
+        "originalSha256": "e56bdb5ab9fe3f84e63271070e95a2d740f6236884eb551ee46439491376f360",
+        "packagedSha256": "e56bdb5ab9fe3f84e63271070e95a2d740f6236884eb551ee46439491376f360",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-gebranbassil": {
+      "name": "Gebran Bassil",
+      "role": "Party president",
+      "source": "https://www.thenationalnews.com/news/mena/2025/02/13/gebran-bassil-on-leading-the-positive-opposition-and-holding-lebanons-new-government-to-account/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-gebranbassil.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Visit_of_Gebran_Bassil_to_the_EC_-_P032956000201-452157_(cropped).jpg",
+        "credit": "© European Union, 2026",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2016-11-15 16:04:13",
+        "originalSha256": "27da77ed3a8948735f5b22493d78b35de7d822f8380879c0d86a5c1f1547de00",
+        "packagedSha256": "27da77ed3a8948735f5b22493d78b35de7d822f8380879c0d86a5c1f1547de00",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-taymourjumblatt": {
+      "name": "Taymour Jumblatt",
+      "role": "Party president",
+      "source": "https://www.lp.gov.lb/ContentRecordDetails?Id=33709",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-taymourjumblatt.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Minister_of_Health_of_Lebanon_Russia_meeting_(cropped_Taymour_Jumblatt).jpg",
+        "credit": "Council.gov.ru",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2015-07-10",
+        "originalSha256": "9b5490261754c0f100cff53d1db5ab27bc11c839349950e1a006870aed44f364",
+        "packagedSha256": "9b5490261754c0f100cff53d1db5ab27bc11c839349950e1a006870aed44f364",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-sajihattieh": {
+      "name": "Sajih Attieh",
+      "role": "Bloc representative in government consultations",
+      "source": "https://www.presidency.gov.lb/media/news/297",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-faisalkarami": {
+      "name": "Faisal Karami",
+      "role": "Dignity Movement head",
+      "source": "https://www.mtv.com.lb/en/News/Local/1531834/karami-broaches-overall-political-situation-with-australian-charg--d-affaires",
+      "evidence": "documented_party_head",
+      "roles": [
+        {
+          "role": "National Accord bloc leader documented in 2025",
+          "source": "https://www.lbcgroup.tv/news/press/762054/lbci-lebanon-articles/en",
+          "evidence": "representative_or_lead"
+        },
+        {
+          "role": "Dignity Movement head",
+          "source": "https://www.mtv.com.lb/en/News/Local/1531834/karami-broaches-overall-political-situation-with-australian-charg--d-affaires",
+          "evidence": "documented_party_head"
+        }
+      ],
+      "asset": "opening-register-portraits/reg-422-faisalkarami.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://nna-leb.gov.lb/en/news/126958/karami-congratulates-derian-on-the-successful-comp",
+        "credit": "National News Agency of Lebanon, portrait accompanying Karami’s public statement.",
+        "license": null,
+        "licenseUrl": null,
+        "reuseEvidence": "reuse_unverified",
+        "rightsStatus": "Planning reference · reuse unverified",
+        "photoDate": "Photo date unlisted",
+        "originalSha256": "0260bc98256e3e37574b9f9bc182631cac11cd9b24d820ad9a5edd898e33504d",
+        "packagedSha256": "0260bc98256e3e37574b9f9bc182631cac11cd9b24d820ad9a5edd898e33504d",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-ibrahimkanaan": {
+      "name": "Ibrahim Kanaan",
+      "role": "Bloc representative in government consultations",
+      "source": "https://www.lebanonfiles.com/2025/articles/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B3%D9%8A%D8%A7%D8%B3%D9%8A%D9%91%D8%A9/%D8%A8%D8%AF%D8%A1-%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%BA%D9%8A%D8%B1-%D8%A7%D9%84%D9%85%D9%84%D8%B2%D9%85%D8%A9-%D8%A7%D9%84%D9%8A%D9%83%D9%85-%D8%A3%D8%A8%D8%B1%D8%B2/",
+      "evidence": "representative_or_lead",
+      "asset": "opening-register-portraits/reg-422-ibrahimkanaan.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ibrahim_Kanaan,_MTV_Lebanon_-_Feb_7,_2020.jpg",
+        "credit": "MTV Lebanon",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2020-02-07",
+        "originalSha256": "ae53529962ecd329728fd84977ab729ec7356ed480165a2e311200592d992d99",
+        "packagedSha256": "ae53529962ecd329728fd84977ab729ec7356ed480165a2e311200592d992d99",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-samygemayel": {
+      "name": "Samy Gemayel",
+      "role": "Party president",
+      "source": "https://en.kataeb.org/articles/on-89th-anniversary-kataeb-renews-pledge-to-build-a-strong-and-sovereign-lebanese-state",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-samygemayel.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:EPP_Political_Assembly,_21_%26_22_November_2024_(54155884258)_(cropped).jpg",
+        "credit": "European People's Party",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2024-11-21 18:57",
+        "originalSha256": "60290789b5cbb6f781aacd4f83f03d94e93b7b110374e9874c244f3166e6bb41",
+        "packagedSha256": "60290789b5cbb6f781aacd4f83f03d94e93b7b110374e9874c244f3166e6bb41",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-markdaou": {
+      "name": "Mark Daou",
+      "role": "Bloc representative in government consultations",
+      "source": "https://www.lebanon24.com/news/lebanon/1306331/%D9%88%D9%82%D8%A7%D8%A6%D8%B9-%D8%A7%D9%84%D8%A5%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%86%D9%8A%D8%A7%D8%A8%D9%8A%D8%A9-%D8%BA%D9%8A%D8%B1-%D8%A7%D9%84%D9%85%D9%8F%D9%84%D8%B2%D9%85%D8%A9-%D8%A3%D8%A8%D8%B1%D8%B2-%D9%85%D9%88%D8%A7%D9%82%D9%81-%D8%A7%D9%84%D9%83%D8%AA%D9%84-%D9%88%D8%A7%D9%84%D9%86%D9%88%D8%A7%D8%A8",
+      "evidence": "representative_or_lead",
+      "roles": [
+        {
+          "role": "Bloc representative in government consultations",
+          "source": "https://www.lebanon24.com/news/lebanon/1306331/%D9%88%D9%82%D8%A7%D8%A6%D8%B9-%D8%A7%D9%84%D8%A5%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%86%D9%8A%D8%A7%D8%A8%D9%8A%D8%A9-%D8%BA%D9%8A%D8%B1-%D8%A7%D9%84%D9%85%D9%8F%D9%84%D8%B2%D9%85%D8%A9-%D8%A3%D8%A8%D8%B1%D8%B2-%D9%85%D9%88%D8%A7%D9%82%D9%81-%D8%A7%D9%84%D9%83%D8%AA%D9%84-%D9%88%D8%A7%D9%84%D9%86%D9%88%D8%A7%D8%A8",
+          "evidence": "representative_or_lead"
+        },
+        {
+          "role": "Elected party representative",
+          "source": "https://actionresearchassociates.org/wp-content/uploads/2023/03/DRI-LEB-Mapping-Full-Report.pdf",
+          "evidence": "representative_or_lead"
+        }
+      ]
+    },
+    "reg-422-sleimanfrangieh": {
+      "name": "Sleiman Frangieh",
+      "role": "Party leader",
+      "source": "https://today.lorientlejour.com/article/1488361/frangieh-expresses-support-for-joseph-aouns-stance-on-preserving-security-and-stability.html",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-sleimanfrangieh.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Suleiman_Frangieh_official_portrait_(cropped).jpg",
+        "credit": "Unknown authorUnknown author",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "1970",
+        "originalSha256": "b8cc49367b7bed3721c49360c30df1b06b092d13854506c281318b5c25e37831",
+        "packagedSha256": "b8cc49367b7bed3721c49360c30df1b06b092d13854506c281318b5c25e37831",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-michelmoawad": {
+      "name": "Michel Moawad",
+      "role": "President of the Independence Movement and bloc co-founder. Bloc status under review",
+      "source": "https://today.lorientlejour.com/article/1453135/after-breaking-apart-michel-moawads-bloc-towards-a-renewal.html",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-michelmoawad.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:MICHEL_MOAWAD_-_PHOTO_2021.jpg",
+        "credit": "Kevin.J.Awkar",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2021-07-12",
+        "originalSha256": "19823820d6000be3a103b102515f14fdbcd85e929ce88675466db492eb424090",
+        "packagedSha256": "19823820d6000be3a103b102515f14fdbcd85e929ce88675466db492eb424090",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-albertbalabanian": {
+      "name": "Albert Balabanian",
+      "role": "Lebanon secretary-general",
+      "source": "https://today.lorientlejour.com/article/1451603/tashnag-elects-albert-balabanian-new-secretary-general.html",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-albertbalabanian.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://today.lorientlejour.com/article/1451603/tashnag-elects-albert-balabanian-new-secretary-general.html",
+        "credit": "Hagop Pakradounian / L’Orient Today, 18 February 2025. Crop of subject captioned at left.",
+        "license": null,
+        "licenseUrl": null,
+        "reuseEvidence": "reuse_unverified",
+        "rightsStatus": "Planning reference · reuse unverified",
+        "photoDate": null,
+        "originalSha256": "8df5c92b1b69efc3618f10adfd27f18897e59fe0682aec3385cb97dbb67e3e6e",
+        "packagedSha256": "8df5c92b1b69efc3618f10adfd27f18897e59fe0682aec3385cb97dbb67e3e6e",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-neematfrem": {
+      "name": "Neemat Frem",
+      "role": "Executive council president of Project Watan",
+      "source": "https://projectwatan.com/ar/%D9%85%D9%86-%D9%86%D8%AD%D9%86",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-neematfrem.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:MP_Neemat_Frem_Picture.jpg",
+        "credit": "AlternativeTC",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2022-06-20",
+        "originalSha256": "230a06229c1c8374269ecf8882887f2ad389d6d301009027bbc6286c1238243e",
+        "packagedSha256": "230a06229c1c8374269ecf8882887f2ad389d6d301009027bbc6286c1238243e",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-mohammedtakkoush": {
+      "name": "Mohammed Takkoush",
+      "role": "Secretary-general of the political organization",
+      "source": "https://apnews.com/article/f9fb0e01e8603cb98363b3263928bd69",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-mohammedtakkoush.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://www.independent.co.uk/news/israel-ap-hezbollah-hamas-sunni-b2518921.html",
+        "credit": "Bilal Hussein / Associated Press, Beirut interview.",
+        "license": null,
+        "licenseUrl": null,
+        "reuseEvidence": "reuse_unverified",
+        "rightsStatus": "Planning reference · reuse unverified",
+        "photoDate": "Photo 26 March 2024",
+        "originalSha256": "7b6f03bae5df426f5754c6015e1cd9e567b89fbf550fc06f82a5cef4c0c28d1a",
+        "packagedSha256": "7b6f03bae5df426f5754c6015e1cd9e567b89fbf550fc06f82a5cef4c0c28d1a",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-imadalhout": {
+      "name": "Imad al-Hout",
+      "role": "Sole parliamentary representative",
+      "source": "https://carnegieendowment.org/middle-east/diwan/2026/02/the-jamaa-al-islamiyya-at-a-crossroads",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-osamasaad": {
+      "name": "Osama Saad",
+      "role": "Elected party representative",
+      "source": "https://static.addiyar.com/storage/pdfs/2025/5680_file1_87085cc14a3d2179b46af755c4687389.pdf",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-cynthiazarazir": {
+      "name": "Cynthia Zarazir",
+      "role": "Elected group representative",
+      "source": "https://actionresearchassociates.org/wp-content/uploads/2023/03/DRI-LEB-Mapping-Full-Report.pdf",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-paulayacoubian": {
+      "name": "Paula Yacoubian",
+      "role": "Elected movement representative",
+      "source": "https://www.newarab.com/features/reform-and-rights-mp-paula-yacoubians-vision-lebanon",
+      "evidence": "representative_or_lead",
+      "asset": "opening-register-portraits/reg-422-paulayacoubian.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Paula_Yacoubian,_It%27s_About_Time,_MTV_Lebanon_-_Feb_2,_2020.jpg",
+        "credit": "mtvlebanon",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "reuseEvidence": "license_listed",
+        "rightsStatus": null,
+        "photoDate": "2020-02-02",
+        "originalSha256": "ba5754f420dbf6143affb7ac26dc9a79e24d596b6aa41730e3d3b19b8c1cba74",
+        "packagedSha256": "ba5754f420dbf6143affb7ac26dc9a79e24d596b6aa41730e3d3b19b8c1cba74",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-halimekaakour": {
+      "name": "Halimé Kaakour",
+      "role": "Elected party representative",
+      "source": "https://www.cldh-lebanon.org/OurBlog/Artical/2067",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-ibrahimmneimneh": {
+      "name": "Ibrahim Mneimneh",
+      "role": "Elected movement representative",
+      "source": "https://actionresearchassociates.org/wp-content/uploads/2023/03/DRI-LEB-Mapping-Full-Report.pdf",
+      "evidence": "representative_or_lead",
+      "asset": "opening-register-portraits/reg-422-ibrahimmneimneh.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:MP_Ibrahim_Mneimneh.jpg",
+        "credit": "IMteam2022",
+        "license": "CC0",
+        "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "reuseEvidence": "license_listed",
+        "rightsStatus": null,
+        "photoDate": "2024-02-13",
+        "originalSha256": "488cb41dcba390871b164eeb94d73f7a7f8e5b436dd050d4506e71f66bb928b6",
+        "packagedSha256": "488cb41dcba390871b164eeb94d73f7a7f8e5b436dd050d4506e71f66bb928b6",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-firashamdan": {
+      "name": "Firas Hamdan",
+      "role": "Elected movement representative",
+      "source": "https://actionresearchassociates.org/wp-content/uploads/2023/03/DRI-LEB-Mapping-Full-Report.pdf",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-yassineyassine": {
+      "name": "Yassine Yassine",
+      "role": "Elected list representative",
+      "source": "https://actionresearchassociates.org/wp-content/uploads/2023/03/DRI-LEB-Mapping-Full-Report.pdf",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-najataounsaliba": {
+      "name": "Najat Aoun Saliba",
+      "role": "Elected party representative",
+      "source": "https://www.cldh-lebanon.org/OurBlog/Artical/2067",
+      "evidence": "representative_or_lead",
+      "asset": "opening-register-portraits/reg-422-najataounsaliba.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Najat_Aoun_Saliba_World_Intellectual_Property_Day_2023_%22Women_in_Science_%E2%80%93_Shaping_the_Future%22_Roundtable_(52853220509)_(cropped).jpg",
+        "credit": "World Intellectual Property Organization",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "reuseEvidence": "license_listed",
+        "rightsStatus": null,
+        "photoDate": "2023-04-26 14:18",
+        "originalSha256": "ddc658527b5515c8e32dd0bfb99d29405be2a3746bdd3423747f22ea229148e6",
+        "packagedSha256": "ddc658527b5515c8e32dd0bfb99d29405be2a3746bdd3423747f22ea229148e6",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-waddahsadek": {
+      "name": "Waddah Sadek",
+      "role": "Elected movement representative",
+      "source": "https://actionresearchassociates.org/wp-content/uploads/2023/03/DRI-LEB-Mapping-Full-Report.pdf",
+      "evidence": "representative_or_lead",
+      "asset": "opening-register-portraits/reg-422-waddahsadek.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Waddah_Sadek.jpg",
+        "credit": "Bellionby",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed",
+        "rightsStatus": null,
+        "photoDate": "2022-07-18",
+        "originalSha256": "2c21bd1fe4e2ed0b31c46c50c252cfb5e0c1f87f09166f4450dd2611767a3ca8",
+        "packagedSha256": "2c21bd1fe4e2ed0b31c46c50c252cfb5e0c1f87f09166f4450dd2611767a3ca8",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-houssameddinekarakira": {
+      "name": "Houssameddine Karakira",
+      "role": "President of the association",
+      "source": "https://today.lorientlejour.com/article/1462682/who-are-the-project-advocates-the-growing-lebanese-sunni-movement.html",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-422-houssameddinekarakira.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://www.elnashra.com/news/show/994465/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%AD%D8%B3%D8%A7%D9%85-%D9%82%D8%B1%D8%A7%D9%82%D9%8A%D8%B1%D8%A9%3A-%D9%86%D8%B4%D9%83%D8%B1%D9%83%D9%85-%D9%84%D9%85%D8%A7-%D8%A8%D8%B0%D9%84%D8%AA%D9%85-%D9%85%D8%A4%D8%AE%D8%B1%D8%A7-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D9%8A%D8%A9",
+        "credit": "Elnashra, archived coverage of the association president.",
+        "license": null,
+        "licenseUrl": null,
+        "reuseEvidence": "reuse_unverified",
+        "rightsStatus": "Planning reference · reuse unverified",
+        "photoDate": null,
+        "originalSha256": "45b1337941f52297423b0991153ac3caff664dda92db774d81bb63dff09a81fc",
+        "packagedSha256": "45b1337941f52297423b0991153ac3caff664dda92db774d81bb63dff09a81fc",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-adnantraboulsi": {
+      "name": "Adnan Traboulsi",
+      "role": "Elected association representative",
+      "source": "https://www.kawalees.net/?p=337983",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-tahanaji": {
+      "name": "Taha Naji",
+      "role": "Elected association representative and northern branch director",
+      "source": "https://www.kawalees.net/?p=337983",
+      "evidence": "representative_or_lead"
+    },
+    "reg-422-hassanmourad": {
+      "name": "Hassan Mourad",
+      "role": "Elected party representative",
+      "source": "https://www.skeyesmedia.org/documents/bo_filemanager/Not-Walking-The-Talk.pdf",
+      "evidence": "representative_or_lead",
+      "asset": "opening-register-portraits/reg-422-hassanmourad.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Hassan_Mourad_.jpg",
+        "credit": "Almrad",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed",
+        "rightsStatus": null,
+        "photoDate": "2010-10-22",
+        "originalSha256": "3d5ece1ab7f8a63dc1565d38b56c43a41c63434f157acc4ad6db566bbc257aa0",
+        "packagedSha256": "3d5ece1ab7f8a63dc1565d38b56c43a41c63434f157acc4ad6db566bbc257aa0",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-josephaoun": {
+      "name": "Joseph Aoun",
+      "role": "President",
+      "source": "https://www.presidency.gov.lb/presidency/3",
+      "evidence": "official source checked",
+      "asset": "opening-register-portraits/reg-422-josephaoun.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:2025_Joseph_Aoun_(cropped).jpg",
+        "credit": "U.S. Department of State",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2025-09-22 17:43:11",
+        "originalSha256": "bd1fe9be0f59d7bb829159b5516874d173c0fc06459b75047886ef319ad0831a",
+        "packagedSha256": "bd1fe9be0f59d7bb829159b5516874d173c0fc06459b75047886ef319ad0831a",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-422-nawafsalam": {
+      "name": "Nawaf Salam",
+      "role": "Prime Minister",
+      "source": "https://www.presidency.gov.lb/presidency/3",
+      "evidence": "official source checked",
+      "asset": "opening-register-portraits/reg-422-nawafsalam.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Nawaf_Salam.jpg",
+        "credit": "ALGÉRIE PRESSE SERVICE",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2025-02-09",
+        "originalSha256": "0067b33ff1c7f7bfe680a5d5059fc3938fce9a68a4970548c931be2c3e560dae",
+        "packagedSha256": "0067b33ff1c7f7bfe680a5d5059fc3938fce9a68a4970548c931be2c3e560dae",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-benjaminnetanyahu": {
+      "name": "Benjamin Netanyahu",
+      "role": "Prime Minister",
+      "source": "https://www.gov.il/en/departments/people/benjamin_netanyahu",
+      "evidence": "official office source; cutoff check pending",
+      "roles": [
+        {
+          "role": "Party chairman",
+          "source": "https://www.likud.org.il/en/about-the-likud",
+          "evidence": "documented_party_head"
+        },
+        {
+          "role": "Prime Minister",
+          "source": "https://www.gov.il/en/departments/people/benjamin_netanyahu",
+          "evidence": "official office source; cutoff check pending"
+        }
+      ],
+      "asset": "opening-register-portraits/reg-376-benjaminnetanyahu.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Benjamin_Netanyahu,_February_2023_(cropped)(b).jpg",
+        "credit": "Avi Ohayon / Government Press Office of Israel",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2023-02-01",
+        "originalSha256": "3ae5a184a148e900a5b89caaea697cfd3de7f20b783dec80f5230ddd28c1bd98",
+        "packagedSha256": "3ae5a184a148e900a5b89caaea697cfd3de7f20b783dec80f5230ddd28c1bd98",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-yairlapid": {
+      "name": "Yair Lapid",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/EN/News/PressReleases/Pages/press13125f.aspx",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-yairlapid.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Yair_Lapid_(D1237-011).jpg",
+        "credit": "Avi Ohayon / Government Press Office of Israel",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken on 30 June 2022",
+        "originalSha256": "8b69e234a7ace32c5a6e6d5273fdf1077931d6fbb1a062500522dbcd45c0ff65",
+        "packagedSha256": "8b69e234a7ace32c5a6e6d5273fdf1077931d6fbb1a062500522dbcd45c0ff65",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-aryehderi": {
+      "name": "Aryeh Deri",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/EN/News/PressReleases/Pages/press161122q.aspx",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-aryehderi.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:%D7%90%D7%A8%D7%99%D7%94_%D7%93%D7%A8%D7%A2%D7%99_2.jpg",
+        "credit": "© \"רווח הפקות\"",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2018-05-25 11:25:33",
+        "originalSha256": "544b09351cdb3dbd35ab0c7490ad2e570f501370d0c96884486d7ae3972ff52e",
+        "packagedSha256": "544b09351cdb3dbd35ab0c7490ad2e570f501370d0c96884486d7ae3972ff52e",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-bennygantz": {
+      "name": "Benny Gantz",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/EN/mk/apps/faction/faction-lobby?KnessetID=25",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-bennygantz.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Israeli_Minister_Benny_Gantz_at_the_Department_of_State_in_Washington,_D.C._on_March_5,_2024_(cropped).jpg",
+        "credit": "U.S. Department of State",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2024-03-05 11:11:46",
+        "originalSha256": "bd426d5a7f2931eb9278877a31c44f4b7425ba500eb3631ab2ae7efa7e9f133d",
+        "packagedSha256": "bd426d5a7f2931eb9278877a31c44f4b7425ba500eb3631ab2ae7efa7e9f133d",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-yitzhakgoldknopf": {
+      "name": "Yitzhak Goldknopf",
+      "role": "Party leader",
+      "source": "https://israelpolicyforum.org/wp-content/uploads/2023/03/Israels-25th-Knesset-37th-Government.pdf",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-yitzhakgoldknopf.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Yitzchak_Goldknopf_1.jpg",
+        "credit": "Avi Ohayon / Government Press Office of Israel",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2023-01-23 10:00:32",
+        "originalSha256": "3baceb5feab898f83c0d02bfe001007b06fc29fb40cfd811228aecfc9feb2170",
+        "packagedSha256": "3baceb5feab898f83c0d02bfe001007b06fc29fb40cfd811228aecfc9feb2170",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-moshegafni": {
+      "name": "Moshe Gafni",
+      "role": "Party leader",
+      "source": "https://socsci4.tau.ac.il/mu2/ines/wp-content/uploads/sites/4/2025/07/EN_Questionnaire_March_2025_Final.pdf",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-moshegafni.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Moshe_Gafni_(E32J1400).jpg",
+        "credit": "Nati Shohat / Knesset Archives",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken on 5 February 2013, 15:36",
+        "originalSha256": "db0ee84b1eee8739bb200d0785ba8bf1f314c5ec5c35b3d0d2c2eedc120229d0",
+        "packagedSha256": "db0ee84b1eee8739bb200d0785ba8bf1f314c5ec5c35b3d0d2c2eedc120229d0",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-bezalelsmotrich": {
+      "name": "Bezalel Smotrich",
+      "role": "Party chairman",
+      "source": "https://www.cbs.gov.il/he/publications/DocLib/2025/ShnatonElectionsTheKnessetandGovernment.27/st27_01.pdf",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-bezalelsmotrich.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Bezalel_Smotrich.jpg",
+        "credit": "Avi Ohayon / Government Press Office of Israel",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2023-02-20 10:54:36",
+        "originalSha256": "1184ed8160fd22019b499d25c95724e8b5f9de71dd0231772382c320d5e07f0f",
+        "packagedSha256": "1184ed8160fd22019b499d25c95724e8b5f9de71dd0231772382c320d5e07f0f",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-avigdorlieberman": {
+      "name": "Avigdor Lieberman",
+      "role": "Party leader",
+      "source": "https://www.cbs.gov.il/he/publications/DocLib/2025/ShnatonElectionsTheKnessetandGovernment.27/st27_01.pdf",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-avigdorlieberman.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Avigdor_Lieberman_2017.jpg",
+        "credit": "Jim Mattis",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2017-03-07 13:15",
+        "originalSha256": "46822c9829cc925ff29b83090c7bf416b4ffa205a1c4f57c9966087b3d86cd44",
+        "packagedSha256": "46822c9829cc925ff29b83090c7bf416b4ffa205a1c4f57c9966087b3d86cd44",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-itamarbengvir": {
+      "name": "Itamar Ben-Gvir",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/EN/mk/apps/faction/faction-lobby?KnessetID=25",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-itamarbengvir.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Itamar_Ben_Gvir_3_(cropped).jpg",
+        "credit": "אלון נוריאל",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken in 2022",
+        "originalSha256": "3374cbbe55591a0276a24f6627a122136af2ab1542a0bd55aa081e9d55c3915c",
+        "packagedSha256": "3374cbbe55591a0276a24f6627a122136af2ab1542a0bd55aa081e9d55c3915c",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-mansourabbas": {
+      "name": "Mansour Abbas",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/EN/News/PressReleases/Pages/press161122q.aspx",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-mansourabbas.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Mansour_Abbas_(ISH_7152).jpg",
+        "credit": "Itzhak Harari / Knesset Archives",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken on 29 April 2019, 11:58",
+        "originalSha256": "1236683bc0fcc5a648711ad95b30d8306171d869f91d0fd7adbab00a5ca5894d",
+        "packagedSha256": "1236683bc0fcc5a648711ad95b30d8306171d869f91d0fd7adbab00a5ca5894d",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-aymanodeh": {
+      "name": "Ayman Odeh",
+      "role": "Party leader at the opening date",
+      "source": "https://main.knesset.gov.il/EN/mk/apps/faction/faction-lobby?KnessetID=25",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-aymanodeh.png",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ayman_Odeh_2021.png",
+        "credit": "אמיר דיב - Amir Deeb",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2021",
+        "originalSha256": "6384514345ca29e8e4f26df3025bcd46b84a841e0534b3590f0917ec0fa43ef7",
+        "packagedSha256": "6384514345ca29e8e4f26df3025bcd46b84a841e0534b3590f0917ec0fa43ef7",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-ahmadtibi": {
+      "name": "Ahmad Tibi",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/en/apps/mklobby/main/current-knesset-mks/all-current-mks",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-ahmadtibi.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Ahmad_Tibi_(00350326).jpg",
+        "credit": "Knesset Archives",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "from 7 June 1999 until 15 November 2024",
+        "originalSha256": "970715fca39097d6fdf33ed20314b1286459652c661172741e1d4578777f6cce",
+        "packagedSha256": "970715fca39097d6fdf33ed20314b1286459652c661172741e1d4578777f6cce",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-yairgolan": {
+      "name": "Yair Golan",
+      "role": "Party chair",
+      "source": "https://democrats.org.il/en/home-2/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-yairgolan.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Yair_Golan_(SHL_9404).jpg",
+        "credit": "Shlomi Amsalem / Knesset Archives",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken on 6 April 2021, 13:48",
+        "originalSha256": "bf3dd3efbbbd804f92e9412001c780c3ab4657edd8bf884e463bc79df8d487ea",
+        "packagedSha256": "bf3dd3efbbbd804f92e9412001c780c3ab4657edd8bf884e463bc79df8d487ea",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-gideonsaar": {
+      "name": "Gideon Sa’ar",
+      "role": "New Hope party leader",
+      "source": "https://www.timesofisrael.com/liveblog_entry/saars-new-hope-signs-agreement-to-merge-with-netanyahus-likud-in-next-elections/",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-gideonsaar.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:2025_Gideon_Sa%E2%80%99ar_(cropped).jpg",
+        "credit": "U.S. Department of State",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2025-12-10 11:45:04",
+        "originalSha256": "ba6fd88fefb8c6a90ba0153e0b4249cb9e055a7aaacbf29931bbb69995d993d3",
+        "packagedSha256": "ba6fd88fefb8c6a90ba0153e0b4249cb9e055a7aaacbf29931bbb69995d993d3",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-avimaoz": {
+      "name": "Avi Maoz",
+      "role": "Party leader",
+      "source": "https://main.knesset.gov.il/EN/mk/apps/faction/faction-lobby?KnessetID=25",
+      "evidence": "documented_party_head",
+      "asset": "opening-register-portraits/reg-376-avimaoz.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Avi_Maoz_(SHL_7964).jpg",
+        "credit": "Shlomi Amsalem / Knesset Archives",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken on 5 April 2022",
+        "originalSha256": "38f10db61d2cdc87e362e2a05a2fb997537e9858d5737561c62faf6e12f822a1",
+        "packagedSha256": "38f10db61d2cdc87e362e2a05a2fb997537e9858d5737561c62faf6e12f822a1",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-isaacherzog": {
+      "name": "Isaac Herzog",
+      "role": "President",
+      "source": "https://www.president.gov.il/en/",
+      "evidence": "official source checked",
+      "asset": "opening-register-portraits/reg-376-isaacherzog.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Isaac_Herzog,_July_2021_(D1233-049).JPG",
+        "credit": "Avi Ohayon / Government Press Office of Israel",
+        "license": "CC BY-SA 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "Taken on 11 July 2021 13:22:36.003",
+        "originalSha256": "6fd787422dc8a34c578f247532253b23719a4d97708edf8165c92c4412b7f457",
+        "packagedSha256": "6fd787422dc8a34c578f247532253b23719a4d97708edf8165c92c4412b7f457",
+        "convertedToJpeg": false
+      }
+    }
+  }
+}

@@ -13,16 +13,18 @@ const inferredCurrentPresets = {
 
 function gpmPartyIdentity(party, foundingPresetId) {
   const saved = party?.gpmIdeologyIdentity?.version === 1 ? party.gpmIdeologyIdentity : null;
-  const presetId = saved?.declared?.id ?? foundingPresetId ?? party?.nameDesc?.gpmDeclaredIdeology ?? party?.nameDesc?.gpmIdeologyPreset;
+  const opening = party?.nameDesc?.gpmOpeningIdeology;
+  const presetId = saved?.declared?.id ?? foundingPresetId ?? party?.nameDesc?.gpmDeclaredIdeology ?? party?.nameDesc?.gpmIdeologyPreset ?? opening;
+  const fromRegister = Boolean(opening && opening === presetId && foundingPresetId === undefined);
   const preset = Object.hasOwn(gpmPresets, presetId) ? gpmPresets[presetId] : null;
   const authored = preset?.congressDoctrine;
   const explicitFoundingChoice = !saved && foundingPresetId !== undefined;
   // Current founding choices supply direct evidence. Older saves may carry only a preset hint.
-  const doctrine = authored && (saved?.congressDoctrine || saved?.declared?.source === "founding-choice" || explicitFoundingChoice || gpmAxes.every(({ id }, index) =>
+  const doctrine = authored && (saved?.congressDoctrine || saved?.declared?.source === "founding-choice" || explicitFoundingChoice || fromRegister || gpmAxes.every(({ id }, index) =>
     Math.abs(party?.ideology?.[id] - preset.values[index] / 100) <= .2))
     ? { family: authored.family, platform: authored.platform, wings: [...authored.wings] } : null;
   const declared = preset ? { id: presetId, label: preset.label, ideologyLabel: preset.ideologyLabel || preset.label,
-    source: saved?.declared?.source ?? "founding-choice" } : saved?.declared ?? null;
+    source: saved?.declared?.source ?? (fromRegister ? "opening-register" : "founding-choice") } : saved?.declared ?? null;
   const estimate = !declared ? estimatePartyIdeology(party?.ideology) : null;
   const estimatePreset = estimate && Object.hasOwn(gpmInferredCurrentPresets, estimate) ? gpmInferredCurrentPresets[estimate] : null;
   const compatibility = estimatePreset ? gpmPresets[estimatePreset].congressDoctrine : null;
@@ -36,7 +38,7 @@ function gpmPartyIdentity(party, foundingPresetId) {
     currentCompatibility,
     ...(doctrine ? { congressDoctrine: doctrine } : {}),
     positions: Object.fromEntries(Object.entries(preset?.positions || {}).map(([key, position]) =>
-      [key, { ...position, source: "founding-platform" }])),
+      [key, { ...position, source: fromRegister ? "register-platform" : "founding-platform" }])),
   };
 }
 
