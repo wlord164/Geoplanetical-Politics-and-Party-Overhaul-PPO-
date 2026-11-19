@@ -76,10 +76,18 @@ function readMedia({ file, source, credit, license, ...details }, actorId, asset
   return { ...details, source, credit, license, asset: readAsset(file, path[1], assets) };
 }
 
+function readHistoricalOfficial(person, id, office, assets) {
+  if (!person?.name || !person.role || !/^https:\/\//.test(person.source) ||
+      (office === "representative" && !person.portrait)) {
+    throw new Error("Invalid historical leader: " + id + "/" + office);
+  }
+  return { ...person, ...(person.portrait ? { portrait: readMedia(person.portrait, id, assets) } : {}) };
+}
+
 function readIdentities(assets) {
   const identities = Object.create(null);
   const convention = JSON.parse(readFileSync(join(__dirname, "historical-flag-convention.json"), "utf8"));
-  for (const name of ["sudan", "world", "independence", "opening"]) {
+  for (const name of ["sudan", "world", "independence", "opening", "register-factions"]) {
     const file = join(__dirname, `historical-identities-${name}.json`);
     const records = JSON.parse(readFileSync(file, "utf8"));
     for (const [id, record] of Object.entries(records)) {
@@ -87,13 +95,23 @@ function readIdentities(assets) {
       for (const office of ["leader", "headOfState", "headOfGovernment", "representative"]) {
         const person = record[office];
         if (!person) continue;
-        if (Object.hasOwn(identity, office)) throw new Error("Duplicate historical identity: " + id + "/" + office);
-        if (!person.name || !person.role || !/^https:\/\//.test(person.source) ||
-            (office === "representative" && !person.portrait)) {
-          throw new Error("Invalid historical leader: " + id + "/" + office);
+        const entry = readHistoricalOfficial(person, id, office, assets);
+        const prior = identity[office];
+        if (prior) {
+          if (name !== "register-factions" || entry.name !== prior.name || prior.portrait || !entry.portrait) {
+            throw new Error("Duplicate historical identity: " + id + "/" + office);
+          }
+          prior.portrait = entry.portrait;
+        } else {
+          identity[office] = entry;
         }
-        identity[office] = { ...person,
-          ...(person.portrait ? { portrait: readMedia(person.portrait, id, assets) } : {}) };
+      }
+      if (record.additionalOfficials) {
+        if (!Array.isArray(record.additionalOfficials) || !record.additionalOfficials.length || identity.additionalOfficials) {
+          throw new Error("Invalid historical additional officials: " + id);
+        }
+        identity.additionalOfficials = record.additionalOfficials.map(person =>
+          readHistoricalOfficial(person, id, "additional official", assets));
       }
       for (const flag of ["flag", "administrationFlag", "victoryFlag"]) {
         if (!record[flag]) continue;
@@ -106,7 +124,7 @@ function readIdentities(assets) {
   for (const [id, key] of Object.entries(convention.actors)) {
     if (!flags[key]) throw new Error("Unknown historical flag convention: " + id);
     const identity = identities[id] ??= {};
-    identity.flag = flags[key];
+    identity.flag ??= flags[key];
   }
   return identities;
 }

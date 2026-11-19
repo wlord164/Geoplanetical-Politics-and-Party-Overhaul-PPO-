@@ -1,113 +1,1619 @@
 {
-  "376": {
-    "LIK": {
-      "preset": "nationalConservative",
-      "scope": "official_party_programme_proxy",
-      "program": "Likud combines the Revisionist Zionist tradition and Jewish national identity with private enterprise, Jewish heritage and social equality. Menachem Begin's Herut and the Liberal Party were leading components of its founding alliance. The relative weight on the gameplay axes is an approximation.",
-      "sources": [
-        "https://www.likud.org.il/en/about-the-likud"
-      ]
-    },
-    "YA": {
-      "preset": "liberalCentre",
-      "scope": "official_party_programme_proxy",
-      "program": "Yesh Atid's programme pairs civil liberties, pluralism and civil marriage with a centrist approach to the economy and public services. It is a secular liberal-centrist fit.",
-      "sources": [
-        "https://ru.yeshatid.org.il/program/",
-        "https://ru.yeshatid.org.il/wp-content/uploads/2021/02/%D7%A4%D7%A8%D7%A7-8-new.pdf"
-      ]
-    },
-    "SHAS": {
-      "preset": "religiousTraditionalist",
-      "scope": "platform_inference",
-      "program": "Shas explicitly represents the Sephardi Torah tradition associated with Rabbi Ovadia Yosef. Aryeh Deri's public platform adds an anti-poverty plan and expanded support for low-income households. The preset represents the religious tradition and does not resolve the party's separate welfare commitments.",
-      "sources": [
-        "https://main.knesset.gov.il/mk/government/pages/coalitionagreements.aspx",
-        "https://www.youtube.com/watch?v=uEuo516PyPQ",
-        "https://m.knesset.gov.il/mk/government/Documents/CA37-ShasRoles.pdf"
-      ]
-    },
-    "NU": {
+  "008": {
+    "PSD": {
       "preset": "mixedEconomyCentre",
-      "scope": "historical_party_document_proxy",
-      "program": "Benny Gantz's continuing Blue and White faction derives from National Unity, the alliance founded by Gantz's Blue and White and Gideon Sa'ar's New Hope in 2022, also joined by Gadi Eisenkot. Its founding platform balances security and civic equality with free enterprise, social justice and equal educational opportunity. New Hope's later departure warrants its own separate party row.",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 20.6619,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Social Democratic Party of Albania",
+      "sourceRow": "14",
       "sources": [
-        "https://kachollavan.org.il/wp-content/uploads/2022/09/principles.pdf",
-        "https://m.knesset.gov.il/EN/mk/apps/faction/general/split-merge"
+        "https://doi.org/10.7910/DVN/WMGTNS"
       ]
     },
-    "UTJ": {
-      "preset": "religiousTraditionalist",
-      "scope": "common_bloc_programme",
-      "program": "The common priorities of Agudat Yisrael and Degel HaTorah in their United Torah Judaism coalition agreement include Haredi schools, yeshivas and preservation of Orthodox arrangements in public life. This is the shared Ashkenazi Haredi tradition across the two member parties.",
-      "sources": [
-        "https://www.idi.org.il/media/18946/%D7%99%D7%94%D7%93%D7%95%D7%AA-%D7%94%D7%AA%D7%95%D7%A8%D7%94.pdf",
-        "https://m.knesset.gov.il/mk/government/Documents/CA35-Likud-YT-130520.pdf"
-      ]
-    },
-    "RZ": {
-      "preset": "nationalConservative",
-      "scope": "official_party_programme_proxy",
-      "program": "Bezalel Smotrich's Religious Zionism pairs a Jewish-national and Torah-oriented identity with expanded Israeli sovereignty and a programme for private enterprise and competition. The fit covers the parliamentary faction after Otzma and Noam separated.",
-      "sources": [
-        "https://zionutdatit.org.il/en/party-platform/",
-        "https://m.knesset.gov.il/mk/government/Documents/CA37-RZ.pdf",
-        "https://hashiloach.org.il/israels-decisive-plan/"
-      ]
-    },
-    "YB": {
+    "gpm-008-party-for-justice-integratio-de631c7": {
       "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 23.6405,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Party for Justice, Integration and Unity",
+      "sourceRow": "13",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "036": {
+    "ALP": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 17.903,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Australian Labor Party",
+      "sourceRow": "31",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "GRN": {
+      "preset": "green",
+      "program": "The Australian Greens' charter specifies ecological sustainability, grassroots democracy, social justice and peace.",
       "scope": "official_party_programme_proxy",
-      "program": "Avigdor Lieberman's Yisrael Beiteinu combines a secular nationalist security agenda with civil marriage, local autonomy over Sabbath opening and market-oriented economics. Liberal Conservatism is the existing PPO proxy. Its base social-conservatism score only partly reflects the party's secular stance.",
       "sources": [
-        "https://en.idi.org.il/media/13926/%D7%99%D7%A9%D7%A8%D7%90%D7%9C-%D7%91%D7%99%D7%AA%D7%A0%D7%95.pdf",
-        "https://m.knesset.gov.il/mk/government/Documents/CA36-YB.pdf",
-        "https://beytenu.org.il/party-platform-israel-beytenu-next-government/"
+        "https://greens.org.au/about/charter"
       ]
     },
-    "OTZ": {
-      "preset": "electoralRadicalRight",
-      "scope": "official_party_programme_proxy",
-      "program": "Otzma Yehudit participates in electoral competition and advocates extending Israeli sovereignty throughout the Land of Israel, a strong Jewish national preference and removal of people it defines as enemies of the state. These commitments support the Electoral Radical Right game fit.",
+    "gpm-036-katter-s-australian-party-9fba06e": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 28.9606,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Katters Australia Party",
+      "sourceRow": "33",
       "sources": [
-        "https://ozma-yeudit.com/the-platform-of-otzma-yehudit-jewish-strength/?lang=he",
-        "https://jewishvirtuallibrary.org/jsource/Politics/Otzma_political_platform.pdf",
-        "https://m.knesset.gov.il/mk/government/Documents/CA37-Otzma.pdf"
+        "https://doi.org/10.7910/DVN/WMGTNS"
       ]
     },
-    "gpm-il-united-arab-list": {
-      "preset": "islamicDemocracy",
-      "scope": "platform_inference",
-      "program": "Ra'am is the parliamentary party associated with the Southern Islamic Movement. Mansour Abbas pursued equitable public investment, improvements to Arab municipal services and civic participation through a formally negotiated coalition agreement. Islamic Democracy approximates the party's religious roots and actual parliamentary strategy.",
+    "gpm-036-liberal-national-party-of-qu-50e73ec": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 10.0998,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Liberal National Party",
+      "sourceRow": "34",
       "sources": [
-        "https://www.washingtoninstitute.org/policy-analysis/arab-leader-israel-conversation-mansour-abbas",
-        "https://m.knesset.gov.il/mk/government/Documents/CA36-Raam.pdf"
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "040": {
+    "FPO": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 14.433,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "FPO",
+      "sourceRow": "1303",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "OVP": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 8.307,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "OVP",
+      "sourceRow": "1302",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SPO": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.386,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SPO",
+      "sourceRow": "1301",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-040-die-grunen-die-grune-alterna-2bac19f": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 18.901,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "Grune",
+      "sourceRow": "1304",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "056": {
+    "CDV": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 24.678,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "CD&V",
+      "sourceRow": "109",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "MR": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 22.296,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "MR",
+      "sourceRow": "106",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "NVA": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 14.361,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "N-VA",
+      "sourceRow": "110",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PS": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 8.812,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "PS",
+      "sourceRow": "102",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-056-open-vld-90351fb": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 27.536,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "Open Vld",
+      "sourceRow": "107",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-056-vooruit-bf631d3": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 8.916,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "Vooruit",
+      "sourceRow": "103",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "068": {
+    "PDC": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 16.7789,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Christian Democratic Party",
+      "sourceRow": "116",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
       ]
     },
-    "gpm-il-hadash-ta-al": {
+    "gpm-068-movement-for-socialism-6633b16": {
+      "preset": "leftNationalist",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 23.9072,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Movement for Socialism",
+      "sourceRow": "117",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "076": {
+    "PT": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 26.6295,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Workers' Party",
+      "sourceRow": "129",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-076-movimento-democratico-brasil-1387b5e": {
+      "preset": "marketCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 18.4445,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Brazilian Democratic Movement",
+      "sourceRow": "122",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-076-partido-da-social-democracia-c4c771c": {
+      "preset": "liberalCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 20.156,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Social Democracy Party",
+      "sourceRow": "125",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-076-partido-socialista-brasileir-1c7dc32": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 15.7564,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Brazilian Socialist Party",
+      "sourceRow": "120",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-076-progressistas-487e2cd": {
+      "preset": "conservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 17.3424,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Progressive Party",
+      "sourceRow": "123",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "100": {
+    "APS": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.95,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "APS",
+      "sourceRow": "2004",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "112": {
+    "gpm-112-non-partisans-8ff5438": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 34.187,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Non-partisans",
+      "sourceRow": "110",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "116": {
+    "CPP": {
+      "preset": "nationalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 30.9718,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Cambodian People's Party",
+      "sourceRow": "520",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "124": {
+    "BQ": {
+      "preset": "leftNationalist",
+      "program": "Closest PPO preset to the 2023 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 28.537,
+      "scope": "ches_estimate",
+      "sourceFamily": null,
+      "sourceParty": "BQ",
+      "sourceRow": "7004",
+      "sources": [
+        "https://doi.org/10.1017/S0008423924000337",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2023
+    },
+    "LPC": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 21.0669,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Liberal Party",
+      "sourceRow": "140",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "NDP": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2023 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 26.301,
+      "scope": "ches_estimate",
+      "sourceFamily": null,
+      "sourceParty": "NDP",
+      "sourceRow": "7003",
+      "sources": [
+        "https://doi.org/10.1017/S0008423924000337",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2023
+    },
+    "gpm-124-green-party-a87851d": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 20.0606,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Green Party",
+      "sourceRow": "139",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "148": {
+    "gpm-148-national-union-for-democracy-1add8ae": {
+      "preset": "center",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 45.8258,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Union for Democracy and Renewal",
+      "sourceRow": "921",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "156": {
+    "PCC": {
+      "preset": "marxistLeninist",
+      "program": "The Communist Party of China's constitution identifies Marxism–Leninism as a guiding tradition alongside later Chinese doctrine. The party also operates a socialist market economy with a substantial private sector.",
+      "scope": "party_self_description",
+      "sources": [
+        "https://english.court.gov.cn/2022-10/27/c_824962.htm"
+      ]
+    }
+  },
+  "158": {
+    "DPP": {
+      "preset": "liberalCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 12.249,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Democratic Progressive Party",
+      "sourceRow": "970",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "KMT": {
+      "preset": "conservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 19.8031,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Chinese Nationalist Party",
+      "sourceRow": "969",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "174": {
+    "CRC": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 23.7317,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Convention for the Renewal of the Comoros",
+      "sourceRow": "191",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "196": {
+    "AKEL": {
       "preset": "democraticSocialist",
-      "scope": "alliance_programme_proxy",
-      "program": "Hadash, chaired by Ayman Odeh and rooted in the Communist Party of Israel and Jewish–Arab front politics, allied with Ahmad Tibi's Arab Movement for Renewal. The programme they defend together emphasizes civic equality, full democracy and opposition to occupation. Democratic Socialism is a front-level approximation that reflects Hadash's influence and leaves room for Ta'al's distinct civic-national orientation.",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.036,
+      "scope": "ches_estimate",
+      "sourceFamily": "6",
+      "sourceParty": "AKEL",
+      "sourceRow": "4003",
       "sources": [
-        "https://maki.org.il/en/?m=202210",
-        "https://maki.org.il/en/?p=30509",
-        "https://maki.org.il/en/?p=30925"
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "DIKO": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 26.325,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "DIKO",
+      "sourceRow": "4004",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "DIPA": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.471,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "DIPA",
+      "sourceRow": "4015",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "DISY": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.563,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "DISY",
+      "sourceRow": "4001",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "ELAM": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 20.402,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "ELAM",
+      "sourceRow": "4009",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "203": {
+    "ANO": {
+      "preset": "paternalistConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.025,
+      "scope": "ches_estimate",
+      "sourceFamily": "9",
+      "sourceParty": "ANO2011",
+      "sourceRow": "2111",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "ODS": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.933,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "ODS",
+      "sourceRow": "2102",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "STAN": {
+      "preset": "liberalCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.212,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "STAN",
+      "sourceRow": "2116",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-203-czech-pirate-party-6b1a4e0": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 13.992,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "Pirates",
+      "sourceRow": "2114",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-203-prisaha-9562e76": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 14.897,
+      "scope": "ches_estimate",
+      "sourceFamily": "9",
+      "sourceParty": "Přísaha",
+      "sourceRow": "2117",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-203-social-democracy-ded4b43": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 17.556,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SOCDEM",
+      "sourceRow": "2101",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-203-top-09-f393c54": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 43.999,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "TOP09",
+      "sourceRow": "2109",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "208": {
+    "M": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.83,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "M",
+      "sourceRow": "221",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "V": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.571,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "V",
+      "sourceRow": "211",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-alternativet-a60e161": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.508,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "ALT",
+      "sourceRow": "219",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-danmarksdemokraterne-f11595f": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 40.543,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "DD",
+      "sourceRow": "222",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-dansk-folkeparti-ef9569e": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 33.159,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "DPP",
+      "sourceRow": "215",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-det-konservative-folkeparti-0ed868f": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from the historical party-family and policy positions in ParlGov.",
+      "rmsDistance": 18.7485,
+      "scope": "parlgov_estimate",
+      "sourceParty": "Konservative",
+      "sourceRow": "590",
+      "sources": [
+        "https://parlgov.fly.dev/docs/codebook/"
       ]
     },
+    "gpm-208-enhedslisten-ce0cf78": {
+      "preset": "democraticSocialist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 8.526,
+      "scope": "ches_estimate",
+      "sourceFamily": "6",
+      "sourceParty": "EL",
+      "sourceRow": "213",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-liberal-alliance-dac59bf": {
+      "preset": "classicalLiberal",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 23.927,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "LA",
+      "sourceRow": "218",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-radikale-venstre-2adee28": {
+      "preset": "liberalCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 28.754,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "RV",
+      "sourceRow": "202",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-208-socialistisk-folkeparti-6b74754": {
+      "preset": "ecosocialist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 38.466,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "SF",
+      "sourceRow": "206",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "218": {
+    "PSC": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 25.097,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Social Christian Party",
+      "sourceRow": "268",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "222": {
+    "ARENA": {
+      "preset": "conservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 29.6329,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Nationalist Republican Alliance",
+      "sourceRow": "860",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "PCN": {
+      "preset": "conservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 19.4279,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Coalition Party",
+      "sourceRow": "858",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-222-christian-democratic-party-fae48c1": {
+      "preset": "conservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 33.2603,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Christian Democratic Party",
+      "sourceRow": "852",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "233": {
+    "EKRE": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 17.747,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "EKRE",
+      "sourceRow": "2209",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "246": {
+    "KD": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 22.714,
+      "scope": "ches_estimate",
+      "sourceFamily": "10",
+      "sourceParty": "KD",
+      "sourceRow": "1409",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "KESK": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 23.351,
+      "scope": "ches_estimate",
+      "sourceFamily": "11",
+      "sourceParty": "KESK",
+      "sourceRow": "1403",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "KOK": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 40.573,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "KOK",
+      "sourceRow": "1402",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PS": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 22.302,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "PS",
+      "sourceRow": "1405",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SDP": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 11.371,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SDP",
+      "sourceRow": "1401",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-246-swedish-peoples-party-of-fin-9393ef6": {
+      "preset": "classicalLiberal",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 20.932,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "SFP/RKP",
+      "sourceRow": "1406",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "250": {
+    "gpm-250-la-france-insoumise-nouveau--ae06fdf": {
+      "preset": "democraticSocialist",
+      "program": "The published LFI and coalition programmes emphasize stronger parliamentary democracy, collective ownership in key sectors, worker representation and economic redistribution.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://programme.lafranceinsoumise.fr/wp-content/uploads/2025/avenir_en_commun_2025.pdf",
+        "https://lafranceinsoumise.fr/comparateur-programmes/"
+      ]
+    },
+    "gpm-250-socialistes-et-apparentes-3085ec6": {
+      "preset": "socialDemocrat",
+      "program": "The group's own declaration emphasizes collective bargaining, public services, social protection, and parliamentary checks and balances.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://parti-socialiste.fr/vie-parlementaire/notre-declaration-politique-17eme-legislature/"
+      ]
+    }
+  },
+  "268": {
+    "gpm-268-georgian-dream-bf95660": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 27.4094,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Georgian Dream",
+      "sourceRow": "337",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "276": {
+    "AfD": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.842,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "AfD",
+      "sourceRow": "310",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "CDU": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 16.973,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "CDU",
+      "sourceRow": "301",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SPD": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.76,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SPD",
+      "sourceRow": "302",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-276-christian-social-union-of-ba-ce6192e": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 11.258,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "CSU",
+      "sourceRow": "308",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "288": {
+    "NDC": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 42.6468,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Democratic Congress",
+      "sourceRow": "341",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "NPP": {
+      "preset": "classicalLiberal",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 14.5535,
+      "scope": "gps2019_estimate",
+      "sourceParty": "New Patriotic Party",
+      "sourceRow": "342",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "300": {
+    "KKE": {
+      "preset": "marxistLeninist",
+      "program": "The KKE's nineteenth-congress programme and statute explicitly identify Marxism–Leninism as the party's guiding worldview.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://inter.kke.gr/en/principles-objectives/programme/",
+        "https://inter.kke.gr/en/principles-objectives/statute/"
+      ]
+    },
+    "ND": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 28.099,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "ND",
+      "sourceRow": "402",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-300-coalition-of-the-radical-lef-2228074": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.372,
+      "scope": "ches_estimate",
+      "sourceFamily": "6",
+      "sourceParty": "SYRIZA",
+      "sourceRow": "403",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-300-democratic-patriotic-movemen-0763255": {
+      "preset": "religiousTraditionalist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 34.042,
+      "scope": "ches_estimate",
+      "sourceFamily": "10",
+      "sourceParty": "Niki",
+      "sourceRow": "419",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "320": {
+    "UNE": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 34.187,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Unity for Hope",
+      "sourceRow": "380",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-320-vision-with-values-545c813": {
+      "preset": "nationalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 23.585,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Vision with Values",
+      "sourceRow": "383",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "348": {
+    "DK": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 18.009,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "DK",
+      "sourceRow": "2311",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-348-hungarian-civic-union-christ-203e380": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 29.337,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "Fidesz-KDNP",
+      "sourceRow": "2302",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-348-hungarian-socialist-party-9c617bc": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 9.21,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "MSZP",
+      "sourceRow": "2301",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-348-momentum-3180d69": {
+      "preset": "liberalCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 37.948,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "Momentum",
+      "sourceRow": "2314",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-348-politics-can-be-different-600d53f": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.154,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "LMP-MZP",
+      "sourceRow": "2309",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "352": {
+    "gpm-352-independence-party-fa8cdd4": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 31.18,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "Sj",
+      "sourceRow": "4501",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-352-peoples-party-f67369e": {
+      "preset": "paternalistConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 35.424,
+      "scope": "ches_estimate",
+      "sourceFamily": "9",
+      "sourceParty": "FlF",
+      "sourceRow": "4508",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-352-progressive-party-aac22dc": {
+      "preset": "center",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 30.822,
+      "scope": "ches_estimate",
+      "sourceFamily": "11",
+      "sourceParty": "F",
+      "sourceRow": "4503",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-352-social-democratic-alliance-26aa215": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 17.5,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "Sam",
+      "sourceRow": "4505",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "356": {
+    "BJP": {
+      "preset": "nationalConservative",
+      "program": "The 2024 election platform pairs national and cultural heritage with a uniform civil code, economic growth and a state-led development agenda.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://sansad.in/ls/library/manifestos"
+      ]
+    },
+    "INC": {
+      "preset": "mixedEconomyCentre",
+      "program": "The Nyay Patra combines social guarantees and public investment with private enterprise and a commitment to constitutional pluralism and civil liberties.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://manifesto.inc.in/en/",
+        "https://manifesto.inc.in/en/defending-the-constitution/"
+      ]
+    },
+    "gpm-356-all-india-trinamool-congress-2bd3198": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 12.1699,
+      "scope": "gps2019_estimate",
+      "sourceParty": "All India Trinamool Congress",
+      "sourceRow": "425",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-356-communist-party-of-india-7f11ea7": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 16.2863,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Communist Party of India",
+      "sourceRow": "428",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-356-communist-party-of-india-mar-187e21f": {
+      "preset": "marxistLeninist",
+      "program": "The party programme explicitly adopts Marxism–Leninism. PPO's preset models the party tradition and does not describe India's multiparty institutions.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://cpim.org/party-programme/"
+      ]
+    },
+    "gpm-356-nationalist-congress-party-s-e9d5c54": {
+      "preset": "mixedEconomyCentre",
+      "program": "The party's 2024 platform endorses the Indian National Congress Nyay Patra and adds specific social and economic commitments. This represents the cited campaign platform.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://sansad.in/uploads/NCP_Manifesto_ENGLISH_manifesto_a782a277f2.pdf"
+      ]
+    },
+    "gpm-356-telugu-desam-party-66f15d3": {
+      "preset": "marketCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 14.2511,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Telugu Desam",
+      "sourceRow": "432",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-356-yuvajana-sramika-rythu-congr-e708b5f": {
+      "preset": "center",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 22.7221,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Yuvajana Sramika Rythu Congress Party",
+      "sourceRow": "433",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "360": {
+    "gpm-360-democratic-party-0824903": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 37.6111,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Democratic Party",
+      "sourceRow": "414",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-360-national-awakening-party-c5f06c5": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 19.2887,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Awakening Party",
+      "sourceRow": "417",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-360-national-mandate-party-ce5d60a": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 10.7529,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Mandate Party",
+      "sourceRow": "419",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-360-prosperous-justice-party-8c80405": {
+      "preset": "islamicDemocracy",
+      "program": "The Prosperous Justice Party's 2023 statutes say it is founded on Islam and commits to a constitutional Indonesian republic and public participation. Its 2020–2025 party programme pursues its agenda through elections and explicitly supports democratization. The Islamic Democracy preset approximates these commitments.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://pks.id/dotAsset/7ea022f0-54d9-466a-a7c1-ad06995232ff?force_download=true",
+        "https://pks.id/content/visi-dan-misi"
+      ]
+    }
+  },
+  "368": {
+    "PUK": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 33.2603,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Patriotic Union of Kurdistan",
+      "sourceRow": "454",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-368-state-of-law-coalition-e7e3b05": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 25.8602,
+      "scope": "gps2019_estimate",
+      "sourceParty": "State of Law Coalition",
+      "sourceRow": "455",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "372": {
+    "gpm-372-fianna-fail-4a2249e": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 36.267,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "FF",
+      "sourceRow": "701",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-372-fine-gael-e012ad8": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 43.093,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "FG",
+      "sourceRow": "702",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-372-green-party-4616906": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 13.092,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "GP",
+      "sourceRow": "705",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-372-labour-party-fc5e504": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 9.61,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "Lab",
+      "sourceRow": "703",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-372-sinn-fein-b14621b": {
+      "preset": "socialDemocrat",
+      "program": "The 2024 manifesto combines a strong public housing, public health and worker protection programme with Irish reunification and support for the Irish language. The gameplay preset reflects the domestic economic programme.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://vote.sinnfein.ie/wp-content/uploads/2024/11/SinnFeinManifesto2024.pdf"
+      ]
+    },
+    "gpm-372-social-democrats-3f5cf4b": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 13.306,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SD",
+      "sourceRow": "710",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "376": {
     "DEM": {
       "preset": "socialDemocrat",
-      "scope": "party_alliance_proxy",
       "program": "The Labor faction retained its parliamentary designation after Yair Golan led the 2024 Labor–Meretz partnership as The Democrats. The party programme combines liberal-democratic institutions, stronger public services, equality and social protection. Social Democracy captures the continuing common programme.",
+      "scope": "party_alliance_proxy",
       "sources": [
         "https://democrats.org.il/institutions/",
         "https://democrats.org.il/en/home-2/",
         "https://main.knesset.gov.il/News/PressReleases/pages/press25022025c.aspx"
       ]
     },
+    "LIK": {
+      "preset": "nationalConservative",
+      "program": "Likud combines the Revisionist Zionist tradition and Jewish national identity with private enterprise, Jewish heritage and social equality. Menachem Begin's Herut and the Liberal Party were leading components of its founding alliance. The relative weight on the gameplay axes is an approximation.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.likud.org.il/en/about-the-likud"
+      ]
+    },
+    "NU": {
+      "preset": "mixedEconomyCentre",
+      "program": "Benny Gantz's continuing Blue and White faction derives from National Unity, the alliance founded by Gantz's Blue and White and Gideon Sa'ar's New Hope in 2022, also joined by Gadi Eisenkot. Its founding platform balances security and civic equality with free enterprise, social justice and equal educational opportunity. New Hope's later departure warrants its own separate party row.",
+      "scope": "historical_party_document_proxy",
+      "sources": [
+        "https://kachollavan.org.il/wp-content/uploads/2022/09/principles.pdf",
+        "https://m.knesset.gov.il/EN/mk/apps/faction/general/split-merge"
+      ]
+    },
+    "OTZ": {
+      "preset": "electoralRadicalRight",
+      "program": "Otzma Yehudit participates in electoral competition and advocates extending Israeli sovereignty throughout the Land of Israel, a strong Jewish national preference and removal of people it defines as enemies of the state. These commitments support the Electoral Radical Right game fit.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://ozma-yeudit.com/the-platform-of-otzma-yehudit-jewish-strength/?lang=he",
+        "https://jewishvirtuallibrary.org/jsource/Politics/Otzma_political_platform.pdf",
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-Otzma.pdf"
+      ]
+    },
+    "RZ": {
+      "preset": "nationalConservative",
+      "program": "Bezalel Smotrich's Religious Zionism pairs a Jewish-national and Torah-oriented identity with expanded Israeli sovereignty and a programme for private enterprise and competition. The fit covers the parliamentary faction after Otzma and Noam separated.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://zionutdatit.org.il/en/party-platform/",
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-RZ.pdf",
+        "https://hashiloach.org.il/israels-decisive-plan/"
+      ]
+    },
+    "SHAS": {
+      "preset": "religiousTraditionalist",
+      "program": "Shas explicitly represents the Sephardi Torah tradition associated with Rabbi Ovadia Yosef. Aryeh Deri's public platform adds an anti-poverty plan and expanded support for low-income households. The preset represents the religious tradition and does not resolve the party's separate welfare commitments.",
+      "scope": "platform_inference",
+      "sources": [
+        "https://main.knesset.gov.il/mk/government/pages/coalitionagreements.aspx",
+        "https://www.youtube.com/watch?v=uEuo516PyPQ",
+        "https://m.knesset.gov.il/mk/government/Documents/CA37-ShasRoles.pdf"
+      ]
+    },
+    "UTJ": {
+      "preset": "religiousTraditionalist",
+      "program": "The common priorities of Agudat Yisrael and Degel HaTorah in their United Torah Judaism coalition agreement include Haredi schools, yeshivas and preservation of Orthodox arrangements in public life. This is the shared Ashkenazi Haredi tradition across the two member parties.",
+      "scope": "common_bloc_programme",
+      "sources": [
+        "https://www.idi.org.il/media/18946/%D7%99%D7%94%D7%93%D7%95%D7%AA-%D7%94%D7%AA%D7%95%D7%A8%D7%94.pdf",
+        "https://m.knesset.gov.il/mk/government/Documents/CA35-Likud-YT-130520.pdf"
+      ]
+    },
+    "YA": {
+      "preset": "liberalCentre",
+      "program": "Yesh Atid's programme pairs civil liberties, pluralism and civil marriage with a centrist approach to the economy and public services. It is a secular liberal-centrist fit.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://ru.yeshatid.org.il/program/",
+        "https://ru.yeshatid.org.il/wp-content/uploads/2021/02/%D7%A4%D7%A8%D7%A7-8-new.pdf"
+      ]
+    },
+    "YB": {
+      "preset": "liberalConservative",
+      "program": "Avigdor Lieberman's Yisrael Beiteinu combines a secular nationalist security agenda with civil marriage, local autonomy over Sabbath opening and market-oriented economics. Liberal Conservatism is the existing PPO proxy. Its base social-conservatism score only partly reflects the party's secular stance.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://en.idi.org.il/media/13926/%D7%99%D7%A9%D7%A8%D7%90%D7%9C-%D7%91%D7%99%D7%AA%D7%A0%D7%95.pdf",
+        "https://m.knesset.gov.il/mk/government/Documents/CA36-YB.pdf",
+        "https://beytenu.org.il/party-platform-israel-beytenu-next-government/"
+      ]
+    },
+    "gpm-il-hadash-ta-al": {
+      "preset": "democraticSocialist",
+      "program": "Hadash, chaired by Ayman Odeh and rooted in the Communist Party of Israel and Jewish–Arab front politics, allied with Ahmad Tibi's Arab Movement for Renewal. The programme they defend together emphasizes civic equality, full democracy and opposition to occupation. Democratic Socialism is a front-level approximation that reflects Hadash's influence and leaves room for Ta'al's distinct civic-national orientation.",
+      "scope": "alliance_programme_proxy",
+      "sources": [
+        "https://maki.org.il/en/?m=202210",
+        "https://maki.org.il/en/?p=30509",
+        "https://maki.org.il/en/?p=30925"
+      ]
+    },
     "gpm-il-new-hope": {
       "preset": "liberalConservative",
-      "scope": "founder_and_coalition_programme_proxy",
       "program": "Gideon Sa'ar's New Hope describes a center-right, Zionist and institutionally conservative alternative, including a market-oriented economy, relative support for decentralization and a strong security posture. The Liberal Conservative preset is a fit for its national-liberal tradition while New Hope is a separate faction.",
+      "scope": "founder_and_coalition_programme_proxy",
       "sources": [
         "https://www.washingtoninstitute.org/policy-analysis/new-leadership-israel-conversation-gideon-saar",
         "https://m.knesset.gov.il/mk/government/Documents/CA36-NH.pdf",
@@ -116,37 +1622,76 @@
     },
     "gpm-il-noam": {
       "preset": "religiousTraditionalist",
-      "scope": "party_coalition_programme_proxy",
       "program": "Avi Maoz's Noam coalition agreement and the resulting Jewish National Identity Authority foreground religious education, traditional family policy and an Orthodox interpretation of Jewish public life. This is a religious-Zionist form of traditionalism separate from the Haredi parties.",
+      "scope": "party_coalition_programme_proxy",
       "sources": [
         "https://m.knesset.gov.il/mk/government/Documents/CA37-Noam.pdf",
         "https://www.gov.il/BlobFolder/unit/freedom_of__information_law/he/report100225.pdf"
       ]
+    },
+    "gpm-il-united-arab-list": {
+      "preset": "islamicDemocracy",
+      "program": "Ra'am is the parliamentary party associated with the Southern Islamic Movement. Mansour Abbas pursued equitable public investment, improvements to Arab municipal services and civic participation through a formally negotiated coalition agreement. Islamic Democracy approximates the party's religious roots and actual parliamentary strategy.",
+      "scope": "platform_inference",
+      "sources": [
+        "https://www.washingtoninstitute.org/policy-analysis/arab-leader-israel-conversation-mansour-abbas",
+        "https://m.knesset.gov.il/mk/government/Documents/CA36-Raam.pdf"
+      ]
+    }
+  },
+  "388": {
+    "PNP": {
+      "preset": "classicalLiberal",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 35.2668,
+      "scope": "gps2019_estimate",
+      "sourceParty": "People's National Party",
+      "sourceRow": "486",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-388-opposition-side-05de2a9": {
+      "preset": "classicalLiberal",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 35.2668,
+      "scope": "gps2019_estimate",
+      "sourceParty": "People's National Party",
+      "sourceRow": "486",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "392": {
+    "JCP": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 21.123,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Japanese Communist Party",
+      "sourceRow": "493",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "KOM": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 18.6649,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Komeitō",
+      "sourceRow": "494",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
     }
   },
   "422": {
-    "HEZ": {
-      "preset": "islamicRepublican",
-      "scope": "lead-party",
-      "program": "Hezbollah, the lead party of Loyalty to the Resistance, combines Shi'a political Islam and the tradition of guardianship of the jurist with participation in Lebanon's parliamentary system. Islamic Republicanism is the closest PPO preset for the party, while its 2009 program describes consensual democracy for Lebanon.",
-      "sources": [
-        "https://translations.meforum.org/documents/hezbollah-political-document-2009/",
-        "https://kurzman.unc.edu/wp-content/uploads/sites/1410/2011/06/Hizbullah_2009_English.pdf"
-      ]
-    },
-    "LF": {
-      "preset": "liberalConservative",
-      "scope": "sponsoring_party_proxy",
-      "program": "Lebanese Forces' published programme supports a competitive private-sector economy with regulation and social protection. Its charter pairs sovereignty and plural communities with constitutional turnover. This is a game proxy for LF, not a claim about every Strong Republic bloc member.",
-      "sources": [
-        "https://www.lebanese-forces.com/2022/04/13/samir-geagea-1657/",
-        "https://www.lebanese-forces.com/2023/01/20/lebanese-forces-1637/"
-      ]
-    },
     "AMAL": {
       "preset": "mixedEconomyCentre",
-      "scope": "sponsoring_party_proxy",
       "program": "Amal's official charter foregrounds assistance to deprived communities and rejects political sectarianism. Its public programme supports constitutional reform, competition rules and public investment. A social-protection/mixed-economy approximation fits better than inferring a religious state from its foundation; exact economy axis remains an approximation.",
+      "scope": "sponsoring_party_proxy",
       "sources": [
         "https://amal-movement.org/حركتنا/",
         "https://amal-movement.org/2022/03/"
@@ -154,34 +1699,52 @@
     },
     "FPM": {
       "preset": "secularRepublican",
-      "scope": "sponsoring_party_proxy",
       "program": "FPM's charter explicitly seeks a secular democratic state governed by law, sovereign, plural and open to the Arab region and the world. This is tied to FPM's constitutional platform and does not extend to every Strong Lebanon allied deputy.",
+      "scope": "sponsoring_party_proxy",
       "sources": [
         "https://www.fpmlb.org/ar/charter/"
       ]
     },
-    "PSP": {
-      "preset": "democraticSocialist",
-      "scope": "sponsoring_party_proxy",
-      "program": "PSP identifies with the democratic socialist tradition through its formal Socialist International membership and participation. A label for the sponsoring PSP, not every Democratic Gathering ally. Do not read the preset's exact ownership axis as a documented January 2026 platform.",
+    "HEZ": {
+      "preset": "islamicRepublican",
+      "program": "Hezbollah, the lead party of Loyalty to the Resistance, combines Shi'a political Islam and the tradition of guardianship of the jurist with participation in Lebanon's parliamentary system. Islamic Republicanism is the closest PPO preset for the party, while its 2009 program describes consensual democracy for Lebanon.",
+      "scope": "lead-party",
       "sources": [
-        "https://www.socialistinternational.org/about-us/members/",
-        "https://www.socialistinternational.org/fileadmin/uploads/si/Documents/Congresses/Lima/Lima_Congress_ssf.pdf"
+        "https://translations.meforum.org/documents/hezbollah-political-document-2009/",
+        "https://kurzman.unc.edu/wp-content/uploads/sites/1410/2011/06/Hizbullah_2009_English.pdf"
       ]
     },
     "KAT": {
       "preset": "socialDemocrat",
-      "scope": "party_self_description",
       "program": "The official general principles expressly call Kataeb the Lebanese Social Democratic Party and combine free enterprise, social justice and equal opportunity. Use present charter language rather than its historical founders' influences.",
+      "scope": "party_self_description",
       "sources": [
         "https://www.lebanesekataeb.com/المبادئ-العامة",
         "https://en.kataeb.org/articles/kataeb-party-unveils-178-steps-electoral-program-"
       ]
     },
+    "LF": {
+      "preset": "liberalConservative",
+      "program": "Lebanese Forces' published programme supports a competitive private-sector economy with regulation and social protection. Its charter pairs sovereignty and plural communities with constitutional turnover. This is a game proxy for LF, not a claim about every Strong Republic bloc member.",
+      "scope": "sponsoring_party_proxy",
+      "sources": [
+        "https://www.lebanese-forces.com/2022/04/13/samir-geagea-1657/",
+        "https://www.lebanese-forces.com/2023/01/20/lebanese-forces-1637/"
+      ]
+    },
+    "PSP": {
+      "preset": "democraticSocialist",
+      "program": "PSP identifies with the democratic socialist tradition through its formal Socialist International membership and participation. A label for the sponsoring PSP, not every Democratic Gathering ally. Do not read the preset's exact ownership axis as a documented January 2026 platform.",
+      "scope": "sponsoring_party_proxy",
+      "sources": [
+        "https://www.socialistinternational.org/about-us/members/",
+        "https://www.socialistinternational.org/fileadmin/uploads/si/Documents/Congresses/Lima/Lima_Congress_ssf.pdf"
+      ]
+    },
     "gpm-lb-armenian-bloc": {
       "preset": "democraticSocialist",
-      "scope": "sponsoring_party_proxy",
       "program": "The sponsoring Tashnag/ARF identifies itself as national, democratic and socialist in its public programme. Use that sponsor tradition as a proxy; the quoted electoral programme is for Armenia and does not establish all local Armenian Bloc deputies' policy positions.",
+      "scope": "sponsoring_party_proxy",
       "sources": [
         "https://old.arfd.info/2017/03/27/arf-d-parliamentary-election-platform-published-in-english/",
         "https://old.arfd.info/arf-dashnaktsutyun-policy-principles/"
@@ -189,25 +1752,42 @@
     },
     "gpm-lb-homeland-of-man-project-bloc": {
       "preset": "marketCentre",
-      "scope": "sponsoring_party_proxy",
       "program": "Project Watan's charter explicitly promotes a free economic system, enterprise and creativity alongside fair social protection and empowered civil institutions. A market-centre fit rather than a claim of unregulated markets.",
+      "scope": "sponsoring_party_proxy",
       "sources": [
         "https://projectwatan.com/ar/من-نحن"
       ]
     },
     "gpm-lb-islamic-group": {
       "preset": "islamicDemocracy",
-      "scope": "official_party_programme_proxy",
       "program": "The official political programme combines an explicitly Islamic inspiration with current Lebanese parliamentary participation, dialogue with plural political actors, and accountable civil institutions. The political opening profile uses the nearest electoral preset without assigning every default law in the preset.",
+      "scope": "official_party_programme_proxy",
       "sources": [
         "https://www.al-jamaa.org/%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A93/%D8%A7%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B3%D9%8A-%D9%84%D9%84%D8%AC%D9%85%D8%A7%D8%B9%D8%A9-%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9",
         "https://www.al-jamaa.org/news2716/%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D9%86-%D8%A7%D9%84%D8%B9%D8%A7%D9%85-%D9%84%D9%84%D8%AC%D9%85%D8%A7%D8%B9%D8%A9-%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D9%85%D8%AD%D9%85%D8%AF-%D8%B7%D9%82%D9%88%D8%B4-%D8%A8%D8%B9%D8%AF-%D8%A7%D9%84%D8%A5%D8%AF%D9%84%D8%A7%D8%A1-%D8%A8%D8%B5%D9%88%D8%AA%D9%87-%D9%81%D9%8A-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%A8%D9%84%D8%AF%D9%8A%D8%A9"
       ]
     },
+    "gpm-lb-khat-ahmar": {
+      "preset": "marketCentre",
+      "program": "Original party-responses survey reports Khat Ahmar prefers privatisation of water and telecom, airport privatisation, and targeted rather than universal social assistance. Market-centre is the nearest economic programme fit, without inferring its positions on all other axes.",
+      "scope": "historical_direct_policy_survey_proxy",
+      "sources": [
+        "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
+      ]
+    },
+    "gpm-lb-lana": {
+      "preset": "socialDemocrat",
+      "program": "Lana calls itself a social democratic party. Its official principles prioritise equality, nondiscrimination and a sustainable economy with social justice.",
+      "scope": "party_self_description",
+      "sources": [
+        "https://lnalebanon.org/principles/",
+        "https://lnalebanon.org/political-paper/"
+      ]
+    },
     "gpm-lb-popular-nasserist-organization": {
       "preset": "nasserist",
-      "scope": "party_self_description",
       "program": "The organization openly identifies with the July Revolution and Nasserist principles in its own published commemorative statement. A meeting host's primary report separately records discussion of maintaining the organization's Nasserist identity.",
+      "scope": "party_self_description",
       "sources": [
         "https://archive.lebanonfiles.com/2020/articles/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D9%85%D8%AD%D9%84%D9%8A%D9%91%D8%A9/%D8%A7%D9%84%D8%AA%D9%86%D8%B8%D9%8A%D9%85-%D8%A7%D9%84%D9%86%D8%A7%D8%B5%D8%B1%D9%8A-%D9%81%D9%8A-%D8%B0%D9%83%D8%B1%D9%89-%D8%AB%D9%88%D8%B1%D8%A9-23-%D8%AA%D9%85%D9%88%D8%B2-%D9%85%D8%A7-%D8%A3/",
         "https://nuwat-lb.org/en/news/-1356"
@@ -215,52 +1795,1446 @@
     },
     "gpm-lb-relebanon": {
       "preset": "marketCentre",
-      "scope": "historical_direct_policy_survey_proxy",
       "program": "The Policy Initiative's original survey of party respondents reports strong support for selected privatisations alongside a lean toward universal social protection. Market-centre is the closest economic proxy in its programme, with those dated survey origins acknowledged.",
+      "scope": "historical_direct_policy_survey_proxy",
       "sources": [
         "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
       ]
     },
     "gpm-lb-tahalof-watani": {
       "preset": "mixedEconomyCentre",
-      "scope": "historical_direct_policy_survey_proxy",
       "program": "The original survey of Tahalof Watani records openness to bank nationalisation and universal social protection while distinguishing public water/telecom ownership from room for commercial airport participation. This is a mixed-economy fit from stated choices.",
+      "scope": "historical_direct_policy_survey_proxy",
       "sources": [
         "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
       ]
     },
-    "gpm-lb-lana": {
-      "preset": "socialDemocrat",
-      "scope": "party_self_description",
-      "program": "Lana calls itself a social democratic party. Its official principles prioritise equality, nondiscrimination and a sustainable economy with social justice.",
-      "sources": [
-        "https://lnalebanon.org/principles/",
-        "https://lnalebanon.org/political-paper/"
-      ]
-    },
     "gpm-lb-taqaddom": {
       "preset": "secularRepublican",
-      "scope": "platform_inference",
       "program": "The documented programme explicitly seeks a civil, secular democratic state, accountable institutions, and equal rights. Original policy survey supports parliamentary participation and social equality. A constitutional approximation, mindful of the group's welfare commitments.",
+      "scope": "platform_inference",
       "sources": [
         "https://sawti.webflow.io/political-groups/taqqadom",
         "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
       ]
     },
-    "gpm-lb-khat-ahmar": {
-      "preset": "marketCentre",
-      "scope": "historical_direct_policy_survey_proxy",
-      "program": "Original party-responses survey reports Khat Ahmar prefers privatisation of water and telecom, airport privatisation, and targeted rather than universal social assistance. Market-centre is the nearest economic programme fit, without inferring its positions on all other axes.",
-      "sources": [
-        "https://api.thepolicyinitiative.org/content/uploads/files/Lebanon%E2%80%99s-Political-Alternatives-Report.pdf"
-      ]
-    },
     "gpm-lb-union-party": {
       "preset": "nasserist",
-      "scope": "historical_party_document_proxy",
       "program": "The 12th congress political document and party leader's published account directly affirm a Nasserist identity and Arab nationalism. Appropriate as a doctrinal proxy; the congress source pre-dates the cutoff substantially.",
+      "scope": "historical_party_document_proxy",
       "sources": [
         "https://archive.assafir.com/ssr/10195060.html"
+      ]
+    }
+  },
+  "428": {
+    "ZZS": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 28.0988,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Union of Greens and Farmers",
+      "sourceRow": "593",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-428-national-alliance-ab9a5a5": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 25.9082,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Alliance",
+      "sourceRow": "590",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "440": {
+    "LSDP": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.225,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "LSDP",
+      "sourceRow": "2501",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "LVZS": {
+      "preset": "paternalistConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.508,
+      "scope": "ches_estimate",
+      "sourceFamily": "11",
+      "sourceParty": "LVZS",
+      "sourceRow": "2507",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "442": {
+    "ADR": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 43.8035,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Alternative Democratic Reform Party",
+      "sourceRow": "577",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "CSV": {
+      "preset": "classicalLiberal",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 47.5657,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Christian Social People's Party",
+      "sourceRow": "578",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "DP": {
+      "preset": "classicalLiberal",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 37.5463,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Democratic Party",
+      "sourceRow": "580",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "LSAP": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 34.8907,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Luxembourg Socialist Workers' Party",
+      "sourceRow": "581",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "454": {
+    "UDF": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 42.8392,
+      "scope": "gps2019_estimate",
+      "sourceParty": "United Democratic Front",
+      "sourceRow": "689",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "UTM": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 42.4752,
+      "scope": "gps2019_estimate",
+      "sourceParty": "United Transformation Unit",
+      "sourceRow": "690",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "496": {
+    "DP": {
+      "preset": "liberalCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 15.5161,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Democratic Party",
+      "sourceRow": "671",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "MPP": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 16.0891,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Mongolian People’s Party",
+      "sourceRow": "674",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "508": {
+    "gpm-508-mozambique-liberation-front-ee5e2a3": {
+      "preset": "center",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 47.9583,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Mozambican Liberation Front",
+      "sourceRow": "675",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "528": {
+    "BBB": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.144,
+      "scope": "ches_estimate",
+      "sourceFamily": "9",
+      "sourceParty": "BBB",
+      "sourceRow": "1054",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "CDA": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.014,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "CDA",
+      "sourceRow": "1001",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "FVD": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 39.076,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "FvD",
+      "sourceRow": "1051",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PVV": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 37.625,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "PVV",
+      "sourceRow": "1017",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "VVD": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.808,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "VVD",
+      "sourceRow": "1003",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-528-50plus-c9955f3": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 22.7116,
+      "scope": "gps2019_estimate",
+      "sourceParty": "50PLUS",
+      "sourceRow": "717",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-528-christenunie-3d50cc7": {
+      "preset": "paternalistConservative",
+      "program": "Closest broad PPO preset from the historical party-family and policy positions in ParlGov.",
+      "rmsDistance": 10.78,
+      "scope": "parlgov_estimate",
+      "sourceParty": "ChristenUnie",
+      "sourceRow": "1206",
+      "sources": [
+        "https://parlgov.fly.dev/docs/codebook/"
+      ]
+    },
+    "gpm-528-denk-953d5aa": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 33.371,
+      "scope": "ches_estimate",
+      "sourceFamily": "9",
+      "sourceParty": "DENK",
+      "sourceRow": "1050",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-528-partij-voor-de-dieren-8e22330": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 18.079,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "PvdD",
+      "sourceRow": "1018",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-528-socialistische-partij-3871026": {
+      "preset": "democraticSocialist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 21.131,
+      "scope": "ches_estimate",
+      "sourceFamily": "6",
+      "sourceParty": "SP",
+      "sourceRow": "1014",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-528-staatkundig-gereformeerde-pa-047b8b8": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 28.952,
+      "scope": "ches_estimate",
+      "sourceFamily": "10",
+      "sourceParty": "SGP",
+      "sourceRow": "1006",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-528-volt-e8c0143": {
+      "preset": "liberalCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 23.368,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "Volt",
+      "sourceRow": "1052",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "548": {
+    "IG": {
+      "preset": "nationalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 33.6341,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Lauko Group",
+      "sourceRow": "1011",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "554": {
+    "GRN": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 14.2677,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Green Party",
+      "sourceRow": "746",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "LAB": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 16.6191,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Labour Party",
+      "sourceRow": "748",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "NAT": {
+      "preset": "marketCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 37.2878,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Party",
+      "sourceRow": "749",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "566": {
+    "ADC": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 35.7946,
+      "scope": "gps2019_estimate",
+      "sourceParty": "African Democratic Congress",
+      "sourceRow": "702",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "APC": {
+      "preset": "center",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 26.9888,
+      "scope": "gps2019_estimate",
+      "sourceParty": "All Progressives Congress",
+      "sourceRow": "704",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "PDP": {
+      "preset": "marketCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 25.1154,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Peoples Democratic Party",
+      "sourceRow": "709",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "600": {
+    "ANR": {
+      "preset": "conservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 18.8161,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Republican Association - Colorado Party",
+      "sourceRow": "803",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "608": {
+    "NP": {
+      "preset": "marketCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 14.3482,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Nacionalista Party",
+      "sourceRow": "773",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "NPC": {
+      "preset": "marketCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 20.8789,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Nationalist People’s Coalition",
+      "sourceRow": "774",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "616": {
+    "PIS": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 33.985,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "PiS",
+      "sourceRow": "2605",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "620": {
+    "CH": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 20.692,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "Chega",
+      "sourceRow": "1253",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "IL": {
+      "preset": "classicalLiberal",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 14.071,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "IL",
+      "sourceRow": "1252",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PCP": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from the historical party-family and policy positions in ParlGov.",
+      "rmsDistance": 29.9662,
+      "scope": "parlgov_estimate",
+      "sourceParty": "Partido Comunista Português",
+      "sourceRow": "514",
+      "sources": [
+        "https://parlgov.fly.dev/docs/codebook/"
+      ]
+    },
+    "PS": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 28.216,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "PS",
+      "sourceRow": "1205",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-620-left-bloc-4065915": {
+      "preset": "democraticSocialist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 33.022,
+      "scope": "ches_estimate",
+      "sourceFamily": "6",
+      "sourceParty": "BE",
+      "sourceRow": "1208",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-620-partido-social-democrata-b5e0539": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from the historical party-family and policy positions in ParlGov.",
+      "rmsDistance": 16.3803,
+      "scope": "parlgov_estimate",
+      "sourceParty": "Partido Social Democrata",
+      "sourceRow": "1273",
+      "sources": [
+        "https://parlgov.fly.dev/docs/codebook/"
+      ]
+    },
+    "gpm-620-party-for-people-animals-and-b412534": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 8.829,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "PAN",
+      "sourceRow": "1250",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "626": {
+    "PD": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 27.0976,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Timorese Democratic Party",
+      "sourceRow": "955",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-626-revolutionary-front-for-an-i-6ef8b16": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 34.8769,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Revolutionary Front for an Independent East Timor",
+      "sourceRow": "953",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "642": {
+    "AUR": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 16.679,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "AUR",
+      "sourceRow": "2715",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PNL": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.527,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "PNL",
+      "sourceRow": "2705",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "POT": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.85,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "POT",
+      "sourceRow": "2717",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PSD": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 29.568,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "PSD",
+      "sourceRow": "2701",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "UDMR": {
+      "preset": "center",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 11.974,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "UDMR",
+      "sourceRow": "2706",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "USR": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 22.762,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "USR",
+      "sourceRow": "2713",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "703": {
+    "KDH": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 21.593,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "KDH",
+      "sourceRow": "2805",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PS": {
+      "preset": "liberalCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 34.507,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "PS",
+      "sourceRow": "2819",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SAS": {
+      "preset": "classicalLiberal",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 24.874,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "SaS",
+      "sourceRow": "2812",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SNS": {
+      "preset": "electoralRadicalRight",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 21.922,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "SNS",
+      "sourceRow": "2809",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "704": {
+    "CPV": {
+      "preset": "marxistLeninist",
+      "program": "The constitutional text and party charter identify Marxism–Leninism and Ho Chi Minh Thought as foundations of the party's leadership. PPO's economic value is a broad ideological proxy for a party that also implements the Đổi Mới market reforms.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://baonghean.vn/en/dieu-le-dang-do-dai-hoi-dai-bieu-toan-quoc-lan-thu-viii-cua-dang-thong-qua-10298229.html",
+        "https://thuvienphapluat.vn/van-ban/Bo-may-hanh-chinh/Van-ban-hop-nhat-52-VBHN-VPQH-2025-Hien-phap-nuoc-Cong-hoa-xa-hoi-chu-nghia-Viet-Nam-665872.aspx"
+      ]
+    }
+  },
+  "705": {
+    "NSI": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 16.798,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "NSi",
+      "sourceRow": "2905",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SD": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 16.484,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SD",
+      "sourceRow": "2903",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SDS": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.75,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "SDS",
+      "sourceRow": "2902",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "724": {
+    "ERC": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 21.984,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "ERC",
+      "sourceRow": "511",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PP": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.494,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "PP",
+      "sourceRow": "502",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "PSOE": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.435,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "PSOE",
+      "sourceRow": "501",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "VOX": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 29.607,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "Vox",
+      "sourceRow": "527",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-724-basque-group-in-the-senate-8d8582f": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 17.756,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "EAJ/PNV",
+      "sourceRow": "506",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-724-basque-nationalist-party-5b0d857": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 17.756,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "EAJ/PNV",
+      "sourceRow": "506",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-724-popular-group-in-the-senate-2490bd7": {
+      "preset": "conservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.494,
+      "scope": "ches_estimate",
+      "sourceFamily": "2",
+      "sourceParty": "PP",
+      "sourceRow": "502",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-724-socialist-parliamentary-grou-0370f8c": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 19.435,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "PSOE",
+      "sourceRow": "501",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-724-vox-mixed-group-f3891b6": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 29.607,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "Vox",
+      "sourceRow": "527",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "740": {
+    "NDP": {
+      "preset": "leftNationalist",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 29.7443,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Democratic Party",
+      "sourceRow": "880",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "VHP": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 41.3068,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Progressive Reform Party",
+      "sourceRow": "882",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "752": {
+    "C": {
+      "preset": "classicalLiberal",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 18.482,
+      "scope": "ches_estimate",
+      "sourceFamily": "11",
+      "sourceParty": "C",
+      "sourceRow": "1603",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "KD": {
+      "preset": "liberalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.751,
+      "scope": "ches_estimate",
+      "sourceFamily": "4",
+      "sourceParty": "KD",
+      "sourceRow": "1606",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "M": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from the historical party-family and policy positions in ParlGov.",
+      "rmsDistance": 30.4831,
+      "scope": "parlgov_estimate",
+      "sourceParty": "Moderaterna",
+      "sourceRow": "657",
+      "sources": [
+        "https://parlgov.fly.dev/docs/codebook/"
+      ]
+    },
+    "MP": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 10.015,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "MP",
+      "sourceRow": "1607",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "S": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from the historical party-family and policy positions in ParlGov.",
+      "rmsDistance": 7.5426,
+      "scope": "parlgov_estimate",
+      "sourceParty": "Socialdemokraterna",
+      "sourceRow": "904",
+      "sources": [
+        "https://parlgov.fly.dev/docs/codebook/"
+      ]
+    },
+    "SD": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 17.675,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "SD",
+      "sourceRow": "1610",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "V": {
+      "preset": "democraticSocialist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 18.232,
+      "scope": "ches_estimate",
+      "sourceFamily": "6",
+      "sourceParty": "V",
+      "sourceRow": "1601",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "756": {
+    "gpm-756-evangelical-people-s-party-c58ba2b": {
+      "preset": "paternalistConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 30.827,
+      "scope": "ches_estimate",
+      "sourceFamily": "10",
+      "sourceParty": "EVP/PEV",
+      "sourceRow": "3607",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-756-fdp-the-liberals-50c8fc2": {
+      "preset": "marketCentre",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 20.594,
+      "scope": "ches_estimate",
+      "sourceFamily": "3",
+      "sourceParty": "FDP/PLR",
+      "sourceRow": "3603",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-756-green-party-356b4c9": {
+      "preset": "ecosocialist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 18.933,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "GPS/PES",
+      "sourceRow": "3605",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-756-socialist-party-85866d7": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 35.479,
+      "scope": "ches_estimate",
+      "sourceFamily": "5",
+      "sourceParty": "SP/PS",
+      "sourceRow": "3602",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-756-swiss-people-s-party-0691ac8": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 24.069,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "SVP/UDC",
+      "sourceRow": "3601",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "762": {
+    "APT": {
+      "preset": "leftNationalist",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 25.5767,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Agrarian Party of Tajikistan",
+      "sourceRow": "940",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "780": {
+    "PNM": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 16.2233,
+      "scope": "gps2019_estimate",
+      "sourceParty": "People's National Movement",
+      "sourceRow": "957",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "UNC": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 22.7761,
+      "scope": "gps2019_estimate",
+      "sourceParty": "United National Congress",
+      "sourceRow": "958",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "792": {
+    "CHP": {
+      "preset": "socialDemocrat",
+      "program": "The late-2025 party programme and public presentation frame political rights, republican government and social protection as party priorities.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://program.chp.org.tr/",
+        "https://www.youtube.com/watch?v=zYFtJxvTFkA"
+      ]
+    },
+    "MHP": {
+      "preset": "nationalConservative",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.914,
+      "scope": "ches_estimate",
+      "sourceFamily": "1",
+      "sourceParty": "MHP",
+      "sourceRow": "3403",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "YRP": {
+      "preset": "religiousTraditionalist",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 25.88,
+      "scope": "ches_estimate",
+      "sourceFamily": "10",
+      "sourceParty": "YRP",
+      "sourceRow": "3416",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    }
+  },
+  "818": {
+    "gpm-818-free-egyptians-party-49d33e5": {
+      "preset": "liberalCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 15.4173,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Free Egyptians Party",
+      "sourceRow": "272",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "826": {
+    "CON": {
+      "preset": "conservative",
+      "program": "The Conservative manifesto emphasizes tax cuts, border and defense policy, support for families and retaining longstanding national institutions.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://public.conservatives.com/static/documents/GE2024/Conservative-Manifesto-GE2024.pdf"
+      ]
+    },
+    "GRN": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.804,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "GPEW",
+      "sourceRow": "1107",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "LAB": {
+      "preset": "socialDemocrat",
+      "program": "The 2024 Labour manifesto emphasizes collective bargaining, work protections, industrial partnership, public services and clean energy investment.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://labour.org.uk/updates/press-releases/keir-starmer-launches-change-labours-general-election-manifesto/",
+        "https://labour.org.uk/wp-content/uploads/2024/06/Change-Labour-Party-Manifesto-2024-large-print.pdf"
+      ]
+    },
+    "LD": {
+      "preset": "liberalCentre",
+      "program": "The Liberal Democrats' manifesto combines civil liberties, electoral reform and stronger parliamentary checks with a mixed economy and public services.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.libdems.org.uk/manifesto"
+      ]
+    },
+    "PC": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 12.059,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "Plaid",
+      "sourceRow": "1106",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "SNP": {
+      "preset": "socialDemocrat",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 8.339,
+      "scope": "ches_estimate",
+      "sourceFamily": "8",
+      "sourceParty": "SNP",
+      "sourceRow": "1105",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-826-democratic-unionist-party-5caa938": {
+      "preset": "nationalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 13.0102,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Democratic Unionist Party",
+      "sourceRow": "328",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "gpm-826-green-party-of-england-and-w-1c8e93f": {
+      "preset": "green",
+      "program": "Closest PPO preset to the 2024 Chapel Hill Expert Survey party positions. The assessment uses the published estimates of economics, social policy, institutional checks and nationalism where scored and restricts the candidate set for specified party families.",
+      "rmsDistance": 15.804,
+      "scope": "ches_estimate",
+      "sourceFamily": "7",
+      "sourceParty": "GPEW",
+      "sourceRow": "1107",
+      "sources": [
+        "https://doi.org/10.1016/j.electstud.2025.102981",
+        "https://www.chesdata.eu/ches-europe/",
+        "https://partyfacts.herokuapp.com/download/"
+      ],
+      "surveyYear": 2024
+    },
+    "gpm-826-sinn-fein-22c8fbb": {
+      "preset": "mixedEconomyCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 27.2975,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Sinn Féin",
+      "sourceRow": "334",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    }
+  },
+  "840": {
+    "DEM": {
+      "preset": "mixedEconomyCentre",
+      "program": "The Democratic platform combines private investment and small-business support with expanded public investment, worker protections, voting rights and reproductive freedom.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://democrats.org/dnc-releases-2024-party-platform-to-be-voted-on-at-convention/",
+        "https://democrats.org/wp-content/uploads/2025/07/2024-Democratic-Party-Platform.pdf"
+      ]
+    },
+    "REP": {
+      "preset": "nationalConservative",
+      "program": "The 2024 Republican platform emphasizes national sovereignty, lower taxes and industry support, stronger border enforcement and economic nationalism.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://prod-static.gop.com/media/RNC2024-Platform.pdf"
+      ]
+    }
+  },
+  "858": {
+    "FA": {
+      "preset": "socialDemocrat",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 28.4441,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Broad Front",
+      "sourceRow": "995",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "PC": {
+      "preset": "classicalLiberal",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 23.8224,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Colorado Party",
+      "sourceRow": "996",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "PI": {
+      "preset": "liberalCentre",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 19.3805,
+      "scope": "gps2019_estimate",
+      "sourceParty": "Independent Party",
+      "sourceRow": "997",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
+      ]
+    },
+    "PN": {
+      "preset": "liberalConservative",
+      "program": "Closest broad PPO preset from Global Party Survey 2019 positions. The survey predates the opening and describes the continuing party.",
+      "rmsDistance": 14.8696,
+      "scope": "gps2019_estimate",
+      "sourceParty": "National Party",
+      "sourceRow": "998",
+      "sources": [
+        "https://doi.org/10.7910/DVN/WMGTNS"
       ]
     }
   }

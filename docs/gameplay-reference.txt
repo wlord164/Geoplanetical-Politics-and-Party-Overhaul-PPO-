@@ -1,8 +1,10 @@
 Politics and Party Overhaul (PPO)
 
-This Windows patch supports Geoplanetical 1.1.5, Windows Steam depot 940231, manifest 6518859217795271965 (app build 26734764). Install Node.js LTS from https://nodejs.org/en/download if needed. Allow about 4 GB of free space on the Steam library drive for backups and staging.
+This Windows patch supports Geoplanetical 1.1.6, Windows Steam depot 940231, manifest 4613876637531523744 (app build 26784265). Install Node.js LTS from https://nodejs.org/en/download if needed. Allow about 4 GB of free space on the Steam library drive for backups and staging.
 
 Close Geoplanetical and use Extract All on the PPO installer ZIP. Double-click Install Party Mod.cmd in the extracted folder. Run the new installer again to update a recognized PPO installation, including after Steam Verify Integrity restores the supported game files. Once the installer reports success, start the game through Steam. If Steam discovery fails, find the game folder with Steam's Browse Local Files and pass that folder as a quoted argument to Install Party Mod.cmd.
+
+Start a new campaign to apply the January 1, 2026 opening register. In Politics > Assembly, hover over a partisan seat for its party name. Select the seat or open the party from the list below it to see its leadership and PPO ideology. Neutral dots denote seats without an assigned party and vacancies. Party ideology labels use the closest PPO equivalent supported by the register or a published estimate. Open Government to see executive officeholders.
 
 If a campaign stopped during monthly finance with corporate-profit:working-capital:insufficient-balance, update PPO and load the last save from before the error. PPO reconciles identified working-capital assignments on load. Advance the campaign and save again to persist the repair.
 

@@ -43,7 +43,20 @@ const previousStock = [{
 }];
 
 // An upgrade profile must use the same stock build as currentStock.
-const previousPpo = [];
+const previousPpo = [
+  {
+    archive: "c95d1bba66e65dd95393cb3ca192554edf40a27c9c9805528ae4f977b286a467",
+    worker: "c761533d7d905227cf3cbe3a07639b4dbf86c2607c454e4c7f2d60e53658cb0d",
+    renderer: "466f77b2d304dd38271ccefb6a54070e000f94831f23f76bb143657551e61237",
+    executable: "3b32d3ec9201e7ee5031babea57eeb866ee26210db5ed2503267b03c08dc6c29",
+  },
+  {
+    archive: "fa7aa57af4fa630fa69d3794c1c2ba6a80a7ba6c037f857372565195ee58311a",
+    worker: "4ff8fffa15ebeccc051e63ba8c460ddd194b3a2aa8f8ec1f33a5478ff9592b2d",
+    renderer: "7372b06c7103d3ebaed1f5549f14c44d7869da4b1c7cb44f5be3b911e9407744",
+    executable: "884efea0beb5fe1877a4c4da0660773b3f397e63e88794fbceb29b9295420f66",
+  },
+];
 
 const backups = { archive: "backupArchive", worker: "backupWorker", executable: "backupExecutable" };
 

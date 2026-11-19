@@ -6,7 +6,7 @@ A Geoplanetical mod that expands party politics, elections, uprisings, and histo
 
 Requires **Geoplanetical 1.1.6 on Windows Steam (build 26784265)**, [Node.js LTS](https://nodejs.org/en/download), and about 4 GB free on the Steam library drive.
 
-1. Close Geoplanetical and extract this compatibility ZIP into a new folder.
+1. Close Geoplanetical and extract the PPO ZIP into a new folder.
 2. Run `Install Party Mod.cmd` from the newly extracted folder, even if PPO is already installed.
 3. Launch Geoplanetical through Steam.
 
@@ -15,11 +15,12 @@ To remove PPO, close the game and run `Restore Original Game.cmd` from that fold
 ## Where to start
 
 - **New Game → Create Party** to choose an ideology and start your own party.
+- **Politics → Assembly** for the seat chart. Hover over a seat for the party name or select it to open the party’s leaders and ideology.
 - **My Party** for Congress, campaigns, staff plans, foreign funding, and uprisings.
 - **Defense → Historical Conflicts** to browse wars, check who controls territory, and review peace options.
 - **At War** to select divisions, organize armies, and assign fronts and orders on the war map.
 
-You can continue an existing campaign. Start a new game to see the full historical opening setup.
+You can continue an existing campaign. Start a new game to load the January 1, 2026 opening register. PPO includes its opening names and portrait assets. The two Workshop party identity mods can be disabled.
 
 ### Frontline orders
 

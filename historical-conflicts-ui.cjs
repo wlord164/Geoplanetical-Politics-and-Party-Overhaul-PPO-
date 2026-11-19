@@ -369,6 +369,13 @@ function gpmHistoricalFactionProfile(actor, front) {
     (representativeImage ? "Faction representative" : illustrativeImage && illustration.fictionalName ? "Fictional scenario character" : null);
   const photoCredit = representativeImage ? "Photo: " + representative.name + " (faction representative)" :
     illustrativeImage ? "Illustrative portrait" : null;
+  const officials = (identity?.additionalOfficials || [])
+    .filter(person => person.name !== currentName && (!representativeImage || person.name !== representative.name));
+  const officialRow = person => {
+    const image = gpmHistoricalAssetUrl(person.portrait?.asset);
+    return `<li class="gpm-war-portrait">${image ? `<img src="${b(image)}" alt="" loading="lazy">` : ""}
+      <span><b>${b(person.name)}</b> <small>${b(person.role)}</small></span></li>`;
+  };
   const ideology = actor.ppoIdeology;
   const politics = ideology?.historicalLabel || ideology?.label ||
     (actor.ideology?.length <= 80 ? actor.ideology.replace(/\.$/, "") : null) ||
@@ -396,6 +403,8 @@ function gpmHistoricalFactionProfile(actor, front) {
         ${leaderRole || photoCredit ? `<span class="il-sub">${b([leaderRole, photoCredit].filter(Boolean).join(" · "))}</span>` : ""}
       </span>
     </div>
+    ${officials.length ? `<details data-gpm-faction-officials><summary>Opening faction officials</summary>
+      <ul class="gpm-faction-laws">${officials.map(officialRow).join("")}</ul></details>` : ""}
     ${stats.length ? `<div class="insp-econ">${stats.map(([label, value]) =>
       `<div class="stat" data-gpm-faction-stat><label>${b(label)}</label><span class="v">${b(value.toLocaleString(Ds()))}</span></div>`).join("")}</div>` : ""}
     ${details.length ? `<div class="insp-rel">${details.map(([label, value]) =>

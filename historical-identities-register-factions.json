@@ -1,0 +1,740 @@
+{
+  "ucdp-actor-8885": {
+    "additionalOfficials": [
+      {
+        "name": "Bertrand Bisimwa",
+        "role": "M23 political leader",
+        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf",
+        "portrait": {
+          "file": "historical-identity-assets/register-bertrand-bisimwa.jpg",
+          "source": "https://commons.wikimedia.org/wiki/File:Bertrand_Bisimwa_(cropped).jpg",
+          "license": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "credit": "Christbirego, September 2025. Wikimedia Commons crop."
+        }
+      },
+      {
+        "name": "Sultani Makenga",
+        "role": "M23 military commander",
+        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf"
+      }
+    ]
+  },
+  "libya-gns": {
+    "flag": {
+      "name": "Libyan national flag used by the Government of National Stability",
+      "file": "historical-identity-assets/register-libya-gns-banner.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Libya.svg",
+      "credit": "Libyan national flag. PNG rendering of the Commons SVG.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 2,
+      "evidence": "https://alumma.ly/storage/pdf/uR9VFjfknATQVSJzzp71RJARlAyXsDbpZ0uvHZjZ.pdf"
+    }
+  },
+  "syr-suwayda-local-groups": {
+    "additionalOfficials": [
+      {
+        "name": "Hikmat al-Hijri",
+        "role": "Druze spiritual authority and National Guard founding figure",
+        "source": "https://www.euaa.europa.eu/syria-security-situation/2132-territorial-control-and-main-armed-actors",
+        "portrait": {
+          "file": "historical-identity-assets/register-hikmat-al-hijri.png",
+          "source": "https://commons.wikimedia.org/wiki/File:Sheikh_Hikmat_al-Hijri_reading_a_speech_in_2024_(cropped).png",
+          "license": "https://creativecommons.org/licenses/by/3.0",
+          "credit": "kayan24, 2024. Wikimedia Commons crop."
+        }
+      }
+    ]
+  },
+  "warwatch-actor-2519": {
+    "leader": {
+      "name": "Ramadhane Abdelkader",
+      "role": "3R leader and April 2025 peace agreement signatory",
+      "source": "https://digitallibrary.un.org/record/4084252/files/S_2025_385-EN.pdf",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "warwatch-actor-2138": {
+    "leader": {
+      "name": "Mohammad Yasin Zia",
+      "role": "Afghanistan Freedom Front leader",
+      "source": "https://monitoring.bbc.co.uk/product/b0006dvf",
+      "evidence": "Continuing leadership reported retrospectively by BBC Monitoring"
+    }
+  },
+  "ucdp-actor-881": {
+    "leader": {
+      "name": "Sa’ad bin Atef al-Awlaki",
+      "role": "AQAP leader",
+      "source": "https://digitallibrary.un.org/record/4102624/files/S_2026_44-EN.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-sa-ad-bin-atef-al-awlaki.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/aqap.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_aqap_sad_atif_al-aulaqi.jpg"
+      }
+    },
+    "flag": {
+      "name": "AQAP flag reference",
+      "file": "historical-identity-assets/register-ucdp-actor-881-banner.png",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/aqap.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.471,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/aqap.png"
+    }
+  },
+  "is-adf": {
+    "leader": {
+      "name": "Seka Musa Baluku",
+      "role": "ADF / ISIS Central Africa leader",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_ca.html",
+      "portrait": {
+        "file": "historical-identity-assets/register-seka-musa-baluku.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_ca.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_isis_drc_seka_baluku.jpg"
+      }
+    },
+    "flag": {
+      "name": "Islamic State Central Africa Province emblem",
+      "file": "historical-identity-assets/register-is-adf-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_ca.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.248,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis_ca.jpg"
+    }
+  },
+  "ucdp-actor-1151": {
+    "leader": {
+      "name": "Rubén Nemesio Oseguera Cervantes",
+      "role": "Founder and leader at the cutoff",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/cjng.html",
+      "portrait": {
+        "file": "historical-identity-assets/register-ruben-nemesio-oseguera-cervantes.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/cjng.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leaders_CJNG_Ruben_Cervantes.jpg"
+      }
+    },
+    "flag": {
+      "name": "CJNG logo",
+      "file": "historical-identity-assets/register-ucdp-actor-1151-banner.png",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/cjng.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.6,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/cartel_cjng_logo.png"
+    }
+  },
+  "ucdp-actor-7870": {
+    "leader": {
+      "name": "François Bozizé",
+      "role": "CPC coalition leader",
+      "source": "https://digitallibrary.un.org/record/4084252/files/S_2025_385-EN.pdf",
+      "evidence": "Documented coalition lead; constituent groups withdrew or re-entered peace process during 2025",
+      "portrait": {
+        "file": "historical-identity-assets/register-francois-bozize.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Francois_Bozize.jpg",
+        "license": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "credit": "HDPT CAR / Pierre Holtz. Wikimedia Commons Flickr-reviewed 2007 photograph."
+      }
+    }
+  },
+  "ucdp-actor-9529": {
+    "leader": {
+      "name": "Thomas Lubanga Dyilo",
+      "role": "President of CRP and co-creator of its political-military movement",
+      "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "ucdp-actor-7092": {
+    "leader": {
+      "name": "Youssouf Toloba",
+      "role": "Dan Na Ambassagou leader",
+      "source": "https://www.sipri.org/sites/default/files/WORKING%20PAPER%20N%C2%B05%20-%20EN%20%28WEB%29.pdf",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "sdn-joint-force": {
+    "additionalOfficials": [
+      {
+        "name": "Minni Arko Minnawi",
+        "role": "Head of the SLM/A-Minnawi coalition component",
+        "source": "https://africacenter.org/spotlight/sudan-conflict-armed-actors/",
+        "evidence": "Documented public role at cutoff",
+        "portrait": {
+          "file": "historical-identity-assets/register-minni-arko-minnawi.jpg",
+          "source": "https://commons.wikimedia.org/wiki/File:Minni_Minnawi.jpg",
+          "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "credit": "White House photo by Kimberlee Hewitt, July 2006. Wikimedia Commons crop."
+        }
+      },
+      {
+        "name": "Jibril Ibrahim",
+        "role": "Head of the Justice and Equality Movement coalition component",
+        "source": "https://africacenter.org/spotlight/sudan-conflict-armed-actors/",
+        "evidence": "Documented public role at cutoff"
+      }
+    ]
+  },
+  "ucdp-actor-528": {
+    "additionalOfficials": [
+      {
+        "name": "Gaston Iyamuremye",
+        "role": "FDLR-FOCA political leader",
+        "source": "https://eur-lex.europa.eu/eli/reg_impl/2024/1271/oj/eng",
+        "evidence": "Documented by UN experts in retrospective reporting"
+      },
+      {
+        "name": "Pacifique Ntawunguka",
+        "role": "FDLR-FOCA military commander",
+        "source": "https://eur-lex.europa.eu/eli/reg_impl/2024/1271/oj/eng",
+        "evidence": "Documented by UN experts in retrospective reporting"
+      }
+    ]
+  },
+  "ucdp-actor-744": {
+    "leader": {
+      "name": "Eliécer Herlinto Chamorro Acosta",
+      "role": "ELN leader",
+      "source": "https://www.policia.gov.co/contenido/eliecer-herlinto-chamorro-acosta",
+      "portrait": {
+        "file": "historical-identity-assets/register-eliecer-herlinto-chamorro-acosta.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/eln.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_eln_eliecer_acosta.jpg"
+      }
+    },
+    "flag": {
+      "name": "National Liberation Army (Colombia) flag",
+      "file": "historical-identity-assets/register-ucdp-actor-744-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/eln.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.501,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/eln.jpg"
+    }
+  },
+  "ucdp-actor-7214": {
+    "leader": {
+      "name": "Jobanis de Jesús Ávila Villadiego",
+      "role": "Ejército Gaitanista de Colombia leader",
+      "source": "https://www.consejeriacomisionadadepaz.gov.co/prensa/Paginas/Comunicado-a-la-opinion-publica-acerca-del-Espacio-de-Conversacion-Sociojuridico-con-el-%28a%29-EGC.aspx",
+      "evidence": "documented in later reporting"
+    }
+  },
+  "ucdp-actor-8468": {
+    "leader": {
+      "name": "Néstor Gregorio Vera Fernández",
+      "role": "Estado Mayor Central faction leader",
+      "source": "https://www.justice.gov/media/1178396/dl?inline="
+    }
+  },
+  "ucdp-actor-9191": {
+    "leader": {
+      "name": "Alexander Díaz Mendoza",
+      "role": "Leader of the EMBF faction",
+      "source": "https://www.camara.gov.co/wp-content/uploads/2025/12/control_politico/respuestas/7971/RTA.MINDEFENSA.pdf",
+      "evidence": "Identified in a December 2025 defence ministry response and contemporaneous reporting."
+    }
+  },
+  "ucdp-actor-209": {
+    "leader": {
+      "name": "Khalil al-Hayya",
+      "role": "Member of Hamas’s temporary leadership committee",
+      "source": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ%3AL_202601173",
+      "portrait": {
+        "file": "historical-identity-assets/register-khalil-al-hayya.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/hamas.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_hamas_khalil_al-hayyah_2024.jpg"
+      }
+    },
+    "additionalOfficials": [
+      {
+        "name": "Mohammed Ismail Darwish",
+        "role": "Shura Council chair and member of Hamas’s temporary leadership council",
+        "source": "https://akparti.org.tr/en/agenda-news/president-erdo%C4%9Fan-receives-hamas-delegation-29-01-2025-18-21-32/",
+        "evidence": "Shura office confirmed by the Turkish delegation host. The movement reported collective leadership at the cutoff.",
+        "portrait": {
+          "file": "historical-identity-assets/register-mohammed-ismail-darwish.jpg",
+          "source": "https://commons.wikimedia.org/wiki/File:Muhammad_Ismail_Darwish_during_an_interview_with_Khamenei.ir_website.jpg",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "credit": "Khamenei.ir, February 2025. Wikimedia Commons portrait."
+        }
+      },
+      {
+        "name": "Khaled Meshaal",
+        "role": "External political bureau head and reported leadership council member",
+        "source": "https://passia.org/wp-content/uploads/2025/10/Hamas-FES-logo-13.10.2025.pdf",
+        "evidence": "Regional leadership and council membership documented in 2025 research."
+      },
+      {
+        "name": "Zaher Jabarin",
+        "role": "West Bank political bureau head and reported leadership council member",
+        "source": "https://passia.org/wp-content/uploads/2025/10/Hamas-FES-logo-13.10.2025.pdf",
+        "evidence": "Regional leadership and council membership documented in 2025 research.",
+        "portrait": {
+          "file": "historical-identity-assets/register-zaher-jabarin.jpg",
+          "source": "https://commons.wikimedia.org/wiki/File:Zaher_Jabarin_2024.jpg",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "credit": "Khamenei.ir, March 2024. Wikimedia Commons crop."
+        }
+      }
+    ],
+    "flag": {
+      "name": "Hamas movement flag",
+      "file": "historical-identity-assets/register-ucdp-actor-209-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/hamas.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.567,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/hamas.jpg"
+    }
+  },
+  "ucdp-actor-366": {
+    "leader": {
+      "name": "Naim Qassem",
+      "role": "Secretary-General",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F625&t=pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-naim-qassem.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Naim_Kassim_(cropped).jpg",
+        "license": "https://creativecommons.org/licenses/by/2.0",
+        "credit": "Sebastian Baryli, January 2009. Wikimedia Commons crop."
+      }
+    },
+    "flag": {
+      "name": "Hezbollah organizational emblem",
+      "file": "historical-identity-assets/register-ucdp-actor-366-banner.png",
+      "source": "https://www.odni.gov/files/documents/2012_nctc_ct_calendar.pdf#page=144",
+      "credit": "U.S. National Counterterrorism Center, 2012 Counterterrorism Calendar, printed page 142. Identifying graphic excerpt.",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.278,
+      "evidence": "https://www.odni.gov/files/documents/2012_nctc_ct_calendar.pdf#page=144"
+    }
+  },
+  "is-iraq-syria": {
+    "leader": {
+      "name": "Abu Hafs al-Hashimi al-Qurashi",
+      "role": "Reported Islamic State emir (nom de guerre)",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2026%2F57&t=pdf",
+      "evidence": "alias only"
+    },
+    "flag": {
+      "name": "Islamic State flag",
+      "file": "historical-identity-assets/register-is-iraq-syria-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.501,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis_flag.jpg"
+    }
+  },
+  "is-khorasan": {
+    "leader": {
+      "name": "Sanaullah Ghafari",
+      "role": "Amir",
+      "source": "https://main.un.org/securitycouncil/en/content/sanaullah-ghafari",
+      "portrait": {
+        "file": "historical-identity-assets/register-sanaullah-ghafari.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_khorasan.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_isis_khorasan_sanaullah_ghafari.jpg"
+      }
+    },
+    "flag": {
+      "name": "Islamic State Khorasan Province emblem",
+      "file": "historical-identity-assets/register-is-khorasan-banner.png",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_khorasan.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.471,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis-k.png"
+    }
+  },
+  "is-mozambique": {
+    "leader": {
+      "name": "Ulanga",
+      "role": "Spiritual leader (public alias)",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F71&t=pdf#page=9",
+      "evidence": "documented in later reporting"
+    },
+    "additionalOfficials": [
+      {
+        "name": "Faridi Suleiman Haruni",
+        "role": "Operational leader",
+        "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F71&t=pdf#page=9",
+        "evidence": "documented in later reporting"
+      }
+    ],
+    "flag": {
+      "name": "Islamic State Mozambique Province emblem",
+      "file": "historical-identity-assets/register-is-mozambique-banner.png",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_mozambique.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.28,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis-mozambique.png"
+    }
+  },
+  "is-sahel": {
+    "flag": {
+      "name": "Islamic State Sahel Province emblem",
+      "file": "historical-identity-assets/register-is-sahel-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_sahel.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.28,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis_sahel.jpg"
+    }
+  },
+  "is-somalia": {
+    "leader": {
+      "name": "Abdul Qadir Mumin",
+      "role": "Founder and reported branch leader",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F71&t=pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-abdul-qadir-mumin.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_somalia.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_isis_somalia_abdulqadir_mumin.jpg"
+      }
+    },
+    "flag": {
+      "name": "Islamic State Somalia emblem",
+      "file": "historical-identity-assets/register-is-somalia-banner.png",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_somalia.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.499,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis_somalia.png"
+    }
+  },
+  "is-west-africa": {
+    "leader": {
+      "name": "Ba’a Shuwa",
+      "role": "ISWAP branch leader reported by the UN monitoring team",
+      "source": "https://afghanmission-un.org/wp-content/uploads/2026/03/37th-Report.pdf#page=8",
+      "evidence": "reported"
+    },
+    "flag": {
+      "name": "Islamic State West Africa Province emblem",
+      "file": "historical-identity-assets/register-is-west-africa-banner.png",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/isis_west_africa.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.28,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/isis-west-v2.png"
+    }
+  },
+  "ucdp-actor-9505": {
+    "leader": {
+      "name": "Hafiz Gul Bahadur",
+      "role": "Leader of the Ittehad-ul-Mujahideen coalition",
+      "source": "https://www.ecoi.net/en/file/local/2140372/2026_05_EUAA_COI_Report_Pakistan_Country_Focus.pdf",
+      "evidence": "Name given by the UN and EUAA; alternate civil identity unverified"
+    }
+  },
+  "ucdp-actor-6716": {
+    "leader": {
+      "name": "Iyad Ag Ghali",
+      "role": "JNIM leader",
+      "source": "https://digitallibrary.un.org/record/3981468/files/S_2022_547-EN.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-iyad-ag-ghali.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/jnim.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_jnim_iyad_ag_ghali.jpg"
+      }
+    },
+    "flag": {
+      "name": "JNIM flag reference",
+      "file": "historical-identity-assets/register-ucdp-actor-6716-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/jnim.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.548,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/jnim_flag_oct2022.jpg"
+    }
+  },
+  "ucdp-actor-8442": {
+    "leader": {
+      "name": "Jorge Eliécer Díaz Collazos",
+      "role": "Los Costeños leader and signatory to the October 2025 truce",
+      "source": "https://caracol.com.co/2025/10/03/costenos-y-pepes-temidas-bandas-de-barranquilla-sellan-tregua-en-la-picota/?outputType=amp",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "ucdp-actor-8866": {
+    "leader": {
+      "name": "Digno Palomino Rodríguez",
+      "role": "Los Pepes leader and signatory to the October 2025 truce",
+      "source": "https://caracol.com.co/2025/10/03/costenos-y-pepes-temidas-bandas-de-barranquilla-sellan-tregua-en-la-picota/?outputType=amp",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "per-mpcp": {
+    "leader": {
+      "name": "Víctor Quispe Palomino",
+      "role": "MPCP leader",
+      "source": "https://www.pj.gob.pe/wps/wcm/connect/d306f88045ffa1bbacfeece5406a4592/TEMP_202100288500113704920251009155343.pdf?CACHEID=d306f88045ffa1bbacfeece5406a4592&MOD=AJPERES",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "sen-mfdc-south": {
+    "leader": {
+      "name": "César Atoute Badiate",
+      "role": "Southern Front leader and peace interlocutor",
+      "source": "https://hdcentre.org/news/he-state-of-senegal-and-the-provisional-committee-of-the-unified-political-and-combat-wings-of-the-mfdc-take-a-major-step-in-the-casamance-peace-process/",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "warwatch-actor-2319": {
+    "leader": {
+      "name": "Thomas Cirillo Swaka",
+      "role": "National Salvation Front chairman",
+      "source": "https://warwatch.ch/situations/non-international-armed-conflicts-in-south-sudan/",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "ucdp-actor-208": {
+    "leader": {
+      "name": "Ziyad al-Nakhalah",
+      "role": "Secretary-General",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/pij.html",
+      "portrait": {
+        "file": "historical-identity-assets/register-ziyad-al-nakhalah.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/pij.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_pij_ziyad_al_nakhalah.jpg"
+      }
+    },
+    "flag": {
+      "name": "Palestine Islamic Jihad flag reference",
+      "file": "historical-identity-assets/register-ucdp-actor-208-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/pij.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.501,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/pij.jpg"
+    }
+  },
+  "ucdp-actor-671": {
+    "leader": {
+      "name": "Said Abdullahi Deni",
+      "role": "President of Puntland",
+      "source": "https://www.government.nl/binaries/government/documenten/reports/2025/04/04/general-country-of-origin-information-report-on-somalia-april-2025/Country%2Bof%2BOrigin%2BInformation%2Breport%2BSomalia%2B2025.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-said-abdullahi-deni.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Said_Abdullahi_Deni_(22-05-2021)_(cropped).jpg",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "credit": "Government of Puntland, May 2021. Wikimedia Commons crop."
+      }
+    },
+    "flag": {
+      "name": "Flag of Puntland",
+      "file": "historical-identity-assets/register-ucdp-actor-671-banner.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Puntland.svg",
+      "credit": "Wikimedia Commons vector. Documentary photograph by UN Photo / Omar Abdisalan.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "ratio": 1.497,
+      "evidence": "https://commons.wikimedia.org/wiki/File:Flag_of_Puntland_and_Flag_of_Somalia.jpg"
+    }
+  },
+  "ucdp-actor-775": {
+    "additionalOfficials": [
+      {
+        "name": "Iván Archivaldo Guzmán Salazar",
+        "role": "Los Chapitos co-leader",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "portrait": {
+          "file": "historical-identity-assets/register-ivan-archivaldo-guzman-salazar.jpg",
+          "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+          "license": "https://archive.dni.gov/index.php/privacy-policy",
+          "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+          "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_ivan_salazar.jpg"
+        }
+      },
+      {
+        "name": "Jesús Alfredo Guzmán Salazar",
+        "role": "Los Chapitos co-leader",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "portrait": {
+          "file": "historical-identity-assets/register-jesus-alfredo-guzman-salazar.jpg",
+          "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+          "license": "https://archive.dni.gov/index.php/privacy-policy",
+          "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+          "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_jesus_salazar.jpg"
+        }
+      },
+      {
+        "name": "Ismael Zambada Sicairos",
+        "role": "Los Mayos leader",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "portrait": {
+          "file": "historical-identity-assets/register-ismael-zambada-sicairos.jpg",
+          "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+          "license": "https://archive.dni.gov/index.php/privacy-policy",
+          "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+          "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_ismael_sicairos.jpg"
+        }
+      },
+      {
+        "name": "Aureliano Guzmán Loera",
+        "role": "El Guano faction leader",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "portrait": {
+          "file": "historical-identity-assets/register-aureliano-guzman-loera.jpg",
+          "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+          "license": "https://archive.dni.gov/index.php/privacy-policy",
+          "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+          "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_aureliano_loera.jpg"
+        }
+      }
+    ]
+  },
+  "ucdp-actor-7795": {
+    "additionalOfficials": [
+      {
+        "name": "Iván Archivaldo Guzmán Salazar",
+        "role": "Los Chapitos co-leader",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "portrait": {
+          "file": "historical-identity-assets/register-ivan-archivaldo-guzman-salazar.jpg",
+          "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+          "license": "https://archive.dni.gov/index.php/privacy-policy",
+          "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+          "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_ivan_salazar.jpg"
+        }
+      },
+      {
+        "name": "Jesús Alfredo Guzmán Salazar",
+        "role": "Los Chapitos co-leader",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "portrait": {
+          "file": "historical-identity-assets/register-jesus-alfredo-guzman-salazar.jpg",
+          "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+          "license": "https://archive.dni.gov/index.php/privacy-policy",
+          "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+          "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_jesus_salazar.jpg"
+        }
+      }
+    ]
+  },
+  "ucdp-actor-7796": {
+    "leader": {
+      "name": "Ismael Zambada Sicairos",
+      "role": "Los Mayos leader",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+      "portrait": {
+        "file": "historical-identity-assets/register-ismael-zambada-sicairos.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/sinaloa_cartel.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_sinaloacartel_ismael_sicairos.jpg"
+      }
+    }
+  },
+  "sdn-sla-aw": {
+    "leader": {
+      "name": "Abdel Wahid Mohamed al-Nur",
+      "role": "Sudan Liberation Movement/Army faction head",
+      "source": "https://darfur24.com/en/2025/12/02/minawi-forms-committee-for-mobilization-and-popular-resistance-in-darfur/",
+      "evidence": "Documented public role at cutoff"
+    }
+  },
+  "ucdp-actor-4226": {
+    "leader": {
+      "name": "Riek Machar",
+      "role": "SPLM/A-IO leader",
+      "source": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2025%2F768&t=pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-riek-machar.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Riek_Machar_VOA_photo_(3x4_cropped).jpg",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "credit": "Voice of America. Wikimedia Commons crop."
+      }
+    }
+  },
+  "ucdp-actor-356": {
+    "leader": {
+      "name": "Noor Wali Mehsud",
+      "role": "Tehrik-e Taliban Pakistan leader",
+      "source": "https://main.un.org/securitycouncil/en/content/noor-wali-mehsud",
+      "portrait": {
+        "file": "historical-identity-assets/register-noor-wali-mehsud.jpg",
+        "source": "https://archive.dni.gov/nctc/terrorist_groups/ttp.html",
+        "license": "https://archive.dni.gov/index.php/privacy-policy",
+        "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+        "evidence": "https://archive.dni.gov/nctc/img/groups/leader_ttp_noor_wali.jpg"
+      }
+    },
+    "flag": {
+      "name": "TTP flag reference",
+      "file": "historical-identity-assets/register-ucdp-actor-356-banner.jpg",
+      "source": "https://archive.dni.gov/nctc/terrorist_groups/ttp.html",
+      "credit": "U.S. National Counterterrorism Center archive (editorial reference excerpt)",
+      "license": "https://archive.dni.gov/index.php/privacy-policy",
+      "ratio": 1.501,
+      "evidence": "https://archive.dni.gov/nctc/img/groups/ttp.jpg"
+    }
+  },
+  "ucdp-actor-7463": {
+    "additionalOfficials": [
+      {
+        "name": "Charité Nguna Kiza",
+        "role": "CODECO/URDPC chief of staff",
+        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf",
+        "evidence": "Named in the UN Group of Experts’ June 2025 command roster. The annex uses the name order Kiza Charité."
+      },
+      {
+        "name": "Désiré Londroma Ndjukpa",
+        "role": "CODECO/URDPC deputy chief of staff for defence",
+        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf",
+        "evidence": "Named in the 2025 UN command roster and Swiss sanctions material."
+      },
+      {
+        "name": "Basa Zukpa Gerson",
+        "role": "CODECO/URDPC spokesperson and senior leadership figure",
+        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf",
+        "evidence": "Documented in 2025 UN reporting. The command annex gives Bassa Zukpa Guersom."
+      }
+    ]
+  },
+  "mmr-uwsa": {
+    "leader": {
+      "name": "Bao Youxiang",
+      "role": "United Wa State Party and Army chairman",
+      "source": "https://cnimyanmar.com/index.php/english-edition/32366-wa-is-operating-one-country-two-systems-like-china",
+      "evidence": "Documented public role at cutoff"
+    },
+    "flag": {
+      "name": "United Wa State Army flag",
+      "file": "historical-identity-assets/register-mmr-uwsa-banner.png",
+      "source": "https://commons.wikimedia.org/wiki/File:United_Wa_State_Army_flag.svg",
+      "credit": "Nrg800, January 2024. Wikimedia Commons vector of the documented army flag.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "ratio": 1.608,
+      "evidence": "https://commons.wikimedia.org/wiki/File:United_Wa_State_Army_flag.png"
+    }
+  },
+  "ucdp-actor-9067": {
+    "leader": {
+      "name": "Jimmy Chérizier",
+      "role": "Viv Ansanm coalition leader identified by the U.S. Department of Justice",
+      "source": "https://www.justice.gov/opa/pr/haitian-gang-leader-barbecue-indicted-conspiracy-violate-us-sanctions"
+    }
+  }
+}

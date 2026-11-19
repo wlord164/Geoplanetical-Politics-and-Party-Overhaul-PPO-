@@ -1274,10 +1274,11 @@
       "territorial": "autonomy"
     },
     "ucdp-actor-366": {
-      "preset": "religiousTraditionalist",
+      "preset": "islamicRepublican",
       "fit": "partial",
       "program": "Lebanese Shia Islamist political and armed movement",
-      "note": "Religion alone is insufficient. Hezbollah is also a party within Lebanon's divided political system.",
+      "historicalLabel": "Islamic Republicanism",
+      "note": "The closest PPO tradition reflects Hezbollah's commitment to the guardianship of the Islamic jurist. The 2009 political document describes consensual democracy for Lebanon's confessional political system.",
       "sources": [
         "https://translations.meforum.org/documents/hezbollah-political-document-2009/",
         "https://www.everycrsreport.com/files/20110103_R41446_638709eb9f613cd2d487e6a55d197870c312798b.pdf"

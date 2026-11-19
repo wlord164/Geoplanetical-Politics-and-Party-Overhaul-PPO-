@@ -140,6 +140,8 @@ function estimatePartyIdeology(ideology) {
 function partyIdeologyLabel(party) {
   const id = party?.nameDesc?.gpmDeclaredIdeology || party?.nameDesc?.gpmIdeologyPreset || party?.nameDesc?.gpmOpeningIdeology;
   if (Object.hasOwn(gpmPresets, id)) return gpmPresets[id].label;
+  if (party?.nameDesc?.gpmOpeningKind === "aggregate") return "";
+  if (party?.nameDesc?.gpmOpeningName && !party.nameDesc.gpmOpeningIdeologySource) return "Ideology unverified";
   return estimatePartyIdeology(party?.ideology) ?? o("pol.family." + mI(party));
 }
 
@@ -148,7 +150,14 @@ function partyIdeologyBadge(party) {
   const presetId = party.nameDesc?.gpmDeclaredIdeology || party.nameDesc?.gpmIdeologyPreset || opening;
   const preset = Object.hasOwn(gpmPresets, presetId) ? gpmPresets[presetId] : null;
   const label = partyIdeologyLabel(party);
-  const tooltip = opening && presetId === opening ? ' data-tip="Closest PPO equivalent from the opening register."' :
+  if (!label) return "";
+  const evidence = party.nameDesc?.gpmOpeningIdeologySource;
+  const registerTooltip = evidence?.endsWith("_estimate") ?
+    ' data-tip="Closest PPO equivalent estimated from published party-position data."' :
+    ' data-tip="Closest PPO equivalent from the opening register."';
+  const tooltip = opening && presetId === opening ? registerTooltip :
+    label === "Ideology unverified" ? ' data-tip="The register has no reliable party-wide ideology match."' :
+    evidence === "game-model" ? ' data-tip="Estimated from this party’s existing game model."' :
     label !== preset?.label && estimatePartyIdeology(party.ideology) ? ' data-tip="Estimated from the party’s four current ideology scores."' : "";
   const historical = party.nameDesc?.gpmHistoricalIdeology;
   const historicalEquivalent = party.nameDesc?.gpmHistoricalIdeologyEquivalent;

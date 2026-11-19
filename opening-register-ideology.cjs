@@ -13,6 +13,7 @@ function openingIdeology(countryKey, row) {
   }
   return {
     preset: match.preset,
+    scope: match.scope,
     scores: Object.fromEntries(dimensions.map((axis, index) => [axis, preset.values[index] / 100])),
   };
 }
