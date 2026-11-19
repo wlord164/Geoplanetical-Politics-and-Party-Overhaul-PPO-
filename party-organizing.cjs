@@ -78,7 +78,7 @@ function partyMovementDemandFit(party, movement, group) {
 function partyOrganizingQuote(sim, country, partyId, kind, targetId, groupList = uAe(country)) {
   const party = AL(country, partyId);
   const record = party?.gpmOrganizing;
-  if (!party?.organization || party.legal === false) {
+  if (!party?.organization || party.legal === false || gpmOpeningNonparty(party)) {
     return { ok: false, reason: "party" };
   }
   if (kind !== "meeting" && kind !== "movement") return { ok: false, reason: "action" };

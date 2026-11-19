@@ -43,9 +43,9 @@ function gpmDomesticNormalizePlan(input) {
   return plan;
 }
 
-function gpmDomesticEligibleParty(country, party) {
+function gpmDomesticEligibleParty(country, party, existing = false) {
   return Boolean(party?.organization && party.legal !== false && !party.gpmUprisingShell && !party.gpmUprisingExcluded &&
-    country.pol?.parties?.includes(party));
+    country.pol?.parties?.includes(party) && (existing || !gpmOpeningNonparty(party)));
 }
 
 function gpmDomesticPlanFor(country, party) {
@@ -62,11 +62,10 @@ function gpmDomesticPolicy(sim, country, party) {
   return plan.enabled ? plan : { ...plan, enabled: true, allowForeignFunding: true, allowForeignDonations: true };
 }
 
-function gpmDomesticAllowsDonation(sim, country, party) {
-  if (!gpmDomesticEligibleParty(country, party)) return false;
-  return tao(sim, country, party.id)
-    ? gpmDomesticNormalizePlan(party.gpmDomestic?.plan).allowForeignDonations
-    : gpmDomesticPolicy(sim, country, party)?.allowForeignDonations === true;
+function gpmDomesticAllowsDonation(sim, country, party, existing = false) {
+  if (!gpmDomesticEligibleParty(country, party, existing)) return false;
+  const plan = gpmDomesticPlanFor(country, party);
+  return tao(sim, country, party.id) ? plan.allowForeignDonations : !plan.enabled || plan.allowForeignDonations;
 }
 
 function gpmDomesticDonationBudget(sim, country, party) {
@@ -144,7 +143,7 @@ function gpmDomesticReceipt(sim, country, party, kind, amount = {}) {
 }
 
 function gpmDomesticEarnMembers(sim, country, party, kind, activistsK, day = sim.day) {
-  if (!sim.gpmDomesticForecast && (sim.countries?.get(country.key) !== country || !gpmDomesticEligibleParty(country, party))) return;
+  if (!sim.gpmDomesticForecast && (sim.countries?.get(country.key) !== country || !gpmDomesticEligibleParty(country, party, true))) return;
   const recruitment = ["meeting", "movement", "outreach", "rally"].includes(kind)
     ? gpmPoliticalCrisisRecruitment(country, party, day) : 1;
   const earned = Math.round(1000 * activistsK * (gpmDomesticMembershipTerms.projectMembers[kind] || 0) * recruitment);

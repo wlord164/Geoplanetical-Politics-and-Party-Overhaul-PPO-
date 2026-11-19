@@ -129,8 +129,8 @@ function gpmFactionPublicOffer({ requestId, requestKey, ...offer }) {
   return offer;
 }
 
-function gpmFactionReview(sim, country, party) {
-  if (!partyCongressEligible(party)) return { ok: false, reason: "party" };
+function gpmFactionReview(sim, country, party, existing = false) {
+  if (!partyCongressEligible(party, existing)) return { ok: false, reason: "party" };
   gpmFactionMigratePartyDoctrines(sim, country, party);
   const old = party.gpmFactionPolitics;
   const sizeState = party.gpmCongressSizeState;
@@ -250,8 +250,8 @@ function gpmFactionUpdateLeaders(sim, country, party, people, partyLeaderId = gp
   }
 }
 
-function gpmFactionLiveLeader(sim, country, party, faction) {
-  if (!faction?.seats || !partyCongressEligible(party)) return null;
+function gpmFactionLiveLeader(sim, country, party, faction, existing = false) {
+  if (!faction?.seats || !partyCongressEligible(party, existing)) return null;
   const person = sim.people?.get(faction.leadership?.personId);
   if (!person || faction.leadership.termEndDay <= sim.day) return null;
   const charter = gpmFactionLeadershipCharter(sim, party, faction);
@@ -267,7 +267,7 @@ function gpmFactionEndorsements(sim, country, party) {
   return accepted.flatMap(offer => {
     if (!offer.leaderId || offer.leaderId === partyLeaderId) return [];
     const faction = state.factions[offer.factionId];
-    if (gpmFactionLiveLeader(sim, country, party, faction)?.id !== offer.leaderId) return [];
+    if (gpmFactionLiveLeader(sim, country, party, faction, true)?.id !== offer.leaderId) return [];
     return [{ label: faction.label, programme: offer.programme, extraYes: offer.extraYes }];
   });
 }
@@ -305,7 +305,7 @@ function gpmFactionView(sim, country, party) {
 
 function gpmFactionCongressData(sim, country, partyId) {
   const party = AL(country, partyId);
-  if (!party || yn(country) !== partyId) return null;
+  if (!party || gpmOpeningNonparty(party) || yn(country) !== partyId) return null;
   const congress = partyCongressView(sim, country, partyId, undefined, undefined, {
     bargaining: gpmFactionView(sim, country, party),
   });
@@ -404,7 +404,7 @@ function gpmFactionExpire(sim, country, party) {
     const faction = state.factions[offer.factionId];
     if (offer.status === "accepted" && offer.deadlineDay > sim.day &&
         (offer.leaderId === null || (faction?.seats > 0 && faction.seats < threshold))) continue;
-    const leader = gpmFactionLiveLeader(sim, country, party, faction);
+    const leader = gpmFactionLiveLeader(sim, country, party, faction, true);
     if (offer.deadlineDay > sim.day && leader?.id === offer.leaderId) continue;
     const reason = offer.deadlineDay <= sim.day ? "deadline" : "leader";
     gpmFactionClose(sim, country, party, state, offer, offer.status === "accepted" ? "breached" : "expired", reason);
@@ -512,19 +512,19 @@ function gpmFactionDaily(sim, country, party, reviewResize = false) {
     gpmFactionSeparatePartyLeader(sim, country, party);
     gpmFactionExpire(sim, country, party);
   }
-  if (!partyCongressEligible(party)) return;
+  if (!partyCongressEligible(party, true)) return;
   const pendingResize = reviewResize && party.gpmCongressSizeState?.pendingResize;
   if (pendingResize) {
     const clearedBlocker = pendingResize.deferred?.offerIds?.some(id => !state?.offers.some(offer =>
       offer.id === id && offer.status === "accepted" && offer.deadlineDay > sim.day));
     if (clearedBlocker) pendingResize.effectiveDay = Math.min(pendingResize.effectiveDay, sim.day);
     if (pendingResize.effectiveDay <= sim.day) {
-      const resize = gpmFactionReview(sim, country, party);
+      const resize = gpmFactionReview(sim, country, party, true);
       if (resize.appliedResize) return;
       state = party.gpmFactionPolitics;
     }
   }
-  if (state?.nextReviewDay == null) return;
+  if (gpmOpeningNonparty(party) || state?.nextReviewDay == null) return;
   const minimum = partyCongressRecognitionSeats(party.gpmCongressSizeState?.size ?? gpmCongressDefaultSize);
   const due = Object.values(state.factions).some(faction => {
     if (!faction.seats) return false;

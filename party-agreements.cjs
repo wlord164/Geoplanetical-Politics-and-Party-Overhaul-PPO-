@@ -22,11 +22,11 @@ function partyAgreementContext(country) {
   return { government, chamber, contest, key };
 }
 
-function partyAgreementPartners(country, context) {
+function partyAgreementPartners(country, context, existing = false) {
   const { government, chamber } = context;
-  const existing = new Set([...(government.coalitionPartyIds || []), ...(government.supportPartyIds || [])]);
-  return (country.pol.parties || []).filter(party => partyCongressEligible(party) &&
-    !existing.has(party.id) && chamber.composition[party.id] > 0);
+  const alreadySupporting = new Set([...(government.coalitionPartyIds || []), ...(government.supportPartyIds || [])]);
+  return (country.pol.parties || []).filter(party => partyCongressEligible(party, existing) &&
+    !alreadySupporting.has(party.id) && chamber.composition[party.id] > 0);
 }
 
 function partyAgreementState(country) {
@@ -38,8 +38,8 @@ function partyAgreementStatus(country, day, agreement, context = undefined) {
   if (!agreement || !["offered", "active"].includes(agreement.status)) return agreement?.status || null;
   if (context === undefined) context = partyAgreementContext(country);
   if (!context || context.key !== agreement.scopeKey || context.government.leadPartyId !== agreement.leadId ||
-      !partyCongressEligible(AL(country, agreement.leadId)) ||
-      !partyAgreementPartners(country, context).some(party => party.id === agreement.supportId)) return "lapsed";
+      !partyCongressEligible(AL(country, agreement.leadId), true) ||
+      !partyAgreementPartners(country, context, true).some(party => party.id === agreement.supportId)) return "lapsed";
   if (day >= (agreement.status === "offered" ? agreement.offerUntilDay : agreement.untilDay)) return "expired";
   if (agreement.status === "active" && agreement.tabledDay == null && day >= agreement.billDueDay) return "missed";
   return agreement.status;
@@ -58,10 +58,10 @@ function partyAgreementReview(sim, country) {
   if (agreement && status !== agreement.status) partyAgreementClose(sim, country, agreement, status);
 }
 
-function partyAgreementTerms(sim, country, leadId, supportId) {
+function partyAgreementTerms(sim, country, leadId, supportId, existing = false) {
   const lead = AL(country, leadId);
   const support = AL(country, supportId);
-  if (!partyCongressEligible(lead) || !partyCongressEligible(support)) return [];
+  if (!partyCongressEligible(lead, existing) || !partyCongressEligible(support, existing)) return [];
   const day = sim.day || 0;
   const candidates = MLa(sim, country, supportId, false).map(entry => ({
     ...entry,
@@ -86,6 +86,7 @@ function partyAgreementTerms(sim, country, leadId, supportId) {
 
 function partyAgreementOpenReason(sim, country, context, partyId) {
   if (!context) return "government";
+  if (!partyCongressEligible(AL(country, partyId))) return "party";
   const day = sim.day || 0;
   if (day - context.government.installedDay > 90) return "window";
   const state = partyAgreementState(country);
@@ -109,7 +110,7 @@ function partyAgreementOptions(sim, country, partyId, context, eligible = () => 
 }
 
 function partyAgreementApply(sim, country, party, action, input) {
-  if (!partyCongressEligible(party)) return { ok: false, reason: "party" };
+  if (!partyCongressEligible(party, action !== "offer")) return { ok: false, reason: "party" };
   partyAgreementReview(sim, country);
   const context = partyAgreementContext(country);
   const day = sim.day || 0;
@@ -144,7 +145,7 @@ function partyAgreementApply(sim, country, party, action, input) {
       partyAgreementClose(sim, country, agreement, "declined");
       return { ok: true, changed: true };
     }
-    const term = partyAgreementTerms(sim, country, agreement.leadId, agreement.supportId)
+    const term = partyAgreementTerms(sim, country, agreement.leadId, agreement.supportId, true)
       .find(option => option.lawId === agreement.lawId && yo(option.value, agreement.value));
     if (!term) return { ok: false, reason: "stale" };
     const untilDay = Math.min(day + 120, context.contest.nextDay ?? Infinity);
@@ -234,14 +235,14 @@ function partyAgreementAgenda(sim, country, partyId) {
 }
 
 function advancePartyAgreementsAI(sim, country, party) {
-  if (!partyCongressEligible(party)) return null;
+  if (!partyCongressEligible(party, true)) return null;
   partyAgreementReview(sim, country);
   const context = partyAgreementContext(country);
   if (!context) return null;
   const state = partyAgreementState(country);
   const agreement = state?.current;
   if (agreement?.status === "offered" && agreement.targetId === party.id) {
-    const compatible = partyAgreementTerms(sim, country, agreement.leadId, agreement.supportId)
+    const compatible = partyAgreementTerms(sim, country, agreement.leadId, agreement.supportId, true)
       .some(term => term.lawId === agreement.lawId && yo(term.value, agreement.value));
     return partyAgreementApply(sim, country, party, compatible ? "accept" : "decline", { id: agreement.id });
   }

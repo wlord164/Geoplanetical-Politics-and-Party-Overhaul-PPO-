@@ -384,8 +384,9 @@ function partyCongressProgrammeLawBonus(party, lawId, day, target) {
   return yo(choice.lawTargets[lawId], target) ? 1 : 0;
 }
 
-function partyCongressEligible(party) {
-  return !!party?.organization && party.legal !== false && !party.gpmUprisingShell && !party.gpmUprisingExcluded;
+function partyCongressEligible(party, existing = false) {
+  return !!party?.organization && party.legal !== false && !party.gpmUprisingShell && !party.gpmUprisingExcluded &&
+    (existing || !gpmOpeningNonparty(party));
 }
 
 function applyPartyCongressVote(sim, country, party, kind, input, data = null) {

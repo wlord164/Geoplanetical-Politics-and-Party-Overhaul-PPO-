@@ -389,7 +389,7 @@ function mountPartyButtons() {
     try {
       const view = await session.queryView("politics.country");
       if (!isCurrent() || !document.querySelector('[data-gpm-rename]')) return;
-      const parties = view?.player?.pol?.parties || [];
+      const parties = (view?.player?.pol?.parties || []).filter(party => !gpmOpeningNonparty(party));
       if (view?.player?.key !== countryKey || !parties.some(party => party.id === partyId)) throw new Error("Your party could not be loaded.");
       partyDialog({
         parties, selectedPartyId: partyId, countryKey,
@@ -435,8 +435,9 @@ function renameDomesticParty(sim, country, input) {
   const identity = validatePartyName(input.rename);
   if (!identity) return { ok: false, reason: "name" };
   const control = Ho(sim);
+  const controlledParty = control.partyId && yP(country, control.partyId);
   if (!country || country !== sim.player || country.key !== input.countryKey || control.countryKey !== country.key ||
-      !control.partyId || input.expectedPartyId !== control.partyId || !yP(country, control.partyId) ||
+      !controlledParty || input.expectedPartyId !== control.partyId || gpmOpeningNonparty(controlledParty) ||
       (input.expectedCampaignId !== undefined && input.expectedCampaignId !== control.campaignId) ||
       (input.expectedControlRevision !== undefined && input.expectedControlRevision !== control.controlRevision)) {
     return { ok: false, reason: "party" };
@@ -444,7 +445,7 @@ function renameDomesticParty(sim, country, input) {
   const targetId = input.targetPartyId === undefined ? control.partyId : input.targetPartyId;
   if (typeof targetId !== "string" || !targetId) return { ok: false, reason: "party" };
   const party = yP(country, targetId);
-  if (!party) return { ok: false, reason: "party" };
+  if (!party || gpmOpeningNonparty(party)) return { ok: false, reason: "party" };
   const descriptor = party.nameDesc || {};
   if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag) return { ok: true, changed: false };
   // Keep the founding status separate from the display name, including for generated party IDs.

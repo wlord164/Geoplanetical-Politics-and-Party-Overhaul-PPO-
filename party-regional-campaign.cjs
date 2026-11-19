@@ -126,7 +126,7 @@ function partyRegionalNationalShares(polity, map, supports) {
 
 function partyRegionalQuote(sim, country, party, kind, region, relocateHeadquarters = false) {
   const baseRule = gpmRegionalRules[kind];
-  if (!party?.organization || party.legal === false) return { ok: false, reason: "party" };
+  if (!party?.organization || party.legal === false || gpmOpeningNonparty(party)) return { ok: false, reason: "party" };
   if (!region || !baseRule) return { ok: false, reason: "region" };
   const rules = gpmCampaignRulesFor(sim);
   const days = rules[kind + "Days"];
@@ -562,8 +562,7 @@ function advancePartyRegionalAI(sim, country, electionIn, contest = null, planne
   const rules = gpmCampaignRulesFor(sim);
   if (rules.regionalAI === "domestic" && country.key !== sim.playerKey) return;
   const preferred = electionIn <= 70 ? "rally" : "investment";
-  const eligible = (country.pol?.parties || []).filter(party => party.organization && party.legal !== false &&
-    !party.gpmUprisingShell && !party.gpmUprisingExcluded &&
+  const eligible = (country.pol?.parties || []).filter(party => gpmDomesticEligibleParty(country, party) &&
     (plannedParty ? plannedParty === party : !tao(sim, country, party.id)) && party.organization.treasuryM > .02 &&
     party.organization.activistsK > .08 && (party.gpmRegional?.projects.length || 0) < rules.maxRegionalProjects);
   if (!eligible.length) return;
