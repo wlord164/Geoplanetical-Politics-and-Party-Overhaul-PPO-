@@ -7,14 +7,15 @@ const style = `
 .gpm-frontline .k[aria-pressed="true"] { border-color: var(--text); color: var(--text); background: var(--raised); }
 .gpm-frontline-war { display: flex; flex-wrap: wrap; gap: var(--gap-2); }
 .gpm-frontline-war > .k { text-align: start; }
-#war-registry.gpm-frontline-open { align-self: stretch; width: clamp(18rem,27vw,25rem); }
+#war-registry.gpm-frontline-open { align-self: stretch; width: min(calc(100vw - 2 * var(--pad)), clamp(18rem,27vw,25rem)); }
 #war-registry.gpm-frontline-open > #war-inspector { display: none; }
 .gpm-frontline-dock { padding: var(--gap-4); min-height: 0; overflow: auto; }
 .gpm-frontline-dock[hidden], .gpm-frontline-roster-bar[hidden] { display: none; }
 .gpm-frontline-dock :is(header, .gpm-frontline-actions) { display: flex; align-items: center; gap: var(--gap-2); flex-wrap: wrap; }
 .gpm-frontline-dock header h3 { margin-right: auto; }
-.gpm-frontline-feedback { min-height: 1.4em; color: var(--text-2); }
-.gpm-frontline-group, .gpm-frontline-editor { display: grid; gap: var(--gap-2); border: 1px solid var(--hairline); padding: var(--gap-3); border-radius: var(--r-sm); }
+.gpm-frontline-feedback { color: var(--text-2); }
+.gpm-frontline-feedback:empty { display: none; }
+.gpm-frontline-group, .gpm-frontline-editor { display: grid; gap: var(--gap-2); min-width: 0; overflow-wrap: anywhere; border: 1px solid var(--hairline); padding: var(--gap-3); border-radius: var(--r-sm); }
 .gpm-frontline-order { display: grid; gap: var(--gap-2); border-top: 1px solid var(--hairline); padding-top: var(--gap-2); }
 .gpm-frontline-order small, .gpm-frontline-group small, .gpm-frontline-editor p { color: var(--text-2); }
 .gpm-frontline-order-label { display: flex; gap: var(--gap-2); align-items: center; }
@@ -29,13 +30,14 @@ const style = `
 .gpm-frontline-roster-bar { position: fixed; z-index: 46; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; padding: 4px 6px 0; gap: 5px; max-width: calc(100vw - 26px); overflow-x: auto; box-sizing: border-box; }
 body.gpm-frontline-planning #war-console { margin-bottom: calc(var(--pad) + 116px); }
 .gpm-frontline-slot { flex: 0 0 var(--frontline-slot-width, 98px); min-width: 0; position: relative; }
-.gpm-frontline-slot > button[data-gpm-frontline-slot] { display: grid; grid-template: 16px 52px / minmax(0, 1fr); align-content: center; justify-items: center; gap: 0; box-sizing: border-box; width: 100%; height: 76px; min-height: 76px; padding: 3px 5px; }
+.gpm-frontline-slot > button[data-gpm-frontline-slot] { display: grid; grid-template: 16px 42px 12px / minmax(0, 1fr); align-content: center; justify-items: center; gap: 0; box-sizing: border-box; width: 100%; height: 76px; min-height: 76px; padding: 3px 5px; }
 .gpm-frontline-slot-name { color: white; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 11px/14px var(--font-display); }
+.gpm-frontline-slot-status { color: var(--text-2); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--fw-semi) 10px/12px var(--font-display); }
 .gpm-frontline-slot [data-slot-state="filled"] .gpm-frontline-slot-name { width: calc(100% - 17px); justify-self: start; text-align: center; }
 .gpm-frontline-slot button[aria-pressed="true"] { outline: 2px solid var(--frontline-color, #82ddf9); outline-offset: -2px; }
 .gpm-frontline-slot [data-gpm-frontline-slot][data-slot-state="empty"] { background: #35383e; color: #a4a7ac; }
 .gpm-frontline-slot [data-gpm-frontline-slot][data-slot-state="empty"] .gpm-frontline-slot-name { color: #b8bbc2; }
-.gpm-frontline-portrait { display: block; width: 42px; height: 52px; border-radius: 3px; object-fit: cover; object-position: top; }
+.gpm-frontline-portrait { display: block; width: 36px; height: 42px; border-radius: 3px; object-fit: cover; object-position: top; }
 .gpm-frontline-portrait-empty { background: #666a73; opacity: .42; }
 .gpm-frontline-slot [data-gpm-frontline-remove-army] { position: absolute; z-index: 1; right: 3px; top: 3px; height: 16px; min-height: 16px; width: 16px; padding: 0; border: 1px solid #9e3139; border-radius: 3px; background: #67282e; color: #fff0f1; font: 700 13px/14px var(--font-display); cursor: pointer; }
 .gpm-frontline-slot [data-gpm-frontline-remove-army]:hover { background: #ab3845; }
@@ -43,6 +45,8 @@ body.gpm-frontline-planning #war-console { margin-bottom: calc(var(--pad) + 116p
 .gpm-frontline-army-meta { display: grid; gap: var(--gap-2); }
 .gpm-frontline-army-meta label { display: grid; gap: 2px; min-width: 0; }
 .gpm-frontline-army-meta :is(input,select) { width: 100%; box-sizing: border-box; }
+.gpm-frontline-editor details[open] > summary { margin-bottom: var(--gap-2); }
+.gpm-frontline-editor details > .gpm-frontline-color { margin-top: var(--gap-2); }
 .gpm-frontline-arrow-labels { position: fixed; inset: 0; pointer-events: none; z-index: 44; overflow: hidden; }
 .gpm-frontline-arrow-label { position: absolute; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; border-radius: 2px; color: white; background: var(--frontline-color); font: var(--fw-semi) 10px/13px var(--font-display); text-shadow: 0 0 2px #000, 0 1px 2px #000; }
 .gpm-frontline-formation-mark { position: absolute; width: 34px; height: 34px; transform: translate(-50%, -50%); border: 2px solid var(--frontline-color); border-radius: 7px; box-shadow: 0 0 0 1px #111a24, inset 0 0 0 1px #111a24; box-sizing: border-box; }
@@ -130,8 +134,9 @@ function gpmMountFrontline(ui, session, warId) {
   host.addEventListener("click", event => gpmFrontlineClick(state, event), options);
   host.addEventListener("input", event => {
     const input = event.target.closest("[data-gpm-frontline-army-name]");
-    if (input && state.draft) {
+    if (input && state.draft && !state.busy && state.draft.name !== input.value) {
       state.draft.name = input.value;
+      state.draft.changed = true;
       gpmPaintFrontlinePaths(state);
     }
   }, options);
@@ -146,17 +151,20 @@ function gpmMountFrontline(ui, session, warId) {
     const general = event.target.closest("[data-gpm-frontline-general]");
     if (general) {
       state.draft.generalId = general.value || null;
+      state.draft.changed = true;
       return;
     }
     const color = event.target.closest("[data-gpm-frontline-color]");
     if (color) {
       state.draft.color = color.value;
+      state.draft.changed = true;
       return gpmPaintFrontline(state);
     }
     const input = event.target.closest("[data-gpm-frontline-formation]");
     if (!input) return;
     if (input.checked) state.draft.ids.add(input.value);
     else state.draft.ids.delete(input.value);
+    state.draft.changed = true;
     gpmPaintFrontline(state);
   }, options);
   gpmBindFrontlineDraw(state);
@@ -223,7 +231,7 @@ async function gpmLoadFrontline(state, force = false) {
 function gpmFrontlineStatus(plan) {
   const labels = { hold: "Holding", holding: "Holding", advance: "Advancing", advancing: "Advancing",
     assembling: "Assembling", regrouping: "Regrouping", resupply: "Resupplying", resupplying: "Resupplying", completed: "Objective secured",
-    complete: "Objective secured", paused: "Paused", ceasefire: "Ceasefire", blocked: "Advance blocked",
+    complete: "Objective secured", paused: "Paused", ceasefire: "Ceasefire", blocked: "Order blocked",
     "no-contact": "Front has moved", no_contact: "Front has moved", "no-route": "No route to objective", queued: "Queued", unassigned: "No front assigned" };
   return labels[plan.status] || (plan.mode === "advance" ? "Advance ordered" : "Hold ordered");
 }
@@ -236,6 +244,13 @@ function gpmFrontlineObjective(state, plan) {
   if (!plan.objectiveProvinceKey) return "";
   const province = state.globe.world?.provByKey?.get?.(plan.objectiveProvinceKey);
   return province?.__name || province?.properties?.name || "Drawn objective";
+}
+
+function gpmKeepFrontlineDraft(state) {
+  if (!state.draft?.changed) return false;
+  state.feedback = "Save or cancel this draft before switching armies or orders.";
+  gpmPaintFrontline(state);
+  return true;
 }
 
 function gpmMountFrontlineRoster(state, options) {
@@ -252,17 +267,26 @@ function gpmMountFrontlineRoster(state, options) {
   document.body.append(layer, selection, roster);
   document.body.classList.add("gpm-frontline-planning");
   roster.addEventListener("click", event => {
-    if (state.busy || state.drawing?.validating) return;
+    if (state.busy || state.drawing?.validating || state.data?.status !== "active") return;
     const remove = event.target.closest("[data-gpm-frontline-remove-army]");
-    if (remove) return void gpmSendFrontline(state, "remove", { id: remove.dataset.gpmFrontlineRemoveArmy, army: true });
+    if (remove) {
+      if (!gpmKeepFrontlineDraft(state)) void gpmSendFrontline(state, "remove", { id: remove.dataset.gpmFrontlineRemoveArmy, army: true });
+      return;
+    }
     if (event.target.closest("[data-gpm-frontline-add-slot]")) {
-      state.slots++;
-      return gpmPaintFrontlineRoster(state);
+      if (gpmKeepFrontlineDraft(state)) return;
+      const occupied = gpmFrontlineArmySlots(state.data.plans);
+      let slot = 1;
+      while (occupied.has(slot)) slot++;
+      gpmSelectFrontlineArmy(state, null, slot);
+      return;
     }
     const button = event.target.closest("[data-gpm-frontline-slot]");
-    if (!button || !state.data || state.data.status !== "active") return;
+    if (!button) return;
+    const slot = Number(button.dataset.gpmFrontlineSlot);
+    if ((state.draft && state.selectedSlot === slot) || gpmKeepFrontlineDraft(state)) return;
     const plan = state.data.plans.find(item => item.id === button.dataset.armyId);
-    gpmSelectFrontlineArmy(state, plan, Number(button.dataset.gpmFrontlineSlot));
+    gpmSelectFrontlineArmy(state, plan, slot);
   }, options);
 }
 
@@ -291,27 +315,39 @@ function gpmPaintFrontlineRoster(state) {
     state.roster.innerHTML = state.rosterHtml;
     return;
   }
-  const slots = gpmFrontlineArmySlots(state.data?.plans || []);
+  const plans = state.data?.plans || [];
+  const slots = gpmFrontlineArmySlots(plans);
+  const currentOrders = new Map(plans.filter(plan => plan.status !== "queued").map(plan => [plan.armyId || plan.id, plan]));
   state.slots = Math.max(state.slots, ...slots.keys());
+  const enabled = state.data?.status === "active" && !state.busy && !state.drawing?.validating;
   const html = Array.from({ length: state.slots }, (_, index) => {
     const slot = index + 1;
     const plan = slots.get(slot);
     const name = plan?.name || `Army ${slot}`;
-    const enabled = state.data?.status === "active" && !state.busy && !state.drawing?.validating;
+    const order = plan && (currentOrders.get(plan.id) || plan);
+    const status = order && (order.status === "unassigned" ? "No front" : gpmFrontlineStatus(order));
     return `<div class="gpm-frontline-slot">
-      <button type="button" class="k" data-gpm-frontline-slot="${slot}" data-army-id="${b(plan?.id || "")}" data-slot-state="${plan ? "filled" : "empty"}" aria-pressed="${state.selectedSlot === slot}" aria-label="${b(plan ? `Select ${name}` : `Create ${name}`)}" title="${b(name)}" style="--frontline-color:${gpmFrontlineColor(plan?.color)}"${enabled ? "" : " disabled"}>
-        <span class="gpm-frontline-slot-name">${plan ? b(name) : "Empty"}</span>${gpmFrontlinePortrait(state, plan?.generalId)}
+      <button type="button" class="k" data-gpm-frontline-slot="${slot}" data-army-id="${b(plan?.id || "")}" data-slot-state="${plan ? "filled" : "empty"}" aria-pressed="${state.selectedSlot === slot}" aria-label="${b(plan ? `Select ${name}, ${status}` : `Create ${name}`)}" title="${b(status ? `${name} · ${status}` : name)}" style="--frontline-color:${gpmFrontlineColor(plan?.color)}"${enabled ? "" : " disabled"}>
+        <span class="gpm-frontline-slot-name">${plan ? b(name) : "Empty"}</span>${gpmFrontlinePortrait(state, plan?.generalId)}${status ? `<small class="gpm-frontline-slot-status" data-gpm-frontline-army-status>${b(status)}</small>` : ""}
       </button>${plan ? `<button type="button" data-gpm-frontline-remove-army="${b(plan.id)}" title="${b(`Disband ${name}`)}" aria-label="${b(`Disband ${name}`)}"${enabled ? "" : " disabled"}>×</button>` : ""}
     </div>`;
-  }).join("") + '<button type="button" class="k gpm-frontline-add-slot" data-gpm-frontline-add-slot aria-label="Add army slot" title="Add army slot">+</button>';
+  }).join("") + `<button type="button" class="k gpm-frontline-add-slot" data-gpm-frontline-add-slot aria-label="Add army" title="Add army"${enabled ? "" : " disabled"}>+</button>`;
   if (state.rosterHtml !== html) {
+    const active = state.roster.contains(document.activeElement) ? document.activeElement.dataset : null;
+    const focus = active?.gpmFrontlineSlot
+      ? `[data-gpm-frontline-slot="${CSS.escape(active.gpmFrontlineSlot)}"]`
+      : active?.gpmFrontlineRemoveArmy
+        ? `[data-gpm-frontline-remove-army="${CSS.escape(active.gpmFrontlineRemoveArmy)}"]`
+        : active?.gpmFrontlineAddSlot != null ? "[data-gpm-frontline-add-slot]" : null;
     state.rosterHtml = html;
     state.roster.style.setProperty("--frontline-slot-width", `clamp(64px, calc((100vw - 64px) / ${state.slots}), 102px)`);
     state.roster.innerHTML = html;
+    if (focus) state.roster.querySelector(focus)?.focus({ preventScroll: true });
   }
 }
 
 function gpmSelectFrontlineArmy(state, plan, slot) {
+  state.slots = Math.max(state.slots, slot);
   state.selectedSlot = slot;
   state.selectedArmyId = plan?.id || null;
   if (!plan) {
@@ -372,6 +408,8 @@ function gpmPaintFrontline(state) {
   const command = (mode, label, plan) => `<button type="button" class="k" data-gpm-frontline-mode="${mode}" data-gpm-fl-focus="${b(plan.id)}-${mode}" aria-pressed="${plan.mode === mode}"${disabled}${mode === "advance" && !plan.arrow?.length ? " disabled" : ""}>${label}</button>`;
   const focusKey = document.activeElement?.getAttribute("data-gpm-fl-focus");
   const rosterScroll = host.querySelector(".gpm-frontline-roster")?.scrollTop || 0;
+  const detailsOpen = host.querySelector("[data-gpm-frontline-army-details]")?.open;
+  const unitDetails = host.querySelector("[data-gpm-frontline-formation-details]");
   const fixedRoster = draft && (draft.afterId || nextBy.has(draft.id));
   const allGenerals = data?.generals || [];
   const otherGenerals = new Set(roots.filter(plan => plan.id !== draft?.id).map(plan => String(plan.generalId)));
@@ -382,34 +420,45 @@ function gpmPaintFrontline(state) {
       ${allGenerals.map(general => `<option value="${b(general.id)}"${draft.generalId === String(general.id) ? " selected" : ""}${otherGenerals.has(String(general.id)) ? " disabled" : ""}>${b(general.name)}</option>`).join("")}
     </select></label>
   </div>` : "";
+  const color = draft && !draft.metadataOnly ? `<label class="gpm-frontline-color">Color <span class="gpm-frontline-swatch" style="--frontline-color:${gpmFrontlineColor(draft.color)}"></span>
+    <select class="k" data-gpm-frontline-color data-gpm-fl-focus="group-color"${disabled}>${Object.keys(gpmFrontlinePalette).map(color => `<option value="${color}"${draft.color === color ? " selected" : ""}>${color[0].toUpperCase() + color.slice(1)}</option>`).join("")}</select>
+  </label>` : "";
   const contacts = data?.contacts || [];
+  const hasFront = draft?.line.length >= 2;
+  const chooseMode = draft?.chooseMode && hasFront;
+  const canSave = canDraft && draft && !draft.needsFront &&
+    (draft.metadataOnly || ((!hasFront || draft.ids.size) && (!draft.afterId || hasFront && draft.arrow.length >= 2)));
+  const saveLabel = draft?.afterId ? "Save order" : chooseMode ? "Save &amp; Hold" :
+    draft?.chooseMode ? "Save without front" : "Save army";
+  const commit = opt("save", saveLabel, `data-gpm-fl-focus="save-group"${draft?.chooseMode ? ' data-gpm-frontline-save-mode="hold"' : ""}${canSave ? "" : " disabled"}`);
+  const advance = chooseMode ? opt("save-advance", "Save &amp; Advance",
+    `data-gpm-fl-focus="save-advance" data-gpm-frontline-save-mode="advance"${canSave && draft.arrow.length >= 2 ? "" : " disabled"}`) : "";
   const keyboard = state.drawing?.kind === "line" && contacts.length ? `<div class="gpm-frontline-contact-keyboard">
     <label>Choose a front <select class="k" data-gpm-frontline-contact data-gpm-fl-focus="contact"${disabled}>
       <option value="">Select</option>${contacts.map((contact, index) => `<option value="${b(contact.id)}"${state.drawing.keyboard?.id === contact.id ? " selected" : ""}>Front ${index + 1}</option>`).join("")}
     </select></label>${opt("assign-contact", "Use entire front", !state.drawing.keyboard || !canDraft ? "disabled" : "")}
   </div>` : "";
+  const formationRoster = draft && !draft.metadataOnly && !fixedRoster ? `<div class="gpm-frontline-roster" role="group" aria-label="Ground formations">${(data?.formations || []).map(formation => {
+    const taken = ownedBy.get(formation.id) && ownedBy.get(formation.id) !== draft.id;
+    const note = taken ? "Assigned to another army" : formation.eligible === false ? "Unavailable" : formation.posture === "resupply" ? "Resupplying" : "";
+    return `<label><input type="checkbox" data-gpm-frontline-formation data-gpm-fl-focus="${b(formation.id)}" value="${b(formation.id)}"${draft.ids.has(formation.id) ? " checked" : ""}${disabled}${(taken || formation.eligible === false) && !draft.ids.has(formation.id) ? " disabled" : ""}><span>${b(formation.name || formation.id)}${note ? `<small>${note}</small>` : ""}</span></label>`;
+  }).join("") || '<p>No eligible ground formations are available.</p>'}</div>` : "";
   const editing = draft && `<section class="gpm-frontline-editor" aria-label="Edit army">
     <h4>${draft.id ? draft.afterId ? "Edit order" : "Edit army" : draft.afterId ? "Queue next order" : "New army"}</h4>
-    ${armyMeta}
-    ${draft.metadataOnly ? "" : `${fixedRoster ? `<small>${draft.ids.size} formations in the order sequence</small>` : `<div class="gpm-frontline-actions">${opt("select", "Select on map", `data-gpm-fl-focus="select-formations" aria-pressed="${state.drawing?.kind === "select"}"${disabled}`)}</div>
-    <div class="gpm-frontline-roster" role="group" aria-label="Ground formations">${(data?.formations || []).map(formation => {
-      const taken = ownedBy.get(formation.id) && ownedBy.get(formation.id) !== draft.id;
-      const note = taken ? "Assigned to another army" : formation.eligible === false ? "Unavailable" : formation.posture === "resupply" ? "Resupplying" : "";
-      return `<label><input type="checkbox" data-gpm-frontline-formation data-gpm-fl-focus="${b(formation.id)}" value="${b(formation.id)}"${draft.ids.has(formation.id) ? " checked" : ""}${disabled}${(taken || formation.eligible === false) && !draft.ids.has(formation.id) ? " disabled" : ""}><span>${b(formation.name || formation.id)}${note ? `<small>${note}</small>` : ""}</span></label>`;
-    }).join("") || '<p>No eligible ground formations are available.</p>'}</div>`}
-    <label class="gpm-frontline-color">Color <span class="gpm-frontline-swatch" style="--frontline-color:${gpmFrontlineColor(draft.color)}"></span>
-      <select class="k" data-gpm-frontline-color data-gpm-fl-focus="group-color"${disabled}>${Object.keys(gpmFrontlinePalette).map(color => `<option value="${color}"${draft.color === color ? " selected" : ""}>${color[0].toUpperCase() + color.slice(1)}</option>`).join("")}</select>
-    </label>
+    ${draft.metadataOnly ? armyMeta : `
     <div class="gpm-frontline-actions">
+      ${fixedRoster ? "" : opt("select", "Select on map", `data-gpm-fl-focus="select-formations" aria-pressed="${state.drawing?.kind === "select"}"${disabled}`)}
       ${opt("line", draft.line.length ? "Change front" : "Set frontline", `data-gpm-fl-focus="draw-front" aria-pressed="${state.drawing?.kind === "line"}"${disabled}`)}
-      ${opt("arrow", draft.arrow.length ? "Redraw arrow" : "Draw arrow", `data-gpm-fl-focus="draw-arrow" aria-pressed="${state.drawing?.kind === "arrow"}"${!draft.line.length || !canDraft ? " disabled" : ""}`)}
+      ${opt("arrow", draft.arrow.length ? "Change objective" : "Set objective", `data-gpm-fl-focus="draw-arrow" aria-pressed="${state.drawing?.kind === "arrow"}"${!hasFront || !canDraft ? " disabled" : ""}`)}
     </div>
     ${keyboard}
-    <small>${draft.ids.size} selected · ${draft.contact?.scope === "whole" ? "Entire front" : draft.contact?.scope === "section" ? "Front section" : draft.line.length ? "Front drawn" : "No front assigned"}${draft.arrow.length ? " · Arrow drawn" : ""}</small>`}
+    <small>${draft.ids.size} ${draft.ids.size === 1 ? "formation" : "formations"}${fixedRoster ? " in order sequence" : " selected"} · ${draft.contact?.scope === "whole" ? "Entire front" : draft.contact?.scope === "section" ? "Front section" : hasFront ? "Front assigned" : "No front assigned"}${draft.arrow.length ? " · Objective set" : ""}</small>`}
     <div class="gpm-frontline-actions">
-      ${opt("save", draft.afterId ? "Save order" : "Save army", `data-gpm-fl-focus="save-group"${!canDraft || (!draft.metadataOnly && ((draft.line.length > 0 && !draft.ids.size) || (draft.afterId && (draft.arrow.length < 2 || draft.line.length < 2)))) ? " disabled" : ""}`)}
+      ${commit}${advance}
       ${opt("cancel", "Cancel", busy ? "disabled" : "")}
     </div>
+    ${formationRoster}
+    ${draft.metadataOnly ? "" : `<details data-gpm-frontline-army-details${detailsOpen ? " open" : ""}><summary>${draft.afterId ? "Order details" : "Army details"}</summary>${armyMeta}${color}</details>`}
   </section>`;
   const groups = roots.map((root, index) => {
     if (root.id !== state.selectedArmyId) return "";
@@ -417,34 +466,39 @@ function gpmPaintFrontline(state) {
     const sequence = [];
     for (let next = root; next && sequence.length < plans.length; next = nextBy.get(next.id)) sequence.push(next);
     return `<section class="gpm-frontline-group"><h4>${b(root.name || `Army ${root.slot || index + 1}`)}</h4>
-      ${units.length ? `<details open><summary>${units.length} ${units.length === 1 ? "formation" : "formations"}</summary><dl class="gpm-frontline-formation-state">${units.map(unit => `<div data-gpm-frontline-unit="${b(unit.id)}" data-status="${b(unit.execution?.status || "")}" data-received="${Boolean(unit.execution?.received)}"><dt>${b(unit.name || unit.id)}</dt><dd>${b(gpmFrontlineFormationState(unit))}</dd></div>`).join("")}</dl></details>` : ""}
-      <div>${opt("metadata", "Edit army", `data-gpm-army-id="${b(root.id)}"${disabled}`)}</div>
       ${sequence.map((plan, order) => {
         const completed = plan.status === "completed";
         const unassigned = plan.status === "unassigned";
         const tail = !nextBy.has(plan.id);
         const unavailable = completed && plan.reason === "no_connected_front";
         const lostRoute = plan.status === "blocked" && ["water", "no_land_route"].includes(plan.reason);
+        const liveOrder = plan.status !== "queued" && !completed && !unassigned;
         const objective = gpmFrontlineObjective(state, plan);
         return `<article class="gpm-frontline-order" data-gpm-frontline-plan="${b(plan.id)}" data-mode="${b(plan.mode)}" data-status="${b(plan.status)}">
         <strong class="gpm-frontline-order-label"><span class="gpm-frontline-swatch" style="--frontline-color:${gpmFrontlineColor(plan.color)}"></span>${sequence.length > 1 ? `Order ${order + 1} · ` : ""}${b(gpmFrontlineStatus(plan))}${completed && tail && !unavailable ? " · Holding" : ""}</strong>
         ${objective ? `<small>${b(objective)}</small>` : ""}
         ${unavailable ? "<small>No connected front near the objective.</small>" : ""}
+        ${liveOrder && plan.reason === "no_connected_front" ? "<small>Waiting for a connected front.</small>" : ""}
         ${lostRoute ? "<small>No reachable land route. Edit the order to choose another objective.</small>" : ""}
+        ${liveOrder ? `<div class="gpm-frontline-actions">
+          ${command("hold", "Hold", plan)}${command("advance", "Advance", plan)}
+          ${!plan.arrow?.length && draft?.id !== plan.id ? opt("objective", "Set objective", disabled) : ""}
+        </div>` : ""}
         <div class="gpm-frontline-actions">
-          ${plan.status !== "queued" && !completed && !unassigned ? command("hold", "Hold", plan) + command("advance", "Advance", plan) : ""}
           ${!completed ? opt("edit", unassigned ? "Set frontline" : "Edit order", disabled) : ""}
           ${tail ? opt("remove", "Remove", disabled) : ""}
           ${tail && ((completed && !unavailable) || plan.arrow?.length) ? opt("queue", "Queue next order", disabled) : ""}
         </div>
       </article>`;
       }).join("")}
+      ${units.length ? `<details data-gpm-frontline-formation-details data-army-id="${b(root.id)}"${unitDetails?.dataset.armyId !== root.id || unitDetails.open ? " open" : ""}><summary>${units.length} ${units.length === 1 ? "formation" : "formations"}</summary><dl class="gpm-frontline-formation-state">${units.map(unit => `<div data-gpm-frontline-unit="${b(unit.id)}" data-status="${b(unit.execution?.status || "")}" data-received="${Boolean(unit.execution?.received)}"><dt>${b(unit.name || unit.id)}</dt><dd>${b(gpmFrontlineFormationState(unit))}</dd></div>`).join("")}</dl></details>` : ""}
+      <div>${opt("metadata", "Edit army", `data-gpm-army-id="${b(root.id)}"${disabled}`)}</div>
     </section>`;
   }).join("");
   const html = `<header><h3 class="mc-title">Army orders</h3>${opt("close", "Deselect")}</header>
     ${currentWar ? `<p>${b(currentWar.name || currentWar.id)}</p>` : ""}
     <p class="gpm-frontline-feedback" data-gpm-frontline-feedback role="status">${b(state.feedback ||
-      (data && !canEdit ? "This war is unavailable for new orders." : state.selectedArmyId && !draft ? "Hold and Advance apply to this army." : ""))}</p>
+      (data && !canEdit ? "This war is unavailable for new orders." : ""))}</p>
     ${groups}${editing || (!state.selectedArmyId && canEdit ? `<div>${opt("new", "New army", disabled)}</div>` : "")}`;
   if (state.html !== html) {
     state.html = html;
@@ -468,13 +522,16 @@ function gpmEditFrontlineDraft(state, plan, predecessor = null, slot = null, met
   state.selectedSlot = slot;
   if (plan || predecessor) state.selectedArmyId = (plan || predecessor).armyId || (plan || predecessor).id;
   const color = plan?.color || predecessor?.color || defaults[(slot - 1) % defaults.length];
-  const heldLine = predecessor?.status === "completed" ? predecessor.liveLine || predecessor.line : null;
+  const heldLine = predecessor?.status === "completed"
+    ? predecessor.liveLine?.length ? predecessor.liveLine : predecessor.line : null;
+  const assignedLine = plan?.liveLine?.length ? plan.liveLine : plan?.line;
   const usedGenerals = new Set(allPlans.filter(item => !item.afterId).map(item => String(item.generalId)));
   const availableGeneral = state.data.generals?.find(item => !usedGenerals.has(String(item.id)))?.id;
   const general = plan ? plan.generalId : predecessor ? predecessor.generalId : availableGeneral;
   state.draft = { id: plan?.id, afterId: plan?.afterId || predecessor?.id, ids: new Set(plan?.formationIds || predecessor?.formationIds),
-    line: plan?.liveLine || plan?.line || heldLine || [], arrow: plan?.arrow || [], objectiveProvinceKey: plan?.objectiveProvinceKey,
+    line: assignedLine || heldLine || [], arrow: plan?.arrow || [], objectiveProvinceKey: plan?.objectiveProvinceKey,
     mode: plan?.mode || (predecessor ? "advance" : "hold"), color, slot, metadataOnly,
+    chooseMode: !metadataOnly && !predecessor && !plan?.afterId && !plan?.line?.length,
     name: plan?.name || predecessor?.name || `Army ${slot}`, generalId: general == null ? null : String(general) };
   gpmFrontlineSetDraw(state, null);
   state.host.querySelector(".gpm-frontline-editor")?.scrollIntoView({ block: "nearest" });
@@ -484,8 +541,10 @@ function gpmEditFrontlineDraft(state, plan, predecessor = null, slot = null, met
 
 function gpmFrontlineClick(state, event) {
   const button = event.target.closest("button");
-  if (!button || button.disabled) return;
+  if (!button || button.disabled || state.busy) return;
   const { gpmFrontlineAction: action, gpmFrontlineMode: mode } = button.dataset;
+  if (!action && !mode) return;
+  if (["close", "remove", "metadata", "new", "edit", "objective", "queue"].includes(action) && gpmKeepFrontlineDraft(state)) return;
   if (action === "close") {
     state.selectedSlot = null;
     state.selectedArmyId = null;
@@ -493,7 +552,6 @@ function gpmFrontlineClick(state, event) {
     gpmFrontlineSetDraw(state, null);
     return;
   }
-  if (state.busy) return;
   const id = button.closest("[data-gpm-frontline-plan]")?.dataset.gpmFrontlinePlan;
   if (mode) return void gpmSendFrontline(state, "mode", { id, mode });
   if (action === "remove") return void gpmSendFrontline(state, "remove", { id });
@@ -505,20 +563,25 @@ function gpmFrontlineClick(state, event) {
   if (action === "assign-contact" && state.drawing?.keyboard) {
     return void gpmTraceFrontline(state, state.drawing, { contactId: state.drawing.keyboard.id });
   }
-  if (action === "new" || action === "edit" || action === "queue") {
-    const plan = action === "edit" && state.data.plans.find(row => row.id === id);
+  if (action === "new" || action === "edit" || action === "objective" || action === "queue") {
+    const plan = (action === "edit" || action === "objective") && state.data.plans.find(row => row.id === id);
     const predecessor = action === "queue" && state.data.plans.find(row => row.id === id);
     gpmEditFrontlineDraft(state, plan, predecessor);
-    if (plan?.status === "unassigned" && plan.formationIds.length) gpmFrontlineSetDraw(state, "line");
+    if (action === "objective" && state.draft.line.length >= 2) gpmFrontlineSetDraw(state, "arrow");
+    else if (plan?.status === "unassigned" && plan.formationIds.length) gpmFrontlineSetDraw(state, "line");
   } else if (action === "cancel") {
     state.draft = null;
     gpmFrontlineSetDraw(state, null);
   } else if (action === "line" || action === "arrow" || action === "select") {
     gpmFrontlineSetDraw(state, state.drawing?.kind === action ? null : action);
-  } else if (action === "save" && state.draft) {
-    const { id: draftId, ids, line, arrow, objectiveProvinceKey, mode: draftMode, color, afterId, name, generalId, slot, metadataOnly, contact } = state.draft;
+  } else if ((action === "save" || action === "save-advance") && state.draft && !state.drawing?.validating) {
+    const { id: draftId, ids, line, arrow, objectiveProvinceKey, mode: draftMode, color, afterId, name, generalId, slot, metadataOnly, contact, chooseMode, needsFront } = state.draft;
+    if (needsFront) return;
     if (metadataOnly) return void gpmSendFrontline(state, "army", { id: draftId, name, generalId, slot });
-    void gpmSendFrontline(state, "upsert", { id: draftId, formationIds: [...ids], line: contact ? undefined : line, arrow, objectiveProvinceKey, mode: draftMode, color, afterId, name, generalId, slot,
+    const advancing = action === "save-advance";
+    if (advancing && (!chooseMode || line.length < 2 || !ids.size || arrow.length < 2)) return;
+    const orderMode = chooseMode ? (advancing ? "advance" : "hold") : draftMode;
+    void gpmSendFrontline(state, "upsert", { id: draftId, formationIds: [...ids], line: contact ? undefined : line, arrow, objectiveProvinceKey, mode: orderMode, color, afterId, name, generalId, slot,
       ...gpmFrontlineContactParams(contact) });
   }
 }
@@ -759,6 +822,7 @@ function gpmSelectFrontlineFormations(state, start, end, add) {
   }
   if (!found.length) return gpmFrontlineSetDraw(state, "select", "No available formations in that box.");
   draft.ids = new Set(add ? [...draft.ids, ...found] : found);
+  draft.changed = true;
   const count = draft.ids.size;
   gpmFrontlineSetDraw(state, null, count === 1 ? "1 formation selected." : `${count} formations selected.`);
 }
@@ -790,6 +854,8 @@ async function gpmTraceFrontline(state, draw, contact) {
     draft.arrow = [];
     draft.objectiveProvinceKey = undefined;
     draft.mode = draft.afterId ? "advance" : "hold";
+    draft.changed = true;
+    draft.needsFront = false;
     const feedback = result.forecast ? "The queued front will update when this order starts."
       : result.scope === "whole" ? "Entire front selected. Save to assign it." : "Front section selected. Save to assign it.";
     gpmFrontlineSetDraw(state, null, feedback);
@@ -829,6 +895,7 @@ async function gpmRouteFrontlineArrow(state, draw, arrow) {
     }
     draft.arrow = result.arrow;
     draft.objectiveProvinceKey = result.objectiveProvinceKey;
+    draft.changed = true;
     gpmFrontlineSetDraw(state, null, result.corrected ? "Arrow adjusted to stay on land." : "");
   } catch (error) {
     if (!current()) return;
@@ -856,7 +923,8 @@ async function gpmSendFrontline(state, action, params) {
       await gpmLoadFrontline(state, true);
     }
     const reason = result?.reason || result?.reasonId;
-    if (!result?.ok && reason === "front_changed" && state.draft) {
+    if (!result?.ok && reason === "front_changed" && action === "upsert" && state.draft) {
+      Object.assign(state.draft, { line: [], contact: null, arrow: [], objectiveProvinceKey: undefined, needsFront: true, changed: true });
       await gpmLoadFrontline(state, true);
       if (state.ui._gpmFrontline === state) gpmFrontlineSetDraw(state, "line", gpmFrontlineError(reason));
     } else state.feedback = result?.ok ? action === "mode" ? "" : result.message || "Order saved." : result?.message || gpmFrontlineError(reason);
@@ -1070,7 +1138,7 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0) {
 
 function patchFrontlineRenderer(source, replaceOnce) {
   const functions = [gpmFrontlineMountStyle, gpmBuildFrontline, gpmRefreshFrontlineEntry, gpmOpenFrontline, gpmMountFrontline, gpmCloseFrontline,
-    gpmRefreshFrontlineMap, gpmLoadFrontline, gpmFrontlineStatus, gpmFrontlineColor, gpmFrontlineObjective,
+    gpmRefreshFrontlineMap, gpmLoadFrontline, gpmFrontlineStatus, gpmFrontlineColor, gpmFrontlineObjective, gpmKeepFrontlineDraft,
     gpmMountFrontlineRoster, gpmFrontlineArmySlots, gpmFrontlinePortrait, gpmPaintFrontlineRoster, gpmSelectFrontlineArmy, gpmFrontlineFormationState,
     gpmPaintFrontline, gpmEditFrontlineDraft, gpmFrontlineClick, gpmFrontlineSetDraw, gpmFrontlineDistance, gpmFrontlineMidpoint,
     gpmFrontlineContactParams, gpmFrontlineScreenPoint, gpmPickFrontlineContact, gpmFrontlineContactSection, gpmBindFrontlineDraw, gpmFinishFrontlineDraw,
