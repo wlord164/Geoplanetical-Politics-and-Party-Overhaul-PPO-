@@ -983,6 +983,100 @@ function gpmClearFrontlinePaths(state) {
   state.globe._frameGate?.invalidate?.();
 }
 
+function gpmFrontlineObjectiveBoundary(geometry, arrow) {
+  const tip = arrow?.at(-1);
+  if (!tip?.every(Number.isFinite)) return null;
+  const polygons = geometry?.type === "Polygon" ? [geometry.coordinates] :
+    geometry?.type === "MultiPolygon" ? geometry.coordinates : [];
+  if (!polygons?.length) return null;
+
+  // Project the actual border arcs into a local plane where great circles are straight.
+  const rad = Math.PI / 180;
+  const sin = Math.sin(tip[1] * rad), cos = Math.cos(tip[1] * rad);
+  const project = point => {
+    if (!Number.isFinite(point?.[0]) || !Number.isFinite(point[1])) return null;
+    const lon = (point[0] - tip[0]) * rad, lat = point[1] * rad;
+    const z = Math.sin(lat), x = Math.cos(lat) * Math.cos(lon);
+    const depth = cos * x + sin * z;
+    return depth > .01 ? [6371 * Math.cos(lat) * Math.sin(lon) / depth, 6371 * (cos * z - sin * x) / depth] : null;
+  };
+  const unproject = ([x, y]) => {
+    const forward = cos - sin * y / 6371, east = x / 6371;
+    const lon = tip[0] + Math.atan2(east, forward) / rad;
+    return [(lon + 540) % 360 - 180, Math.atan2(sin + cos * y / 6371, Math.hypot(forward, east)) / rad];
+  };
+  const previous = arrow.slice(0, -1).map(project).findLast(point => point && Math.hypot(...point) > .01);
+  if (!previous) return null;
+  const approach = Math.hypot(...previous);
+  const heading = previous.map(value => -value / approach);
+  const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+  const interpolate = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  const cross = (a, b) => a[0] * b[1] - a[1] * b[0];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+  const inside = ring => ring.reduce((found, a, index) => {
+    const b = ring[(index + 1) % ring.length];
+    const crosses = (a[1] > 0) !== (b[1] > 0) && a[0] - a[1] * (b[0] - a[0]) / (b[1] - a[1]) > 0;
+    return crosses ? !found : found;
+  }, false);
+  const areas = polygons.flatMap(polygon => {
+    if (!Array.isArray(polygon)) return [];
+    const rings = polygon.map(ring => Array.isArray(ring) ? ring.map(project) : []);
+    const [exterior, ...holes] = rings;
+    return exterior?.length >= 3 && exterior.every(Boolean) ? [{ exterior, holes }] : [];
+  });
+  const enclosing = areas.filter(({ exterior }) => inside(exterior));
+  const component = enclosing.find(({ holes }) => !holes.some(ring => ring.length >= 3 && ring.every(Boolean) && inside(ring)));
+  if (enclosing.length && !component) return null;
+
+  let ahead, nearby;
+  for (const { exterior: ring } of component ? [component] : areas) {
+    for (let index = 0; index < ring.length; index++) {
+      const a = ring[index], b = ring[(index + 1) % ring.length];
+      const edge = [b[0] - a[0], b[1] - a[1]];
+      const lengthSq = dot(edge, edge);
+      if (lengthSq < 1e-10) continue;
+      const divisor = cross(heading, edge);
+      if (Math.abs(divisor) > 1e-8) {
+        const ray = cross(a, edge) / divisor;
+        const along = cross(a, heading) / divisor;
+        if (ray >= 0 && (component || ray <= 45) && along >= 0 && along <= 1 && (!ahead || ray < ahead.distance)) {
+          ahead = { point: interpolate(a, b, along), index, ring, distance: ray };
+        }
+      }
+      const factor = Math.max(0, Math.min(1, -dot(a, edge) / lengthSq));
+      const point = interpolate(a, b, factor);
+      const offset = Math.hypot(...point);
+      if (offset <= (component ? 125 : 25) && dot(point, heading) >= -Math.min(8, offset * .2) &&
+          (!nearby || offset < nearby.distance)) nearby = { point, index, ring, distance: offset };
+    }
+  }
+  const hit = ahead || nearby;
+  if (!hit) return null;
+  const { ring, index, point } = hit;
+  const perimeter = ring.reduce((sum, a, i) => sum + distance(a, ring[(i + 1) % ring.length]), 0);
+  const span = Math.min(perimeter * .16, Math.min(52, 29 + hit.distance * .14));
+  if (span <= .01) return null;
+
+  const walk = direction => {
+    const path = [];
+    let remaining = span, at = point, vertex = direction > 0 ? (index + 1) % ring.length : index;
+    for (let visited = 0; remaining > .001 && visited <= ring.length; visited++) {
+      const next = ring[vertex];
+      const edge = distance(at, next);
+      if (edge > remaining) {
+        path.push(interpolate(at, next, remaining / edge));
+        break;
+      }
+      if (edge > .001) path.push(next);
+      remaining -= edge;
+      at = next;
+      vertex = (vertex + direction + ring.length) % ring.length;
+    }
+    return path;
+  };
+  return [...walk(-1).reverse(), point, ...walk(1)].map(unproject);
+}
+
 function gpmPaintFrontlinePaths(state) {
   const plans = state.data?.plans || [];
   const draft = state.draft;
@@ -994,12 +1088,14 @@ function gpmPaintFrontlinePaths(state) {
     const alpha = plan.status === "queued" ? .45 : !state.selectedArmyId || selected ? .96 : .53;
     const line = completed && plan.reason === "no_connected_front" ? [] : plan.liveLine || plan.line;
     return [[line, color, false, alpha, null, selected ? 1 : 0],
-      [completed ? [] : plan.arrow, color, true, alpha, plan.name || `Army ${plan.slot || index + 1}`, selected ? 1 : 0]];
+      [completed ? [] : plan.arrow, color, true, alpha, plan.name || `Army ${plan.slot || index + 1}`, selected ? 1 : 0,
+        !completed && plan.status !== "queued" ? plan.objectiveProvinceKey : null]];
   });
   if (draft) {
     const color = gpmFrontlinePalette[draft.color] || gpmFrontlinePalette.cyan;
-    strokes.push([draft.line, color, false, .92, null, 1], [draft.arrow, color, true, .92, draft.name || `Army ${draft.slot}`, 1]);
     const draw = state.drawing;
+    strokes.push([draft.line, color, false, .92, null, 1], [draft.arrow, color, true, .92, draft.name || `Army ${draft.slot}`, 1,
+      !draft.afterId && draw?.kind !== "arrow" ? draft.objectiveProvinceKey : null]);
     if (draw?.kind === "line" && draw.preview?.length > 1) strokes.push([draw.preview, 0xffffec, false, .88, null, 2]);
     if (draw?.pointer != null && draw.kind === "arrow" && draw.preview?.length > 1) strokes.push([draw.preview, color, true, .65]);
   }
@@ -1009,10 +1105,15 @@ function gpmPaintFrontlinePaths(state) {
   gpmClearFrontlinePaths(state);
   state.labelLayer.replaceChildren();
   state.labels = [];
-  for (const [path, color, arrow, opacity, name, emphasis] of strokes) {
+  for (const [path, color, arrow, opacity, name, emphasis, objective] of strokes) {
     if (!path || path.length < 2) continue;
     gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis);
     if (arrow && name) gpmAddFrontlineLabel(state, path, color, opacity, name);
+    if (objective) {
+      const geometry = state.globe.world?.provByKey?.get(objective)?.geometry;
+      const boundary = gpmFrontlineObjectiveBoundary(geometry, path);
+      if (boundary) gpmAddFrontlinePath(state, boundary, color, false, opacity, emphasis, objective);
+    }
   }
   gpmTickFrontlineLabels(state.ui);
   state.globe._frameGate?.invalidate?.();
@@ -1113,15 +1214,18 @@ function gpmTickFrontlineFormationMarks(state) {
   }
 }
 
-function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0) {
+function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, objective = null) {
   const segments = [];
-  const radius = dt * (arrow ? 1.007 : 1.0012);
+  const radius = dt * (arrow || objective ? 1.007 : 1.0012);
   const add = (a, b) => segments.push(a.x, a.y, a.z, b.x, b.y, b.z);
   const points = path.map(([lon, lat]) => ct(lat, lon, 1).normalize());
+  let length = 0;
   for (let index = 1; index < points.length; index++) {
     const a = points[index - 1];
     const b = points[index];
-    const steps = Math.max(2, Math.ceil(a.angleTo(b) * 100));
+    const angle = a.angleTo(b);
+    const steps = Math.max(2, Math.ceil(angle * 100));
+    length += angle * radius;
     let previous = a.clone().multiplyScalar(radius);
     for (let step = 1; step <= steps; step++) {
       const next = a.clone().lerp(b, step / steps).normalize().multiplyScalar(radius);
@@ -1140,16 +1244,30 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0) {
       add(tip.clone().multiplyScalar(radius), corner);
     }
   }
-  const geometry = new ys();
-  geometry.setPositions(segments);
-  const material = new Uc({ color, linewidth: arrow ? 1.9 : emphasis ? 5.4 : 4.5, transparent: true, opacity, depthTest: true, depthWrite: false });
-  material.resolution.set(window.innerWidth, window.innerHeight);
-  (state.globe._lineMats ||= []).push(material);
-  const mesh = new fd(geometry, material);
-  mesh.renderOrder = 28 + emphasis;
-  mesh.frustumCulled = false;
-  state.globe.scene.add(mesh);
-  state.meshes.push(mesh);
+  const addMesh = (ink, linewidth, alpha, order, name) => {
+    const geometry = new ys();
+    geometry.setPositions(segments);
+    const style = { color: ink, linewidth, transparent: true, opacity: alpha, depthTest: true, depthWrite: false };
+    if (objective) Object.assign(style, { dashed: true, dashSize: length * .096, gapSize: length * .059 });
+    const material = new Uc(style);
+    material.resolution.set(window.innerWidth, window.innerHeight);
+    (state.globe._lineMats ||= []).push(material);
+    const mesh = new fd(geometry, material);
+    mesh.renderOrder = order + emphasis;
+    mesh.frustumCulled = false;
+    if (objective) {
+      mesh.name = name;
+      mesh.userData.objectiveProvinceKey = objective;
+      mesh.computeLineDistances();
+    }
+    state.globe.scene.add(mesh);
+    state.meshes.push(mesh);
+  };
+  if (objective) {
+    if (length < 1e-7) return;
+    addMesh(0x111923, emphasis ? 5.7 : 4.8, opacity * .9, 26, "gpm-frontline-objective-boundary-casing");
+    addMesh(color, emphasis ? 3.1 : 2.5, opacity, 27, "gpm-frontline-objective-boundary");
+  } else addMesh(color, arrow ? 1.9 : emphasis ? 5.4 : 4.5, opacity, 28);
 }
 
 function patchFrontlineRenderer(source, replaceOnce) {
@@ -1159,7 +1277,7 @@ function patchFrontlineRenderer(source, replaceOnce) {
     gpmPaintFrontline, gpmEditFrontlineDraft, gpmFrontlineClick, gpmFrontlineSetDraw, gpmFrontlineDistance, gpmFrontlineMidpoint,
     gpmFrontlineContactParams, gpmFrontlineScreenPoint, gpmPickFrontlineContact, gpmFrontlineContactSection, gpmBindFrontlineDraw, gpmFinishFrontlineDraw,
     gpmFrontlineSelectionRect, gpmSelectFrontlineFormations, gpmTraceFrontline, gpmClipFrontlinePreview, gpmRouteFrontlineArrow,
-    gpmSendFrontline, gpmFrontlineError, gpmClearFrontlinePaths, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
+    gpmSendFrontline, gpmFrontlineError, gpmClearFrontlinePaths, gpmFrontlineObjectiveBoundary, gpmPaintFrontlinePaths, gpmFrontlineHeadSize,
     gpmAddFrontlineLabel, gpmTickFrontlineLabels, gpmTickFrontlineFormationMarks, gpmAddFrontlinePath];
   const insertion = "\nmountPartyButtons();\n";
   let js = replaceOnce(source, insertion, `\nconst gpmFrontlineStyle = ${JSON.stringify(style)};\nconst gpmFrontlinePalette = ${JSON.stringify(palette)};\n${functions.join("\n")}${insertion}`);
