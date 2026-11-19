@@ -724,6 +724,7 @@ function patchRenderer(bytes) {
   js = patchSudanReunificationRenderer(js, replaceOnce);
   js = patchHistoricalIdentityRenderer(js, replaceOnce);
   js = patchFactionPeopleRenderer(js, replaceOnce);
+  js = require("./frontline-ui.cjs").patchFrontlineRenderer(js, replaceOnce);
   return Buffer.from(patchPartyDomesticRenderer(js, replaceOnce));
 }
 
@@ -877,7 +878,7 @@ function patchWorker(bytes) {
     `let c=yn(e);
     if(!gpmActionMatchesActor(s,c))return{ok:false,reason:"stale_actor",message:"Player control changed. Refresh this view and try again."};
     return Te(e,e.player,{...s,speakerId:c.representativeId,partyId:c.partyId,roleId:c.parliamentaryRole})`);
-  return Buffer.from(worker);
+  return Buffer.from(require("./frontline-worker.cjs").patchFrontlineWorker(worker, replaceOnce));
 }
 
 function advancePartyModDay(sim) {

@@ -1,0 +1,109 @@
+const gpmFrontlineContactCache = new WeakMap();
+
+function gpmFrontlineTracePoints(input) {
+  if (!Array.isArray(input) || input.length < 2 || !input.every($Z)) return null;
+  return input.some(point => Bi(input[0], point) > 1) ? input.map(point => point.slice()) : null;
+}
+
+function gpmFrontlineContactChains(war) {
+  const field = war?.field;
+  if (!field?.terrain || !field?.control || !field.heat) return [];
+  const cached = gpmFrontlineContactCache.get(field);
+  if (cached && Object.is(cached.generation, field._gen) && (Number.isFinite(field._gen) || cached.tick === field._tick)) return cached.chains;
+  const source = field._frontGeometryCache?.gen === field._gen && field._frontGeometryCache;
+  const geometry = source || Yho(field, field._phiGen === field._gen && field._phiDeg ||
+    Float32Array.from(field.control, side => side ? 1 : -1));
+  const chains = geometry.chains.map(keys => {
+    const vertices = keys.map(key => geometry.pt.get(key)).filter(Boolean);
+    const points = vertices.map(({ lon, lat }) => [((lon + 180) % 360 + 360) % 360 - 180, lat]);
+    const distances = [0];
+    for (let index = 1; index < points.length; index++) distances.push(distances.at(-1) + Bi(points[index - 1], points[index]));
+    return { points, distances, span: distances.at(-1), closed: keys[0] === keys.at(-1) };
+  }).filter(chain => chain.span > 1);
+  gpmFrontlineContactCache.set(field, { generation: field._gen, tick: field._tick, chains });
+  return chains;
+}
+
+function gpmFrontlineContactAt(war, position, reachable = null) {
+  let nearest = null;
+  let maxDistance = gpmFrontlineSectorKm;
+  for (const chain of gpmFrontlineContactChains(war)) {
+    for (let index = 1; index < chain.points.length; index++) {
+      const a = chain.points[index - 1];
+      const b = chain.points[index];
+      const segmentKm = chain.distances[index] - chain.distances[index - 1];
+      if (Bi(a, position) > maxDistance + segmentKm) continue;
+      const projection = CK(a, b, position, maxDistance);
+      if (!projection) continue;
+      const point = projection.ll || WM(a, b, segmentKm ? projection.alongKm / segmentKm : 0);
+      if (reachable && !reachable(point)) continue;
+      maxDistance = projection.distanceKm;
+      nearest = { chain, measure: chain.distances[index - 1] + projection.alongKm, position: point };
+    }
+  }
+  return nearest;
+}
+
+function gpmFrontlineChainPoint(chain, measure) {
+  if (measure <= 0) return chain.points[0];
+  if (measure >= chain.span) return chain.points.at(-1);
+  const index = chain.distances.findIndex(distance => distance >= measure);
+  const step = chain.distances[index] - chain.distances[index - 1];
+  return step ? WM(chain.points[index - 1], chain.points[index], (measure - chain.distances[index - 1]) / step) : chain.points[index];
+}
+
+function gpmFrontlineChainSlice(chain, from, to) {
+  const result = [gpmFrontlineChainPoint(chain, from)];
+  for (let index = 1; index < chain.distances.length - 1; index++) {
+    if (chain.distances[index] > from && chain.distances[index] < to) result.push(chain.points[index]);
+  }
+  result.push(gpmFrontlineChainPoint(chain, to));
+  return result;
+}
+
+function gpmFrontlineTrace(war, line) {
+  if (!line?.length) return null;
+  const start = gpmFrontlineContactAt(war, line[0]);
+  const end = gpmFrontlineContactAt(war, line.at(-1));
+  if (!start || !end || start.chain !== end.chain) return null;
+  const chain = start.chain;
+  const from = Math.min(start.measure, end.measure);
+  const to = Math.max(start.measure, end.measure);
+  let forward = start.measure <= end.measure;
+  let path;
+  if (chain.closed && to - from > chain.span / 2) {
+    path = gpmFrontlineChainSlice(chain, to, chain.span).concat(gpmFrontlineChainSlice(chain, 0, from).slice(1));
+    forward = !forward;
+  } else {
+    path = gpmFrontlineChainSlice(chain, from, to);
+  }
+  return gpmFrontlineTracePoints(forward ? path : path.reverse());
+}
+
+function gpmFrontlineTraceWidth(line) {
+  return line.slice(1).reduce((length, point, index) => length + Bi(line[index], point), 0);
+}
+
+function gpmFrontlineTraceWindow(war, position, width, reachable = null) {
+  const selected = gpmFrontlineContactAt(war, position, reachable);
+  if (!selected) return null;
+  const { chain, measure } = selected;
+  const span = Math.min(width, chain.span);
+  if (chain.closed && span < chain.span && (measure - span / 2 < 0 || measure + span / 2 > chain.span)) {
+    const a = (measure - span / 2 + chain.span) % chain.span;
+    const b = (measure + span / 2) % chain.span;
+    return gpmFrontlineTracePoints(gpmFrontlineChainSlice(chain, a, chain.span).concat(gpmFrontlineChainSlice(chain, 0, b).slice(1)));
+  }
+  const from = Math.max(0, Math.min(measure - span / 2, chain.span - span));
+  return gpmFrontlineTracePoints(gpmFrontlineChainSlice(chain, from, from + span));
+}
+
+function gpmFrontlineLinePreview(sim, input) {
+  const war = sim.conflicts?.get(input.warId);
+  if (!gpmFrontlineWar(sim, war)) return { ok: false, reason: "conflict" };
+  const request = gpmFrontlineTracePoints(input.line);
+  if (!request) return { ok: false, reason: "front" };
+  const previous = war.gpmFrontline?.find(plan => plan.id === input.afterId && plan.owner === sim.playerKey);
+  const line = gpmFrontlinePlanLine(war, request, previous);
+  return line ? { ok: true, line, forecast: !!previous && !previous.completed } : { ok: false, reason: "no_connected_front" };
+}
