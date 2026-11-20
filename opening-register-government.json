@@ -1,0 +1,3366 @@
+{
+  "cutoff": "2026-01-01",
+  "countries": {
+    "108": {
+      "government": {
+        "deputy": "reg-108-cabinet-prosperbazombanza-deputy",
+        "economy": "reg-108-cabinet-alainndikumana-economy",
+        "defense": "reg-108-cabinet-mariechantalnijimbere-defense",
+        "foreign": "reg-108-cabinet-edouardbizimana-foreign",
+        "justice": "reg-108-cabinet-arthemonkatihabwa-justice"
+      }
+    },
+    "124": {
+      "government": {
+        "economy": "reg-124-cabinet-francoisphilippechampagne-economy",
+        "defense": "reg-124-cabinet-davidmcguinty-defense",
+        "interior": "reg-124-cabinet-garyanandasangaree-interior",
+        "foreign": "reg-124-cabinet-anitaanand-foreign",
+        "justice": "reg-124-cabinet-seanfraser-justice",
+        "chief_of_staff": "reg-124-cabinet-jenniecarignan-chief-of-staff"
+      }
+    },
+    "140": {
+      "government": {
+        "defense": "reg-140-cabinet-rameauxclaudebireau-defense",
+        "foreign": "reg-140-cabinet-sylviebaipotemon-foreign"
+      }
+    },
+    "152": {
+      "government": {
+        "economy": "reg-152-cabinet-alvarogarcia-economy",
+        "defense": "reg-152-cabinet-adrianadelpiano-defense",
+        "interior": "reg-152-cabinet-alvaroelizalde-interior",
+        "foreign": "reg-152-cabinet-albertovanklaveren-foreign",
+        "justice": "reg-152-cabinet-jaimegajardo-justice"
+      }
+    },
+    "156": {
+      "government": {
+        "economy": "reg-156-cabinet-lanfoan-economy",
+        "defense": "reg-156-cabinet-dongjun-defense",
+        "interior": "reg-156-cabinet-wangxiaohong-interior",
+        "foreign": "reg-156-cabinet-wangyi-foreign",
+        "justice": "reg-156-cabinet-herong-justice",
+        "deputy": "reg-156-cabinet-hanzheng-deputy",
+        "chief_of_staff": "reg-156-cabinet-liuzhenli-chief-of-staff"
+      }
+    },
+    "174": {
+      "government": {
+        "economy": "reg-174-cabinet-moustoifahassanemohamed-economy",
+        "foreign": "reg-174-cabinet-mbaemohamed-foreign"
+      }
+    },
+    "178": {
+      "government": {
+        "economy": "reg-178-cabinet-ludovicngatse-economy",
+        "defense": "reg-178-cabinet-charlesrichardmondjo-defense",
+        "interior": "reg-178-cabinet-raymondzephirinmboulou-interior",
+        "foreign": "reg-178-cabinet-jeanclaudegakosso-foreign",
+        "justice": "reg-178-cabinet-angeaimewilfridbininga-justice"
+      }
+    },
+    "191": {
+      "government": {
+        "economy": "reg-191-cabinet-antesusnjar-economy",
+        "justice": "reg-191-cabinet-damirhabijan-justice"
+      }
+    },
+    "196": {
+      "government": {
+        "economy": "reg-196-cabinet-makiskeravnos-economy",
+        "defense": "reg-196-cabinet-vasilispalmas-defense",
+        "interior": "reg-196-cabinet-konstantinosioannou-interior",
+        "foreign": "reg-196-cabinet-konstantinoskombos-foreign",
+        "justice": "reg-196-cabinet-konstantinosfytiris-justice"
+      }
+    },
+    "204": {
+      "government": {
+        "defense": "reg-204-cabinet-fortunetalainnouatin-defense",
+        "interior": "reg-204-cabinet-alassaneseidou-interior",
+        "foreign": "reg-204-cabinet-shegunadjadibakari-foreign",
+        "justice": "reg-204-cabinet-yvondetchenou-justice"
+      }
+    },
+    "208": {
+      "government": {
+        "foreign": "reg-208-cabinet-larslokkerasmussen-foreign"
+      }
+    },
+    "214": {
+      "government": {
+        "deputy": "reg-214-cabinet-raquelpenarodriguez-deputy",
+        "economy": "reg-214-cabinet-miguelcearahatton-economy",
+        "interior": "reg-214-cabinet-farideraful-interior"
+      }
+    },
+    "218": {
+      "government": {
+        "deputy": "reg-218-cabinet-mariajosepintogonzalez-deputy",
+        "economy": "reg-218-cabinet-sarihamoyaangulo-economy",
+        "defense": "reg-218-cabinet-giancarloloffredorendon-defense",
+        "interior": "reg-218-cabinet-johnreimbergoviedo-interior",
+        "foreign": "reg-218-cabinet-gabrielasommerfeldrosero-foreign"
+      }
+    },
+    "233": {
+      "government": {
+        "foreign": "reg-233-cabinet-margustsahkna-foreign",
+        "justice": "reg-233-cabinet-lisalypakosta-justice"
+      }
+    },
+    "242": {
+      "government": {
+        "economy": "reg-242-cabinet-esromimmanuel-economy",
+        "defense": "reg-242-cabinet-piotikoduadua-defense",
+        "justice": "reg-242-cabinet-siromidokonivaluturaga-justice"
+      }
+    },
+    "246": {
+      "government": {
+        "defense": "reg-246-cabinet-anttihakkanen-defense",
+        "interior": "reg-246-cabinet-marirantanen-interior",
+        "foreign": "reg-246-cabinet-elinavaltonen-foreign",
+        "justice": "reg-246-cabinet-leenameri-justice"
+      }
+    },
+    "250": {
+      "government": {
+        "economy": "reg-250-cabinet-rolandlescure-economy",
+        "interior": "reg-250-cabinet-laurentnunez-interior",
+        "foreign": "reg-250-cabinet-jeannoelbarrot-foreign",
+        "justice": "reg-250-cabinet-geralddarmanin-justice",
+        "defense": "reg-250-cabinet-catherinevautrin-defense"
+      }
+    },
+    "268": {
+      "government": {
+        "economy": "reg-268-cabinet-mariamkvrivishvili-economy",
+        "defense": "reg-268-cabinet-iraklichikovani-defense",
+        "foreign": "reg-268-cabinet-makabochorishvili-foreign",
+        "justice": "reg-268-cabinet-paatasalia-justice"
+      }
+    },
+    "276": {
+      "government": {
+        "economy": "reg-276-cabinet-katherinareiche-economy",
+        "defense": "reg-276-cabinet-borispistorius-defense",
+        "interior": "reg-276-cabinet-alexanderdobrindt-interior",
+        "foreign": "reg-276-cabinet-johannwadephul-foreign",
+        "justice": "reg-276-cabinet-stefaniehubig-justice"
+      }
+    },
+    "288": {
+      "government": {
+        "deputy": "reg-288-cabinet-naanajaneopokuagyemang-deputy",
+        "economy": "reg-288-cabinet-cassielatobaahforson-economy",
+        "interior": "reg-288-cabinet-alhajimohammedmubarakmuntaka-interior",
+        "foreign": "reg-288-cabinet-samuelokudzetoablakwa-foreign"
+      }
+    },
+    "300": {
+      "government": {
+        "economy": "reg-300-cabinet-kyriakospierrakakis-economy",
+        "defense": "reg-300-cabinet-nikolaosgeorgiosdendias-defense",
+        "interior": "reg-300-cabinet-theodoroslivanios-interior",
+        "foreign": "reg-300-cabinet-georgiosgerapetritis-foreign",
+        "justice": "reg-300-cabinet-georgiosfloridis-justice"
+      }
+    },
+    "320": {
+      "government": {
+        "deputy": "reg-320-cabinet-karinlarissaherreraaguilar-deputy",
+        "economy": "reg-320-cabinet-gabrielagarciaquinn-economy",
+        "defense": "reg-320-cabinet-henrydavidsaenz-defense",
+        "interior": "reg-320-cabinet-marcoantoniovilledasandoval-interior",
+        "foreign": "reg-320-cabinet-carlosramiromartinezalvarado-foreign",
+        "justice": "reg-320-cabinet-mariaconsueloporras-justice"
+      }
+    },
+    "332": {
+      "government": {
+        "interior": "reg-332-cabinet-paulantoinebienaime-interior",
+        "justice": "reg-332-cabinet-patrickpelissier-justice"
+      }
+    },
+    "352": {
+      "government": {
+        "economy": "reg-352-cabinet-dadimarkristofersson-economy",
+        "foreign": "reg-352-cabinet-thorgerdurkatringunnarsdottir-foreign",
+        "justice": "reg-352-cabinet-thorbjorgsigridurgunnlaugsdottir-justice"
+      }
+    },
+    "368": {
+      "government": {
+        "foreign": "reg-368-cabinet-fuadhusayn-foreign",
+        "justice": "reg-368-cabinet-khalidshwani-justice"
+      }
+    },
+    "372": {
+      "government": {
+        "foreign": "reg-372-cabinet-helenmcentee-foreign",
+        "justice": "reg-372-cabinet-jimocallaghan-justice"
+      }
+    },
+    "376": {
+      "government": {
+        "economy": "reg-376-cabinet-nirbarkat-economy",
+        "defense": "reg-376-cabinet-israelkatz-defense",
+        "foreign": "reg-376-cabinet-gideonsaar-foreign",
+        "justice": "reg-376-cabinet-yarivlevin-justice",
+        "chief_of_staff": "reg-376-cabinet-eyalzamir-chief-of-staff"
+      }
+    },
+    "398": {
+      "government": {
+        "economy": "reg-398-cabinet-serikzhumangarin-economy",
+        "defense": "reg-398-cabinet-daurenkosanov-defense",
+        "interior": "reg-398-cabinet-yerzhansadenov-interior",
+        "foreign": "reg-398-cabinet-yermekkosherbayev-foreign",
+        "justice": "reg-398-cabinet-yerlansarsembayev-justice"
+      }
+    },
+    "400": {
+      "government": {
+        "economy": "reg-400-cabinet-abdulhakimalshibli-economy",
+        "interior": "reg-400-cabinet-mazinalfarayah-interior",
+        "justice": "reg-400-cabinet-bassamtalhouni-justice"
+      }
+    },
+    "410": {
+      "government": {
+        "economy": "reg-410-cabinet-kooyuncheol-economy",
+        "defense": "reg-410-cabinet-ahngyuback-defense",
+        "interior": "reg-410-cabinet-yunhojung-interior",
+        "foreign": "reg-410-cabinet-chohyun-foreign",
+        "justice": "reg-410-cabinet-jungseongho-justice"
+      }
+    },
+    "417": {
+      "government": {
+        "economy": "reg-417-cabinet-bakytsydykov-economy",
+        "defense": "reg-417-cabinet-ruslanmukambetov-defense",
+        "interior": "reg-417-cabinet-ulanbekniyazbekov-interior",
+        "foreign": "reg-417-cabinet-jeenbekkulubaev-foreign",
+        "justice": "reg-417-cabinet-ayazbaetov-justice"
+      }
+    },
+    "418": {
+      "government": {
+        "economy": "reg-418-cabinet-santiphapphomvihan-economy",
+        "foreign": "reg-418-cabinet-thongsavanphomvihan-foreign",
+        "justice": "reg-418-cabinet-phaivisiboualipha-justice"
+      }
+    },
+    "422": {
+      "government": {
+        "economy": "reg-422-cabinet-amerbisat-economy",
+        "defense": "reg-422-cabinet-michelmenassa-defense",
+        "interior": "reg-422-cabinet-ahmadalhajjar-interior",
+        "foreign": "reg-422-cabinet-youssefrajji-foreign",
+        "justice": "reg-422-cabinet-adelnassar-justice",
+        "chief_of_staff": "reg-422-cabinet-hassanaudi-chief-of-staff"
+      }
+    },
+    "434": {
+      "government": {
+        "justice": "reg-434-cabinet-halimahibrahim-justice"
+      }
+    },
+    "440": {
+      "government": {
+        "economy": "reg-440-cabinet-edvinasgriksas-economy",
+        "defense": "reg-440-cabinet-robertaskaunas-defense",
+        "interior": "reg-440-cabinet-vladislavaskondratovicius-interior",
+        "foreign": "reg-440-cabinet-kestutisbudrys-foreign",
+        "justice": "reg-440-cabinet-ritatamasuniene-justice"
+      }
+    },
+    "442": {
+      "government": {
+        "economy": "reg-442-cabinet-lexdelles-economy",
+        "defense": "reg-442-cabinet-yurikobackes-defense",
+        "interior": "reg-442-cabinet-leongloden-interior",
+        "foreign": "reg-442-cabinet-xavierbettel-foreign",
+        "justice": "reg-442-cabinet-elisabethmargue-justice"
+      }
+    },
+    "450": {
+      "government": {
+        "interior": "reg-450-cabinet-hanitravelonjaratiarayrakotonandrasana-interior",
+        "foreign": "reg-450-cabinet-christineharijaoninarazanamahasoa-foreign",
+        "justice": "reg-450-cabinet-fanirisoaernaivo-justice"
+      }
+    },
+    "454": {
+      "government": {
+        "economy": "reg-454-cabinet-josephmwanamvekha-economy",
+        "foreign": "reg-454-cabinet-georgechaponda-foreign",
+        "justice": "reg-454-cabinet-charlesmhango-justice"
+      }
+    },
+    "466": {
+      "government": {
+        "foreign": "reg-466-cabinet-abdoulayediop-foreign",
+        "justice": "reg-466-cabinet-mahamadoukassogue-justice"
+      }
+    },
+    "478": {
+      "government": {
+        "economy": "reg-478-cabinet-abdallahisuleimancheikhsidiya-economy",
+        "defense": "reg-478-cabinet-hananaouldsidi-defense",
+        "interior": "reg-478-cabinet-mohamedahmedouldmohamedlemine-interior",
+        "foreign": "reg-478-cabinet-mohamedsalemmerzoug-foreign",
+        "justice": "reg-478-cabinet-mohamedouldsouiedatt-justice"
+      }
+    },
+    "484": {
+      "government": {
+        "economy": "reg-484-cabinet-marceloebrard-economy",
+        "foreign": "reg-484-cabinet-juanramondelafuente-foreign",
+        "defense": "reg-484-cabinet-ricardotrevillatrejo-defense",
+        "interior": "reg-484-cabinet-rosaicelarodriguez-interior",
+        "justice": "reg-484-cabinet-ernestinagodoyramos-justice",
+        "chief_of_staff": "reg-484-cabinet-arturocoronelflores-chief-of-staff"
+      }
+    },
+    "496": {
+      "government": {
+        "economy": "reg-496-cabinet-jadambaenkhbayar-economy",
+        "defense": "reg-496-cabinet-dambabatlut-defense",
+        "foreign": "reg-496-cabinet-batmunkhbattsetseg-foreign",
+        "justice": "reg-496-cabinet-battumurenkhbayar-justice"
+      }
+    },
+    "498": {
+      "government": {
+        "defense": "reg-498-cabinet-anatolienosatii-defense",
+        "interior": "reg-498-cabinet-daniellamisailnichitin-interior"
+      }
+    },
+    "499": {
+      "government": {
+        "economy": "reg-499-cabinet-novicavukovic-economy",
+        "defense": "reg-499-cabinet-dragankrapovic-defense",
+        "interior": "reg-499-cabinet-danilosaranovic-interior",
+        "justice": "reg-499-cabinet-bojanbozovic-justice"
+      }
+    },
+    "516": {
+      "government": {
+        "deputy": "reg-516-cabinet-luciawitbooi-deputy",
+        "economy": "reg-516-cabinet-ericashafudah-economy",
+        "defense": "reg-516-cabinet-franskapofi-defense",
+        "interior": "reg-516-cabinet-lucialipumbu-interior",
+        "justice": "reg-516-cabinet-fillemonwiseemmanuel-justice"
+      }
+    },
+    "548": {
+      "government": {
+        "economy": "reg-548-cabinet-johnnykoanapo-economy",
+        "interior": "reg-548-cabinet-andrewnapuat-interior",
+        "foreign": "reg-548-cabinet-marcati-foreign",
+        "justice": "reg-548-cabinet-jobsamandy-justice"
+      }
+    },
+    "554": {
+      "government": {
+        "economy": "reg-554-cabinet-nicolawillis-economy",
+        "interior": "reg-554-cabinet-brookevanvelden-interior",
+        "foreign": "reg-554-cabinet-winstonpeters-foreign",
+        "justice": "reg-554-cabinet-paulgoldsmith-justice"
+      }
+    },
+    "566": {
+      "government": {
+        "deputy": "reg-566-cabinet-kashimshettima-deputy",
+        "interior": "reg-566-cabinet-olubunmitunjiojo-interior",
+        "justice": "reg-566-cabinet-lateeffagbemi-justice"
+      }
+    },
+    "578": {
+      "government": {
+        "economy": "reg-578-cabinet-jensstoltenberg-economy",
+        "foreign": "reg-578-cabinet-espenbartheide-foreign",
+        "justice": "reg-578-cabinet-astriaashansen-justice"
+      }
+    },
+    "591": {
+      "government": {
+        "economy": "reg-591-cabinet-felipechapman-economy",
+        "foreign": "reg-591-cabinet-javiermartinezacha-foreign"
+      }
+    },
+    "598": {
+      "government": {
+        "defense": "reg-598-cabinet-williambillyjoseph-defense",
+        "foreign": "reg-598-cabinet-justintkatchenko-foreign",
+        "justice": "reg-598-cabinet-pilakoleniningi-justice"
+      }
+    },
+    "642": {
+      "government": {
+        "foreign": "reg-642-cabinet-oanatoiu-foreign",
+        "justice": "reg-642-cabinet-radumarinescu-justice"
+      }
+    },
+    "643": {
+      "government": {
+        "economy": "reg-643-cabinet-maksimreshetnikov-economy",
+        "defense": "reg-643-cabinet-andreybelousov-defense",
+        "interior": "reg-643-cabinet-vladimirkolokoltsev-interior",
+        "foreign": "reg-643-cabinet-sergeylavrov-foreign",
+        "justice": "reg-643-cabinet-konstantinchuychenko-justice",
+        "chief_of_staff": "reg-643-cabinet-valerygerasimov-chief-of-staff"
+      }
+    },
+    "646": {
+      "government": {
+        "economy": "reg-646-cabinet-yussufmurangwa-economy",
+        "defense": "reg-646-cabinet-juvenalmarizamunda-defense"
+      }
+    },
+    "703": {
+      "government": {
+        "economy": "reg-703-cabinet-ladislavkamenicky-economy",
+        "interior": "reg-703-cabinet-matussutajestok-interior",
+        "justice": "reg-703-cabinet-borissusko-justice"
+      }
+    },
+    "705": {
+      "government": {
+        "economy": "reg-705-cabinet-matjazhan-economy"
+      }
+    },
+    "710": {
+      "government": {
+        "economy": "reg-710-cabinet-enochgodongwana-economy",
+        "defense": "reg-710-cabinet-angiemotshekga-defense",
+        "interior": "reg-710-cabinet-leonschreiber-interior",
+        "justice": "reg-710-cabinet-thembinkadimeng-justice"
+      }
+    },
+    "716": {
+      "government": {
+        "economy": "reg-716-cabinet-mthulincube-economy",
+        "defense": "reg-716-cabinet-oppahmuchingurikashiri-defense",
+        "interior": "reg-716-cabinet-kazembekazembe-interior",
+        "foreign": "reg-716-cabinet-amonmurwira-foreign",
+        "justice": "reg-716-cabinet-ziyambiziyambi-justice"
+      }
+    },
+    "728": {
+      "government": {
+        "economy": "reg-728-cabinet-athiandiingathian-economy"
+      }
+    },
+    "760": {
+      "government": {
+        "economy": "reg-760-cabinet-muhammadnidalalshaar-economy",
+        "defense": "reg-760-cabinet-murhafabuqasra-defense",
+        "interior": "reg-760-cabinet-anashasankhattab-interior",
+        "foreign": "reg-760-cabinet-asadhasanalshaybani-foreign",
+        "justice": "reg-760-cabinet-mazharalwais-justice"
+      }
+    },
+    "762": {
+      "government": {
+        "economy": "reg-762-cabinet-abdurahmonabdurahmonzoda-economy",
+        "interior": "reg-762-cabinet-ramazonrahimzoda-interior",
+        "foreign": "reg-762-cabinet-sirojiddinmuhriddin-foreign",
+        "justice": "reg-762-cabinet-muzaffarashuriyon-justice"
+      }
+    },
+    "764": {
+      "government": {
+        "economy": "reg-764-cabinet-eknitinitithanpraphat-economy",
+        "interior": "reg-764-cabinet-anuthinchanwirakun-interior",
+        "foreign": "reg-764-cabinet-sihasakphuangketkeow-foreign"
+      }
+    },
+    "768": {
+      "government": {
+        "economy": "reg-768-cabinet-badanampatoki-economy",
+        "foreign": "reg-768-cabinet-komlanedorobertdussey-foreign",
+        "justice": "reg-768-cabinet-mepacomeyawoviadjourouv-justice"
+      }
+    },
+    "795": {
+      "government": {
+        "economy": "reg-795-cabinet-mammetgulyastanagulow-economy",
+        "defense": "reg-795-cabinet-begencgundogdyyew-defense",
+        "interior": "reg-795-cabinet-muhammethydyrow-interior",
+        "foreign": "reg-795-cabinet-rasitmeredow-foreign",
+        "justice": "reg-795-cabinet-merettagantaganow-justice"
+      }
+    },
+    "804": {
+      "government": {
+        "economy": "reg-804-cabinet-oleksiysobolev-economy",
+        "interior": "reg-804-cabinet-ihorklymenko-interior",
+        "foreign": "reg-804-cabinet-andriysybiha-foreign"
+      }
+    },
+    "818": {
+      "government": {
+        "economy": "reg-818-cabinet-ahmedkouchouk-economy",
+        "defense": "reg-818-cabinet-abdelmeguidsaqr-defense",
+        "interior": "reg-818-cabinet-mahmoudtawfik-interior",
+        "foreign": "reg-818-cabinet-badrabdelatty-foreign",
+        "justice": "reg-818-cabinet-adnanfangary-justice",
+        "chief_of_staff": "reg-818-cabinet-ahmedfathyibrahimkhalifa-chief-of-staff"
+      }
+    },
+    "826": {
+      "government": {
+        "interior": "reg-826-cabinet-shabanamahmood-interior",
+        "foreign": "reg-826-cabinet-yvettecooper-foreign",
+        "justice": "reg-826-cabinet-davidlammy-justice",
+        "economy": "reg-826-cabinet-rachelreeves-economy",
+        "defense": "reg-826-cabinet-johnhealey-defense",
+        "chief_of_staff": "reg-826-cabinet-richardknighton-chief-of-staff"
+      }
+    },
+    "834": {
+      "government": {
+        "deputy": "reg-834-cabinet-emmanuelnchimbi-deputy",
+        "economy": "reg-834-cabinet-khamismussaomar-economy",
+        "defense": "reg-834-cabinet-rhimonyansaho-defense",
+        "interior": "reg-834-cabinet-bonifacegeorgesimbachawene-interior",
+        "foreign": "reg-834-cabinet-mahmoudthabitkombo-foreign",
+        "justice": "reg-834-cabinet-hamzajohari-justice"
+      }
+    },
+    "840": {
+      "government": {
+        "deputy": "reg-840-jdvance",
+        "economy": "reg-840-scottbessent",
+        "defense": "reg-840-petehegseth",
+        "interior": "reg-840-dougburgum",
+        "foreign": "reg-840-marcorubio",
+        "justice": "reg-840-pambondi",
+        "chief_of_staff": "reg-840-dancaine"
+      }
+    },
+    "860": {
+      "government": {
+        "economy": "reg-860-cabinet-jamshidqochqorov-economy",
+        "defense": "reg-860-cabinet-shuhratxolmuhamedov-defense",
+        "interior": "reg-860-cabinet-aziztoshpolatov-interior",
+        "foreign": "reg-860-cabinet-baxtiyorsaidov-foreign",
+        "justice": "reg-860-cabinet-akbartoshqulov-justice"
+      }
+    },
+    "862": {
+      "government": {
+        "economy": "reg-862-cabinet-anabelpereirafernandez-economy",
+        "interior": "reg-862-cabinet-diosdadocabellorondon-interior"
+      }
+    },
+    "882": {
+      "government": {
+        "economy": "reg-882-cabinet-mulipolaanaorsaalemolioo-economy",
+        "foreign": "reg-882-cabinet-laaulialemalietoaleuateapolataivaoschmidt-foreign",
+        "justice": "reg-882-cabinet-fesolaiapulutusiuputuigamala-justice"
+      }
+    },
+    "032": {
+      "government": {
+        "deputy": "reg-032-cabinet-victoriavillarruel-deputy",
+        "economy": "reg-032-cabinet-luiscaputo-economy",
+        "interior": "reg-032-cabinet-diegosantilli-interior",
+        "foreign": "reg-032-cabinet-pabloquirno-foreign",
+        "justice": "reg-032-cabinet-marianocuneolibarona-justice"
+      }
+    },
+    "044": {
+      "government": {
+        "economy": "reg-044-cabinet-michaelbrianhalkitis-economy",
+        "foreign": "reg-044-cabinet-frederickaudleymitchell-foreign"
+      }
+    },
+    "051": {
+      "government": {
+        "economy": "reg-051-cabinet-gevorgpapoyan-economy",
+        "defense": "reg-051-cabinet-surenpapikyan-defense",
+        "interior": "reg-051-cabinet-arpinesargsyan-interior",
+        "foreign": "reg-051-cabinet-araratmirzoyan-foreign",
+        "justice": "reg-051-cabinet-srbuhigalyan-justice"
+      }
+    },
+    "068": {
+      "government": {
+        "deputy": "reg-068-cabinet-edmanlaramontano-deputy",
+        "economy": "reg-068-cabinet-josegabrielespinozayanez-economy",
+        "defense": "reg-068-cabinet-raulmarcelosalinasgamarra-defense",
+        "foreign": "reg-068-cabinet-fernandohugoaramayocarrasco-foreign",
+        "justice": "reg-068-cabinet-freddyalejandrovidovichfalch-justice"
+      }
+    },
+    "084": {
+      "government": {
+        "economy": "reg-084-cabinet-johnbriceno-economy",
+        "defense": "reg-084-cabinet-florenciomarinjr-defense",
+        "interior": "reg-084-cabinet-oscarmira-interior",
+        "foreign": "reg-084-cabinet-francisfonseca-foreign",
+        "justice": "reg-084-cabinet-anthonysylvestre-justice"
+      }
+    },
+    "012": {
+      "government": {
+        "economy": "reg-012-cabinet-abdelkrimbouzerd-economy",
+        "defense": "reg-012-cabinet-abdelmadjidtebboune-defense",
+        "interior": "reg-012-cabinet-saidsayoud-interior",
+        "foreign": "reg-012-cabinet-ahmedattaf-foreign",
+        "justice": "reg-012-cabinet-lotfiboudjemaa-justice"
+      }
+    },
+    "031": {
+      "government": {
+        "economy": "reg-031-cabinet-mikayiljabbarov-economy",
+        "defense": "reg-031-cabinet-vugarmustafayev-defense",
+        "foreign": "reg-031-cabinet-jeyhunbayramov-foreign",
+        "justice": "reg-031-cabinet-faridahmadov-justice"
+      }
+    },
+    "036": {
+      "government": {
+        "economy": "reg-036-cabinet-katygallagher-economy",
+        "interior": "reg-036-cabinet-tonyburke-interior",
+        "foreign": "reg-036-cabinet-pennywong-foreign"
+      }
+    },
+    "056": {
+      "government": {
+        "defense": "reg-056-cabinet-theofrancken-defense",
+        "foreign": "reg-056-cabinet-maximeprevot-foreign",
+        "justice": "reg-056-cabinet-anneliesverlinden-justice"
+      }
+    },
+    "090": {
+      "government": {
+        "interior": "reg-090-cabinet-isikelivavejr-interior"
+      }
+    },
+    "096": {
+      "government": {
+        "interior": "reg-096-cabinet-ahmaddinabdullahrahman-interior",
+        "foreign": "reg-096-cabinet-erywanyusof-foreign"
+      }
+    },
+    "004": {
+      "government": {
+        "interior": "reg-004-sirajuddinhaqqani",
+        "deputy": "reg-004-abdulsalamhanafi",
+        "foreign": "reg-004-amirkhanmuttaqi"
+      }
+    }
+  },
+  "people": {
+    "reg-840-jdvance": {
+      "name": "JD Vance",
+      "role": "Vice President",
+      "source": "https://www.whitehouse.gov/administration/jd-vance/",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-jdvance.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://www.loc.gov/item/2025163295/",
+        "credit": "Official White House photo by Daniel Torok",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-01-15",
+        "rightsSource": "https://www.loc.gov/item/2025163295/",
+        "originalSha256": "f6ae195b4160c068813f099c502388e838708f4caca017ad7105b955d77d7787",
+        "packagedSha256": "8f9c63ee17cb6f2a73c462191629386425c4f0e4c392ee20252c04efd0a5e50a",
+        "derivative": "Cropped, resized to 240 × 320 and encoded as JPEG"
+      }
+    },
+    "reg-840-scottbessent": {
+      "name": "Scott Bessent",
+      "role": "Secretary of the Treasury",
+      "source": "https://home.treasury.gov/about/history/prior-secretaries",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-scottbessent.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Official_portrait_of_Treasury_Secretary_Scott_Bessent.jpg",
+        "credit": "United States Department of the Treasury",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-02-06",
+        "rightsSource": "https://home.treasury.gov/about/general-information/officials/scott-bessent",
+        "originalSha256": "e33ac8a63539ddbbdb35d70c50c52aef9827c80195bf97ef17cfbe19c3dbb2ed",
+        "packagedSha256": "4c5b4395c6ea140898e7b8cae5131e34a07b4dfa6ffe1135ae426dc75df1e3ad",
+        "derivative": "Cropped, resized to 240 × 320 and encoded as JPEG"
+      }
+    },
+    "reg-840-petehegseth": {
+      "name": "Pete Hegseth",
+      "role": "Secretary of Defense",
+      "source": "https://www.defense.gov/News/News-Stories/Article/Article/4041030/secretary-of-defense-pete-hegseth-begins-most-important-deployment-of-my-life/",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-petehegseth.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://www.dvidshub.net/image/8844545/29th-secretary-defense-pete-hegseth-official-portrait",
+        "credit": "U.S. Department of Defense photo by Chad J. McNeeley",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-01-27",
+        "rightsSource": "https://www.dvidshub.net/image/8844545/29th-secretary-defense-pete-hegseth-official-portrait",
+        "packagedSha256": "11c7044c510f3acdafc1540b83df8bed9468537f9af418ff3996fee68020dfa8",
+        "derivative": "Cropped, resized to 240 × 320 and encoded as JPEG",
+        "sourceThumbnailSha256": "f8dd38191b8c9e302a8a5fd3fad99c9f6c9b7143fe456b9c7861f91fadabb971"
+      }
+    },
+    "reg-840-dougburgum": {
+      "name": "Doug Burgum",
+      "role": "Secretary of the Interior",
+      "source": "https://www.doi.gov/node/61421",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-dougburgum.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Portait_of_Secretary_Doug_Burgum%2C_2025_High_Quality_%28cropped1%29.jpg",
+        "credit": "United States Department of the Interior",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-01-31",
+        "rightsSource": "https://www.doi.gov/secretary-doug-burgum",
+        "originalSha256": "5a4b6805db23fdf933ed4a483d509539123550828fad80b202157af5f3f3f534",
+        "packagedSha256": "ab19e7fd1a39da46e11a438777286ffccd6aaca3a224d374c8209fe22fbf9633",
+        "derivative": "Resized to 239 × 320 and encoded as JPEG"
+      }
+    },
+    "reg-840-marcorubio": {
+      "name": "Marco Rubio",
+      "role": "Secretary of State",
+      "source": "https://history.state.gov/departmenthistory/people/rubio-marco",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-marcorubio.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Official_portrait_of_the_United_States_Secretary_of_State_Marco_Rubio%2C_January_2025_%28cropped%29.jpg",
+        "credit": "United States Department of State",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-01-23",
+        "rightsSource": "https://www.flickr.com/photos/statephotos/54295399868/",
+        "originalSha256": "26e089702f07858a131c7424855e49cf1bf2149945c17e1375074ede6a730922",
+        "packagedSha256": "11afa1fa1e33f6a281347878c8bcacae31c66982ea8295139530d1a0dc7b14f5",
+        "derivative": "Resized to 240 × 319 and encoded as JPEG"
+      }
+    },
+    "reg-840-pambondi": {
+      "name": "Pam Bondi",
+      "role": "Attorney General",
+      "source": "https://www.justice.gov/ag/bio/attorney-general-pamela-bondi",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-pambondi.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Pam_Bondi_official_portrait_%28cropped1%29.jpg",
+        "credit": "United States Department of Justice",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-11-17",
+        "rightsSource": "https://www.justice.gov/d9/2025-12/ag_pamela_bondi.jpg.jpg",
+        "packagedSha256": "6e9cc942e98ce76d9d0f828dc230c0cc1764a7f759c04a874d1e7324af196cf8",
+        "derivative": "Resized to 240 × 320 and encoded as JPEG",
+        "sourceThumbnailSha256": "63464ab45baf2f95d5dd25e7082794897c8dcd496343917d0204242c85189a3e"
+      }
+    },
+    "reg-840-dancaine": {
+      "name": "Dan Caine",
+      "role": "Chairman of the Joint Chiefs of Staff",
+      "source": "https://www.jcs.mil/Leadership/Article-View/Article/1974872/gen-dan-caine/",
+      "evidence": "documented_opening_government",
+      "asset": "opening-register-portraits/reg-840-dancaine.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:General_John_D._Caine_%28cropped%29.jpg",
+        "credit": "United States Department of Defense",
+        "license": "U.S. public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2025-04-09",
+        "rightsSource": "https://media.defense.gov/2025/Apr/11/2003687687/-1/-1/0/110425-F-AB123-1001.JPG",
+        "packagedSha256": "b03932ee56f59ce7491a46f3b6b1f1ab3169a9f2fbd743723dc24c592eb8f4e3",
+        "derivative": "Resized to 240 × 320 and encoded as JPEG",
+        "sourceThumbnailSha256": "abec3e757f7f2aa8aae815e919aa360ca6e68f9c12677659bbfae9bfadc0a195"
+      },
+      "officeNote": "U.S. equivalent for the Chief of General Staff slot. The Chairman is the senior-ranking military officer and principal military adviser."
+    },
+    "reg-152-cabinet-alvarogarcia-economy": {
+      "name": "Alvaro Garcia",
+      "role": "Minister of Economy, Development, and Tourism",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/chile/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-23"
+    },
+    "reg-152-cabinet-adrianadelpiano-defense": {
+      "name": "Adriana Delpiano",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/chile/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-23"
+    },
+    "reg-152-cabinet-alvaroelizalde-interior": {
+      "name": "Alvaro Elizalde",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/chile/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-23"
+    },
+    "reg-152-cabinet-albertovanklaveren-foreign": {
+      "name": "Alberto van Klaveren",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/chile/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-23"
+    },
+    "reg-152-cabinet-jaimegajardo-justice": {
+      "name": "Jaime Gajardo",
+      "role": "Minister of Justice and Human Rights",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/chile/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-23"
+    },
+    "reg-178-cabinet-ludovicngatse-economy": {
+      "name": "Ludovic Ngatse",
+      "role": "Minister of Economy, Planning, and Regional Integration",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/congo-republic-of-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-01"
+    },
+    "reg-178-cabinet-charlesrichardmondjo-defense": {
+      "name": "Charles Richard Mondjo",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/congo-republic-of-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-01"
+    },
+    "reg-178-cabinet-raymondzephirinmboulou-interior": {
+      "name": "Raymond Zephirin Mboulou",
+      "role": "Minister of the Interior, Decentralization, and Local Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/congo-republic-of-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-01"
+    },
+    "reg-178-cabinet-jeanclaudegakosso-foreign": {
+      "name": "Jean Claude Gakosso",
+      "role": "Minister of Foreign Affairs, of La Francophonie, and Congolese Living Abroad",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/congo-republic-of-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-01"
+    },
+    "reg-178-cabinet-angeaimewilfridbininga-justice": {
+      "name": "Ange Aime Wilfrid Bininga",
+      "role": "Minister of Justice, Human Rights, and the Promotion of Indigenous Peoples and Keeper of the Seals",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/congo-republic-of-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-01"
+    },
+    "reg-196-cabinet-makiskeravnos-economy": {
+      "name": "Makis Keravnos",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/cyprus/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-196-cabinet-vasilispalmas-defense": {
+      "name": "Vasilis Palmas",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/cyprus/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-196-cabinet-konstantinosioannou-interior": {
+      "name": "Konstantinos Ioannou",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/cyprus/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-196-cabinet-konstantinoskombos-foreign": {
+      "name": "Konstantinos Kombos",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/cyprus/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-196-cabinet-konstantinosfytiris-justice": {
+      "name": "Konstantinos Fytiris",
+      "role": "Minister of Justice and Public Order",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/cyprus/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-204-cabinet-fortunetalainnouatin-defense": {
+      "name": "Fortunet Alain Nouatin",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/benin/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-204-cabinet-alassaneseidou-interior": {
+      "name": "Alassane Seidou",
+      "role": "Minister of Interior and Public Security",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/benin/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-204-cabinet-shegunadjadibakari-foreign": {
+      "name": "Shegun Adjadi Bakari",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/benin/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-204-cabinet-yvondetchenou-justice": {
+      "name": "Yvon Detchenou",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/benin/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-218-cabinet-mariajosepintogonzalez-deputy": {
+      "name": "Maria Jose Pinto Gonzalez",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ecuador/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-218-cabinet-sarihamoyaangulo-economy": {
+      "name": "Sariha Moya Angulo",
+      "role": "Minister of Economy and Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ecuador/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-218-cabinet-giancarloloffredorendon-defense": {
+      "name": "Gian Carlo Loffredo Rendon",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ecuador/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-218-cabinet-johnreimbergoviedo-interior": {
+      "name": "John Reimberg Oviedo",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ecuador/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-218-cabinet-gabrielasommerfeldrosero-foreign": {
+      "name": "Gabriela Sommerfeld Rosero",
+      "role": "Minister of Foreign Relations and Integration",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ecuador/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-250-cabinet-rolandlescure-economy": {
+      "name": "Roland Lescure",
+      "role": "Minister of Economy and Finance",
+      "source": "https://www.elysee.fr/emmanuel-macron/2025/10/12/nomination-du-gouvernement-6",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-10-12"
+    },
+    "reg-250-cabinet-laurentnunez-interior": {
+      "name": "Laurent Nuñez",
+      "role": "Minister of the Interior",
+      "source": "https://www.elysee.fr/emmanuel-macron/2025/10/12/nomination-du-gouvernement-6",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-10-12"
+    },
+    "reg-250-cabinet-jeannoelbarrot-foreign": {
+      "name": "Jean-Noël Barrot",
+      "role": "Minister for Europe and Foreign Affairs",
+      "source": "https://www.elysee.fr/emmanuel-macron/2025/10/12/nomination-du-gouvernement-6",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-10-12"
+    },
+    "reg-250-cabinet-geralddarmanin-justice": {
+      "name": "Gérald Darmanin",
+      "role": "Minister of Justice and Keeper of the Seals",
+      "source": "https://www.elysee.fr/emmanuel-macron/2025/10/12/nomination-du-gouvernement-6",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-10-12"
+    },
+    "reg-288-cabinet-naanajaneopokuagyemang-deputy": {
+      "name": "Naana Jane Opoku-Agyemang",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ghana/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-288-cabinet-cassielatobaahforson-economy": {
+      "name": "Cassiel Ato Baah Forson",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ghana/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-288-cabinet-alhajimohammedmubarakmuntaka-interior": {
+      "name": "Alhaji Mohammed Mubarak Muntaka",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ghana/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-288-cabinet-samuelokudzetoablakwa-foreign": {
+      "name": "Samuel Okudzeto Ablakwa",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ghana/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-320-cabinet-karinlarissaherreraaguilar-deputy": {
+      "name": "Karin Larissa Herrera Aguilar",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/guatemala/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-320-cabinet-gabrielagarciaquinn-economy": {
+      "name": "Gabriela Garcia Quinn",
+      "role": "Minister of Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/guatemala/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-320-cabinet-henrydavidsaenz-defense": {
+      "name": "Henry David Saenz",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/guatemala/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-320-cabinet-marcoantoniovilledasandoval-interior": {
+      "name": "Marco Antonio Villeda Sandoval",
+      "role": "Minister of the Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/guatemala/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-320-cabinet-carlosramiromartinezalvarado-foreign": {
+      "name": "Carlos Ramiro Martinez Alvarado",
+      "role": "Minister of Foreign Relations",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/guatemala/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-320-cabinet-mariaconsueloporras-justice": {
+      "name": "Maria Consuelo Porras",
+      "role": "Attorney Gen.",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/guatemala/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-372-cabinet-helenmcentee-foreign": {
+      "name": "Helen Mcentee",
+      "role": "Minister for Foreign Affairs and Trade; Minister for Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ireland/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-372-cabinet-jimocallaghan-justice": {
+      "name": "Jim O’Callaghan",
+      "role": "Minister for Justice, Home Affairs, and Migration",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ireland/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-398-cabinet-serikzhumangarin-economy": {
+      "name": "Serik Zhumangarin",
+      "role": "Minister of National Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kazakhstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-03"
+    },
+    "reg-398-cabinet-daurenkosanov-defense": {
+      "name": "Dauren Kosanov",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kazakhstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-03"
+    },
+    "reg-398-cabinet-yerzhansadenov-interior": {
+      "name": "Yerzhan Sadenov",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kazakhstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-03"
+    },
+    "reg-398-cabinet-yermekkosherbayev-foreign": {
+      "name": "Yermek Kosherbayev",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kazakhstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-03"
+    },
+    "reg-398-cabinet-yerlansarsembayev-justice": {
+      "name": "Yerlan Sarsembayev",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kazakhstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-03"
+    },
+    "reg-400-cabinet-abdulhakimalshibli-economy": {
+      "name": "Abdul Hakim al-SHIBLI",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/jordan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-04"
+    },
+    "reg-400-cabinet-mazinalfarayah-interior": {
+      "name": "Mazin al-FARAYAH",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/jordan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-04"
+    },
+    "reg-400-cabinet-bassamtalhouni-justice": {
+      "name": "Bassam Talhouni",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/jordan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-04"
+    },
+    "reg-417-cabinet-bakytsydykov-economy": {
+      "name": "Bakyt Sydykov",
+      "role": "Minister of Economy and Commerce",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kyrgyzstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-29"
+    },
+    "reg-417-cabinet-ruslanmukambetov-defense": {
+      "name": "Ruslan Mukambetov",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kyrgyzstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-29"
+    },
+    "reg-417-cabinet-ulanbekniyazbekov-interior": {
+      "name": "Ulanbek Niyazbekov",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kyrgyzstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-29"
+    },
+    "reg-417-cabinet-jeenbekkulubaev-foreign": {
+      "name": "Jeenbek Kulubaev",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kyrgyzstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-29"
+    },
+    "reg-417-cabinet-ayazbaetov-justice": {
+      "name": "Ayaz Baetov",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/kyrgyzstan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-29"
+    },
+    "reg-440-cabinet-edvinasgriksas-economy": {
+      "name": "Edvinas Griksas",
+      "role": "Minister of Economy and Innovation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/lithuania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-440-cabinet-robertaskaunas-defense": {
+      "name": "Robertas Kaunas",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/lithuania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-440-cabinet-vladislavaskondratovicius-interior": {
+      "name": "Vladislavas Kondratovicius",
+      "role": "Minister of the Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/lithuania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-440-cabinet-kestutisbudrys-foreign": {
+      "name": "Kestutis Budrys",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/lithuania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-440-cabinet-ritatamasuniene-justice": {
+      "name": "Rita Tamasuniene",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/lithuania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-442-cabinet-lexdelles-economy": {
+      "name": "Lex Delles",
+      "role": "Minister of the Economy, Small- and Medium-Sized Enterprises, Energy, and Tourism",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/luxembourg/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-442-cabinet-yurikobackes-defense": {
+      "name": "Yuriko Backes",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/luxembourg/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-442-cabinet-leongloden-interior": {
+      "name": "Leon Gloden",
+      "role": "Minister for Home Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/luxembourg/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-442-cabinet-xavierbettel-foreign": {
+      "name": "Xavier Bettel",
+      "role": "Minister for Foreign Affairs and Foreign Trade",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/luxembourg/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-442-cabinet-elisabethmargue-justice": {
+      "name": "Elisabeth Margue",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/luxembourg/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-450-cabinet-hanitravelonjaratiarayrakotonandrasana-interior": {
+      "name": "Hanitra Velonjara Tiaray Rakotonandrasana",
+      "role": "Minister of Interior and Decentralization",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/madagascar/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-450-cabinet-christineharijaoninarazanamahasoa-foreign": {
+      "name": "Christine Harijaonina Razanamahasoa",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/madagascar/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-450-cabinet-fanirisoaernaivo-justice": {
+      "name": "Fanirisoa Ernaivo",
+      "role": "Minister of Justice; State Treasurer",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/madagascar/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-478-cabinet-abdallahisuleimancheikhsidiya-economy": {
+      "name": "Abdallahi Suleiman Cheikh Sidiya",
+      "role": "Minister of Economic Affairs and Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mauritania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-18"
+    },
+    "reg-478-cabinet-hananaouldsidi-defense": {
+      "name": "Hanana Ould Sidi",
+      "role": "Minister of Defense and Veterans Affairs and Martyrs’ Families",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mauritania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-18"
+    },
+    "reg-478-cabinet-mohamedahmedouldmohamedlemine-interior": {
+      "name": "Mohamed Ahmed Ould Mohamed Lemine",
+      "role": "Minister of Interior, Decentralization, and Local Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mauritania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-18"
+    },
+    "reg-478-cabinet-mohamedsalemmerzoug-foreign": {
+      "name": "Mohamed Salem Merzoug",
+      "role": "Minister of Foreign Affairs, African Cooperation, and Mauritanians Abroad",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mauritania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-18"
+    },
+    "reg-478-cabinet-mohamedouldsouiedatt-justice": {
+      "name": "Mohamed Ould Souiedatt",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mauritania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-18"
+    },
+    "reg-496-cabinet-jadambaenkhbayar-economy": {
+      "name": "Jadamba Enkhbayar",
+      "role": "Minister of Economy and Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mongolia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-10"
+    },
+    "reg-496-cabinet-dambabatlut-defense": {
+      "name": "Damba Batlut",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mongolia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-10"
+    },
+    "reg-496-cabinet-batmunkhbattsetseg-foreign": {
+      "name": "Batmunkh Battsetseg",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mongolia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-10"
+    },
+    "reg-496-cabinet-battumurenkhbayar-justice": {
+      "name": "Battumur Enkhbayar",
+      "role": "Minister of Justice and Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mongolia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-10"
+    },
+    "reg-646-cabinet-yussufmurangwa-economy": {
+      "name": "Yussuf Murangwa",
+      "role": "Minister of Finance and Economic Planning",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/rwanda/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-646-cabinet-juvenalmarizamunda-defense": {
+      "name": "Juvenal Marizamunda",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/rwanda/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-710-cabinet-enochgodongwana-economy": {
+      "name": "Enoch Godongwana",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/south-africa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-710-cabinet-angiemotshekga-defense": {
+      "name": "Angie Motshekga",
+      "role": "Minister of Defense and Military Veterans",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/south-africa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-710-cabinet-leonschreiber-interior": {
+      "name": "Leon Schreiber",
+      "role": "Minister of Home Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/south-africa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-710-cabinet-thembinkadimeng-justice": {
+      "name": "Thembi Nkadimeng",
+      "role": "Minister of Justice and Constitutional Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/south-africa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-760-cabinet-muhammadnidalalshaar-economy": {
+      "name": "Muhammad Nidal al-SHAAR",
+      "role": "Minister of the Economy and Industry",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/syria/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-12"
+    },
+    "reg-760-cabinet-murhafabuqasra-defense": {
+      "name": "Murhaf Abu Qasra",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/syria/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-12"
+    },
+    "reg-760-cabinet-anashasankhattab-interior": {
+      "name": "Anas Hasan Khattab",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/syria/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-12"
+    },
+    "reg-760-cabinet-asadhasanalshaybani-foreign": {
+      "name": "As’ad Hasan al-SHAYBANI",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/syria/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-12"
+    },
+    "reg-760-cabinet-mazharalwais-justice": {
+      "name": "Mazhar al-WAIS",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/syria/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-12"
+    },
+    "reg-762-cabinet-abdurahmonabdurahmonzoda-economy": {
+      "name": "Abdurahmon Abdurahmonzoda",
+      "role": "Minister of Economic Development and Trade",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tajikistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-18"
+    },
+    "reg-762-cabinet-ramazonrahimzoda-interior": {
+      "name": "Ramazon Rahimzoda",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tajikistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-18"
+    },
+    "reg-762-cabinet-sirojiddinmuhriddin-foreign": {
+      "name": "Sirojiddin Muhriddin",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tajikistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-18"
+    },
+    "reg-762-cabinet-muzaffarashuriyon-justice": {
+      "name": "Muzaffar Ashuriyon",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tajikistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-18"
+    },
+    "reg-768-cabinet-badanampatoki-economy": {
+      "name": "Badanam Patoki",
+      "role": "Minister of Economy and Strategic Monitoring",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/togo/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-768-cabinet-komlanedorobertdussey-foreign": {
+      "name": "Komlan Edo Robert Dussey",
+      "role": "Minister of Foreign Affairs, Regional Integration, and Togolese Abroad",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/togo/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-768-cabinet-mepacomeyawoviadjourouv-justice": {
+      "name": "Me Pacome Yawovi Adjourouv",
+      "role": "Minister of Justice and Human Rights",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/togo/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-834-cabinet-emmanuelnchimbi-deputy": {
+      "name": "Emmanuel Nchimbi",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tanzania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-834-cabinet-khamismussaomar-economy": {
+      "name": "Khamis Mussa Omar",
+      "role": "Minister for Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tanzania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-834-cabinet-rhimonyansaho-defense": {
+      "name": "Rhimo Nyansaho",
+      "role": "Minister for Defense and National Service",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tanzania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-834-cabinet-bonifacegeorgesimbachawene-interior": {
+      "name": "Boniface George Simbachawene",
+      "role": "Minister for Home Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tanzania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-834-cabinet-mahmoudthabitkombo-foreign": {
+      "name": "Mahmoud Thabit Kombo",
+      "role": "Minister for Foreign Affairs and East African Cooperation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tanzania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-834-cabinet-hamzajohari-justice": {
+      "name": "Hamza Johari",
+      "role": "Attorney Gen.",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/tanzania/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-21"
+    },
+    "reg-860-cabinet-jamshidqochqorov-economy": {
+      "name": "Jamshid Qochqorov",
+      "role": "Minister of Economy and Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/uzbekistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-860-cabinet-shuhratxolmuhamedov-defense": {
+      "name": "Shuhrat Xolmuhamedov",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/uzbekistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-860-cabinet-aziztoshpolatov-interior": {
+      "name": "Aziz Toshpolatov",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/uzbekistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-860-cabinet-baxtiyorsaidov-foreign": {
+      "name": "Baxtiyor Saidov",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/uzbekistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-860-cabinet-akbartoshqulov-justice": {
+      "name": "Akbar Toshqulov",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/uzbekistan/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-882-cabinet-mulipolaanaorsaalemolioo-economy": {
+      "name": "Mulipola Anaorsa Ale-Molio’o",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/samoa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-17"
+    },
+    "reg-882-cabinet-laaulialemalietoaleuateapolataivaoschmidt-foreign": {
+      "name": "La’Aulialemalietoa Leuatea Polataivao Schmidt",
+      "role": "Minister of Foreign Affairs and Trade",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/samoa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-17"
+    },
+    "reg-882-cabinet-fesolaiapulutusiuputuigamala-justice": {
+      "name": "Fesolai Apulu Tusiupu Tuigamala",
+      "role": "Minister of Justice and Courts Admin.",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/samoa/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-17"
+    },
+    "reg-032-cabinet-victoriavillarruel-deputy": {
+      "name": "Victoria Villarruel",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/argentina/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-032-cabinet-luiscaputo-economy": {
+      "name": "Luis Caputo",
+      "role": "Minister of Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/argentina/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-032-cabinet-diegosantilli-interior": {
+      "name": "Diego Santilli",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/argentina/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-032-cabinet-pabloquirno-foreign": {
+      "name": "Pablo Quirno",
+      "role": "Minister of Foreign Relations, International Trade, and Worship",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/argentina/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-032-cabinet-marianocuneolibarona-justice": {
+      "name": "Mariano Cuneo Libarona",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/argentina/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-02"
+    },
+    "reg-044-cabinet-michaelbrianhalkitis-economy": {
+      "name": "Michael Brian Halkitis",
+      "role": "Minister of Economic Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bahamas-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-04"
+    },
+    "reg-044-cabinet-frederickaudleymitchell-foreign": {
+      "name": "Frederick Audley Mitchell",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bahamas-the/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-04"
+    },
+    "reg-051-cabinet-gevorgpapoyan-economy": {
+      "name": "Gevorg Papoyan",
+      "role": "Minister of Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/armenia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-28"
+    },
+    "reg-051-cabinet-surenpapikyan-defense": {
+      "name": "Suren Papikyan",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/armenia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-28"
+    },
+    "reg-051-cabinet-arpinesargsyan-interior": {
+      "name": "Arpine Sargsyan",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/armenia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-28"
+    },
+    "reg-051-cabinet-araratmirzoyan-foreign": {
+      "name": "Ararat Mirzoyan",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/armenia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-28"
+    },
+    "reg-051-cabinet-srbuhigalyan-justice": {
+      "name": "Srbuhi Galyan",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/armenia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-28"
+    },
+    "reg-068-cabinet-edmanlaramontano-deputy": {
+      "name": "Edman Lara Montano",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bolivia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-13"
+    },
+    "reg-068-cabinet-josegabrielespinozayanez-economy": {
+      "name": "Jose Gabriel Espinoza Yanez",
+      "role": "Minister of the Economy and Public Finances",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bolivia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-13"
+    },
+    "reg-068-cabinet-raulmarcelosalinasgamarra-defense": {
+      "name": "Raul Marcelo Salinas Gamarra",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bolivia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-13"
+    },
+    "reg-068-cabinet-fernandohugoaramayocarrasco-foreign": {
+      "name": "Fernando Hugo Aramayo Carrasco",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bolivia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-13"
+    },
+    "reg-068-cabinet-freddyalejandrovidovichfalch-justice": {
+      "name": "Freddy Alejandro Vidovich Falch",
+      "role": "Minister of Justice and Interim Minister of Cultures",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/bolivia/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-13"
+    },
+    "reg-084-cabinet-johnbriceno-economy": {
+      "name": "John Briceño",
+      "role": "Minister of Finance, Economic Transformation and Investment, Civil Aviation, and E-Governance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belize/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-084-cabinet-florenciomarinjr-defense": {
+      "name": "Florencio MARIN, Jr.",
+      "role": "Minister of National Defense and Border Security",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belize/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-084-cabinet-oscarmira-interior": {
+      "name": "Oscar Mira",
+      "role": "Minister of Home Affairs and Enterprise",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belize/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-084-cabinet-francisfonseca-foreign": {
+      "name": "Francis Fonseca",
+      "role": "Minister of Foreign Affairs and Foreign Trade",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belize/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-084-cabinet-anthonysylvestre-justice": {
+      "name": "Anthony Sylvestre",
+      "role": "Attorney General",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belize/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-11-20"
+    },
+    "reg-422-cabinet-amerbisat-economy": {
+      "name": "Amer Bisat",
+      "role": "Minister of Economy and Trade",
+      "source": "https://www.pcm.gov.lb/arabic/subpg.aspx?pageid=13587",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-02-08"
+    },
+    "reg-422-cabinet-michelmenassa-defense": {
+      "name": "Michel Menassa",
+      "role": "Minister of National Defense",
+      "source": "https://www.pcm.gov.lb/arabic/subpg.aspx?pageid=13587",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-02-08"
+    },
+    "reg-422-cabinet-ahmadalhajjar-interior": {
+      "name": "Ahmad al-Hajjar",
+      "role": "Minister of Interior and Municipalities",
+      "source": "https://www.pcm.gov.lb/arabic/subpg.aspx?pageid=13587",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-02-08"
+    },
+    "reg-422-cabinet-youssefrajji-foreign": {
+      "name": "Youssef Rajji",
+      "role": "Minister of Foreign Affairs and Emigrants",
+      "source": "https://www.pcm.gov.lb/arabic/subpg.aspx?pageid=13587",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-02-08"
+    },
+    "reg-422-cabinet-adelnassar-justice": {
+      "name": "Adel Nassar",
+      "role": "Minister of Justice",
+      "source": "https://www.pcm.gov.lb/arabic/subpg.aspx?pageid=13587",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-02-08"
+    },
+    "reg-376-cabinet-nirbarkat-economy": {
+      "name": "Nir Barkat",
+      "role": "Minister of Economy and Industry",
+      "source": "https://m.knesset.gov.il/en/mk/government/pages/governments.aspx",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-376-cabinet-israelkatz-defense": {
+      "name": "Israel Katz",
+      "role": "Minister of Defense",
+      "source": "https://m.knesset.gov.il/en/mk/government/pages/governments.aspx",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-376-cabinet-gideonsaar-foreign": {
+      "name": "Gideon Sa'ar",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://m.knesset.gov.il/en/mk/government/pages/governments.aspx",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-11-24",
+      "asset": "opening-register-portraits/reg-376-gideonsaar.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:2025_Gideon_Sa%E2%80%99ar_(cropped).jpg",
+        "credit": "U.S. Department of State",
+        "license": "Public domain",
+        "licenseUrl": null,
+        "reuseEvidence": "license_listed_review_pending",
+        "rightsStatus": null,
+        "photoDate": "2025-12-10 11:45:04",
+        "originalSha256": "ba6fd88fefb8c6a90ba0153e0b4249cb9e055a7aaacbf29931bbb69995d993d3",
+        "packagedSha256": "ba6fd88fefb8c6a90ba0153e0b4249cb9e055a7aaacbf29931bbb69995d993d3",
+        "convertedToJpeg": false
+      }
+    },
+    "reg-376-cabinet-yarivlevin-justice": {
+      "name": "Yariv Levin",
+      "role": "Minister of Justice",
+      "source": "https://m.knesset.gov.il/en/mk/government/pages/governments.aspx",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-11-24"
+    },
+    "reg-250-cabinet-catherinevautrin-defense": {
+      "name": "Catherine Vautrin",
+      "role": "Minister of the Armed Forces and Veterans",
+      "source": "https://www.elysee.fr/emmanuel-macron/2025/10/12/nomination-du-gouvernement-6",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-10-12"
+    },
+    "reg-276-cabinet-katherinareiche-economy": {
+      "name": "Katherina Reiche",
+      "role": "Federal Minister for Economic Affairs and Energy",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/regierungsprogramme-im-fokus-2348226",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-05-23"
+    },
+    "reg-276-cabinet-borispistorius-defense": {
+      "name": "Boris Pistorius",
+      "role": "Federal Minister of Defence",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/regierungsprogramme-im-fokus-2348226",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-05-23"
+    },
+    "reg-276-cabinet-alexanderdobrindt-interior": {
+      "name": "Alexander Dobrindt",
+      "role": "Federal Minister of the Interior",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/regierungsprogramme-im-fokus-2348226",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-05-23"
+    },
+    "reg-276-cabinet-johannwadephul-foreign": {
+      "name": "Johann Wadephul",
+      "role": "Federal Minister for Foreign Affairs",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/regierungsprogramme-im-fokus-2348226",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-05-23"
+    },
+    "reg-276-cabinet-stefaniehubig-justice": {
+      "name": "Stefanie Hubig",
+      "role": "Federal Minister of Justice and Consumer Protection",
+      "source": "https://www.bundesregierung.de/breg-de/aktuelles/regierungsprogramme-im-fokus-2348226",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-05-23"
+    },
+    "reg-818-cabinet-ahmedkouchouk-economy": {
+      "name": "Ahmed Kouchouk",
+      "role": "Minister of Finance",
+      "source": "https://www.presidency.eg/en/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news372024/",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2024-07-03"
+    },
+    "reg-818-cabinet-abdelmeguidsaqr-defense": {
+      "name": "Abdel Meguid Saqr",
+      "role": "Minister of Defense and Military Production",
+      "source": "https://www.presidency.eg/en/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news372024/",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2024-07-03"
+    },
+    "reg-818-cabinet-mahmoudtawfik-interior": {
+      "name": "Mahmoud Tawfik",
+      "role": "Minister of Interior",
+      "source": "https://www.presidency.eg/en/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news372024/",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2024-07-03"
+    },
+    "reg-818-cabinet-badrabdelatty-foreign": {
+      "name": "Badr Abdelatty",
+      "role": "Minister of Foreign Affairs, Emigration and Egyptian Expatriates",
+      "source": "https://www.presidency.eg/en/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news372024/",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2024-07-03"
+    },
+    "reg-818-cabinet-adnanfangary-justice": {
+      "name": "Adnan Fangary",
+      "role": "Minister of Justice",
+      "source": "https://www.presidency.eg/en/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news372024/",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2024-07-03"
+    },
+    "reg-826-cabinet-shabanamahmood-interior": {
+      "name": "Shabana Mahmood",
+      "role": "Home Secretary",
+      "source": "https://www.gov.uk/government/news/ministerial-appointments-5-september-2025",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-09-05"
+    },
+    "reg-826-cabinet-yvettecooper-foreign": {
+      "name": "Yvette Cooper",
+      "role": "Foreign Secretary",
+      "source": "https://www.gov.uk/government/news/ministerial-appointments-5-september-2025",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-09-05"
+    },
+    "reg-826-cabinet-davidlammy-justice": {
+      "name": "David Lammy",
+      "role": "Lord Chancellor and Justice Secretary",
+      "source": "https://www.gov.uk/government/news/ministerial-appointments-5-september-2025",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-09-05"
+    },
+    "reg-156-cabinet-lanfoan-economy": {
+      "name": "Lan Fo'an",
+      "role": "Minister of Finance",
+      "source": "https://english.www.gov.cn/statecouncil/202303/12/content_WS5f334b75c6d029c1c26379c3.html",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-08-07"
+    },
+    "reg-156-cabinet-dongjun-defense": {
+      "name": "Dong Jun",
+      "role": "Minister of National Defense",
+      "source": "https://english.www.gov.cn/statecouncil/202303/12/content_WS5f334b75c6d029c1c26379c3.html",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-08-07"
+    },
+    "reg-156-cabinet-wangxiaohong-interior": {
+      "name": "Wang Xiaohong",
+      "role": "Minister of Public Security",
+      "source": "https://english.www.gov.cn/statecouncil/202303/12/content_WS5f334b75c6d029c1c26379c3.html",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-08-07"
+    },
+    "reg-156-cabinet-wangyi-foreign": {
+      "name": "Wang Yi",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://english.www.gov.cn/statecouncil/202303/12/content_WS5f334b75c6d029c1c26379c3.html",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-08-07"
+    },
+    "reg-156-cabinet-herong-justice": {
+      "name": "He Rong",
+      "role": "Minister of Justice",
+      "source": "https://english.www.gov.cn/statecouncil/202303/12/content_WS5f334b75c6d029c1c26379c3.html",
+      "evidence": "official_appointment_or_directory",
+      "evidenceDate": "2025-08-07"
+    },
+    "reg-484-cabinet-marceloebrard-economy": {
+      "name": "Marcelo Ebrard",
+      "role": "Secretary of Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mexico/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-484-cabinet-ricardotrevillatrejo-defense": {
+      "name": "Ricardo Trevilla Trejo",
+      "role": "Secretary of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mexico/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-484-cabinet-rosaicelarodriguez-interior": {
+      "name": "Rosa Icela Rodríguez",
+      "role": "Secretary of the Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mexico/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-484-cabinet-juanramondelafuente-foreign": {
+      "name": "Juan Ramón de la Fuente",
+      "role": "Secretary of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mexico/",
+      "evidence": "cutoff_adjacent_official_directory",
+      "evidenceDate": "2025-12-30"
+    },
+    "reg-643-cabinet-maksimreshetnikov-economy": {
+      "name": "Maksim Reshetnikov",
+      "role": "Minister of Economic Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/russia/",
+      "supportingSource": "http://government.ru/gov/persons/",
+      "evidence": "official_directory_bracketed_cutoff",
+      "evidenceDate": "2024-06-18"
+    },
+    "reg-643-cabinet-andreybelousov-defense": {
+      "name": "Andrey Belousov",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/russia/",
+      "supportingSource": "http://government.ru/gov/persons/",
+      "evidence": "official_directory_bracketed_cutoff",
+      "evidenceDate": "2024-06-18"
+    },
+    "reg-643-cabinet-vladimirkolokoltsev-interior": {
+      "name": "Vladimir Kolokoltsev",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/russia/",
+      "supportingSource": "http://government.ru/gov/persons/",
+      "evidence": "official_directory_bracketed_cutoff",
+      "evidenceDate": "2024-06-18"
+    },
+    "reg-643-cabinet-sergeylavrov-foreign": {
+      "name": "Sergey Lavrov",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/russia/",
+      "supportingSource": "http://government.ru/gov/persons/",
+      "evidence": "official_directory_bracketed_cutoff",
+      "evidenceDate": "2024-06-18"
+    },
+    "reg-643-cabinet-konstantinchuychenko-justice": {
+      "name": "Konstantin Chuychenko",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/russia/",
+      "supportingSource": "http://government.ru/gov/persons/",
+      "evidence": "official_directory_bracketed_cutoff",
+      "evidenceDate": "2024-06-18"
+    },
+    "reg-124-cabinet-francoisphilippechampagne-economy": {
+      "evidence": "verified_documented_opening_office",
+      "name": "François-Philippe Champagne",
+      "role": "Minister of Finance and National Revenue",
+      "source": "https://www.pm.gc.ca/en/news/news-releases/2025/05/13/prime-minister-carney-announces-new-ministry",
+      "evidenceDate": "2025-05-13"
+    },
+    "reg-124-cabinet-davidmcguinty-defense": {
+      "evidence": "verified_documented_opening_office",
+      "name": "David McGuinty",
+      "role": "Minister of National Defence",
+      "source": "https://www.pm.gc.ca/en/news/news-releases/2025/05/13/prime-minister-carney-announces-new-ministry",
+      "evidenceDate": "2025-05-13"
+    },
+    "reg-124-cabinet-garyanandasangaree-interior": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Gary Anandasangaree",
+      "role": "Minister of Public Safety",
+      "source": "https://www.pm.gc.ca/en/news/news-releases/2025/05/13/prime-minister-carney-announces-new-ministry",
+      "evidenceDate": "2025-05-13",
+      "officeNote": "Canada's Public Safety portfolio is the domestic security equivalent for the native Interior card."
+    },
+    "reg-124-cabinet-anitaanand-foreign": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Anita Anand",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.pm.gc.ca/en/news/news-releases/2025/05/13/prime-minister-carney-announces-new-ministry",
+      "evidenceDate": "2025-05-13"
+    },
+    "reg-124-cabinet-seanfraser-justice": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Sean Fraser",
+      "role": "Minister of Justice and Attorney General",
+      "source": "https://justice.canada.ca/eng/news-nouv/ja-nj.aspx?ssum=1&yr=2025",
+      "evidenceDate": "2025-12-16"
+    },
+    "reg-124-cabinet-jenniecarignan-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Jennie Carignan",
+      "role": "Chief of the Defence Staff",
+      "source": "https://www.canada.ca/en/department-national-defence/maple-leaf/defence/2025/12/dm-cds-message-new-deputy-minister-national-defence-announced.html",
+      "evidenceDate": "2025-12-19"
+    },
+    "reg-156-cabinet-hanzheng-deputy": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Han Zheng",
+      "role": "Vice President",
+      "source": "https://english.www.gov.cn/news/202501/21/content_WS678f017dc6d0868f4e8ef05e.html",
+      "evidenceDate": "2025-01-21",
+      "officeNote": "Also listed in the CIA China country archive as Vice President on August 7, 2025 and identified in that role in January 2026 by the Organization of Islamic Cooperation."
+    },
+    "reg-156-cabinet-liuzhenli-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Liu Zhenli",
+      "role": "Chief of Staff of the Central Military Commission Joint Staff Department",
+      "source": "https://eng.mod.gov.cn/2025xb/P/16439230.html",
+      "evidenceDate": "2026-01-24",
+      "officeNote": "The Ministry of National Defense identified him in this office when announcing its January examination. A June 2025 Chinese Embassy newsletter corroborates the ongoing appointment."
+    },
+    "reg-376-cabinet-eyalzamir-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Eyal Zamir",
+      "role": "Chief of the General Staff of the Israel Defense Forces",
+      "source": "https://www.idf.il/en/mini-sites/idf-press-releases-israel-at-war/december-25-pr/the-chief-of-the-general-staff-at-the-intelligence-directorates-research-department-conference/",
+      "evidenceDate": "2025-12-25"
+    },
+    "reg-422-cabinet-hassanaudi-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Hassan Audi",
+      "role": "Chief of Staff of the Lebanese Armed Forces",
+      "source": "https://www.lebarmy.gov.lb/en/content/inspection-chief-staff-several-operational-military-units",
+      "evidenceDate": "2025-01-01",
+      "officeNote": "The Lebanese Army confirms that the Chief of Staff was still in the senior command in December 2025, serving as Interim Army Commander when the regular commander was absent."
+    },
+    "reg-484-cabinet-ernestinagodoyramos-justice": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Ernestina Godoy Ramos",
+      "role": "Attorney General of the Republic",
+      "source": "https://gaceta.diputados.gob.mx/PDF/66/2025/dic/20251203-VII.pdf",
+      "evidenceDate": "2025-12-03",
+      "officeNote": "The Senate appointed her federal attorney general. This independent prosecution office is the closest counterpart to the game's Justice slot."
+    },
+    "reg-484-cabinet-arturocoronelflores-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Arturo Coronel Flores",
+      "role": "Chief of the Joint Staff of National Defense",
+      "source": "https://www.gob.mx/defensa/estructuras/general-de-brigada-diplomado-de-estado-mayor-arturo-coronel-flores",
+      "evidenceDate": "2025-09-06",
+      "officeNote": "The government profile identifies the officer. The dated September 2025 joint staff anniversary coverage and the October 2026 successor reporting bracket his tenure for the opening date."
+    },
+    "reg-643-cabinet-valerygerasimov-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Valery Gerasimov",
+      "role": "Chief of the General Staff of the Russian Armed Forces",
+      "source": "https://kremlin.ru/events/president/news/78888",
+      "evidenceDate": "2025-12-29",
+      "officeNote": "The official Kremlin press channel and Interfax identify the same sitting officeholder in the December 29 briefing."
+    },
+    "reg-818-cabinet-ahmedfathyibrahimkhalifa-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Ahmed Fathy Ibrahim Khalifa",
+      "role": "Chief of Staff of the Armed Forces",
+      "source": "https://www.presidency.eg/en/%D9%82%D8%B3%D9%85-%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1-%D8%B1%D8%A6%D8%A7%D8%B3%D9%8A%D8%A9/news372024-5/",
+      "evidenceDate": "2024-07-03",
+      "officeNote": "The presidential decree appointed him Chief of Staff. Egypt's official State Information Service corroborates his office at the December 2025 EDEX event."
+    },
+    "reg-826-cabinet-rachelreeves-economy": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Rachel Reeves",
+      "role": "Chancellor of the Exchequer",
+      "source": "https://assets.publishing.service.gov.uk/media/6943eef7143d960161547e66/Governor_Open_Letter_-_December_2025.pdf",
+      "evidenceDate": "2025-12-18"
+    },
+    "reg-826-cabinet-johnhealey-defense": {
+      "evidence": "verified_documented_opening_office",
+      "name": "John Healey",
+      "role": "Secretary of State for Defence",
+      "source": "https://www.gov.uk/government/news/aukus-defence-ministers-meeting-trilateral-joint-statement-10-december-2025",
+      "evidenceDate": "2025-12-11"
+    },
+    "reg-826-cabinet-richardknighton-chief-of-staff": {
+      "evidence": "verified_documented_opening_office",
+      "name": "Richard Knighton",
+      "role": "Chief of the Defence Staff",
+      "source": "https://www.gov.uk/government/speeches/chief-of-the-defence-staff-speech-15-december-2025",
+      "evidenceDate": "2025-12-15"
+    },
+    "reg-108-cabinet-prosperbazombanza-deputy": {
+      "name": "Prosper Bazombanza",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/burundi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/burundi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-13",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-108-cabinet-alainndikumana-economy": {
+      "name": "Alain Ndikumana",
+      "role": "Minister of Finance, Budget, and Digital Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/burundi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/burundi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-13",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-108-cabinet-mariechantalnijimbere-defense": {
+      "name": "Marie-Chantal Nijimbere",
+      "role": "Minister of National Defense and Veteran Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/burundi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/burundi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-13",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-108-cabinet-edouardbizimana-foreign": {
+      "name": "Edouard Bizimana",
+      "role": "Minister of Foreign Affairs, Regional Integration, and International Cooperation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/burundi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/burundi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-13",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-108-cabinet-arthemonkatihabwa-justice": {
+      "name": "Arthemon Katihabwa",
+      "role": "Minister of Justice, Human Rights, and Gender",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/burundi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/burundi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-13",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-140-cabinet-rameauxclaudebireau-defense": {
+      "name": "Rameaux Claude Bireau",
+      "role": "Minister of National Defense and Reconstruction of the Army",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/central-african-republic/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/central-african-republic/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-29",
+      "supportingEvidenceDate": "2026-07-29"
+    },
+    "reg-140-cabinet-sylviebaipotemon-foreign": {
+      "name": "Sylvie Baipo-Temon",
+      "role": "Minister of Foreign Affairs, Francophonie and Central Africans Abroad",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/central-african-republic/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/central-african-republic/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-29",
+      "supportingEvidenceDate": "2026-07-29"
+    },
+    "reg-174-cabinet-moustoifahassanemohamed-economy": {
+      "name": "Moustoifa Hassane Mohamed",
+      "role": "Minister of Economy, Industry, Investments, Head of Economic Integration",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/comoros/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/comoros/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-12",
+      "supportingEvidenceDate": "2026-02-11"
+    },
+    "reg-174-cabinet-mbaemohamed-foreign": {
+      "name": "Mbae Mohamed",
+      "role": "Minister of Foreign Affairs and Intl. Cooperation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/comoros/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/comoros/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-12",
+      "supportingEvidenceDate": "2026-02-11"
+    },
+    "reg-191-cabinet-antesusnjar-economy": {
+      "name": "Ante Susnjar",
+      "role": "Minister of the Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/croatia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/croatia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-31",
+      "supportingEvidenceDate": "2026-06-24"
+    },
+    "reg-191-cabinet-damirhabijan-justice": {
+      "name": "Damir Habijan",
+      "role": "Minister of Justice, Public Administration, and Digital Transformation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/croatia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/croatia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-31",
+      "supportingEvidenceDate": "2026-06-24"
+    },
+    "reg-208-cabinet-larslokkerasmussen-foreign": {
+      "name": "Lars Lokke Rasmussen",
+      "role": "Minister for Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/denmark/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/denmark/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-23",
+      "supportingEvidenceDate": "2026-07-23"
+    },
+    "reg-214-cabinet-raquelpenarodriguez-deputy": {
+      "name": "Raquel Pena Rodriguez",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/dominican-republic/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/dominican-republic/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-11",
+      "supportingEvidenceDate": "2026-10-21"
+    },
+    "reg-214-cabinet-miguelcearahatton-economy": {
+      "name": "Miguel Ceara Hatton",
+      "role": "Minister of Economy, Planning, and Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/dominican-republic/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/dominican-republic/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-11",
+      "supportingEvidenceDate": "2026-10-21"
+    },
+    "reg-214-cabinet-farideraful-interior": {
+      "name": "Faride Raful",
+      "role": "Minister of Interior and Police",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/dominican-republic/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/dominican-republic/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-11",
+      "supportingEvidenceDate": "2026-10-21"
+    },
+    "reg-233-cabinet-margustsahkna-foreign": {
+      "name": "Margus Tsahkna",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/estonia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/estonia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-18",
+      "supportingEvidenceDate": "2026-11-12"
+    },
+    "reg-233-cabinet-lisalypakosta-justice": {
+      "name": "Lisa-Ly Pakosta",
+      "role": "Minister of Justice and Digital Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/estonia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/estonia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-18",
+      "supportingEvidenceDate": "2026-11-12"
+    },
+    "reg-242-cabinet-esromimmanuel-economy": {
+      "name": "Esrom Immanuel",
+      "role": "Minister for Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/fiji/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/fiji/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-11-05",
+      "supportingEvidenceDate": "2026-01-20"
+    },
+    "reg-242-cabinet-piotikoduadua-defense": {
+      "name": "Pio Tikoduadua",
+      "role": "Minister for Defense and Veterans Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/fiji/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/fiji/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-11-05",
+      "supportingEvidenceDate": "2026-01-20"
+    },
+    "reg-242-cabinet-siromidokonivaluturaga-justice": {
+      "name": "Siromi Dokonivalu Turaga",
+      "role": "Minister for Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/fiji/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/fiji/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-11-05",
+      "supportingEvidenceDate": "2026-01-20"
+    },
+    "reg-246-cabinet-anttihakkanen-defense": {
+      "name": "Antti Hakkanen",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/finland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/finland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-12",
+      "supportingEvidenceDate": "2026-08-20"
+    },
+    "reg-246-cabinet-marirantanen-interior": {
+      "name": "Mari Rantanen",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/finland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/finland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-12",
+      "supportingEvidenceDate": "2026-08-20"
+    },
+    "reg-246-cabinet-elinavaltonen-foreign": {
+      "name": "Elina Valtonen",
+      "role": "Minister for Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/finland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/finland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-12",
+      "supportingEvidenceDate": "2026-08-20"
+    },
+    "reg-246-cabinet-leenameri-justice": {
+      "name": "Leena Meri",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/finland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/finland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-12",
+      "supportingEvidenceDate": "2026-08-20"
+    },
+    "reg-268-cabinet-mariamkvrivishvili-economy": {
+      "name": "Mariam Kvrivishvili",
+      "role": "Minister of Economy and Sustainable Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/georgia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/georgia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-24",
+      "supportingEvidenceDate": "2026-10-16"
+    },
+    "reg-268-cabinet-iraklichikovani-defense": {
+      "name": "Irakli Chikovani",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/georgia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/georgia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-24",
+      "supportingEvidenceDate": "2026-10-16"
+    },
+    "reg-268-cabinet-makabochorishvili-foreign": {
+      "name": "Maka Bochorishvili",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/georgia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/georgia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-24",
+      "supportingEvidenceDate": "2026-10-16"
+    },
+    "reg-268-cabinet-paatasalia-justice": {
+      "name": "Paata Salia",
+      "role": "Minister of Justice and Corrections",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/georgia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/georgia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-24",
+      "supportingEvidenceDate": "2026-10-16"
+    },
+    "reg-300-cabinet-kyriakospierrakakis-economy": {
+      "name": "Kyriakos Pierrakakis",
+      "role": "Minister of National Economy and Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/greece/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/greece/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-30",
+      "supportingEvidenceDate": "2026-04-23"
+    },
+    "reg-300-cabinet-nikolaosgeorgiosdendias-defense": {
+      "name": "Nikolaos-Georgios Dendias",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/greece/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/greece/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-30",
+      "supportingEvidenceDate": "2026-04-23"
+    },
+    "reg-300-cabinet-theodoroslivanios-interior": {
+      "name": "Theodoros Livanios",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/greece/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/greece/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-30",
+      "supportingEvidenceDate": "2026-04-23"
+    },
+    "reg-300-cabinet-georgiosgerapetritis-foreign": {
+      "name": "Georgios Gerapetritis",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/greece/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/greece/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-30",
+      "supportingEvidenceDate": "2026-04-23"
+    },
+    "reg-300-cabinet-georgiosfloridis-justice": {
+      "name": "Georgios Floridis",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/greece/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/greece/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-30",
+      "supportingEvidenceDate": "2026-04-23"
+    },
+    "reg-332-cabinet-paulantoinebienaime-interior": {
+      "name": "Paul Antoine Bien-Aime",
+      "role": "Minister of the Interior and Territorial Communities",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/haiti/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/haiti/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-01",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-332-cabinet-patrickpelissier-justice": {
+      "name": "Patrick Pelissier",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/haiti/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/haiti/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-01",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-352-cabinet-dadimarkristofersson-economy": {
+      "name": "Dadi Mar Kristofersson",
+      "role": "Minister of Finance and Economic Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/iceland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/iceland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-09",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-352-cabinet-thorgerdurkatringunnarsdottir-foreign": {
+      "name": "Thorgerdur Katrin Gunnarsdottir",
+      "role": "Minister for Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/iceland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/iceland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-09",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-352-cabinet-thorbjorgsigridurgunnlaugsdottir-justice": {
+      "name": "Thorbjorg Sigridur Gunnlaugsdottir",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/iceland/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/iceland/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-09",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-368-cabinet-fuadhusayn-foreign": {
+      "name": "Fuad Husayn",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/iraq/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/iraq/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-20",
+      "supportingEvidenceDate": "2026-11-03"
+    },
+    "reg-368-cabinet-khalidshwani-justice": {
+      "name": "Khalid Shwani",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/iraq/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/iraq/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-06-20",
+      "supportingEvidenceDate": "2026-11-03"
+    },
+    "reg-410-cabinet-kooyuncheol-economy": {
+      "name": "Koo Yun-cheol",
+      "role": "Minister of Economy and Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/korea-south/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/korea-south/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-28",
+      "supportingEvidenceDate": "2026-07-24"
+    },
+    "reg-410-cabinet-ahngyuback-defense": {
+      "name": "Ahn Gyu-back",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/korea-south/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/korea-south/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-28",
+      "supportingEvidenceDate": "2026-07-24"
+    },
+    "reg-410-cabinet-yunhojung-interior": {
+      "name": "Yun Ho-jung",
+      "role": "Minister of the Interior and Safety",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/korea-south/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/korea-south/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-28",
+      "supportingEvidenceDate": "2026-07-24"
+    },
+    "reg-410-cabinet-chohyun-foreign": {
+      "name": "Cho Hyun",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/korea-south/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/korea-south/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-28",
+      "supportingEvidenceDate": "2026-07-24"
+    },
+    "reg-410-cabinet-jungseongho-justice": {
+      "name": "Jung Seong-ho",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/korea-south/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/korea-south/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-28",
+      "supportingEvidenceDate": "2026-07-24"
+    },
+    "reg-418-cabinet-santiphapphomvihan-economy": {
+      "name": "Santiphap Phomvihan",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/laos/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/laos/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-01-21"
+    },
+    "reg-418-cabinet-thongsavanphomvihan-foreign": {
+      "name": "Thongsavan Phomvihan",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/laos/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/laos/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-01-21"
+    },
+    "reg-418-cabinet-phaivisiboualipha-justice": {
+      "name": "Phaivi Siboualipha",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/laos/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/laos/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-01-21"
+    },
+    "reg-434-cabinet-halimahibrahim-justice": {
+      "name": "Halimah Ibrahim",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/libya/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/libya/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-01-29",
+      "supportingEvidenceDate": "2026-04-28"
+    },
+    "reg-454-cabinet-josephmwanamvekha-economy": {
+      "name": "Joseph Mwanamvekha",
+      "role": "Minister of Finance, Economic Planning, and Development",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/malawi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/malawi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-10",
+      "supportingEvidenceDate": "2026-01-07"
+    },
+    "reg-454-cabinet-georgechaponda-foreign": {
+      "name": "George Chaponda",
+      "role": "Minister of Foreign Affairs and International Cooperation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/malawi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/malawi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-10",
+      "supportingEvidenceDate": "2026-01-07"
+    },
+    "reg-454-cabinet-charlesmhango-justice": {
+      "name": "Charles Mhango",
+      "role": "Minister of Justice and Constitutional Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/malawi/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/malawi/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-10",
+      "supportingEvidenceDate": "2026-01-07"
+    },
+    "reg-466-cabinet-abdoulayediop-foreign": {
+      "name": "Abdoulaye Diop",
+      "role": "Minister of Foreign Affairs and Intl. Cooperation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mali/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/mali/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-11",
+      "supportingEvidenceDate": "2026-08-24"
+    },
+    "reg-466-cabinet-mahamadoukassogue-justice": {
+      "name": "Mahamadou Kassogue",
+      "role": "Minister of Justice, Human Rights, and Keeper of the Seals",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/mali/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/mali/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-11",
+      "supportingEvidenceDate": "2026-08-24"
+    },
+    "reg-498-cabinet-anatolienosatii-defense": {
+      "name": "Anatolie Nosatii",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/moldova/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/moldova/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-04-03",
+      "supportingEvidenceDate": "2026-01-14"
+    },
+    "reg-498-cabinet-daniellamisailnichitin-interior": {
+      "name": "Daniella Misail-Nichitin",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/moldova/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/moldova/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-04-03",
+      "supportingEvidenceDate": "2026-01-14"
+    },
+    "reg-499-cabinet-novicavukovic-economy": {
+      "name": "Novica Vukovic",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/montenegro/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/montenegro/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-07",
+      "supportingEvidenceDate": "2026-08-03"
+    },
+    "reg-499-cabinet-dragankrapovic-defense": {
+      "name": "Dragan Krapovic",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/montenegro/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/montenegro/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-07",
+      "supportingEvidenceDate": "2026-08-03"
+    },
+    "reg-499-cabinet-danilosaranovic-interior": {
+      "name": "Danilo Saranovic",
+      "role": "Minister of the Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/montenegro/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/montenegro/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-07",
+      "supportingEvidenceDate": "2026-08-03"
+    },
+    "reg-499-cabinet-bojanbozovic-justice": {
+      "name": "Bojan Bozovic",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/montenegro/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/montenegro/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-07",
+      "supportingEvidenceDate": "2026-08-03"
+    },
+    "reg-516-cabinet-luciawitbooi-deputy": {
+      "name": "Lucia Witbooi",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/namibia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/namibia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-05",
+      "supportingEvidenceDate": "2026-01-02"
+    },
+    "reg-516-cabinet-ericashafudah-economy": {
+      "name": "Erica Shafudah",
+      "role": "Minister of Finance and Social Grants Management",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/namibia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/namibia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-05",
+      "supportingEvidenceDate": "2026-01-02"
+    },
+    "reg-516-cabinet-franskapofi-defense": {
+      "name": "Frans Kapofi",
+      "role": "Minister of Defense and Veterans Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/namibia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/namibia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-05",
+      "supportingEvidenceDate": "2026-01-02"
+    },
+    "reg-516-cabinet-lucialipumbu-interior": {
+      "name": "Lucia Lipumbu",
+      "role": "Minister of Home Affairs, Immigration, Safety, and Security",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/namibia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/namibia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-05",
+      "supportingEvidenceDate": "2026-01-02"
+    },
+    "reg-516-cabinet-fillemonwiseemmanuel-justice": {
+      "name": "Fillemon Wise Emmanuel",
+      "role": "Minister of Justice and Labor Relations",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/namibia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/namibia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-12-05",
+      "supportingEvidenceDate": "2026-01-02"
+    },
+    "reg-548-cabinet-johnnykoanapo-economy": {
+      "name": "Johnny Koanapo",
+      "role": "Minister for Finance and Economic Management",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/vanuatu/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/vanuatu/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-07-31"
+    },
+    "reg-548-cabinet-andrewnapuat-interior": {
+      "name": "Andrew Napuat",
+      "role": "Minister for Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/vanuatu/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/vanuatu/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-07-31"
+    },
+    "reg-548-cabinet-marcati-foreign": {
+      "name": "Marc Ati",
+      "role": "Minister for Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/vanuatu/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/vanuatu/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-07-31"
+    },
+    "reg-548-cabinet-jobsamandy-justice": {
+      "name": "Job Sam Andy",
+      "role": "Minister for Justice and Community Services",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/vanuatu/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/vanuatu/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-07-31"
+    },
+    "reg-554-cabinet-nicolawillis-economy": {
+      "name": "Nicola Willis",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/new-zealand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/new-zealand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-20",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-554-cabinet-brookevanvelden-interior": {
+      "name": "Brooke van Velden",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/new-zealand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/new-zealand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-20",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-554-cabinet-winstonpeters-foreign": {
+      "name": "Winston Peters",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/new-zealand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/new-zealand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-20",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-554-cabinet-paulgoldsmith-justice": {
+      "name": "Paul Goldsmith",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/new-zealand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/new-zealand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-20",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-566-cabinet-kashimshettima-deputy": {
+      "name": "Kashim Shettima",
+      "role": "Vice President",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/nigeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/nigeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-16",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-566-cabinet-olubunmitunjiojo-interior": {
+      "name": "Olubunmi Tunji-Ojo",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/nigeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/nigeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-16",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-566-cabinet-lateeffagbemi-justice": {
+      "name": "Lateef Fagbemi",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/nigeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/nigeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-16",
+      "supportingEvidenceDate": "2026-05-05"
+    },
+    "reg-578-cabinet-jensstoltenberg-economy": {
+      "name": "Jens Stoltenberg",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/norway/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/norway/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-09-25"
+    },
+    "reg-578-cabinet-espenbartheide-foreign": {
+      "name": "Espen Barth Eide",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/norway/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/norway/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-09-25"
+    },
+    "reg-578-cabinet-astriaashansen-justice": {
+      "name": "Astri Aas-Hansen",
+      "role": "Minister of Justice and Public Security",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/norway/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/norway/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-09-25"
+    },
+    "reg-591-cabinet-felipechapman-economy": {
+      "name": "Felipe Chapman",
+      "role": "Minister of Economy and Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/panama/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/panama/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-01-13",
+      "supportingEvidenceDate": "2026-09-14"
+    },
+    "reg-591-cabinet-javiermartinezacha-foreign": {
+      "name": "Javier Martinez Acha",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/panama/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/panama/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-01-13",
+      "supportingEvidenceDate": "2026-09-14"
+    },
+    "reg-598-cabinet-williambillyjoseph-defense": {
+      "name": "William \"Billy\" Joseph",
+      "role": "Minister for Defense and Fire Service",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/papua-new-guinea/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/papua-new-guinea/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-01-15"
+    },
+    "reg-598-cabinet-justintkatchenko-foreign": {
+      "name": "Justin Tkatchenko",
+      "role": "Minister for Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/papua-new-guinea/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/papua-new-guinea/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-01-15"
+    },
+    "reg-598-cabinet-pilakoleniningi-justice": {
+      "name": "Pila Kole Niningi",
+      "role": "Minister for Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/papua-new-guinea/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/papua-new-guinea/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-01-15"
+    },
+    "reg-642-cabinet-oanatoiu-foreign": {
+      "name": "Oana Toiu",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/romania/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/romania/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-03",
+      "supportingEvidenceDate": "2026-03-05"
+    },
+    "reg-642-cabinet-radumarinescu-justice": {
+      "name": "Radu Marinescu",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/romania/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/romania/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-03",
+      "supportingEvidenceDate": "2026-03-05"
+    },
+    "reg-703-cabinet-ladislavkamenicky-economy": {
+      "name": "Ladislav Kamenicky",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/slovakia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/slovakia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-04-03",
+      "supportingEvidenceDate": "2026-02-25"
+    },
+    "reg-703-cabinet-matussutajestok-interior": {
+      "name": "Matus Sutaj Estok",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/slovakia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/slovakia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-04-03",
+      "supportingEvidenceDate": "2026-02-25"
+    },
+    "reg-703-cabinet-borissusko-justice": {
+      "name": "Boris Susko",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/slovakia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/slovakia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-04-03",
+      "supportingEvidenceDate": "2026-02-25"
+    },
+    "reg-705-cabinet-matjazhan-economy": {
+      "name": "Matjaz Han",
+      "role": "Minister of Economy, Tourism, and Sport",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/slovenia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/slovenia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-01-17",
+      "supportingEvidenceDate": "2026-06-11"
+    },
+    "reg-716-cabinet-mthulincube-economy": {
+      "name": "Mthuli Ncube",
+      "role": "Minister of Finance and Investment Promotion",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/zimbabwe/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/zimbabwe/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-10",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-716-cabinet-oppahmuchingurikashiri-defense": {
+      "name": "Oppah Muchinguri-Kashiri",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/zimbabwe/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/zimbabwe/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-10",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-716-cabinet-kazembekazembe-interior": {
+      "name": "Kazembe Kazembe",
+      "role": "Minister of Home Affairs and Cultural Heritage",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/zimbabwe/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/zimbabwe/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-10",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-716-cabinet-amonmurwira-foreign": {
+      "name": "Amon Murwira",
+      "role": "Minister of Foreign Affairs and Intl. Trade",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/zimbabwe/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/zimbabwe/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-10",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-716-cabinet-ziyambiziyambi-justice": {
+      "name": "Ziyambi Ziyambi",
+      "role": "Minister of Justice, Legal, and Parliamentary Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/zimbabwe/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/zimbabwe/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-10",
+      "supportingEvidenceDate": "2026-01-16"
+    },
+    "reg-728-cabinet-athiandiingathian-economy": {
+      "name": "Athian Diing Athian",
+      "role": "Minister of Finance and Planning",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/south-sudan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/south-sudan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-03",
+      "supportingEvidenceDate": "2026-09-24"
+    },
+    "reg-764-cabinet-eknitinitithanpraphat-economy": {
+      "name": "Ekniti Nitithanpraphat",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/thailand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/thailand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-23",
+      "supportingEvidenceDate": "2026-04-07"
+    },
+    "reg-764-cabinet-anuthinchanwirakun-interior": {
+      "name": "Anuthin Chanwirakun",
+      "role": "Minister of Interior",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/thailand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/thailand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-23",
+      "supportingEvidenceDate": "2026-04-07"
+    },
+    "reg-764-cabinet-sihasakphuangketkeow-foreign": {
+      "name": "Sihasak Phuangketkeow",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/thailand/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/thailand/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-23",
+      "supportingEvidenceDate": "2026-04-07"
+    },
+    "reg-795-cabinet-mammetgulyastanagulow-economy": {
+      "name": "Mammetguly Astanagulow",
+      "role": "Minister of Finance and Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/turkmenistan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/turkmenistan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-15",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-795-cabinet-begencgundogdyyew-defense": {
+      "name": "Begenc Gundogdyyew",
+      "role": "Minister of Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/turkmenistan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/turkmenistan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-15",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-795-cabinet-muhammethydyrow-interior": {
+      "name": "Muhammet Hydyrow",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/turkmenistan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/turkmenistan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-15",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-795-cabinet-rasitmeredow-foreign": {
+      "name": "Rasit Meredow",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/turkmenistan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/turkmenistan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-15",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-795-cabinet-merettagantaganow-justice": {
+      "name": "Merettagan Taganow",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/turkmenistan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/turkmenistan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-15",
+      "supportingEvidenceDate": "2026-03-10"
+    },
+    "reg-804-cabinet-oleksiysobolev-economy": {
+      "name": "Oleksiy Sobolev",
+      "role": "Minister of Economy, Environment, and Agriculture",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/ukraine/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ukraine/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-29",
+      "supportingEvidenceDate": "2026-01-23"
+    },
+    "reg-804-cabinet-ihorklymenko-interior": {
+      "name": "Ihor Klymenko",
+      "role": "Minister of Internal Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/ukraine/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ukraine/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-29",
+      "supportingEvidenceDate": "2026-01-23"
+    },
+    "reg-804-cabinet-andriysybiha-foreign": {
+      "name": "Andriy Sybiha",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2025-december/ukraine/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/ukraine/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-29",
+      "supportingEvidenceDate": "2026-01-23"
+    },
+    "reg-862-cabinet-anabelpereirafernandez-economy": {
+      "name": "Anabel Pereira Fernandez",
+      "role": "Minister of Economy and Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/venezuela/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/venezuela/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-26",
+      "supportingEvidenceDate": "2026-10-30"
+    },
+    "reg-862-cabinet-diosdadocabellorondon-interior": {
+      "name": "Diosdado Cabello Rondon",
+      "role": "Minister of Interior, Justice and Peace",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/venezuela/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/venezuela/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-26",
+      "supportingEvidenceDate": "2026-10-30"
+    },
+    "reg-012-cabinet-abdelkrimbouzerd-economy": {
+      "name": "Abdelkrim Bouzerd",
+      "role": "Minister of Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/algeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/algeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-04-20"
+    },
+    "reg-012-cabinet-abdelmadjidtebboune-defense": {
+      "name": "Abdelmadjid Tebboune",
+      "role": "Minister of National Defense",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/algeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/algeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-04-20"
+    },
+    "reg-012-cabinet-saidsayoud-interior": {
+      "name": "Said Sayoud",
+      "role": "Minister of Interior, Local Authorities, and Transport",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/algeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/algeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-04-20"
+    },
+    "reg-012-cabinet-ahmedattaf-foreign": {
+      "name": "Ahmed Attaf",
+      "role": "Minister of Foreign Affairs and Diaspora",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/algeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/algeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-04-20"
+    },
+    "reg-012-cabinet-lotfiboudjemaa-justice": {
+      "name": "Lotfi Boudjemaa",
+      "role": "Minister of Justice and Keeper of Seals",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/algeria/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/algeria/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-09-16",
+      "supportingEvidenceDate": "2026-04-20"
+    },
+    "reg-031-cabinet-mikayiljabbarov-economy": {
+      "name": "Mikayil Jabbarov",
+      "role": "Minister of Economy",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/azerbaijan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/azerbaijan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-05-12"
+    },
+    "reg-031-cabinet-vugarmustafayev-defense": {
+      "name": "Vugar Mustafayev",
+      "role": "Minister of Defense Industry",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/azerbaijan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/azerbaijan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-05-12"
+    },
+    "reg-031-cabinet-jeyhunbayramov-foreign": {
+      "name": "Jeyhun Bayramov",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/azerbaijan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/azerbaijan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-05-12"
+    },
+    "reg-031-cabinet-faridahmadov-justice": {
+      "name": "Farid Ahmadov",
+      "role": "Minister of Justice",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/azerbaijan/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/azerbaijan/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-02-13",
+      "supportingEvidenceDate": "2026-05-12"
+    },
+    "reg-036-cabinet-katygallagher-economy": {
+      "name": "Katy Gallagher",
+      "role": "Minister for Finance",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/australia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/australia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-15",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-036-cabinet-tonyburke-interior": {
+      "name": "Tony Burke",
+      "role": "Minister for Home Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/australia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/australia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-15",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-036-cabinet-pennywong-foreign": {
+      "name": "Penny Wong",
+      "role": "Minister for Foreign Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/australia/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/australia/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-08-15",
+      "supportingEvidenceDate": "2026-08-17"
+    },
+    "reg-056-cabinet-theofrancken-defense": {
+      "name": "Theo Francken",
+      "role": "Minister of Defense and Foreign Trade",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belgium/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/belgium/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-28",
+      "supportingEvidenceDate": "2026-05-08"
+    },
+    "reg-056-cabinet-maximeprevot-foreign": {
+      "name": "Maxime Prevot",
+      "role": "Minister of Foreign Affairs and Development Cooperation",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belgium/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/belgium/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-28",
+      "supportingEvidenceDate": "2026-05-08"
+    },
+    "reg-056-cabinet-anneliesverlinden-justice": {
+      "name": "Annelies Verlinden",
+      "role": "Minister of Justice and North Sea",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/belgium/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/belgium/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-07-28",
+      "supportingEvidenceDate": "2026-05-08"
+    },
+    "reg-090-cabinet-isikelivavejr-interior": {
+      "name": "Isikeli Vave Jr.",
+      "role": "Minister of Home Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/solomon-islands/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/solomon-islands/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-10-16",
+      "supportingEvidenceDate": "2026-09-09"
+    },
+    "reg-096-cabinet-ahmaddinabdullahrahman-interior": {
+      "name": "Ahmaddin Abdullah Rahman",
+      "role": "Minister of Home Affairs",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/brunei/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/brunei/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-23",
+      "supportingEvidenceDate": "2026-11-05"
+    },
+    "reg-096-cabinet-erywanyusof-foreign": {
+      "name": "Erywan Yusof",
+      "role": "Minister of Foreign Affairs II",
+      "source": "https://www.cia.gov/resources/world-leaders/historical-data/2026-january/brunei/",
+      "supportingSource": "https://www.cia.gov/resources/world-leaders/foreign-governments/brunei/",
+      "evidence": "reconstructed_from_matching_pre_and_post_cutoff_directory",
+      "evidenceDate": "2025-05-23",
+      "supportingEvidenceDate": "2026-11-05"
+    },
+    "reg-004-abdulghanibaradar": {
+      "name": "Abdul Ghani Baradar",
+      "role": "Deputy Prime Minister for Economic Affairs (acting)",
+      "evidence": "documented_january_2026_officeholder",
+      "evidenceDate": "2025-12-04",
+      "source": "https://www.dpmea.gov.af/index.php/biography",
+      "sources": [
+        "https://www.dpmea.gov.af/sites/default/files/2026-02/Abaadi-Monthly-25th-issue_1.pdf",
+        "https://www.cia.gov/resources/world-leaders/historical-data/2026-february/afghanistan/"
+      ],
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Abdul_Ghani_Baradar.jpg",
+        "credit": "Ronny Przysucha / U.S. Department of State",
+        "license": "U.S. federal public domain",
+        "licenseUrl": "https://www.copyright.gov/title17/92chap1.html#105",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2020-09-12",
+        "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/a/af/Abdul_Ghani_Baradar.jpg?utm_campaign=index&utm_content=original&utm_source=commons.wikimedia.org",
+        "subjectName": "Abdul Ghani Baradar",
+        "subjectEvidence": "Baradar attended the 12 September 2020 peace talks with the U.S. Secretary of State in Doha.",
+        "subjectEvidenceSource": "https://2017-2021.state.gov/secretary-pompeos-meeting-with-the-taliban/",
+        "sourceSha256": "51502e67c13cfc5fbdfa91e3ff9b72ab7ab39696d98020fe7a8ed3f61fecbfd4",
+        "packagedSha256": "b34b6fa7b2cff4e982660cba472068c1cd998a4070c1bc244cadbcf32ffbbd84",
+        "derivative": "Resized source crop to 240 x 320 JPEG; documentary headwear and beard retained"
+      },
+      "asset": "opening-register-portraits/reg-004-abdulghanibaradar.jpg"
+    },
+    "reg-004-sirajuddinhaqqani": {
+      "name": "Sirajuddin Haqqani",
+      "role": "Interior Minister (acting)",
+      "evidence": "documented_january_2026_officeholder",
+      "evidenceDate": "2025-07-21",
+      "source": "https://www.moi.gov.af/en/node/11065",
+      "sources": [
+        "https://www.cia.gov/resources/world-leaders/historical-data/2026-february/afghanistan/",
+        "https://www.gov.kz/org/economy/press/news/details/1245199?lang=en"
+      ],
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Sirajuddin_Haqqani_2026.jpg",
+        "credit": "Press Service of the Government of Kazakhstan / primeminister.kz",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "reuseEvidence": "license_verified",
+        "rightsStatus": null,
+        "photoDate": "2026-06-22",
+        "sourceImage": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Sirajuddin_Haqqani_2026.jpg?utm_campaign=index&utm_content=original&utm_source=commons.wikimedia.org",
+        "subjectName": "Sirajuddin Haqqani",
+        "subjectEvidence": "The Kazakh government identifies Haqqani as the Afghan Interior Minister pictured at the 22 June 2026 official diplomatic meeting in Kabul. The primary publication licenses site content under CC BY 4.0.",
+        "subjectEvidenceSource": "https://primeminister.kz/en/news/serik-zhumangarin-meets-with-afghanistans-minister-of-internal-affairs-sirajuddin-haqqani-cooperation-in-security-modernization-of-nitrogen-plant-and-training-of-canine-specialists-31547",
+        "sourceSha256": "cdc3db97f08ae105c05ee131826b3be29242f884905437b595294f6e3c2b0fcb",
+        "packagedSha256": "2b31ea5ab5673d9a9986cdfdf3b18c7df155671389ca5a3cc9df80e8fe7ab804",
+        "derivative": "Resized source crop to 240 x 320 JPEG; documentary headwear and beard retained"
+      },
+      "asset": "opening-register-portraits/reg-004-sirajuddinhaqqani.jpg"
+    },
+    "reg-004-abdulsalamhanafi": {
+      "name": "Abdul Salam Hanafi",
+      "role": "Deputy Prime Minister for Administrative Affairs",
+      "source": "https://digitallibrary.un.org/record/4095910/files/S_2025_796-EN.pdf",
+      "evidence": "documented_opening_official",
+      "evidenceDate": "2025-12-08",
+      "asset": "opening-register-portraits/reg-004-abdulsalamhanafi.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Abdul_Salam_Hanafi.jpg",
+        "original": "https://www.youtube.com/watch?v=3GFGUibSMlo",
+        "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Abdul_Salam_Hanafi.jpg/960px-Abdul_Salam_Hanafi.jpg",
+        "credit": "BBC News Uzbek. Still from its interview with Abdul Salam Hanafi, cropped for PPO.",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+        "reuseEvidence": "Original BBC Uzbek Creative Commons release independently verified by Wikimedia Commons on 14 July 2022",
+        "rightsStatus": null,
+        "photoDate": "2019-05-30",
+        "sourceThumbnailSha256": "3db44a09b6bc038ab1c65ada230459add8dead274259efb6c86599b0294bb0b0",
+        "packagedSha256": "439431722ca8af08912f04a6cc085eb644e75c9b57460d5842332dc7f85716e2",
+        "derivative": "Cropped to show Hanafi alone, resized to 240 × 320 and encoded as JPEG"
+      }
+    },
+    "reg-004-amirkhanmuttaqi": {
+      "name": "Amir Khan Muttaqi",
+      "role": "Minister of Foreign Affairs",
+      "source": "https://digitallibrary.un.org/record/4095910/files/S_2025_796-EN.pdf",
+      "evidence": "documented_opening_official",
+      "evidenceDate": "2025-12-08",
+      "asset": "opening-register-portraits/reg-004-amirkhanmuttaqi.jpg",
+      "portrait": {
+        "kind": "documentary_reference",
+        "source": "https://commons.wikimedia.org/wiki/File:Amir_Khan_Muttaqi_Oct_2025_crop.jpg",
+        "original": "https://www.mea.gov.in/newsdetail1.htm?13880/=",
+        "sourceImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Amir_Khan_Muttaqi_Oct_2025_crop.jpg/250px-Amir_Khan_Muttaqi_Oct_2025_crop.jpg",
+        "credit": "Ministry of External Affairs, Government of India. October 2025 meeting in New Delhi, Wikimedia Commons crop resized for PPO.",
+        "license": "Government Open Data License - India",
+        "licenseUrl": "https://data.gov.in/government-open-data-license-india",
+        "reuseEvidence": "Wikimedia Commons source record identifies the Government of India as photographer and lists the Government Open Data License - India",
+        "rightsStatus": null,
+        "photoDate": "2025-10",
+        "sourceThumbnailSha256": "77dbfab92a47be274a9c1fade544097376f6f7f287a0e731bc89e72bf8e351ef",
+        "packagedSha256": "874e601c8dab04128ed6653dbc1f819f8e44f3e03dfc5f31f593b4e921ede77b",
+        "derivative": "Resized to 240 × 320 and encoded as JPEG"
+      }
+    }
+  }
+}

@@ -202,6 +202,7 @@ function gpmHistoricalWarParticipant(participant, scopeId, { actor, focused, pag
       ${Number.isFinite(deaths) || !page ? `<div><dt>Military deaths in this war</dt><dd>${Number.isFinite(deaths) ? b(deaths.toLocaleString(Ds())) : "Unknown"}</dd></div>` : ""}
     </dl>
     ${actor ? gpmHistoricalWarPortrait(actor) : ""}
+    ${gpmHistoricalOpeningRepresentativeList(actor?.id || id)}
   </details>`;
 }
 
@@ -218,6 +219,15 @@ function gpmHistoricalWarPortrait(actor) {
   if (!image) return "";
   const label = portrait ? (leader ? Dt(leader) : opening?.name) : representativeImage ? representative.name : "Illustrative portrait";
   return `<div class="gpm-war-portrait"><img src="${b(image)}" alt="" loading="lazy"><small>${b(label || "Portrait")}</small></div>`;
+}
+
+function gpmHistoricalOpeningRepresentativeList(actorId) {
+  const representatives = gpmOpeningDossierRepresentatives(actorId);
+  if (!representatives.length) return "";
+  return `<div data-gpm-opening-representatives><div class="insp-tier">Opening representatives</div>
+    <ul class="gpm-faction-laws">${representatives.map(person => `<li class="gpm-war-portrait" data-gpm-opening-representative>
+      <img src="${b(gpmHistoricalAssetUrl(person.portrait.asset))}" alt="" loading="lazy">
+      <span><b>${b(person.name)}</b> <small>${b(person.role)}</small></span></li>`).join("")}</ul></div>`;
 }
 
 function gpmHistoricalWarCard(card, variant, { actors, actorId } = {}) {
@@ -418,6 +428,7 @@ function gpmHistoricalFactionProfile(actor, front) {
       </div>
       ${officials.length ? `<div data-gpm-faction-officials><div class="insp-tier">Opening faction officials</div>
         <ul class="gpm-faction-laws">${officials.map(officialRow).join("")}</ul></div>` : ""}
+      ${gpmHistoricalOpeningRepresentativeList(actor.id)}
       ${details.length ? `<div class="insp-rel">${details.map(([label, value]) =>
         `<div class="ir-cell"><label>${b(label)}</label><span>${b(value)}</span></div>`).join("")}</div>` : ""}
       ${laws.length ? `<div data-gpm-faction-policies><div class="insp-tier">Policies</div>
@@ -1199,7 +1210,7 @@ function gpmBuildHistoricalConflicts(container, ui, session) {
 }
 
 function patchHistoricalConflictsRenderer(source, replaceOnce) {
-  const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalPlayerRole, gpmHistoricalIdeologyLabel, gpmHistoricalWarParticipant, gpmHistoricalWarPortrait,
+  const rendererFunctions = [gpmHistoricalLabel, gpmHistoricalPlayerRole, gpmHistoricalIdeologyLabel, gpmHistoricalWarParticipant, gpmHistoricalWarPortrait, gpmHistoricalOpeningRepresentativeList,
     gpmHistoricalWarCard, gpmHistoricalWarFallback, gpmShowNextWarAlert, gpmQueueWarAlert,
     gpmMountHistoricalInspector, gpmHistoricalFactionHeading, gpmHistoricalFactionProfile, gpmOpenHistoricalFactionInspector,
     gpmHistoricalControlSummary, gpmHistoricalControlStatus, gpmHistoricalFrontSummary, gpmHistoricalOverlayFront, gpmCloseRegionalControlBox, gpmOpenRegionalControlBox,

@@ -34,7 +34,8 @@ function gpmFoundingSeatPlan(country, party, requested) {
       composition[party.id] > 0) return { seats: 0, reason: "unsupported-composition" };
 
   const government = B6a(politics);
-  const legal = new Set(politics.parties.filter(member => member.legal !== false && member.id !== party.id).map(member => member.id));
+  const legal = new Set(politics.parties.filter(member =>
+    member.legal !== false && member.id !== party.id && !gpmOpeningNonparty(member)).map(member => member.id));
   const donors = Object.keys(composition).filter(id => legal.has(id));
   const majority = Math.floor(chamber.seats / 2) + 1;
   const governingSeats = donors.reduce((total, id) => total + (government.has(id) ? composition[id] : 0), 0);

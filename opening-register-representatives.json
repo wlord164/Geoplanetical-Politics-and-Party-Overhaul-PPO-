@@ -1,0 +1,112 @@
+{
+  "countries": {
+    "238": [
+      {
+        "name": "Colin Martin-Reynolds",
+        "role": "Governor of the Falkland Islands",
+        "source": "https://www.gov.uk/government/people/colin-reynolds",
+        "file": "opening-register-portraits/reg-238-colinmartinreynolds.jpg",
+        "credit": "Foreign, Commonwealth & Development Office, UK Government",
+        "license": "OGL 3.0",
+        "portraitSource": "https://commons.wikimedia.org/wiki/File:Colin_Martin-Reynolds.jpg",
+        "sha256": "27bdb1b3a3140a37f694ff35f7ec3064503af0564d5f9d7726901f8ea3c19b73"
+      }
+    ],
+    "574": [
+      {
+        "name": "David Smith",
+        "role": "Australian MP for Bean (includes Norfolk Island)",
+        "source": "https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=276714",
+        "file": "opening-register-portraits/reg-574-davidsmith.jpg",
+        "credit": "UCStudentActivist97",
+        "license": "CC BY-SA 4.0",
+        "portraitSource": "https://commons.wikimedia.org/wiki/File:Senator_David_Smith.jpg",
+        "sha256": "1a724d7fddf00870f0067831041ea505bfe5ce31fe2a889110463c45da0a653f"
+      }
+    ],
+    "666": [
+      {
+        "name": "Stéphane Lenormand",
+        "role": "Deputy for Saint-Pierre and Miquelon (Archipel demain)",
+        "source": "https://www.assemblee-nationale.fr/dyn/deputes/PA795244",
+        "file": "opening-register-portraits/reg-666-stephanelenormand.jpg",
+        "credit": "TrisHR",
+        "license": "CC BY-SA 4.0",
+        "portraitSource": "https://commons.wikimedia.org/wiki/File:24022026-P1400695_Lenormand_Stephane_Wikipedia.jpg",
+        "sha256": "07b41d7e7ffa7924f622cb8f90c47fa893ff5d434073a54cc52d280af2db5fcb"
+      }
+    ],
+    "768": [
+      {
+        "identityId": "reg-768-faureessozimnagnassingbe",
+        "role": "President of the Council of Ministers",
+        "source": "https://presidenceduconseil.gouv.tg/2025/05/03/renouveau-institutionnel-au-togo-faure-essozimna-gnassingbe-investi-president-du-conseil/"
+      }
+    ],
+    "831": [
+      {
+        "identityId": "reg-831-richardcripwell",
+        "role": "Lieutenant-Governor",
+        "source": "https://www.governmenthouse.gg/"
+      }
+    ],
+    "876": [
+      {
+        "name": "Mikaele Seo",
+        "role": "Deputy for Wallis and Futuna",
+        "source": "https://www2.assemblee-nationale.fr/sycomore/fiche/19800",
+        "file": "opening-register-portraits/reg-876-mikaeleseo.jpg",
+        "credit": "TrisHR",
+        "license": "CC BY 4.0",
+        "portraitSource": "https://commons.wikimedia.org/wiki/File:Mikaele_Seo_(cropped).jpg",
+        "sha256": "31e26eb0d1230b7509f94cf83b0081576d631d2bb99949aca1ecf684d40b54b3"
+      }
+    ],
+    "gpm-historical-ucdp-actor-6288": [
+      {
+        "name": "Ilham Ahmed",
+        "role": "AANES Foreign Relations Department co-chair",
+        "source": "https://hawarnews.com/en/ilham-ahmed-reveals-obstacles-to-implementing-march-10-agreement-with-transitional-govt",
+        "file": "historical-identity-assets/register-ilham-ahmed.jpg",
+        "credit": "Voice of America Kurdish, 8 November 2013. Cropped for PPO.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "portraitSource": "https://commons.wikimedia.org/wiki/File:%C3%8Elham_Ahmed,_2013.jpg",
+        "sha256": "9f12c5745a9b3f6d226a84d957246a151f1a8a998648405c4c52a5f8851cfebe"
+      }
+    ],
+    "gpm-historical-mmr-cnf": [
+      {
+        "name": "Lal Mawi Thang",
+        "role": "Chinland representative",
+        "fictional": true,
+        "file": "historical-identity-assets/illustrative-cnf.jpg",
+        "credit": "Existing PPO illustration"
+      }
+    ],
+    "004": [
+      {
+        "identityId": "reg-004-abdulghanibaradar",
+        "role": "Deputy Prime Minister for Economic Affairs (acting)",
+        "source": "https://www.dpmea.gov.af/index.php/biography"
+      },
+      {
+        "identityId": "reg-004-sirajuddinhaqqani",
+        "role": "Interior Minister (acting)",
+        "source": "https://www.moi.gov.af/en/node/11065"
+      },
+      {
+        "identityId": "reg-004-abdulsalamhanafi",
+        "role": "Deputy Prime Minister for Administrative Affairs",
+        "source": "https://digitallibrary.un.org/record/4095910/files/S_2025_796-EN.pdf"
+      },
+      {
+        "identityId": "reg-004-amirkhanmuttaqi",
+        "role": "Minister of Foreign Affairs",
+        "source": "https://digitallibrary.un.org/record/4095910/files/S_2025_796-EN.pdf"
+      }
+    ]
+  },
+  "dossierCountries": {
+    "ucdp-actor-130": "004"
+  }
+}

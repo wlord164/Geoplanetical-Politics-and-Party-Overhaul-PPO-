@@ -153,6 +153,40 @@ function gpmHistoricalAssetUrl(asset) {
   return Object.hasOwn(gpmHistoricalAssets, asset) ? gpmHistoricalAssets[asset] : null;
 }
 
+function readOpeningRepresentatives(people, assets) {
+  const { countries, dossierCountries } = require("./opening-register-representatives.json");
+  const portraits = Object.fromEntries(Object.entries(countries).map(([key, entries]) => {
+    const names = new Set();
+    const rows = entries.map(entry => {
+      const registered = entry.identityId && people[entry.identityId];
+      const name = registered?.name || entry.name;
+      const file = registered?.asset || entry.file;
+      const extension = /^(?:opening-register-portraits|historical-identity-assets)\/[a-z0-9][a-z0-9-]*\.(jpg|jpeg|png|webp)$/.exec(file)?.[1];
+      if (entry.identityId && !registered?.asset || !name || !entry.role || !extension || names.has(name) ||
+          (entry.fictional ? registered || !entry.credit : !/^https:\/\//.test(entry.source) || (!registered && (!entry.credit || !entry.license)))) {
+        throw new Error("Invalid opening representative: " + key + "/" + name);
+      }
+      names.add(name);
+      return {
+        name,
+        role: entry.fictional ? "Fictional " + entry.role : entry.role,
+        identityId: entry.identityId,
+        portrait: { asset: readAsset(file, extension, assets) },
+      };
+    });
+    return [key, rows];
+  }));
+  for (const key of Object.values(dossierCountries)) {
+    if (!Object.hasOwn(portraits, key)) throw new Error("Missing opening representatives for: " + key);
+  }
+  return { portraits, dossierCountries };
+}
+
+function gpmOpeningDossierRepresentatives(actorId) {
+  const { portraits, dossierCountries } = gpmOpeningRepresentatives;
+  return portraits[dossierCountries[actorId] || "gpm-historical-" + actorId] || [];
+}
+
 function gpmHistoricalFlagUrls(flags) {
   return Object.fromEntries(Object.entries(flags).map(([id, { asset, ...flag }]) =>
     [id, { url: gpmHistoricalAssetUrl(asset), ...flag }]));
@@ -166,8 +200,7 @@ function gpmNativeHistoricalPortrait(person, year, fallbackIcon) {
   const illustration = actorId && !image && gpmHistoricalDossierIllustrations[actorId];
   const illustrationImage = gpmHistoricalAssetUrl(illustration?.asset);
   const representative = historical?.representative;
-  const photo = gpmHistoricalAssetUrl(representative?.asset) || illustrationImage || image ||
-    (historical ? yse(person, year) : pl(person, year));
+  const photo = gpmHistoricalAssetUrl(representative?.asset) || illustrationImage || image || pl(person, year);
   const note = representative ? `Photo: ${representative.name} (faction representative)` :
     illustrationImage ? "Illustrative portrait" : historical && !image && photo ? "Game-generated portrait" : null;
   const title = representative ? [representative.name, representative.role, "Faction representative"].filter(Boolean).join(" · ") : note;
@@ -175,6 +208,21 @@ function gpmNativeHistoricalPortrait(person, year, fallbackIcon) {
     html: photo ? `<img class="il-av" src="${b(photo)}" alt="${b(note || "")}"${title ? ` title="${b(title)}"` : ""}>` : fallbackIcon,
     note,
   };
+}
+
+function gpmHistoricalBirthYear(person) {
+  return gpmHistoricalPeople[person?.gpmHistoricalPerson]?.unverifiedBirth ? null : person?.born ?? null;
+}
+
+function gpmRefreshOpeningHeadOfGovernment(ui, row, opening) {
+  row.disabled = !opening.personId;
+  row.dataset.mid = opening.personId || "";
+  row.setAttribute("data-gpm-opening-head-of-government", "");
+  row.style.display = "";
+  const photo = gpmHistoricalAssetUrl(gpmHistoricalPeople[opening.id]?.asset);
+  ui._isetHtml("crownAvatar", photo ? `<img class="il-av" src="${b(photo)}" alt="">` : Y.user);
+  ui._iset("crownName", opening.name);
+  ui._iset("crownRole", "Opening · " + opening.role);
 }
 
 function patchHistoricalIdentityRenderer(source, replaceOnce) {
@@ -187,18 +235,43 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
       [`${actorId}:${office}`, { asset: identity[office].portrait?.asset || null, role: identity[office].role,
         representative: !identity[office].portrait && identity.representative ?
           { name: identity.representative.name, role: identity.representative.role, asset: identity.representative.portrait.asset } : null }])));
-  for (const [id, entry] of Object.entries(require("./opening-register-data.json").people)) {
-    if (!entry.asset) continue;
+  const governmentPeople = require("./opening-register-government.json").people;
+  const register = require("./opening-register-data.json");
+  const registerPeople = { ...register.people, ...governmentPeople };
+  const openingRepresentatives = readOpeningRepresentatives(registerPeople, assets);
+  for (const [id, entry] of Object.entries(registerPeople)) {
+    const role = entry.executiveRole?.role || entry.role;
+    const unverifiedBirth = !entry.biography?.born;
+    if (!entry.asset) {
+      people[id] = { asset: null, role, unverifiedBirth, generatedFallback: Object.hasOwn(governmentPeople, id) };
+      continue;
+    }
     const file = /^opening-register-portraits\/[a-z0-9][a-z0-9-]*\.(jpg|jpeg|png|webp)$/.exec(entry.asset);
     if (!file) throw new Error("Invalid register portrait asset: " + id);
-    people[id] = { asset: readAsset(entry.asset, file[1], assets), role: entry.role };
+    people[id] = { asset: readAsset(entry.asset, file[1], assets), role, unverifiedBirth };
   }
+  const partyIllustrations = Object.fromEntries(Object.entries(register.countries).flatMap(([key, country]) =>
+    Object.entries(country.fictionalOpeningPortraits || {}).map(([id, portrait]) => {
+      const file = /^opening-register-portraits\/reg-fictional-[a-z0-9-]+\.jpg$/.exec(portrait.asset);
+      if (!file || !country.illustratedOpeningParties?.includes(id)) throw new Error("Invalid fictional representative portrait: " + key + "/" + id);
+      return [key + "/" + id, readAsset(portrait.asset, "jpg", assets)];
+    })));
   const portraitSelector = 'function pl(e,t,a){';
   let patched = replaceOnce(source, portraitSelector,
-    `const gpmHistoricalPeople = ${JSON.stringify(people)};\n${gpmNativeHistoricalPortrait}\n` +
-    `${portraitSelector}const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person)return gpmHistoricalAssetUrl(person.asset);`);
+    `const gpmHistoricalPeople = ${JSON.stringify(people)};\n${gpmNativeHistoricalPortrait}\n${gpmHistoricalBirthYear}\n${gpmRefreshOpeningHeadOfGovernment}\n` +
+    `const gpmFictionalPartyPortraits=${JSON.stringify(partyIllustrations)};\n` +
+    `${portraitSelector}const portrait=gpmFictionalPartyPortraits[e?.gpmRegisterChair?.illustration];if(portrait)return gpmHistoricalAssetUrl(portrait);const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person&&!person.generatedFallback)return gpmHistoricalAssetUrl(person.asset);`);
+  patched = replaceOnce(patched, "let w=e.headOfStateId!==e.nationalExecutiveId?e.headOfState:null",
+    'l.disabled=false;l.removeAttribute("data-gpm-opening-head-of-government");let w=gpmShowSeparateHeadOfState(e)?e.headOfState:null');
+  patched = replaceOnce(patched, 'function BYe(e,t){',
+    'function gpmShowSeparateHeadOfState(country){const head=country.headOfState;return !!head&&country.headOfStateId!==country.nationalExecutiveId&&(!head.gpmHistoricalPerson||head.gpmHistoricalPerson!==country.nationalExecutive?.gpmHistoricalPerson)}function BYe(e,t){');
+  patched = replaceOnce(patched, "!!a.headOfState&&a.headOfStateId!==a.nationalExecutiveId", "gpmShowSeparateHeadOfState(a)||!!a.gpmOpeningHeadOfGovernment");
   patched = replaceOnce(patched, 'let w=e.nationalExecutiveRoleId?o(', 'let w=gpmHistoricalPeople[n.gpmHistoricalPerson]?.role||(e.nationalExecutiveRoleId?o(');
   patched = replaceOnce(patched, ':o("inspector.leader.title"),k=t.year', ':o("inspector.leader.title")),k=t.year');
+  patched = replaceOnce(patched, '_=n.born?k-n.born:null', '_=gpmHistoricalBirthYear(n)==null?null:k-n.born');
+  patched = replaceOnce(patched, ':w.born?" \\xB7 "+o("inspector.leader.age"', ':gpmHistoricalBirthYear(w)!=null?" \\xB7 "+o("inspector.leader.age"');
+  patched = replaceOnce(patched, 'e.born!=null&&a.push({y:e.born,txt:o("fiche.life.born")})',
+    'gpmHistoricalBirthYear(e)!=null&&a.push({y:e.born,txt:o("fiche.life.born")})');
   patched = replaceOnce(patched, 'o("inspector.leader.age",{age:_}):""))}else a?',
     'o("inspector.leader.age",{age:_}):"")+(s.note?" · "+s.note:""))}else a?');
   patched = replaceOnce(patched, '_refreshInspector(e,t){this._iset("countryName",G(e,e.key)),this._iset("regimeName",ry(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(w=>w.id===r)||null;if(n)',
@@ -210,7 +283,7 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
   patched = replaceOnce(patched, 'vd(e.headOfStateRoleId||"head_of_state",w.g);this._iset("crownRole",P+',
     'vd(e.headOfStateRoleId||"head_of_state",w.g));this._iset("crownRole",P+');
   patched = replaceOnce(patched, 'o("inspector.leader.age",{age:k-w.born}):""))}else l.style.display="none"}',
-    'o("inspector.leader.age",{age:k-w.born}):"")+(_.note?" · "+_.note:e.key?.startsWith("gpm-historical-")&&gpmHistoricalPeople[n?.gpmHistoricalPerson]&&!w.gpmHistoricalPerson?" · Simulated officeholder":""))}else l.style.display="none"}');
+    'o("inspector.leader.age",{age:k-w.born}):"")+(_.note?" · "+_.note:e.key?.startsWith("gpm-historical-")&&gpmHistoricalPeople[n?.gpmHistoricalPerson]&&!w.gpmHistoricalPerson?" · Simulated officeholder":""))}else if(e.gpmOpeningHeadOfGovernment)gpmRefreshOpeningHeadOfGovernment(this,l,e.gpmOpeningHeadOfGovernment);else l.style.display="none"}');
   const flagSelector = 'function Mk(e){return kZ(e)||cie(e)}';
   const flagEntry = (flag, provisional) => ({
     asset: flag.asset, ratio: flag.ratio || 1.5, label: `${provisional ? "Provisional · " : ""}${flag.name}`,
@@ -228,6 +301,7 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
   }));
   patched = replaceOnce(patched, flagSelector,
     `const gpmHistoricalAssets = ${JSON.stringify(Object.fromEntries(assets))};\n${gpmHistoricalAssetUrl}\n` +
+    `const gpmOpeningRepresentatives = ${JSON.stringify(openingRepresentatives)};\n${gpmOpeningDossierRepresentatives}\n` +
     `const gpmHistoricalDossierIllustrations = ${JSON.stringify(illustrations)};\n` +
     `${gpmHistoricalFlagUrls}\n` +
     `const gpmHistoricalPolityFlags=gpmHistoricalFlagUrls(${JSON.stringify(polityFlags)});\nconst gpmHistoricalVictoryFlags=gpmHistoricalFlagUrls(${JSON.stringify(victoryFlags)});\n` +

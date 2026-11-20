@@ -447,10 +447,12 @@ function renameDomesticParty(sim, country, input) {
   const party = yP(country, targetId);
   if (!party || gpmOpeningNonparty(party)) return { ok: false, reason: "party" };
   const descriptor = party.nameDesc || {};
-  if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag) return { ok: true, changed: false };
+  if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag &&
+      descriptor.customName === identity.name && descriptor.customTag === identity.tag) return { ok: true, changed: false };
   // Keep the founding status separate from the display name, including for generated party IDs.
   const origin = /^np\d+$/.test(party.id) ? { gpmFounded: isCustomParty(party) } : {};
-  party.nameDesc = { ...descriptor, ...origin, gpmName: identity.name, gpmTag: identity.tag };
+  party.nameDesc = { ...descriptor, ...origin, gpmName: identity.name, gpmTag: identity.tag,
+    customName: identity.name, customTag: identity.tag };
   return { ok: true, changed: true };
 }
 
@@ -707,7 +709,10 @@ function patchRenderer(bytes) {
   js = replaceOnce(js, 'this._mpWire(e,t),GK(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,p,this),bindPartyOrganizing(e,t,this),GK(this,e,t)');
   js = replaceOnce(js, '"data-bill-line","data-party-activity","data-mp-auto-fundraise","data-mp-parl-laws","data-mp-propose","data-mp-customize"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-mp-auto-fundraise","data-mp-parl-laws","data-mp-propose","data-mp-customize","data-gpm-congress-size","data-gpm-congress-bargain","data-gpm-congress-priority","data-gpm-congress-vote","data-gpm-congress-priority-vote","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
-  js = replaceOnce(js, refresh, `${refresh},this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,c,this),bindPartyOrganizing(t,e,this)`);
+  const bindCustomization = 'v0e(this,t.querySelector("[data-mp-customization]"),this._mpSession,a,e)';
+  // Refreshing the identity replaces the button. The customization host is a sibling of that reading.
+  js = replaceOnce(js, `this._mpSim=e,${bindCustomization};let n=`, 'this._mpSim=e;let n=');
+  js = replaceOnce(js, refresh, `${refresh},${bindCustomization},this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,c,this),bindPartyOrganizing(t,e,this)`);
   js = replaceOnce(js, 'iJe(JP,null,"new",!1,e,void 0,a)', 'iJe(JP,null,"new",!1,{...e,partyModRules:gpmCampaignRulesForStart(),...gpmNewParty?{partyModCreate:gpmNewParty}:{}},void 0,a)');
   js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,partyModRules:a.partyModRules,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
   js = replaceOnce(js, '_bPolElectorat(e,t){', '_bPolElectorat(e,t){bindElectorateWidth(e);');
@@ -747,6 +752,9 @@ function patchRenderer(bytes) {
 function patchWorker(bytes) {
   if (sha256(bytes) !== workerHash) throw new Error(`Unsupported Geoplanetical simulation. This mod targets ${version}.`);
   let js = bytes.toString("utf8");
+  // The native editor and PPO Rename Party share the visible identity for mod-named parties.
+  js = replaceOnce(js, 't.name!==void 0&&(e.nameDesc.customName=t.name),t.tag!==void 0&&(e.nameDesc.customTag=t.tag)',
+    't.name!==void 0&&(e.nameDesc.customName=t.name,typeof e.nameDesc.gpmName==="string"&&(e.nameDesc.gpmName=t.name)),t.tag!==void 0&&(e.nameDesc.customTag=t.tag,typeof e.nameDesc.gpmName==="string"&&(e.nameDesc.gpmTag=t.tag))');
   js = patchHistoricalOpeningTopology(js, replaceOnce, "worker");
   js = replaceOnce(js, "function bRt(){",
     readFileSync(join(__dirname, "historical-province-climate.js"), "utf8") + "\nfunction bRt(){");

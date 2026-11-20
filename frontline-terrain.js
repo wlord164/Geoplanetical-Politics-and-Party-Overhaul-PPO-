@@ -84,7 +84,7 @@ function gpmFrontlineStartingCell(war, terrain, start, line) {
   return best;
 }
 
-function gpmFrontlineGridPath(sim, war, owner, points, line) {
+function gpmFrontlineGridPath(sim, war, owner, points, line, objectiveProvinceKey) {
   const { field } = war;
   if (!field?.terrain || !field?.prov || typeof field.lonOf !== "function" || typeof field.latOf !== "function") return null;
   const goal = points.at(-1);
@@ -106,7 +106,8 @@ function gpmFrontlineGridPath(sim, war, owner, points, line) {
   for (let index = 0; index < count; index++) {
     const cell = pending[index];
     const position = terrain.center(cell);
-    if (terrain.hostile(cell) && Math.abs(position[1] - goal[1]) * 111 < remainingDistance) {
+    if (terrain.hostile(cell) && Math.abs(position[1] - goal[1]) * 111 < remainingDistance &&
+        (objectiveProvinceKey == null || sim.world.provinces[field.prov[cell]]?.__provKey === objectiveProvinceKey)) {
       if (cell === goalCell && dryGoal && terrain.eligible(cell) && gpmFrontlineLandSegment(sim, field, position, goal)) {
         closest = cell;
         remainingDistance = 0;
@@ -158,11 +159,11 @@ function gpmFrontlineCanonicalArrow(sim, war, owner, raw, line, objectiveProvinc
     if (objective.reason || objective.controlled) return { ok: false, reason: objective.reason || "objective_held" };
     return { ok: true, arrow: points, objectiveProvinceKey: objective.key, corrected: false };
   }
-  let corrected = gpmFrontlineGridPath(sim, war, owner, points, line);
+  let corrected = gpmFrontlineGridPath(sim, war, owner, points, line, objectiveProvinceKey);
   if (!corrected || !gpmFrontlineLandStroke(sim, field, corrected)) return { ok: false, reason: "no_land_route" };
   const direct = [points[0], corrected.at(-1)];
   if (gpmFrontlineLandStroke(sim, field, direct)) corrected = direct;
-  const objective = gpmFrontlineObjectiveState(sim, war, owner, corrected);
+  const objective = gpmFrontlineObjectiveState(sim, war, owner, corrected, objectiveProvinceKey);
   if (objective.reason || objective.controlled) return { ok: false, reason: objective.reason || "objective_held" };
   return { ok: true, arrow: corrected, objectiveProvinceKey: objective.key, corrected: true };
 }

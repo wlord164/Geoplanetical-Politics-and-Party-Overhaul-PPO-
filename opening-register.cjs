@@ -4,11 +4,15 @@ const data = require("./opening-register-data.json");
 const { openingIdeology } = require("./opening-register-ideology.cjs");
 
 function gpmOpeningNonparty(party) {
-  return ["aggregate", "unaffiliated", "affiliation-unverified"].includes(party?.nameDesc?.gpmOpeningKind);
+  return ["aggregate", "unaffiliated", "affiliation-unverified"].includes(party?.kind ?? party?.nameDesc?.gpmOpeningKind);
 }
 
 function gpmOpeningBallotEligible(party) {
-  const kind = party?.nameDesc?.gpmOpeningKind;
+  const descriptor = party?.nameDesc;
+  const kind = descriptor?.gpmOpeningKind;
+  if (kind === "unaffiliated") {
+    return gpmOpeningIndependentCandidates.has(JSON.stringify([party.id, descriptor.gpmOpeningName]));
+  }
   return kind !== "aggregate" && kind !== "affiliation-unverified";
 }
 
@@ -84,7 +88,8 @@ function gpmOpeningRegisterPreset(countryKey, preset, createPolity, options) {
       ...chamber,
       customName: source.name,
       seats: source.statutorySeats,
-      seatsBasis: "opening-register",
+      seatsBasis: source.openingStatus === "dissolved" ? "opening-register-dissolved" :
+        source.openingStatus === "inactive" ? "opening-register-inactive" : "opening-register",
       composition: Object.fromEntries(source.rows.filter(row => row.seats > 0).map(row => [row.id, row.seats])),
     });
     for (const row of source.rows) {
@@ -95,14 +100,21 @@ function gpmOpeningRegisterPreset(countryKey, preset, createPolity, options) {
     }
   }
 
-  if (!registeredParties.size) return preset;
+  if (![...registeredParties.values()].some(row => row.seats > 0 && !gpmOpeningNonparty(row))) {
+    const existingParties = new Set(preset.parties.map(party => party.id));
+    for (const row of registeredParties.values()) {
+      if (!existingParties.has(row.id)) preset.parties.push({ ...gpmRegisteredOpeningParty({}, row), support: 0 });
+    }
+    preset.chambers = chambers;
+    return preset;
+  }
   const previous = new Map(preset.parties.map(party => [party.id, party]));
   const parties = [];
   for (const row of registeredParties.values()) {
     const base = previous.get(row.id) || previous.get(row.stockBasis) || {};
     parties.push({
       ...gpmRegisteredOpeningParty(base, row),
-      support: registeredSeats ? row.seats / registeredSeats : 0,
+      support: row.seats / registeredSeats,
     });
   }
   for (const party of previous.values()) {
@@ -128,6 +140,12 @@ function gpmOpeningRegisterPreset(countryKey, preset, createPolity, options) {
 function gpmOpeningVacancyHtml(chamber) {
   const vacancies = chamber?.composition?.["gpm-vacant"] || 0;
   if (!vacancies) return "";
+  if (vacancies === chamber.seats && chamber.seatsBasis === "opening-register-dissolved") {
+    return '<p class="empty-note">Chamber dissolved at the January 1 opening</p>';
+  }
+  if (vacancies === chamber.seats && chamber.seatsBasis === "opening-register-inactive") {
+    return '<p class="empty-note">No sitting lawmakers at the January 1 opening</p>';
+  }
   return '<p class="empty-note">' + vacancies + " vacant " + (vacancies === 1 ? "seat" : "seats") + "</p>";
 }
 
@@ -216,12 +234,21 @@ function patchOpeningRegisterRenderer(source, replaceOnce) {
 
 function patchOpeningRegisterWorker(source, replaceOnce) {
   const setup = "function gFa(e,t=2026){";
+  const independents = Object.values(data.countries).flatMap(country =>
+    Object.values(country.chambers || {}).flatMap(chamber =>
+      chamber.rows.filter(row => row.kind === "unaffiliated" && row.independentCandidate)
+        .map(row => JSON.stringify([row.id, row.name]))));
   let js = replaceOnce(source, setup,
-    seedDeclaration() + gpmOpeningBallotEligible + "\n" + gpmOpeningBallotShares + "\n" + setup);
+    seedDeclaration() + "const gpmOpeningIndependentCandidates=new Set(" + JSON.stringify(independents) + ");\n" +
+      gpmOpeningBallotEligible + "\n" + gpmOpeningBallotShares + "\n" + setup);
   js = replaceOnce(js, "Xho(a,n),lga(n,yte(a))",
     "Xho(a,n),lga(n,yte(a)),gpmOpeningRegisterPreset(a,n,cga,{culture:Js(a),baseSeed:Ma(a)})");
   js = replaceOnce(js, 'i.seatsBasis==="reform"||K0(i)?.seats!=null',
     '(i.seatsBasis==="reform"||i.seatsBasis==="opening-register")||K0(i)?.seats!=null');
+  js = replaceOnce(js, "parties:Object.freeze((a.pol?.parties||[]).map(i=>{let s=a.key===r.countryKey",
+    "parties:Object.freeze((a.pol?.parties||[]).filter(i=>gpmOpeningBallotEligible(i)||(a.key===r.countryKey&&i.id===r.partyId)).map(i=>{let s=a.key===r.countryKey");
+  js = replaceOnce(js, 'if(!o||o.gpmUprisingShell||o.gpmUprisingExcluded)return{ok:!1,reason:"party"};let n=Ho(e)',
+    'if(!o||o.gpmUprisingShell||o.gpmUprisingExcluded||!gpmOpeningBallotEligible(o))return{ok:!1,reason:"party"};let n=Ho(e)');
   // Seat-ledger buckets can finish their current terms without entering a later ballot.
   js = replaceOnce(js, "for(let n of t.pol.parties){let i=n.campaigns[o];",
     "for(let n of t.pol.parties){if(!gpmOpeningBallotEligible(n))continue;let i=n.campaigns[o];");

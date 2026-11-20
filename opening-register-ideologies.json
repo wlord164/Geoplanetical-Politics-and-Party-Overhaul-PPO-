@@ -2636,6 +2636,172 @@
       "surveyYear": 2024
     }
   },
+  "710": {
+    "ANC": {
+      "preset": "socialDemocrat",
+      "program": "The developmental-state programme pairs a mixed economy with national health insurance, stronger social grants, a path toward basic income support and public investment within the constitutional order.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.anc1912.org.za/wp-content/uploads/2024/02/ANC-2024-Elections-Manifesto.pdf",
+        "https://www.anc1912.org.za/statement-of-intent-of-the-2024-government-of-national-unity-2/"
+      ]
+    },
+    "DA": {
+      "preset": "marketCentre",
+      "program": "The 2024 programme centers private enterprise and competition for growth and jobs, alongside a social safety net and independent constitutional institutions.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.da.org.za/policy/the-das-plan-to-unleash-enterprise-grow-the-economy-and-create-jobs",
+        "https://www.da.org.za/policy/social-development-policy",
+        "https://www.da.org.za/campaigns/the-da-rescue-plan-for-south-africa"
+      ]
+    },
+    "MK": {
+      "preset": "leftNationalist",
+      "program": "The party manifesto combines African sovereignty, nationalisation, redistributive land policy and stronger parliamentary authority. The same programme proposes stronger roles for traditional leaders.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://mkparty.org.za/wp-content/uploads/2025/10/MK-Manifesto.pdf"
+      ]
+    },
+    "EFF": {
+      "preset": "marxistLeninist",
+      "program": "The EFF constitution identifies Marxism, Leninism and Fanonian thought as its guiding doctrine. Its programme centers public ownership of strategic industries and land redistribution. PPO uses its Marxist–Leninist preset as the declared-doctrine match.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://effonline.org/wp-content/uploads/2025/02/FINAL-EFF-CONSTITUTION-2024-AMENDED-29.01.2025.pdf",
+        "https://effonline.org/about-us/"
+      ]
+    },
+    "IFP": {
+      "preset": "paternalistConservative",
+      "program": "The IFP pairs protection of traditional and Khoi-San institutions with a safety net for older people and children, local enterprise and public-private partnerships.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://ifp.org.za/documents/election-manifestos/2024-manifesto/",
+        "https://ifp.org.za/speak-your-truth/",
+        "https://ifp.org.za/our-national-manifesto/trust-us-to-protect-traditional-and-khoi-san-institutions-and-leadership/"
+      ]
+    },
+    "PA": {
+      "preset": "nationalConservative",
+      "program": "The party's 2024 strategy and programme prioritize national security and border enforcement as part of a citizen-focused electoral platform. Its published objectives combine social order, community development and national participation.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://mypa.org.za/wp-content/uploads/2024/03/TURNAROUND-STRATEGY-2024-7.pdf",
+        "https://mypa.org.za/about/our-history-2/",
+        "https://mypa.org.za/about/"
+      ]
+    },
+    "FFP": {
+      "preset": "liberalConservative",
+      "program": "The programme calls for free enterprise and limited state economic power, combined with Christian values, federal devolution and the constitutional self-determination of cultural communities.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.vfplus.org.za/wp-content/uploads/2024/03/FF-Plus-Manifesto-2024-Digital.pdf",
+        "https://www.vfplus.org.za/policy/ff-plus-manifesto-2024/"
+      ]
+    },
+    "ACTIONSA": {
+      "preset": "marketCentre",
+      "program": "ActionSA proposes a competitive market economy, private enterprise, simpler regulation and independent institutions, with social grants focused on the most vulnerable.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.actionsa.org.za/economicprosperity/",
+        "https://www.actionsa.org.za/wp-content/uploads/2024/03/ActionSA-National-Manifesto-2024.pdf"
+      ]
+    },
+    "ACDP": {
+      "preset": "conservative",
+      "program": "The Christian democratic programme combines biblical social principles and family policy with an open market economy, a social safety net and competitive parliamentary rule. PPO's conservative preset is the closest available broad platform.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://acdp.org.za/2024ManifestoENGLISH-download.pdf",
+        "https://acdp.org.za/ACDPConstitution_031122.pdf"
+      ]
+    },
+    "UDM": {
+      "preset": "socialDemocrat",
+      "program": "The 2024 manifesto explicitly identifies the UDM as social democratic. It proposes stronger public health and social welfare, investment in skills and small enterprises and constitutional equality.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.spotlightnsp.co.za/wp-content/uploads/2024/05/udm-election-manifesto-2024.pdf",
+        "https://udm.org.za/history"
+      ]
+    },
+    "ATM": {
+      "preset": "socialDemocrat",
+      "program": "The ATM describes itself as a faith-based social democratic party. Its 2025 alliance statement reaffirmed both commitments and its programme calls for social protection and public accountability.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://atm-sa.co.za/about",
+        "https://atm-sa.co.za/blog/atm-mk-party-alliance-2026"
+      ]
+    },
+    "ALJAMA": {
+      "preset": "islamicDemocracy",
+      "program": "The party draws its political values from Islam and pursues legislation, equity and minority rights within South Africa's constitutional multiparty system.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.aljama.co.za/al-jama-ahs-constitution-2023/",
+        "https://www.aljama.co.za/wp-content/uploads/2024/03/2024-MANIFESTO-04032024_SINGLE-PAGE.pdf"
+      ]
+    },
+    "BOSA": {
+      "preset": "marketCentre",
+      "program": "The growth charter emphasizes private investment, easing business regulation, small-enterprise finance and employment, alongside targeted public investment in human capital.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://bosa.co.za/wp-content/uploads/2025/04/A_Growth_Charter_for_South_Africa1.pdf",
+        "https://bosa.co.za/bosa-manifesto/"
+      ]
+    },
+    "RISE": {
+      "preset": "socialDemocrat",
+      "program": "The People's Manifesto combines private enterprise with public investment, economic inclusion and equal access to services. Its 2024 programme expands child grants and promotes universal early childhood development.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://risemzansi.co.za/policies/the-peoples-manifesto",
+        "https://www.spotlightnsp.co.za/wp-content/uploads/2024/05/rise-mzansi-election-manifesto-2024.pdf",
+        "https://risemzansi.co.za/media-statements/we-need-new-leaders-to-care-about-single-mothers"
+      ]
+    },
+    "NCC": {
+      "preset": "socialDemocrat",
+      "program": "The election manifesto explicitly identifies the movement as social democratic. Its constitution pursues constitutional redress for First Nation descendants and other marginalized minorities, alongside social and economic equality.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.nationalcolouredcongress.org.za/assets/files/MANIFESTONCC_3.pdf",
+        "https://nationalcolouredcongress.org.za/assets/files/NCC-Constitution-2023-updated.pdf"
+      ]
+    },
+    "PAC": {
+      "preset": "leftNationalist",
+      "program": "The party constitution combines African nationalism, Pan-Africanism, national self-determination and Africanist socialist democracy. Its 2024 manifesto centers land and economic redistribution.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://www.pacofazania.org.za/wp-content/uploads/2020/02/CONSTITUTION_-_20001.pdf",
+        "https://afromanifesto.com/wp-content/uploads/2024/04/pac_2024_manifesto.pdf"
+      ]
+    },
+    "GOOD": {
+      "preset": "green",
+      "program": "The manifesto gives environmental justice equal standing with economic, social and spatial justice. Its programme links a just transition and renewable energy investment to a universal basic income, public employment and social inclusion.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://forgood.org.za/wp-content/uploads/2024/03/manifesto-2024-15-Mar.pdf",
+        "https://forgood.org.za/the-good-manifesto-is-our-recipe-to-re-balance-society/"
+      ]
+    },
+    "UAT": {
+      "preset": "leftNationalist",
+      "program": "The manifesto advocates socialist transformation, redistribution of land and resources toward marginalized African communities, mineral nationalisation and community participation.",
+      "scope": "official_party_programme_proxy",
+      "sources": [
+        "https://uat2023.org.za/manifesto/"
+      ]
+    }
+  },
   "724": {
     "ERC": {
       "preset": "socialDemocrat",

@@ -10,7 +10,8 @@ const style = `
 #war-registry.gpm-frontline-open { align-self: stretch; width: min(calc(100vw - 2 * var(--pad)), clamp(18rem,27vw,25rem)); }
 #war-registry.gpm-frontline-open > #war-inspector { display: none; }
 .gpm-frontline-dock { padding: var(--gap-4); min-height: 0; overflow: auto; }
-.gpm-frontline-dock[hidden], .gpm-frontline-roster-bar[hidden] { display: none; }
+.gpm-frontline-dock[hidden], .gpm-frontline-arrow-labels[hidden],
+body.mil-mode:has(#workspace.open) #mil-frame { display: none; }
 .gpm-frontline-dock :is(header, .gpm-frontline-actions) { display: flex; align-items: center; gap: var(--gap-2); flex-wrap: wrap; }
 .gpm-frontline-dock header h3 { margin-right: auto; }
 .gpm-frontline-feedback { color: var(--text-2); }
@@ -126,6 +127,7 @@ function gpmRefreshFrontlineEntry(ui) {
 async function gpmOpenFrontline(ui, session) {
   if (ui.sim !== session || !ui.canOpenMilitaryMode?.()) return;
   if (!ui.militaryModeActive) await ui.openMilitaryMode();
+  else if (ui.activeModule) ui.closeModule();
   if (ui.sim === session) gpmRefreshFrontlineMap(ui);
 }
 
@@ -145,7 +147,7 @@ function gpmMountFrontline(ui, session, warId) {
   registry.append(host);
   const state = ui._gpmFrontline = { session, ui, playerKey: session.playerKey, warId, host, registry, frame, globe, canvas,
     events: new AbortController(), data: null, draft: null, drawing: null, selectedSlot: null, selectedArmyId: null,
-    feedback: "", meshes: [], request: 0 };
+    feedback: "", meshes: [], request: 0, suspended: false };
   const options = { signal: state.events.signal };
   gpmMountFrontlineRoster(state, options, consoleHost);
   host.addEventListener("click", event => gpmFrontlineClick(state, event), options);
@@ -205,16 +207,32 @@ function gpmCloseFrontline(ui) {
   gpmClearFrontlinePaths(state);
 }
 
+function gpmSuspendFrontline(state, suspended) {
+  if (state.suspended === suspended) return;
+  state.suspended = suspended;
+  state.labelLayer.hidden = suspended;
+  state.selectionLayer.hidden = suspended;
+  if (suspended) {
+    state.host.hidden = true;
+    state.registry.classList.remove("gpm-frontline-open");
+    if (state.drawing) gpmFrontlineSetDraw(state, null);
+    state.pathSignature = null;
+    gpmClearFrontlinePaths(state);
+  } else gpmPaintFrontline(state);
+}
+
 function gpmRefreshFrontlineMap(ui) {
+  if (!ui.militaryModeActive) return gpmCloseFrontline(ui);
   const state = ui._gpmFrontline;
   const session = ui.sim;
   const view = session && Ci(session);
   const key = view && ui._activeWarKey();
   const warId = view?.wars?.[key]?.id;
-  if (state && (!ui.militaryModeActive || !warId || state.warId !== warId || session !== state.session ||
+  if (state && (!warId || state.warId !== warId || session !== state.session ||
       session.playerKey !== state.playerKey || state.globe !== ui.globe)) gpmCloseFrontline(ui);
-  if (!ui.militaryModeActive || !warId) return;
   const current = ui._gpmFrontline;
+  if (current) gpmSuspendFrontline(current, !!ui.activeModule);
+  if (!warId || ui.activeModule) return;
   if (!current) return gpmMountFrontline(ui, session, warId);
   if (!current.busy && !current.drawing?.pointer && !current.drawing?.validating) void gpmLoadFrontline(current);
 }
@@ -406,7 +424,7 @@ function gpmFrontlineFormationState(unit) {
 
 function gpmPaintFrontline(state) {
   const { host, data, draft, busy } = state;
-  if (!host.isConnected) return;
+  if (state.suspended || !host.isConnected) return;
   const selected = state.selectedSlot != null;
   host.hidden = !selected;
   state.registry.classList.toggle("gpm-frontline-open", selected);
@@ -607,6 +625,7 @@ function gpmFrontlineClick(state, event) {
 function gpmFrontlineSetDraw(state, kind, message = null) {
   state.selectionBox?.remove();
   state.selectionBox = null;
+  if (state.suspended) kind = null;
   state.drawing = kind ? { kind } : null;
   if (kind === "arrow") state.drawing.start = gpmFrontlineMidpoint(state.draft.line);
   state.canvas.classList.toggle("gpm-frontline-crosshair", !!kind);
@@ -1239,6 +1258,7 @@ function gpmTickFrontlineObjectives(state, project) {
 }
 
 function gpmPaintFrontlinePaths(state) {
+  if (state.suspended) return;
   const plans = state.data?.plans || [];
   const draft = state.draft;
   const strokes = plans.filter(plan => plan.id !== draft?.id).flatMap((plan, index) => {
@@ -1249,8 +1269,8 @@ function gpmPaintFrontlinePaths(state) {
     const alpha = plan.status === "queued" ? .45 : !state.selectedArmyId || selected ? .96 : .53;
     const line = completed && plan.reason === "no_connected_front" ? [] : plan.liveLine || plan.line;
     return [[line, color, false, alpha, null, selected ? 1 : 0],
-      [completed ? [] : plan.arrow, color, true, alpha, plan.name || `Army ${plan.slot || index + 1}`, selected ? 1 : 0,
-        !completed && plan.status !== "queued" ? plan.objectiveProvinceKey : null]];
+      [completed ? [] : plan.displayArrow || plan.arrow, color, true, alpha, plan.name || `Army ${plan.slot || index + 1}`, selected ? 1 : 0,
+        !completed && plan.status !== "queued" ? plan.objectiveProvinceKey : null, plan.displayArrow && plan.arrow]];
   });
   if (draft) {
     const color = gpmFrontlinePalette[draft.color] || gpmFrontlinePalette.cyan;
@@ -1266,11 +1286,11 @@ function gpmPaintFrontlinePaths(state) {
   gpmClearFrontlinePaths(state);
   state.labelLayer.replaceChildren();
   state.labels = [];
-  for (const [path, color, arrow, opacity, name, emphasis, objective] of strokes) {
+  for (const [path, color, arrow, opacity, name, emphasis, objective, originalArrow] of strokes) {
     if (!path || path.length < 2) continue;
     gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis);
     if (arrow && name) gpmAddFrontlineLabel(state, path, color, opacity, name);
-    if (objective) gpmAddFrontlineObjective(state, path, objective, color, opacity, emphasis);
+    if (objective) gpmAddFrontlineObjective(state, originalArrow || path, objective, color, opacity, emphasis);
   }
   gpmTickFrontlineLabels(state.ui);
   state.globe._frameGate?.invalidate?.();
@@ -1308,7 +1328,7 @@ function gpmAddFrontlineLabel(state, path, color, opacity, name) {
 
 function gpmTickFrontlineLabels(ui) {
   const state = ui._gpmFrontline;
-  if (!state || !state.labels?.length && !state.objectives?.length && state.selectedSlot == null && !state.formationMarks.size) return;
+  if (!state || state.suspended || !state.labels?.length && !state.objectives?.length && state.selectedSlot == null && !state.formationMarks.size) return;
   const { camera, sphere } = state.globe;
   const radius = sphere.geometry.parameters.radius;
   camera.updateMatrixWorld();
@@ -1437,7 +1457,7 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, o
 
 function patchFrontlineRenderer(source, replaceOnce) {
   const functions = [gpmFrontlineMountStyle, gpmBuildFrontline, gpmRefreshFrontlineEntry, gpmOpenFrontline, gpmMountFrontline, gpmCloseFrontline,
-    gpmRefreshFrontlineMap, gpmLoadFrontline, gpmFrontlineStatus, gpmFrontlineColor, gpmFrontlineObjective, gpmKeepFrontlineDraft,
+    gpmSuspendFrontline, gpmRefreshFrontlineMap, gpmLoadFrontline, gpmFrontlineStatus, gpmFrontlineColor, gpmFrontlineObjective, gpmKeepFrontlineDraft,
     gpmMountFrontlineRoster, gpmFrontlineArmySlots, gpmFrontlinePortrait, gpmPaintFrontlineRoster, gpmSelectFrontlineArmy, gpmFrontlineFormationState,
     gpmPaintFrontline, gpmEditFrontlineDraft, gpmFrontlineClick, gpmFrontlineSetDraw, gpmFrontlineDistance, gpmFrontlineMidpoint,
     gpmFrontlineContactParams, gpmFrontlineScreenPoint, gpmPickFrontlineContact, gpmFrontlineContactSection, gpmBindFrontlineDraw, gpmFinishFrontlineDraw,
@@ -1457,6 +1477,10 @@ function patchFrontlineRenderer(source, replaceOnce) {
   js = replaceOnce(js, foot, '(this._subSel.military==="historical-conflicts"||this._subSel.military==="frontline")?null:');
   const refresh = '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);';
   js = replaceOnce(js, refresh, refresh + 'gpmRefreshFrontlineEntry(this);');
+  const moduleOpen = 'this.activeModule=e,this._subSel[e]=t,this._syncSimulationViewSubscriptions(e)';
+  js = replaceOnce(js, moduleOpen, 'this.activeModule=e,this._subSel[e]=t,gpmRefreshFrontlineMap(this),this._syncSimulationViewSubscriptions(e)');
+  const moduleClose = 'this.activeModule=null,this._moduleViewsPendingScope=null';
+  js = replaceOnce(js, moduleClose, 'this.activeModule=null,gpmRefreshFrontlineMap(this),this._moduleViewsPendingScope=null');
   const refreshMap = 'this._warAlliesRefresh?.(),this._renderWarInspector()}finally';
   js = replaceOnce(js, refreshMap, 'this._warAlliesRefresh?.(),this._renderWarInspector(),gpmRefreshFrontlineMap(this)}finally');
   const labels = 'tickWarVisual(e,t=null){e=e||.016,';

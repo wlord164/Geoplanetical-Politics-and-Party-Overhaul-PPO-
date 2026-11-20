@@ -15,7 +15,16 @@
       {
         "name": "Sultani Makenga",
         "role": "M23 military commander",
-        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf"
+        "source": "https://digitallibrary.un.org/record/4085466/files/S_2025_446-EN.pdf",
+        "portrait": {
+          "name": "Sultani Makenga",
+          "source": "https://commons.wikimedia.org/wiki/File:Sultani_Makenga,_M23,_2013_(cropped).jpg",
+          "credit": "Nicolas Pinault (Voice of America), February 2013. Wikimedia Commons crop.",
+          "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+          "file": "historical-identity-assets/register-sultani-makenga.jpg",
+          "reuseEvidence": "U.S. public domain as credited original Voice of America photograph",
+          "packagedSha256": "38e7a7713eea6db74c0fcfbdad3e785eac2960f3d791cfdf507d38e611127059"
+        }
       }
     ]
   },
@@ -28,22 +37,48 @@
       "license": "https://creativecommons.org/publicdomain/mark/1.0/",
       "ratio": 2,
       "evidence": "https://alumma.ly/storage/pdf/uR9VFjfknATQVSJzzp71RJARlAyXsDbpZ0uvHZjZ.pdf"
+    },
+    "leader": {
+      "name": "Osama Hammad",
+      "role": "House of Representatives-appointed Prime Minister",
+      "source": "https://digitallibrary.un.org/record/4086980/files/S_2025_509-EN.pdf",
+      "portrait": {
+        "file": "historical-identity-assets/register-osama-hammad.jpg",
+        "kind": "documentary_reference",
+        "source": "https://fawaselmedia.com/%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D9%86%D9%88%D8%A7%D8%A8-%D9%8A%D9%82%D9%8A%D9%84-%D8%A8%D8%A7%D8%B4%D8%A7%D8%BA%D8%A7-%D9%88%D9%8A%D8%AD%D9%8A%D9%84%D9%87-%D9%84%D9%84%D8%AA%D8%AD%D9%82%D9%8A/",
+        "sourceImage": "https://fawaselmedia.com/wp-content/uploads/2023/05/%D8%A3%D8%B3%D8%A7%D9%85%D8%A9-%D8%AD%D9%85%D8%A7%D8%AF.jpg",
+        "credit": "Fawasel Media, May 2023 publication (original photographer not credited); crop for PPO",
+        "license": "Local documentary use only. Redistribution permission unconfirmed.",
+        "licenseUrl": "https://fawaselmedia.com/",
+        "rightsStatus": "Local build only",
+        "reuseEvidence": "local_only",
+        "photoDate": null,
+        "subjectName": "Osama Hammad",
+        "subjectEvidence": "Central seated subject; the article identifies him as the incoming House-appointed prime minister. His appearance matches the man at the right of the separately published Egyptian government hand-shake photograph. The Thailand NIA profile also names the GNS subject and supplies a red-tie portrait.",
+        "subjectSources": [
+          "https://sis.gov.eg/es/centro-de-informacion/noticias-exclusivas/el-primer-ministro-recibe-a-su-hom%C3%B3logo-libio-en-la-sede-del-gobierno-en-nuevo-alamein/",
+          "https://almanac.nia.go.th/media/almanac/2024/01/Libya-2567.pdf",
+          "https://en.wikipedia.org/wiki/Osama_Hammad"
+        ],
+        "sourceImageSha256": "5bf86af09a7705838a69980b6f9eb45d3542f71ce11452d7120130c7b01a7cc0",
+        "derivative": "Color photograph cropped and resized to a 240 × 320 JPEG",
+        "packagedSha256": "00a9367ab03df27ad174015f655b2293f8f302f6af19ad96383a3d56562c5a2b"
+      }
     }
   },
   "syr-suwayda-local-groups": {
-    "additionalOfficials": [
-      {
-        "name": "Hikmat al-Hijri",
-        "role": "Druze spiritual authority and National Guard founding figure",
-        "source": "https://www.euaa.europa.eu/syria-security-situation/2132-territorial-control-and-main-armed-actors",
-        "portrait": {
-          "file": "historical-identity-assets/register-hikmat-al-hijri.png",
-          "source": "https://commons.wikimedia.org/wiki/File:Sheikh_Hikmat_al-Hijri_reading_a_speech_in_2024_(cropped).png",
-          "license": "https://creativecommons.org/licenses/by/3.0",
-          "credit": "kayan24, 2024. Wikimedia Commons crop."
-        }
+    "leader": {
+      "name": "Hikmat al-Hijri",
+      "role": "Druze spiritual authority and National Guard founding figure",
+      "source": "https://www.euaa.europa.eu/syria-security-situation/2132-territorial-control-and-main-armed-actors",
+      "portrait": {
+        "file": "historical-identity-assets/register-hikmat-al-hijri.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Sheikh_Hikmat_al-Hijri_reading_a_speech_in_2024_(cropped).png",
+        "license": "https://creativecommons.org/licenses/by/3.0",
+        "credit": "kayan24, 2024. Wikimedia Commons crop.",
+        "reuseEvidence": "CC BY 3.0 recorded on the identified source crop"
       }
-    ]
+    }
   },
   "warwatch-actor-2519": {
     "leader": {
@@ -759,6 +794,200 @@
         "https://ctc.westpoint.edu/kachallas-and-kinship-understanding-jihadi-expansion-and-diffusion-in-nigeria/",
         "https://issafrica.org/iss-today/time-to-double-down-after-security-strikes-against-boko-haram-leaders"
       ]
+    }
+  },
+  "ucdp-actor-123": {
+    "leader": {
+      "name": "Abdulmalik al-Houthi",
+      "role": "Ansar Allah leader",
+      "source": "https://main.un.org/securitycouncil/en/sanctions/2140/materials/summaries/individual/abdulmalik-al-houthi",
+      "portrait": {
+        "name": "Abdulmalik al-Houthi",
+        "source": "https://commons.wikimedia.org/wiki/File:%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%85%D9%84%DA%A9_%D8%AD%D9%88%D8%AB%DB%8C.jpg",
+        "credit": "Wikishia, January 2024.",
+        "license": "https://creativecommons.org/licenses/by/2.0",
+        "file": "historical-identity-assets/register-abdulmalik-al-houthi.jpg",
+        "reuseEvidence": "CC BY 2.0 credited to Wikishia in the media file record",
+        "packagedSha256": "584e8c2dba3a52e420f85e0333233b4bc675c0ddb6d25c8c565555ba033307bc"
+      }
+    }
+  },
+  "som-somaliland-authority": {
+    "leader": {
+      "name": "Abdirahman Mohamed Abdullahi",
+      "role": "President of Somaliland",
+      "source": "https://madaxtoyadajsl.com/news/somaliland-president-abdirahman-irro-chairs-cabinet-ministers-meeting-1765389044306",
+      "evidence": "Official presidency material documents his tenure at cutoff.",
+      "evidenceDate": "2025-12-10",
+      "portrait": {
+        "name": "Abdirahman Mohamed Abdullahi",
+        "source": "https://commons.wikimedia.org/wiki/File:Abdirahman_Mohamed_Abdullahi_(cropped).jpg",
+        "credit": "Gaashaannews, February 2021. Wikimedia Commons crop.",
+        "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+        "file": "historical-identity-assets/register-somaliland-president.jpg",
+        "reuseEvidence": "U.S. public domain recorded in the file provenance under Title 17 Section 104",
+        "packagedSha256": "d44af0767627f86b5c16aa1e150f53bbcf7b78b1b69424316eb7368ab5780516"
+      }
+    },
+    "flag": {
+      "name": "Flag of Somaliland",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Somaliland.svg",
+      "credit": "Government of Somaliland. SVG render from Wikimedia Commons.",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "evidence": "https://madaxtoyadajsl.com/",
+      "file": "historical-identity-assets/register-somaliland-flag.png",
+      "reuseEvidence": "Official national symbol in the public-domain file record",
+      "packagedSha256": "fdfda6ede48a4d1dc28e9d125d784d4419beb13ff095462f1f097a5e9ae2035f",
+      "ratio": 2
+    }
+  },
+  "som-north-east": {
+    "leader": {
+      "name": "Abdulqadir Ahmed Aw-Ali",
+      "role": "Regional president, elected August 30, 2025",
+      "source": "https://sonna.so/en/abdulqadir-ahmed-aw-ali-firdhiye-elected-president-of-north-eastern-state",
+      "evidence": "Elected in August 2025. The separate federal inauguration in January 2026 followed the election.",
+      "evidenceDate": "2025-08-30"
+    },
+    "additionalOfficials": [
+      {
+        "name": "Abdirashid Yusuf Jibriil",
+        "role": "Regional vice president, elected August 30, 2025",
+        "source": "https://moi.gov.so/news-detail.php?slug=federal-government-of-somalias-weekly-briefing-mogadishu-friday-5th-september-2025",
+        "evidenceDate": "2025-09-05"
+      }
+    ],
+    "flag": {
+      "name": "Flag of North Eastern State of Somalia",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_North_Eastern_State_of_Somalia.svg",
+      "credit": "Wowzers122. Based on a July 2025 post by Somalia’s Ministry of Interior, Federal Affairs and Reconciliation.",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "evidence": "https://usa.mfa.gov.so/h-e-president-hassan-sheikh-mohamud-arrives-in-las-anod-to-inaugurate-the-northeastern-state-of-somalia/",
+      "file": "historical-identity-assets/register-north-eastern-state-somalia-flag.png",
+      "reuseEvidence": "CC0 Commons vector based on the federal Interior Ministry design reference",
+      "packagedSha256": "4143fbbd4a255511d10d3083a4321189bfad4c7e2b38bc178a4939468e1b092b",
+      "ratio": 1.83
+    }
+  },
+  "ucdp-actor-9545": {
+    "leader": {
+      "name": "Eskinder Nega",
+      "role": "Amhara Fano Popular Organization chairperson",
+      "source": "https://www.amharaamerica.org/post/amhara-fano-people-s-organization-afpo-urgent-press-release",
+      "evidence": "AFPO's December statement identifies its chairperson. The June 2025 UK Home Office report corroborates the appointment.",
+      "evidenceDate": "2025-12-05",
+      "corroboration": "https://assets.publishing.service.gov.uk/media/68654ef66569be0acf74db74/ETH_CPIN_Amhara_and_Amhara_opposition_groups.pdf"
+    }
+  },
+  "ucdp-actor-8118": {
+    "additionalOfficials": [
+      {
+        "name": "Zemene Kassie",
+        "role": "Leader of a Fano component documented in Gojjam",
+        "source": "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible",
+        "evidence": "Documented component leader in 2025. Announced January 17, 2026 as chair of the later merged movement."
+      },
+      {
+        "name": "Eskinder Nega",
+        "role": "Leader of the Amhara Fano People’s Organization component",
+        "source": "https://www.gov.uk/government/publications/ethiopia-country-policy-and-information-notes/country-policy-and-information-note-amhara-and-amhara-opposition-groups-ethiopia-june-2025-accessible",
+        "evidence": "Documented component leader in 2025. His later role in the merged movement began after the cutoff."
+      }
+    ]
+  },
+  "ucdp-actor-7256": {
+    "leader": {
+      "name": "José Antonio Yépez Ortiz",
+      "role": "Founder and leader identified by U.S. Treasury",
+      "source": "https://home.treasury.gov/news/press-releases/sb0339",
+      "evidence": "U.S. Treasury identified him as the leader and attributed continued influence from prison in December 2025.",
+      "evidenceDate": "2025-12-17"
+    }
+  },
+  "ucdp-actor-4102": {
+    "leader": {
+      "name": "Hafiz Gul Bahadur",
+      "role": "Leader of the eponymous group",
+      "source": "https://www.euaa.europa.eu/sites/default/files/publications/2026-05/2026_05_EUAA_COI_Report_Pakistan_Country_Focus.pdf",
+      "evidence": "Retrospective EUAA reporting identifies his public name and role. Additional civil-name information is unresolved.",
+      "evidenceDate": "2026-05"
+    }
+  },
+  "mmr-knu": {
+    "leader": {
+      "name": "P’doh Saw Kwe Htoo Win",
+      "role": "Karen National Union chairman",
+      "source": "https://www.karennationalunion.org/about-us/chairman-timeline",
+      "portrait": {
+        "file": "historical-identity-assets/register-kwe-htoo-win.jpg",
+        "source": "https://www.mofa.go.jp/s_sa/sea1/mm/pageite_000001_00001.html",
+        "sourceImage": "https://www.mofa.go.jp/files/100669081.jpg",
+        "retrieval": "https://www.rsis.edu.sg/wp-content/uploads/2024/07/IP24057.pdf#page=2",
+        "evidence": "https://www.irrawaddy.com/news/burma/japanese-envoy-meets-myanmars-ethnic-armed-organizations.html",
+        "credit": "Ministry of Foreign Affairs of Japan, 14 May 2024. Cropped from the published delegation photograph for PPO. Source accessed 2026-11-20.",
+        "license": "https://www.digital.go.jp/en/resources/open_data/public_data_license_v1.0",
+        "rightsEvidence": "https://www.mofa.go.jp/about/legalmatters.html",
+        "packagedSha256": "90c1729622ac99caf866b38e7705c7486df1086d2eb6417508b159c6f874f898"
+      }
+    }
+  },
+  "mmr-cnf": {
+    "headOfGovernment": {
+      "name": "Pu Pa Thang",
+      "role": "Chinland Government prime minister",
+      "source": "https://www.myanmarmissionnewyork.org/post/bi-weekly-update-on-the-current-situation-in-myanmar-16-09-2025-to-30-09-2025",
+      "portrait": {
+        "file": "historical-identity-assets/register-pu-pa-thang.jpg",
+        "kind": "documentary_reference",
+        "source": "https://mmpeacemonitor.org/en/en-interviews/the-establishment-of-chinland-and-the-chinland-council-is-to-implement-the-interests-of-the-entire-chin-people-it-also-aims-to-further-strengthen-the-revolution-in-any-case-there-are-group/",
+        "sourceImage": "https://mmpeacemonitor.org/wp-content/uploads/2024/03/Pu-Pa-Thang.png",
+        "credit": "Myanmar Peace Monitor, KMG interview published March 15, 2024 (original photographer not credited); crop for PPO",
+        "license": "Local documentary use only. Redistribution permission unconfirmed.",
+        "licenseUrl": "https://mmpeacemonitor.org/en/",
+        "rightsStatus": "Local build only",
+        "reuseEvidence": "local_only",
+        "photoDate": null,
+        "subjectName": "Pu Pa Thang",
+        "subjectEvidence": "Single featured foreground man in striped traditional coat, in a direct interview with the named official. Publisher's source filename uses his name. Independent sources verify the office. The different lectern photo published by DVB is the same Chinland Council photograph as RFA's explicitly captioned Pu Zing Cung image, with a different crop. That photograph was rejected.",
+        "subjectSources": [
+          "https://en.wikipedia.org/wiki/Pu_Pa_Thang",
+          "https://khonumthung.org/english/chinland-council-forms-new-government-in-chin-state/",
+          "https://www.rfa.org/burmese/program_2/chin-chinland-council-grovement-criticisms-02022024150327.html"
+        ],
+        "sourceImageSha256": "44aaefa8992c120f4aa026335d5c3cb5ea050a68d75272c9add03b69e69768ef",
+        "derivative": "Color photograph cropped and resized to a 240 × 320 JPEG",
+        "packagedSha256": "2b578f8d5eb3313b97d7b8d22ad7931f32a76a564fe095e7a72b7b9fe23c4335"
+      }
+    }
+  },
+  "ucdp-actor-6288": {
+    "headOfGovernment": {
+      "name": "Hussein Othman",
+      "role": "AANES Executive Council co-chair",
+      "source": "https://m-syria-d.com/en/?p=8080",
+      "portrait": {
+        "file": "historical-identity-assets/register-hussein-othman.jpg",
+        "kind": "documentary_reference",
+        "source": "https://syriacpress.com/blog/2025/01/09/administration-of-north-and-east-syria-calls-for-inclusive-representation-in-transition-government/",
+        "sourceImage": "https://syriacpress.com/wp-content/uploads/2025/01/daarnes_executive_council_co-chair_hussein_osman.png",
+        "credit": "Briefing image published by SyriacPress, January 9, 2025 (original photographer not credited); crop for PPO",
+        "license": "Local documentary use only. Redistribution permission unconfirmed.",
+        "licenseUrl": "https://syriacpress.com/",
+        "rightsStatus": "Local build only",
+        "reuseEvidence": "local_only",
+        "photoDate": null,
+        "subjectName": "Hussein Othman",
+        "subjectEvidence": "Single foreground seated official. Caption and image filename identify the DAANES Executive Council co-chair. This matches the person shown in official DAANES event coverage and the ANHA interview portrait.",
+        "subjectSources": [
+          "https://daanes.org/%D8%AD%D8%B3%D9%8A%D9%86-%D8%B9%D8%AB%D9%85%D8%A7%D9%86-%D9%8A%D8%AC%D8%A8-%D8%A7%D9%84%D8%B9%D9%85%D9%84-%D9%85%D8%B9%D8%A7%D9%8B-%D9%84%D8%A8%D9%86%D8%A7%D8%A1-%D9%88%D8%B7%D9%86-%D8%B3%D9%88%D8%B1/",
+          "https://www.hawarnews.com/en/hussein-othman-dialogue-decentralization-are-best-ways-to-solve-crises",
+          "https://m-syria-d.com/en/?p=6081",
+          "https://en.wikipedia.org/wiki/Democratic_Autonomous_Administration_of_North_and_East_Syria"
+        ],
+        "sourceImageSha256": "58b19a936715dc06e784ea81396fe8542264369ded71e3837140cacee0f889e4",
+        "derivative": "Color photograph cropped and resized to a 240 × 320 JPEG",
+        "packagedSha256": "5043a56fc8bbf73d2e02b1764c5554409bb6249da1b7e51bd40024c2fd201dba"
+      }
     }
   }
 }

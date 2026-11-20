@@ -213,7 +213,8 @@ function gpmUprisingGovernment(sim, country, founder, profile, transitional, cus
   const partyId = founder.id;
   const draft = gpmUprisingReform(country, profile);
   customizeDraft?.(draft);
-  const rivals = country.pol.parties.filter(party => party.id !== partyId && party.legal !== false);
+  const rivals = country.pol.parties.filter(party => party.id !== partyId && party.legal !== false &&
+    (!transitional || !gpmOpeningNonparty(party)));
   const weights = Object.fromEntries(rivals.map(party => [party.id, Math.max(.0001, party.support || 0)]));
   for (const chamber of draft.draftChambers) {
     if (profile.singleParty || !rivals.length) {
@@ -675,7 +676,8 @@ function gpmUprisingWarDecision(sim, country, input) {
 }
 
 function gpmUprisingSeatTransfers(polity, founderId, incumbent) {
-  const rivals = polity.parties.filter(party => party.id !== founderId && party.legal !== false);
+  const rivals = polity.parties.filter(party =>
+    party.id !== founderId && party.legal !== false && !gpmOpeningNonparty(party));
   const transfers = [];
   for (const chamber of polity.chambers) {
     const composition = chamber.composition || {};

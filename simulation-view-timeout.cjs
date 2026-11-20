@@ -32,8 +32,8 @@ function patchSimulationViewTimeout(js, replaceOnce) {
     'const startTimeout=(delay=l)=>l===1/0?null:setTimeout(()=>{if(!this.requests.has(i))return;');
   js = replaceOnce(js, '},l);this.requests.set(i,{resolve:u,reject:d,command:t,timer:p,recoveryTimer:null,',
     `},delay);
-    const isFiniteView = t === Wd.VIEW_SNAPSHOT && l !== Infinity;
-    const deferTimeout = l !== Infinity && t !== Wd.SHUTDOWN && this.requests.size > 0 &&
+    const isFiniteView = t === t0.VIEW_SNAPSHOT && l !== Infinity;
+    const deferTimeout = l !== Infinity && t !== t0.SHUTDOWN && this.requests.size > 0 &&
       [...this.requests.values()].every(request => request.hasTimeout);
     const viewWatchdog = isFiniteView ? {schedule:startTimeout,timeout:l,deadline:0,progress:null} : null;
     const armTimeout = () => {

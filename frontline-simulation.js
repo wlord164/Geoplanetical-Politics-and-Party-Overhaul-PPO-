@@ -46,13 +46,14 @@ function gpmFrontlineRestore(saved, sim) {
     if (!line || line.length && !formationIds.length || !gpmFrontlineModes.includes(plan.mode)) continue;
     const parent = plans.find(item => item.id === plan.afterId && item.owner === plan.owner);
     if (plan.afterId && (!parent || plans.some(item => item.afterId === parent.id) || !gpmFrontlineSameGroup(parent.formationIds, formationIds))) continue;
+    const routeBlocked = plan.routeBlocked === true || !!candidate && !arrow;
     seen.add(plan.id);
     plans.push({ id: plan.id, owner: plan.owner, formationIds, line, arrow: arrow || [],
-      objectiveProvinceKey: arrow && typeof plan.objectiveProvinceKey === "string" ? plan.objectiveProvinceKey : null,
+      objectiveProvinceKey: (arrow || routeBlocked) && typeof plan.objectiveProvinceKey === "string" ? plan.objectiveProvinceKey : null,
       mode: arrow ? plan.mode : "hold", color: gpmFrontlineColors.includes(plan.color) ? plan.color : "blue",
       afterId: parent?.id ?? null, completed: plan.completed === true, holdLine: gpmFrontlineTracePoints(plan.holdLine),
       holdLineUnavailable: plan.holdLineUnavailable === true, resumeRequired: plan.resumeRequired === true,
-      routeBlocked: plan.routeBlocked === true || !!candidate && !arrow,
+      routeBlocked,
       requestedDay: Number.isSafeInteger(plan.requestedDay) ? plan.requestedDay : null,
       revision: Number.isSafeInteger(plan.revision) ? plan.revision : 0,
       ...(parent ? {} : { name: typeof plan.name === "string" ? plan.name.slice(0, 80).trim() : null,
@@ -116,10 +117,32 @@ function gpmFrontlineRoute(points, location) {
   let total = 0;
   for (let i = 1; i < points.length; i++) {
     const point = VK(points[i - 1], points[i], location, Infinity);
-    if (point && point.distanceKm < nearest.distanceKm) nearest = { distanceKm: point.distanceKm, alongKm: total + point.alongKm };
+    if (point && point.distanceKm < nearest.distanceKm) nearest = {
+      distanceKm: point.distanceKm, alongKm: total + point.alongKm, position: point.ll, segmentEnd: i,
+    };
     total += qi(points[i - 1], points[i]);
   }
   return { ...nearest, total };
+}
+
+function gpmFrontlineDisplayArrow(sim, war, arrow, line) {
+  if (arrow.length < 2 || !line?.length) return null;
+  // Match the route to this army's live sector. Its midpoint selects the local
+  // approach when a winding route passes near more than one part of the line.
+  const approach = gpmFrontlineRoute(arrow, gpmFrontlineMidpoint(line));
+  const origin = gpmFrontlineRoute(line, approach.position).position;
+  if (qi(origin, arrow[0]) < .01) return null;
+  const progress = gpmFrontlineRoute(arrow, origin);
+  const remaining = arrow.slice(progress.segmentEnd);
+  if (remaining.length > 1 && qi(origin, remaining[0]) < .01) remaining.shift();
+  if (progress.distanceKm < .01) return [origin, ...remaining];
+  // Keep land-routed orders clear of water when the new front moves off the
+  // planned route. A short bend can reconnect to its original approach.
+  const field = war.field?.terrain ? war.field : null;
+  if (gpmFrontlineLandStroke(sim, field, [origin, remaining[0]])) return [origin, ...remaining];
+  if (!gpmFrontlineLandStroke(sim, field, [origin, progress.position])) return null;
+  if (qi(progress.position, remaining[0]) >= .01) remaining.unshift(progress.position);
+  return [origin, ...remaining];
 }
 
 function gpmFrontlineStations(war) {
@@ -288,6 +311,7 @@ function gpmFrontlineChange(sim, country, input, operation) {
   } else {
     war.gpmFrontline = record ? plans.map(item => item === record ? plan : item) : [...plans, plan];
   }
+  if (record) war._gpmFrontlineLiveLines?.delete(record.id);
   if (wasActive && !wholeArmy) gpmFrontlineClearOrders(sim, record);
   if (operation === "mode" && record.mode === "hold") {
     for (const id of record.formationIds) {
@@ -357,12 +381,14 @@ function gpmFrontlineView(sim, input) {
       const { owner: countryKey, ...summary } = plan;
       const army = gpmFrontlineArmyRoot(plans, plan);
       const slots = war.frontSlots?.[side];
-      const positions = active.includes(plan) ? plan.formationIds.map(id => slots?.[id]?.ll).filter(_Q) : [];
+      const activePlan = active.includes(plan);
+      const positions = activePlan ? plan.formationIds.map(id => slots?.[id]?.ll).filter(_Q) : [];
       const tracked = (Object.is(war._gpmFrontlineLiveLineGeneration, war.field?._gen) && war._gpmFrontlineLiveLines?.get(plan.id)) ||
         gpmFrontlineTrackedLine(war, plan, positions);
+      const displayArrow = !plan.completed && activePlan && gpmFrontlineDisplayArrow(sim, war, plan.arrow, tracked);
       return { ...summary, armyId: army.id, name: army.name, slot: army.slot, generalId: army.generalId,
         arrow: plan.completed ? [] : plan.arrow, status: gpmFrontlinePlanState(sim, war, plan),
-        liveLine: tracked || [],
+        liveLine: tracked || [], ...(displayArrow ? { displayArrow } : {}),
         reason: plan.routeBlocked ? "no_land_route" : plan.line.length && !tracked?.length ? "no_connected_front" : null };
     }) };
 }
@@ -454,6 +480,9 @@ function gpmFrontlineReanchorSuccessor(sim, war, previous, successor) {
   if (!previous.holdLine || previous.holdLineUnavailable) return;
   successor.line = previous.holdLine.map(point => point.slice());
   if (!successor.arrow.length) return;
+  // An allied advance can secure the next objective before this stage activates.
+  if (successor.mode === "advance" &&
+      gpmFrontlineObjectiveState(sim, war, successor.owner, successor.arrow, successor.objectiveProvinceKey).controlled) return;
   const adjusted = gpmFrontlineCanonicalArrow(sim, war, successor.owner, successor.arrow, successor.line, successor.objectiveProvinceKey);
   if (adjusted.ok) {
     successor.arrow = adjusted.arrow;
@@ -461,7 +490,6 @@ function gpmFrontlineReanchorSuccessor(sim, war, previous, successor) {
     return;
   }
   successor.arrow = [];
-  successor.objectiveProvinceKey = null;
   successor.mode = "hold";
   successor.routeBlocked = true;
 }
