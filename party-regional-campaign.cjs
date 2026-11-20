@@ -341,6 +341,18 @@ function partyCampaignChamberRules(chamber) {
   };
 }
 
+function gpmWithPromisePreviewInfrastructure(sim, infrastructure, preview) {
+  if (sim == null || typeof sim !== "object") return preview();
+  const previous = gpmPromisePreviewInfrastructure.get(sim);
+  gpmPromisePreviewInfrastructure.set(sim, infrastructure);
+  try {
+    return preview();
+  } finally {
+    if (previous) gpmPromisePreviewInfrastructure.set(sim, previous);
+    else gpmPromisePreviewInfrastructure.delete(sim);
+  }
+}
+
 function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints = 0, { day, base, projectedPolity, local = false } = {}) {
   const contest = lt(country)?.contests?.[contestId];
   const party = AL(country, partyId);
@@ -350,14 +362,24 @@ function partyCampaignForecast(sim, country, partyId, contestId, proposedPoints 
   const campaign = active?.electionDay === contest.nextDay && (active.kind || "presidential") === context.kind ? active : null;
   const score = campaign?.score || 0;
   const nextScore = Fn(Au(score + proposedPoints, 0, 50));
-  const effectiveOffset = B4o(sim, country, party, campaign) + ((party.organization.credibility ?? .5) - .5) * 12;
+  // Both estimates use the same live promises. Keep this cache inside the forecast.
+  const promiseEffects = new Map();
+  const infrastructure = { plantSites: null, commitments: new WeakMap() };
+  const promiseEffect = (member, activeCampaign) => {
+    const previous = promiseEffects.get(member);
+    if (previous && previous.campaign === activeCampaign) return previous.value;
+    const value = gpmWithPromisePreviewInfrastructure(sim, infrastructure, () => B4o(sim, country, member, activeCampaign));
+    promiseEffects.set(member, { campaign: activeCampaign, value });
+    return value;
+  };
+  const effectiveOffset = promiseEffect(party, campaign) + ((party.organization.credibility ?? .5) - .5) * 12;
   const polity = projectedPolity || country.pol;
   gpmBindCampaignPolity(sim, polity);
   const chamber = polity.chambers?.find(item => contest.targetOrganId === "chamber:" + item.id);
   const map = tD(sim, country);
   map.day = day ?? map.day;
   const estimate = score => {
-    const raw = LO(sim, country, context, { partyId, score, base });
+    const raw = LO(sim, country, context, { partyId, score, base, promiseEffect });
     let eligible = g5(polity, raw);
     if (context.kind === "presidential") {
       if (!Object.keys(eligible).length) eligible = raw;
@@ -636,11 +658,12 @@ function advancePartyRegionalAI(sim, country, electionIn, contest = null, planne
 
 module.exports = {
   rules,
-  workerFunctions: ["const gpmRegionalAICache = new WeakMap();", partyRegionalProvince, partyUprisingProvinceEligible,
+  workerFunctions: ["const gpmRegionalAICache = new WeakMap();", "var gpmPromisePreviewInfrastructure = new WeakMap();",
+    partyRegionalProvince, partyUprisingProvinceEligible,
     partyRegionalRallyWeight, partyRegionalPresence, partyCampaignSmallPartyFactor,
     partyRegionalPermanentWeight, partyRegionalHeadquartersWeight, partyRegionalWeight,
     partyRegionalShares, partyRegionalNationalTotals, partyRegionalNormalize, partyRegionalNationalShares,
     partyRegionalQuote, partyRegionalQuoteToken, partyRegionalStart, partyRegionalProjectEligible, advancePartyRegionalCampaign, partyRegionalReceipt, registerPartyRegionalCampaign,
-    partyCampaignChamberRules, partyCampaignForecast, partyCampaignSpendPreview, partyAssignedActivists,
+    partyCampaignChamberRules, gpmWithPromisePreviewInfrastructure, partyCampaignForecast, partyCampaignSpendPreview, partyAssignedActivists,
     partyRegionalNationalForecast, partyRegionalProjectProjection, partyRegionalBreakdown, partyRegionalCampaignView, advancePartyRegionalAI],
 };

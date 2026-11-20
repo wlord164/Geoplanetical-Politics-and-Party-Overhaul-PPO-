@@ -841,7 +841,18 @@ function patchWorker(bytes) {
   // Regional seat rules use the adjusted local shares. National rules use their population-weighted change.
   js = replaceOnce(js, 'function LO(e,t,a=null){let r=a?.kind||null', 'function LO(e,t,a=null,gpmForecast=null){let r=a?.kind||null');
   js = replaceOnce(js, 'd=u&&c.score||0,p=r6t(l,d,B4o(e,t,l,u?c:null));',
-    'd=gpmForecast?.partyId===l.id?gpmForecast.score:u&&c.score||0,p=r6t(gpmForecast?.base?{...l,support:gpmForecast.base[l.id]??l.support}:l,d,B4o(e,t,l,u?c:null));');
+    'd=gpmForecast?.partyId===l.id?gpmForecast.score:u&&c.score||0,p=r6t(gpmForecast?.base?{...l,support:gpmForecast.base[l.id]??l.support}:l,d,gpmForecast?.promiseEffect?.(l,u?c:null)??B4o(e,t,l,u?c:null));');
+  // Native energy promise previews read the same infrastructure totals for each party.
+  js = replaceOnce(js, "function y0e(e){let t=new Map,a=(r,o)=>",
+    "function y0e(e){const gpmPreview=gpmPromisePreviewInfrastructure?.get(e);if(gpmPreview?.plantSites)return gpmPreview.plantSites;let t=new Map,a=(r,o)=>");
+  js = replaceOnce(js, "a(r.provKey,r.src).pendingGW+=Math.max(0,r.gw||0));return t}",
+    "a(r.provKey,r.src).pendingGW+=Math.max(0,r.gw||0));if(gpmPreview)gpmPreview.plantSites=t;return t}");
+  js = replaceOnce(js, "function Jzr(e,t){let a=e.finance",
+    "function Jzr(e,t){const gpmCommitments=gpmPromisePreviewInfrastructure?.get(e)?.commitments;" +
+    "if(gpmCommitments?.has(t))return gpmCommitments.get(t);let a=e.finance");
+  js = replaceOnce(js, "return{committedMonthlyBn:V(o),payableBn:r.get(a)||0}}",
+    'const gpmResult={committedMonthlyBn:V(o),payableBn:r.get(a)||0};' +
+    'if(gpmCommitments&&t&&typeof t==="object")gpmCommitments.set(t,gpmResult);return gpmResult}');
   js = replaceOnce(js, 'let l=WO(t,i,e.day||0,o.contestId||null);return m3e(e,t,a,l,o)',
     'let l=WO(t,i,e.day||0,o.contestId||null);return partyCampaignSpendPreview(e,t,a,l,o)');
   js = replaceOnce(js, 'if(s.transfer)return dao(s,t,a,{rulingId:r,rig:mAe(e,o),polity:n,electoralMap:i});let l={},c=0;',
