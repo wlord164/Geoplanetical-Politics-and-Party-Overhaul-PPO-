@@ -310,6 +310,9 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
     'const flag=iy(t);return` data-flag="${t}"${gpmHistoricalFlagLabel(flag)}`+HPe(flag)');
   patched = replaceOnce(patched, 'function Pc(e){',
     'function gpmHistoricalFlagLabel(flag){return flag?.label?` role="img" aria-label="${b(flag.label)}" title="${b(flag.label)}"`:""}function Pc(e){');
+  patched = replaceOnce(patched,
+    'l.setAttribute("data-flag",(e.__a2||"").toLowerCase()),l.style.backgroundColor=e.__dotColor;let c=Mi(e.__a2);l.style.backgroundImage=c?`url("${c}")`:"",T2(K("btn-start"),c);',
+    'l.setAttribute("data-flag",(e.__a2||"").toLowerCase());let c=iy(e.__a2);Pk(l,c);if(!c)l.style.backgroundColor=e.__dotColor;T2(K("btn-start"),c?.url||null);');
   return replaceOnce(patched, 'let n=Au(e);return`<span class="flag ${a||""}" data-flag="${n}"${HPe(iy(n),',
     'let n=Au(e);const flag=iy(n);return`<span class="flag ${a||""}" data-flag="${n}"${gpmHistoricalFlagLabel(flag)}${HPe(flag,');
 }

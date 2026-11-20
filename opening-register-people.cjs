@@ -1,6 +1,7 @@
 "use strict";
 
 const governmentRegister = require("./opening-register-government.json");
+const { readCatalog } = require("./historical-conflicts.cjs");
 
 function gpmApplyOpeningPersonIdentity(person, identityId) {
   const identity = gpmRegisterPersonData.people[identityId];
@@ -311,6 +312,68 @@ function gpmOpeningRepresentativeCards(view) {
     </div>`).join("")}</div></section>`;
 }
 
+function openingSetupGovernments() {
+  const { actors, conflicts } = readCatalog();
+  const entries = {};
+  const addLeader = (countryKey, actorId, governmentLeads = false) => {
+    const identities = actors[actorId]?.identity;
+    if (!identities) return;
+    const office = governmentLeads && identities.headOfGovernment ? "headOfGovernment" :
+      identities.headOfState ? "headOfState" : "leader";
+    const person = identities[office];
+    if (person) entries[countryKey] = { name: person.name, gpmHistoricalPerson: `${actorId}:${office}` };
+  };
+  for (const { native, openingGovernment, sides } of conflicts) {
+    if (openingGovernment) {
+      const { actorId, regime, reform } = openingGovernment;
+      const parliamentary = regime === "parliamentary_republic" || regime === "federal_parliamentary";
+      const governmentLeads = (reform?.ceremonial ?? parliamentary) && reform?.headGovExists !== 0;
+      addLeader(`gpm-historical-${actorId}`, actorId, governmentLeads);
+    } else if (native) {
+      addLeader(native.parentKey, native.parentActorId || sides[0][0]);
+      addLeader(`gpm-historical-${native.actorId}`, native.actorId);
+    }
+  }
+  return entries;
+}
+
+function gpmOpeningSetupIdentity(countryKey, organs, sovereignKey) {
+  const historical = gpmOpeningSetupGovernments[countryKey];
+  if (historical) return historical;
+  const offices = gpmOpeningSetupOffices[countryKey];
+  if (!offices?.length || !organs) return null;
+  const resolve = role => {
+    while (organs[role]?.ref) role = organs[role].ref;
+    return organs[role] ? role : null;
+  };
+  const state = resolve("head_of_state");
+  const originalGovernment = resolve("head_of_gov");
+  const inheritsHeadOfState = !!sovereignKey && sovereignKey !== countryKey;
+  // A sovereign supplies a ceremonial head of state, with a separate domestic government.
+  const government = inheritsHeadOfState && state && originalGovernment === state ? "head_of_gov" : originalGovernment;
+  const principal = state && !inheritsHeadOfState && !organs[state].ceremonial ? state : government || state;
+  const target = offices.find(([role]) => {
+    const office = role === "head_of_gov" ? government : resolve(role);
+    return (office || (role === "council_chair" ? principal : null)) === principal;
+  });
+  if (!target) return null;
+  return { name: target[2], gpmHistoricalPerson: target[1] };
+}
+
+function gpmRenderOpeningSetupLeader(row, countryKey, organs, sovereignKey, generated) {
+  const opening = gpmOpeningSetupIdentity(countryKey, organs, sovereignKey);
+  if (!opening && !generated?.playAs) {
+    row.classList.add("hidden");
+    return;
+  }
+  const person = opening ? { ...generated?.portrait, ...opening } : generated.portrait;
+  const role = gpmHistoricalPeople[opening?.gpmHistoricalPerson]?.role;
+  row.classList.remove("hidden");
+  K("card-leader-ic").innerHTML = xr(person, 2026, { size: "sm" });
+  K("card-leader-name").textContent = opening?.name || Dt(person);
+  K("card-leader-role").textContent = role || o(`role.${generated?.roleToken || "president"}${generated?.g === "f" ? ".f" : ""}`);
+}
+
 function openingPeopleData(data) {
   const people = Object.fromEntries(Object.entries({ ...data.people, ...governmentRegister.people }).map(([id, person]) =>
     [id, { name: person.name, role: person.executiveRole?.role || person.role, biography: person.biography }]));
@@ -377,6 +440,9 @@ function patchRegisterPeopleWorker(source, replaceOnce, data) {
 
 function patchRegisterPeopleRenderer(source, replaceOnce, data) {
   const partyCard = 'function pm(e,t,a,n=""){';
+  const previewData = openingPeopleData(data);
+  const setupOffices = Object.fromEntries(Object.entries(previewData.countries).map(([key, { executive }]) =>
+    [key, executive.map(([role, id]) => [role, id, previewData.people[id].name])]));
   const roles = {};
   for (const [id, person] of Object.entries({ ...data.people, ...governmentRegister.people })) {
     const label = person.role?.split(/ · |\. /u, 1)[0]
@@ -386,9 +452,17 @@ function patchRegisterPeopleRenderer(source, replaceOnce, data) {
   const patched = replaceOnce(source, partyCard,
     `const gpmOpeningRegisterPartyIndexes = new WeakMap();\n` +
     `const gpmOpeningRegisterRoles = ${JSON.stringify(roles)};\n` +
+    `const gpmOpeningSetupOffices = ${JSON.stringify(setupOffices)};\n` +
+    `const gpmOpeningSetupGovernments = ${JSON.stringify(openingSetupGovernments())};\n` +
+    `${gpmOpeningSetupIdentity}\n${gpmRenderOpeningSetupLeader}\n` +
     `${gpmOpeningRegisterPartyCards}\n${gpmOpeningRegisterGovernmentCards}\n${gpmOpeningRepresentativeCards}\n${partyCard}`);
+  const setupPreview = 'return Object.freeze({countryKey:String(e.key),governmentPartyId:s,parties:';
+  const setupLeader = 'let d=K("card-leader"),p=qB(e.__key,i,_h(e.__key));p&&p.playAs?(d.classList.remove("hidden"),K("card-leader-ic").innerHTML=xr(p.portrait,2026,{size:"sm"}),K("card-leader-name").textContent=Dt(p.portrait),K("card-leader-role").textContent=o(`role.${p.roleToken}${p.g==="f"?".f":""}`)):d.classList.add("hidden")';
+  const withSetup = replaceOnce(replaceOnce(patched, setupPreview,
+    'return Object.freeze({countryKey:String(e.key),gpmOpeningOrgans:t.constitution.organs,governmentPartyId:s,parties:'), setupLeader,
+    'gpmRenderOpeningSetupLeader(K("card-leader"),e.__key,this._suPreview?.gpmOpeningOrgans,e.__sovereign,qB(e.__key,i,_h(e.__key)))');
   const partyBench = 'g=(e.player.partyBench?.[i.id]||[]).slice(0,2).map(v=>e.people.get(v)).filter(Boolean).map(v=>pm(e,v,"","")).join("")';
-  const withCards = replaceOnce(patched, partyBench, "g=gpmOpeningRegisterPartyCards(e,i)");
+  const withCards = replaceOnce(withSetup, partyBench, "g=gpmOpeningRegisterPartyCards(e,i)");
   const government = '${h&&h.id!==g?pm(t,h,o("role."+DK(a.constitution)+(h.g==="f"?".f":""))):""}';
   let withGovernment = replaceOnce(withCards, government, government + '${gpmOpeningRegisterGovernmentCards(t)}');
   const cabinet = '${pFe(this,t,s)}';
