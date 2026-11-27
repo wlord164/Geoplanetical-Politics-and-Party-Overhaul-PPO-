@@ -151,7 +151,7 @@ function gpmOpeningVacancyHtml(chamber) {
 
 function gpmAssemblyPartyName(party) {
   if (!party || gpmOpeningNonparty(party)) return "";
-  const name = ba(party);
+  const name = Sa(party);
   return /^(?:other(?: parties)?|others|miscellaneous|independents?|non[- ]affiliated)$/i.test(name.trim()) ? "" : name;
 }
 
@@ -182,37 +182,38 @@ function seedDeclaration() {
 }
 
 function patchOpeningRegisterRenderer(source, replaceOnce) {
-  const setup = "function Sse(e,t=2026){";
+  const setup = "function Cpe(e,t=2026){";
   let js = replaceOnce(source, setup, seedDeclaration() + setup);
-  js = replaceOnce(js, "t_t(a,i),xIe(i,CIe(a))",
-    "t_t(a,i),xIe(i,CIe(a)),gpmOpeningRegisterPreset(a,i,RIe,{culture:ld(a),baseSeed:_h(a)})");
-  js = replaceOnce(js, "if(e?.nameDesc?.customName)return e.nameDesc.customName;let a=t&&e?.id?N9(",
-    "if(e?.nameDesc?.customName)return e.nameDesc.customName;if(e?.nameDesc?.gpmOpeningName)return e.nameDesc.gpmOpeningName;let a=t&&e?.id?N9(");
-  js = replaceOnce(js, "gpmTag:i?N9(", "gpmTag:r.nameDesc?.gpmOpeningTag||(i?N9(");
+  js = replaceOnce(js, "T$t(a,i),CFe(i,NFe(a))",
+    "T$t(a,i),CFe(i,NFe(a)),gpmOpeningRegisterPreset(a,i,EFe,{culture:t0(a),baseSeed:Bf(a)})");
+  js = replaceOnce(js, "if(e?.nameDesc?.customName)return e.nameDesc.customName;let a=t&&e?.id?XS(",
+    "if(e?.nameDesc?.customName)return e.nameDesc.customName;if(e?.nameDesc?.gpmOpeningName)return e.nameDesc.gpmOpeningName;let a=t&&e?.id?XS(");
+  js = replaceOnce(js, "gpmTag:i?XS(", "gpmTag:r.nameDesc?.gpmOpeningTag||(i?XS(");
   js = replaceOnce(js, "?.tag:null);s&&n.add(s)", "?.tag:null));s&&n.add(s)");
-  js = replaceOnce(js, "gpmTag:s?.tag)||Obt(l,n)", "gpmTag:r.nameDesc?.gpmOpeningTag||s?.tag)||Obt(l,n)");
+  js = replaceOnce(js, "gpmTag:s?.tag)||pNt(l,n)", "gpmTag:r.nameDesc?.gpmOpeningTag||s?.tag)||pNt(l,n)");
   const chooseParty = "u=c.filter(d=>!d.isGovernmentLead).sort(";
   js = replaceOnce(js, chooseParty, "u=c.filter(d=>!d.isGovernmentLead&&!gpmOpeningNonparty(d)).sort(");
-  const coalition = "i=Object.entries(n).sort((h,f)=>f[1]-h[1]),s=a&&n[a]?a:i.length?i[0][0]:Wj(e)";
+  const coalition = "i=Object.entries(n).sort((h,f)=>f[1]-h[1]),s=a&&n[a]?a:i.length?i[0][0]:mV(e)";
   js = replaceOnce(js, coalition,
     "gpmEligible=gpmOpeningGoverningParties(e.parties),gpmIds=new Set(gpmEligible.map(p=>p.id))," +
-    "i=Object.entries(n).filter(([id])=>gpmIds.has(id)).sort((h,f)=>f[1]-h[1]),s=a&&n[a]&&gpmIds.has(a)?a:i.length?i[0][0]:Wj(e)");
+    "i=Object.entries(n).filter(([id])=>gpmIds.has(id)).sort((h,f)=>f[1]-h[1]),s=a&&n[a]&&gpmIds.has(a)?a:i.length?i[0][0]:mV(e)");
   js = replaceOnce(js, "p=e.parties.filter(h=>h.id!==s&&(n[h.id]||0)>0)", "p=gpmEligible.filter(h=>h.id!==s&&(n[h.id]||0)>0)");
-  const partyGrid = "function fFe(e,t){";
+  const partyGrid = "function WQe(e,t){";
   js = replaceOnce(js, partyGrid, gpmOpeningVacancyHtml + "\n" + gpmAssemblyPartyName + "\n" + gpmOpenAssemblyParty + "\n" + partyGrid);
   js = replaceOnce(js, "coalition:c||[],held:u",
     "coalition:c||[],held:u,assemblyNamesOnly:true,showCoalition:!!c||u!=null");
   js = replaceOnce(js,
-    '${o("pol.absoluteMajority")} : <b>${R}</b> \\xB7 ${o("pol.coalition")} : <b>${M}</b>',
-    '${o("pol.absoluteMajority")} : <b>${R}</b>${a.showCoalition===false?"":` · ${o("pol.coalition")} : <b>${M}</b>`}');
-  js = replaceOnce(js, 'for(let L of c){let I=Pl(i(L)),A=r.has(L)?" gov":"";',
-    'for(let L of c){let gpmName=a.assemblyNamesOnly?gpmAssemblyPartyName(i(L)):"",I=a.assemblyNamesOnly&&!gpmName?"#657383":Pl(i(L)),A=r.has(L)?" gov":"";');
-  js = replaceOnce(js, 'r="${k.toFixed(1)}" fill="${I}"/>',
-    'r="${k.toFixed(1)}" fill="${I}"${gpmName?` data-gpm-assembly-party="${b(L)}" style="cursor:pointer"`:""}>${gpmName?`<title>${b(gpmName)}</title>`:""}</circle>');
-  js = replaceOnce(js, "let C=c.slice().sort((L,I)=>e[I]-e[L]).map(", 'let C=a.assemblyNamesOnly?"":c.slice().sort((L,I)=>e[I]-e[L]).map(');
-  js = replaceOnce(js, '<div class="hc-legend">${C}</div>${E}</div>', '${a.assemblyNamesOnly?"":`<div class="hc-legend">${C}</div>`}${E}</div>');
-  js = replaceOnce(js, 'this._wireHemicycle(e),this._wireParl(e),',
-    'this._wireHemicycle(e),e.querySelector(".pa-panel")?.addEventListener("click",event=>gpmOpenAssemblyParty(event,e)),this._wireParl(e),');
+    '${o("pol.absoluteMajority")} : <b>${d}</b> \\xB7 ${o("pol.coalition")} : <b>${p}</b>',
+    '${o("pol.absoluteMajority")} : <b>${d}</b>${a.showCoalition===false?"":` · ${o("pol.coalition")} : <b>${p}</b>`}');
+  // The new chart draws a single native SVG path per party, including at large seat counts.
+  js = replaceOnce(js, 'let u=iN(c.map(f=>({id:f,seats:e[f],color:ol(i(f)),label:`${s(f)} \\xB7 ${o("pol.seats.n",{n:e[f]})}`})))',
+    'let u=iN(c.map(f=>{const name=a.assemblyNamesOnly?gpmAssemblyPartyName(i(f)):"";return{id:f,seats:e[f],color:a.assemblyNamesOnly&&!name?"#657383":ol(i(f)),assemblyParty:!!name,label:a.assemblyNamesOnly?name:`${s(f)} \\xB7 ${o("pol.seats.n",{n:e[f]})}`}}))');
+  js = replaceOnce(js, 'data-pty="${b(h.id)}" stroke-width=',
+    'data-pty="${b(h.id)}"${h.assemblyParty?` data-gpm-assembly-party="${b(h.id)}"`:""} stroke-width=');
+  js = replaceOnce(js, "let m=c.slice().sort((f,g)=>e[g]-e[f]).map(", 'let m=a.assemblyNamesOnly?"":c.slice().sort((f,g)=>e[g]-e[f]).map(');
+  js = replaceOnce(js, '<div class="hc-legend">${m}</div></div>', '${a.assemblyNamesOnly?"":`<div class="hc-legend">${m}</div>`}</div>');
+  js = replaceOnce(js, 'this._wireHemicycle(e),e.querySelector("[data-snap-seats]").addEventListener',
+    'this._wireHemicycle(e),e.querySelector(".pa-panel")?.addEventListener("click",event=>gpmOpenAssemblyParty(event,e)),e.querySelector("[data-snap-seats]").addEventListener');
   js = replaceOnce(js, "n=a.parties.filter(i=>i.legal!==!1).sort(", "n=a.parties.filter(i=>i.legal!==!1&&gpmAssemblyPartyName(i)).sort(");
   js = replaceOnce(js, "u=t[i.id]||0,d=Number.isFinite(i.support)?",
     "gpmChambers=a.chambers.filter(chamber=>chamber.composition?.[i.id]>0)," +
@@ -223,17 +224,17 @@ function patchOpeningRegisterRenderer(source, replaceOnce) {
     '<summary style="grid-template-columns:minmax(0,1fr) 54px auto"><span class="sh-idline pa-identity"><span class="pa-party-tag"');
   js = replaceOnce(js, '<span class="pa-party-tag" style="--pa-color:${s}">${b(y||"")}</span>',
     '<span aria-hidden="true" style="width:.65em;height:.65em;flex:0 0 .65em;border-radius:50%;background:${s}"></span>');
-  js = replaceOnce(js, '<span><b>${b(ba(i))}</b><small data-tip="${b(o("pol.party.roleTip."+l))}">${o("pol.role."+l)}</small></span>',
+  js = replaceOnce(js, '<span><b>${b(Sa(i))}</b><small data-tip="${b(o("pol.party.roleTip."+l))}">${o("pol.role."+l)}</small></span>',
     '<span><b>${b(gpmAssemblyPartyName(i))}</b></span>');
   js = replaceOnce(js, '<span class="pa-number"><b>${d}</b><small>${o("pol.party.support")}</small></span>',
     "");
   js = replaceOnce(js, '${h}</summary>\n      <div class="pa-party-body">', '</summary>\n      <div class="pa-party-body">${h}');
-  return replaceOnce(js, '>${s.seats} ${$C(s)}</span></h3>${d}</section>',
-    '>${s.seats} ${$C(s)}</span></h3>${d}${gpmOpeningVacancyHtml(s)}</section>');
+  return replaceOnce(js, '>${s.seats} ${IE(s)}</span></h3>${d}</section>',
+    '>${s.seats} ${IE(s)}</span></h3>${d}${gpmOpeningVacancyHtml(s)}</section>');
 }
 
 function patchOpeningRegisterWorker(source, replaceOnce) {
-  const setup = "function gFa(e,t=2026){";
+  const setup = "function lEa(e,t=2026){";
   const independents = Object.values(data.countries).flatMap(country =>
     Object.values(country.chambers || {}).flatMap(chamber =>
       chamber.rows.filter(row => row.kind === "unaffiliated" && row.independentCandidate)
@@ -241,51 +242,51 @@ function patchOpeningRegisterWorker(source, replaceOnce) {
   let js = replaceOnce(source, setup,
     seedDeclaration() + "const gpmOpeningIndependentCandidates=new Set(" + JSON.stringify(independents) + ");\n" +
       gpmOpeningBallotEligible + "\n" + gpmOpeningBallotShares + "\n" + setup);
-  js = replaceOnce(js, "Xho(a,n),lga(n,yte(a))",
-    "Xho(a,n),lga(n,yte(a)),gpmOpeningRegisterPreset(a,n,cga,{culture:Js(a),baseSeed:Ma(a)})");
-  js = replaceOnce(js, 'i.seatsBasis==="reform"||K0(i)?.seats!=null',
-    '(i.seatsBasis==="reform"||i.seatsBasis==="opening-register")||K0(i)?.seats!=null');
-  js = replaceOnce(js, "parties:Object.freeze((a.pol?.parties||[]).map(i=>{let s=a.key===r.countryKey",
-    "parties:Object.freeze((a.pol?.parties||[]).filter(i=>gpmOpeningBallotEligible(i)||(a.key===r.countryKey&&i.id===r.partyId)).map(i=>{let s=a.key===r.countryKey");
-  js = replaceOnce(js, 'if(!o||o.gpmUprisingShell||o.gpmUprisingExcluded)return{ok:!1,reason:"party"};let n=Ho(e)',
-    'if(!o||o.gpmUprisingShell||o.gpmUprisingExcluded||!gpmOpeningBallotEligible(o))return{ok:!1,reason:"party"};let n=Ho(e)');
+  js = replaceOnce(js, "p$r(A,o),zFA(o,Lse(A))",
+    "p$r(A,o),zFA(o,Lse(A)),gpmOpeningRegisterPreset(A,o,VFA,{culture:bs(A),baseSeed:qA(A)})");
+  js = replaceOnce(js, 'n.seatsBasis==="reform"||oc(n)?.seats!=null',
+    '(n.seatsBasis==="reform"||n.seatsBasis==="opening-register")||oc(n)?.seats!=null');
+  js = replaceOnce(js, "parties:Object.freeze((A.pol?.parties||[]).map(n=>{let i=A.key===a.countryKey",
+    "parties:Object.freeze((A.pol?.parties||[]).filter(n=>gpmOpeningBallotEligible(n)||(A.key===a.countryKey&&n.id===a.partyId)).map(n=>{let i=A.key===a.countryKey");
+  js = replaceOnce(js, 'if(!r||r.gpmUprisingShell||r.gpmUprisingExcluded)return{ok:!1,reason:"party"};let o=Qo(e)',
+    'if(!r||r.gpmUprisingShell||r.gpmUprisingExcluded||!gpmOpeningBallotEligible(r))return{ok:!1,reason:"party"};let o=Qo(e)');
   // Seat-ledger buckets can finish their current terms without entering a later ballot.
-  js = replaceOnce(js, "for(let n of t.pol.parties){let i=n.campaigns[o];",
-    "for(let n of t.pol.parties){if(!gpmOpeningBallotEligible(n))continue;let i=n.campaigns[o];");
-  js = replaceOnce(js, "for(let r of t.pol.parties){if(r.campaigns[a.id]?.electionDay===a.nextDay)",
-    "for(let r of t.pol.parties){if(!gpmOpeningBallotEligible(r)||r.campaigns[a.id]?.electionDay===a.nextDay)");
-  js = replaceOnce(js, "function WO(e,t,a,r=null){return Object.values(t?.campaigns||{})",
-    "function WO(e,t,a,r=null){if(!gpmOpeningBallotEligible(t))return null;return Object.values(t?.campaigns||{})");
-  js = replaceOnce(js, "for(let l of t.pol.parties){let c=o?l.campaigns?.[o]||null:WO(t,l,0)",
-    "for(let l of t.pol.parties){if(!gpmOpeningBallotEligible(l))continue;let c=o?l.campaigns?.[o]||null:WO(t,l,0)");
-  js = replaceOnce(js, "for(let i of t.pol?.parties||[]){let s=Math.max(0,a?.[i.id]||0)",
-    "for(let i of t.pol?.parties||[]){if(!gpmOpeningBallotEligible(i))continue;let s=Math.max(0,a?.[i.id]||0)");
-  js = replaceOnce(js, "i-s.day<Y4o)return s;let c=g5(",
-    "i-s.day<Y4o&&!t.pol.parties.some(p=>!gpmOpeningBallotEligible(p)&&Object.hasOwn(s.values||{},p.id)))return s;let c=g5(");
-  js = replaceOnce(js, "u=t.pol.parties.map(m=>{let f=WO(",
-    "u=t.pol.parties.filter(gpmOpeningBallotEligible).map(m=>{let f=WO(");
+  js = replaceOnce(js, "for(let o of t.pol.parties){let n=o.campaigns[r];",
+    "for(let o of t.pol.parties){if(!gpmOpeningBallotEligible(o))continue;let n=o.campaigns[r];");
+  js = replaceOnce(js, "for(let a of t.pol.parties){if(a.campaigns[A.id]?.electionDay===A.nextDay)",
+    "for(let a of t.pol.parties){if(!gpmOpeningBallotEligible(a)||a.campaigns[A.id]?.electionDay===A.nextDay)");
+  js = replaceOnce(js, "function OI(e,t,A,a=null){return Object.values(t?.campaigns||{})",
+    "function OI(e,t,A,a=null){if(!gpmOpeningBallotEligible(t))return null;return Object.values(t?.campaigns||{})");
+  js = replaceOnce(js, "for(let s of t.pol.parties){let l=r?s.campaigns?.[r]||null:OI(t,s,0)",
+    "for(let s of t.pol.parties){if(!gpmOpeningBallotEligible(s))continue;let l=r?s.campaigns?.[r]||null:OI(t,s,0)");
+  js = replaceOnce(js, "for(let n of t.pol?.parties||[]){let i=Math.max(0,A?.[n.id]||0)",
+    "for(let n of t.pol?.parties||[]){if(!gpmOpeningBallotEligible(n))continue;let i=Math.max(0,A?.[n.id]||0)");
+  js = replaceOnce(js, "n-i.day<ZYr)return i;let l=up(",
+    "n-i.day<ZYr&&!t.pol.parties.some(p=>!gpmOpeningBallotEligible(p)&&Object.hasOwn(i.values||{},p.id)))return i;let l=up(");
+  js = replaceOnce(js, "c=t.pol.parties.map(E=>{let B=OI(",
+    "c=t.pol.parties.filter(gpmOpeningBallotEligible).map(E=>{let B=OI(");
   // Regional allocation falls back to current support for omitted IDs. Restrict that electorate too.
-  js = replaceOnce(js, "shares:U6a(e.parties,m,{rulingIds:o,perf:n,sigma:i,partyPerf:s})",
-    "shares:U6a(a?e.parties.filter(gpmOpeningBallotEligible):e.parties,m,{rulingIds:o,perf:n,sigma:i,partyPerf:s})");
-  js = replaceOnce(js, "{rulingId:r,integrity:o=1,polity:n=null,electoralMap:i=null}={}){let s=G6a(e);",
-    "{rulingId:r,integrity:o=1,polity:n=null,electoralMap:i=null}={}){" +
-      'if(n&&e.selectMode!=="appointed"&&e.selectMode!=="hereditary"){' +
-        "t=gpmOpeningBallotShares(n.parties,t);if(r&&n.parties.some(p=>p.id===r&&!gpmOpeningBallotEligible(p)))r=null;" +
-      "}let s=G6a(e);");
+  js = replaceOnce(js, "shares:PFA(e.parties,E,{rulingIds:r,perf:o,sigma:n,partyPerf:i})",
+    "shares:PFA(a?e.parties.filter(gpmOpeningBallotEligible):e.parties,E,{rulingIds:r,perf:o,sigma:n,partyPerf:i})");
+  js = replaceOnce(js, "{rulingId:a,integrity:r=1,polity:o=null,electoralMap:n=null}={}){let i=SFA(e);",
+    "{rulingId:a,integrity:r=1,polity:o=null,electoralMap:n=null}={}){" +
+      'if(o&&e.selectMode!=="appointed"&&e.selectMode!=="hereditary"){' +
+        "t=gpmOpeningBallotShares(o.parties,t);if(a&&o.parties.some(p=>p.id===a&&!gpmOpeningBallotEligible(p)))a=null;" +
+      "}let i=SFA(e);");
   // An election with no eligible party candidate must leave the existing officeholder in place.
-  js = replaceOnce(js, 'x,R;if(d==="electoral-college"){let ee=mho(e,t,C);',
-    'x,R;if(!M.length)return{ok:!1,reason:"winner_party_required"};' +
-    'if(d==="electoral-college"){let ee=mho(e,t,C,M.some(ee=>ee.id===s)?s:M[0].id);');
-  js = replaceOnce(js, "function mho(e,t,a){", "function mho(e,t,a,gpmFallback=Kt(t)){");
-  js = replaceOnce(js, "v=g?g.lead:Kt(t);c[h.__provId]", "v=g?.lead??gpmFallback;c[h.__provId]");
-  js = replaceOnce(js, "d[0].id:f.id:Kt(t),evByParty:u", "d[0].id:f.id:gpmFallback,evByParty:u");
-  js = replaceOnce(js, "F={};for(let ee of r.parties){let J=U(ee.id);",
-    "F={};for(let ee of r.parties){if(!gpmOpeningBallotEligible(ee))continue;let J=U(ee.id);");
-  const coalition = "n=Object.entries(r).sort((m,f)=>f[1]-m[1]),i=a&&r[a]?a:n.length?n[0][0]:SC(e)";
+  js = replaceOnce(js, 'R,P;if(u==="electoral-college"){let te=PXr(e,t,w);',
+    'R,P;if(!M.length)return{ok:!1,reason:"winner_party_required"};' +
+    'if(u==="electoral-college"){let te=PXr(e,t,w,M.some(te=>te.id===s)?s:M[0].id);');
+  js = replaceOnce(js, "function PXr(e,t,A){", "function PXr(e,t,A,gpmFallback=Ut(t)){");
+  js = replaceOnce(js, "f=m?m.lead:Ut(t);l[Q.__provId]", "f=m?.lead??gpmFallback;l[Q.__provId]");
+  js = replaceOnce(js, "u[0].id:B.id:Ut(t),evByParty:c", "u[0].id:B.id:gpmFallback,evByParty:c");
+  js = replaceOnce(js, "L={};for(let te of a.parties){let G=O(te.id);",
+    "L={};for(let te of a.parties){if(!gpmOpeningBallotEligible(te))continue;let G=O(te.id);");
+  const coalition = "o=Object.entries(a).sort((E,B)=>B[1]-E[1]),n=A&&a[A]?A:o.length?o[0][0]:hk(e)";
   js = replaceOnce(js, coalition,
     "gpmEligible=gpmOpeningGoverningParties(e.parties),gpmIds=new Set(gpmEligible.map(p=>p.id))," +
-    "n=Object.entries(r).filter(([id])=>gpmIds.has(id)).sort((m,f)=>f[1]-m[1]),i=a&&r[a]&&gpmIds.has(a)?a:n.length?n[0][0]:SC(e)");
-  js = replaceOnce(js, "d=e.parties.filter(m=>m.id!==i&&(r[m.id]||0)>0)", "d=gpmEligible.filter(m=>m.id!==i&&(r[m.id]||0)>0)");
+    "o=Object.entries(a).filter(([id])=>gpmIds.has(id)).sort((E,B)=>B[1]-E[1]),n=A&&a[A]&&gpmIds.has(A)?A:o.length?o[0][0]:hk(e)");
+  js = replaceOnce(js, "u=e.parties.filter(E=>E.id!==n&&(a[E.id]||0)>0)", "u=gpmEligible.filter(E=>E.id!==n&&(a[E.id]||0)>0)");
   return replaceOnce(js, "gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:",
     "gpmTag:e.nameDesc.gpmTag||null,gpmOpeningName:e.nameDesc.gpmOpeningName||null,gpmOpeningTag:e.nameDesc.gpmOpeningTag||null,gpmOpeningKind:e.nameDesc.gpmOpeningKind||null,gpmOpeningIdeology:e.nameDesc.gpmOpeningIdeology||null,gpmOpeningIdeologySource:e.nameDesc.gpmOpeningIdeologySource||null,gpmIdeologyPreset:");
 }

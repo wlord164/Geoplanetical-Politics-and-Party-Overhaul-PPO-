@@ -33,7 +33,7 @@ function gpmHistoricalClimateProvinceMap(world, source) {
     if (!children) continue;
     const lon = (index % width + 0.5) * 360 / width - 180;
     const lat = (Math.floor(index / width) + 0.5) * 180 / height - 90;
-    const child = children.find(province => f4(province, lon, lat));
+    const child = children.find(province => Vm(province, lon, lat));
     if (child) raster.setUint16(offset, child.__provId + 1, true);
   }
   // The stock climate model samples the centroid for sub-grid provinces.

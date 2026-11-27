@@ -6,17 +6,23 @@ const { createHash } = require("node:crypto");
 const { execFileSync } = require("node:child_process");
 const { version, patchRenderer, patchWorker, sha256 } = require("./patch.cjs");
 const { withInstallerTransaction } = require("./installer-transaction.cjs");
-// Windows Steam depot 940231, manifest 4613876637531523744.
+// Windows Steam depot 940231, manifest 246297533406324981.
 const currentStock = {
   version,
-  build: 26784265,
+  build: 26971237,
+  archive: "4283d3d64e21aa2a8a09042039b96d3f5be2e8712a358cc6ec1e8920f858df7b",
+  payload: "1ac65b3ab0e4ccf98c9ab6ff2c10acc98cac68c269f441c901e84e5617d2bfe3",
+  executable: "03508c6f6ad804033bb15f7644c46e0dbb224554f29d72a9cba9fcc803e996ef",
+  worker: "346cb7a4d21cc9d9c963c8340a621acbb85e67e80400788a206d090ae74d8bc5",
+  renderer: "5bf93822d46c2a59bca6dfb382bfcbaa9dfdf775af60bbb05e1f998bc753decc",
+};
+const previousStock = [{
+  version: "1.1.6",
   archive: "37f3278a01385a9269669e30b05a848792791f1aaff4c61212db4974efe6e70e",
   payload: "2bb7f22a54945e789c24dcf66370b7831f7c736ea7d1675c7c33f7b05c442652",
   executable: "f1aaa8e2872b4a91ec2c6ed5f3dd86ae3181d71bd2a40b5c26a909c33a832fd7",
   worker: "88e16be58ec635a78681a3c94fcd50606426e36d030edbee36e66805eee65fa5",
-  renderer: "fb8bc4ff2b916fbd781af393f87a63120b6ee839c9bc8dc179a444ffb0373227",
-};
-const previousStock = [{
+}, {
   version: "1.1.5",
   archive: "fe485532947956a4e5ffc19a49725b04658c9343c5fc5439573eac1f4b7558ef",
   payload: "b1b2d2e8157c4ed8d894cde85e655e65be383daecee484e86666d7907f8a6d0e",
@@ -42,7 +48,7 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
-// An upgrade profile must use the same stock build as currentStock.
+// Earlier PPO profiles require original backups for the same stock build.
 const previousPpo = [
   {
     archive: "f08d9cab8fab638636c0014cf502e9caa7822b61f30177cd38375b7d58a71791",

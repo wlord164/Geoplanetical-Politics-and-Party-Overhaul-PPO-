@@ -71,14 +71,14 @@ function gpmRenderCampaignPlan() {
 
 function gpmDomesticMoney(value, signed = false) {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat(Ds(), {
+  return new Intl.NumberFormat(il(), {
     style: "currency", currency: "USD", maximumFractionDigits: 0, signDisplay: signed ? "exceptZero" : "auto",
   }).format(Math.round(value * 1e6));
 }
 
 function gpmDomesticContestLabel(contest, ui) {
   const key = contest?.chamberNameKey;
-  const name = key && Xe(key) ? o(key) : contest?.label || contest?.chamberName;
+  const name = key && Qe(key) ? o(key) : contest?.label || contest?.chamberName;
   const kind = contest?.kind === "presidential" ? "Executive election" : "Legislative election";
   return [name || kind, Number.isFinite(contest?.electionDay) && ui.gameDate(contest.electionDay)].filter(Boolean).join(" · ");
 }
@@ -89,13 +89,13 @@ function gpmDomesticAccount(state, ui) {
   const membership = data.membership;
   const details = (pairs, label) => `<div class="gpm-domestic-summary"><h4>${b(label)}</h4><dl>${pairs.map(([key, value]) =>
     `<div><dt>${b(key)}</dt><dd>${b(String(value))}</dd></div>`).join("")}</dl></div>`;
-  const counter = new Intl.NumberFormat(Ds(), { maximumFractionDigits: 0 });
+  const counter = new Intl.NumberFormat(il(), { maximumFractionDigits: 0 });
   return `<div class="gpm-domestic-grid">${details([
-    ["Treasury", gpmDomesticMoney(data.cashM)], ["Activists available", Number.isFinite(data.activistsK) ? fr(data.activistsK) : "—"],
+    ["Treasury", gpmDomesticMoney(data.cashM)], ["Activists available", Number.isFinite(data.activistsK) ? qn(data.activistsK) : "—"],
     ["Influence", Number.isFinite(data.influence) ? counter.format(data.influence) : "—"],
     ["Spent this month", gpmDomesticMoney(data.monthlySpendM)],
   ], "Party resources")}${details([
-    ["Treasury", gpmDomesticMoney(reserve.cashM ?? 0)], ["Activists", fr(reserve.activistsK ?? 0)],
+    ["Treasury", gpmDomesticMoney(reserve.cashM ?? 0)], ["Activists", qn(reserve.activistsK ?? 0)],
     ["Influence", counter.format(reserve.influence ?? 0)],
   ], "Staff reserve")}${membership ? details([
     ["Members", Number.isFinite(membership.members) ? counter.format(membership.members) : "—"],
@@ -164,7 +164,7 @@ function gpmDomesticRecap(result, ui, state = {}) {
   const vote = result.voteShare ?? result.support ?? result.after?.support;
   const projectedSeats = result.projectedSeats ?? result.forecast?.seats;
   const key = result.chamberNameKey;
-  const chamber = key && Xe(key) ? o(key) : result.chamberName || result.label;
+  const chamber = key && Qe(key) ? o(key) : result.chamberName || result.label;
   const lines = [Number.isInteger(seats) && `${seats} ${seats === 1 ? "seat" : "seats"}` +
     (Number.isFinite(before) ? ` (${seats >= before ? "+" : ""}${seats - before})` : ""),
     Number.isFinite(vote) && `${gpmRegionalPercent(vote)} vote share`,
@@ -172,7 +172,7 @@ function gpmDomesticRecap(result, ui, state = {}) {
   ].filter(Boolean);
   if (!lines.length) return "";
   const rows = result.parties || [];
-  const names = new Map((state.view?.player?.pol?.parties || []).map(item => [item.id, ba(item)]));
+  const names = new Map((state.view?.player?.pol?.parties || []).map(item => [item.id, Sa(item)]));
   const table = rows.length ? `<details><summary>All party results</summary><table aria-label="Election results by party">
     <thead><tr><th scope="col">Party</th><th scope="col">Vote share</th><th scope="col">Seats</th><th scope="col">Change</th></tr></thead>
     <tbody>${rows.map(row => {
@@ -193,10 +193,10 @@ function gpmDomesticProjectRows(state, ui) {
   if (!projects.length) return "";
   return `<h4>Projects underway</h4><ul class="gpm-domestic-list">${projects.map(project => {
     const name = gpmRegionalActionName(project.kind) || "Party project";
-    const target = regions.get(project.key) || (project.kind === "meeting" && project.targetId ? jr(project.targetId) : "");
+    const target = regions.get(project.key) || (project.kind === "meeting" && project.targetId ? wr(project.targetId) : "");
     const duration = project.endDay - project.startDay;
     const details = [target, Number.isFinite(project.endDay) && `Due ${ui.gameDate(project.endDay)}`,
-      Number.isFinite(project.activistsK) && `${fr(project.activistsK)} activists assigned`];
+      Number.isFinite(project.activistsK) && `${qn(project.activistsK)} activists assigned`];
     return `<li><strong>${b(name)}</strong><small>${b(details.filter(Boolean).join(" · "))}</small>` +
       (Number.isFinite(project.startDay) && duration > 0 ? `<progress value="${Math.min(duration, Math.max(0, day - project.startDay))}" max="${duration}" aria-label="${b(name + " progress")}"></progress>` : "") + "</li>";
   }).join("")}</ul>`;
@@ -230,13 +230,13 @@ function gpmDomesticActivityTarget(state, ui, row) {
     const region = state.regions.find(item => item.key === target);
     return region ? gpmRegionalRegionName(region) : "";
   }
-  if (row.kind === "meeting" || row.kind === "outreach") return jr(target);
+  if (row.kind === "meeting" || row.kind === "outreach") return wr(target);
   if (row.kind === "movement") {
     const movement = state.view.party.organizing?.movements?.find(item => item.id === target);
     return movement ? o("domestic.demand." + movement.demandId) : "";
   }
-  if (row.kind.startsWith("agreement-")) return Jn(target);
-  if (row.kind.startsWith("foreign-funding-")) return bd(target, target);
+  if (row.kind.startsWith("agreement-")) return Gn(target);
+  if (row.kind.startsWith("foreign-funding-")) return u0(target, target);
   if (row.kind === "activists-returned") return gpmDomesticActivityLabel(target);
   return target;
 }
@@ -263,7 +263,7 @@ function gpmDomesticActivity(state, ui) {
   if (!ledger.length) return "<small>No party activity recorded yet.</small>";
   return `<ul class="gpm-domestic-list">${ledger.map(row => {
     const details = [Number.isFinite(row.day) && ui.gameDate(row.day), row.cashM && gpmDomesticMoney(row.cashM, true),
-      row.activistsK && `${row.activistsK > 0 ? "+" : ""}${fr(row.activistsK)} activists`,
+      row.activistsK && `${row.activistsK > 0 ? "+" : ""}${qn(row.activistsK)} activists`,
       row.influence && `${row.influence > 0 ? "+" : ""}${row.influence} influence`,
       gpmDomesticActivityTarget(state, ui, row)].filter(Boolean);
     const title = (row.staff === true ? "Staff · " : "") + gpmDomesticActivityLabel(row.kind);
@@ -299,13 +299,13 @@ function gpmDomesticSitroomRows(view, ui, recent = false) {
   return gpmDomesticAgendaEntries(view.gpmDomesticAgenda).filter(row =>
     recent === (row.status === "completed")).map(row => {
     const days = Number.isFinite(row.deadlineDay) ? Math.max(0, Math.ceil(row.deadlineDay - view.day)) : null;
-    const measure = days === null ? "" : Mc(days);
+    const measure = days === null ? "" : Vl(days);
     const date = recent && Number.isFinite(row.day) ? ui.gameDate(row.day) : "";
     const contest = row.kind === "vote" ? view.player?.pol?.contests?.[row.contestId] : null;
-    const title = contest ? Kbt(view, contest) : row.title;
+    const title = contest ? _Nt(view, contest) : row.title;
     return { id: `gpm-party:${row.kind}:${row.id}${recent ? ":" + row.day : ""}`, den: recent ? "registre" : "dossier", sort: days ?? 1e6,
       sev: days !== null && days <= 7 ? "important" : "routine", hand: recent ? "none" : "you",
-      title: `${Wo("gov")}${b(title)}`, meta: b(date), outcome: contest ? "Open Campaign Plan" : recent ? "" : row.status || "", measure,
+      title: `${Jo("gov")}${b(title)}`, meta: b(date), outcome: contest ? "Open Campaign Plan" : recent ? "" : row.status || "", measure,
       contestId: contest?.id, gauge: null, gaugeTone: null, route: gpmDomesticAgendaRoute(row),
       aria: [title, date, measure].filter(Boolean).join(" · ") };
   }).filter(row => !recent || !dismissed?.has(row.id));
@@ -432,7 +432,7 @@ async function gpmRunDomesticForecast(state, ui) {
       const request = state.forecastRequest;
       let result, error;
       try {
-        result = await Je(state.session, "gpm.partyCampaignPlanForecast", { contestId: request.id });
+        result = await Ze(state.session, "gpm.partyCampaignPlanForecast", { contestId: request.id });
         if (result?.contestId !== request.id) error = "An estimate is unavailable for this contest.";
       } catch {
         error = "Could not refresh the estimate. Try again.";
@@ -457,7 +457,7 @@ async function gpmSaveCampaignPlan(state, ui) {
   gpmPaintDomesticForm(state);
   try {
     const plan = state.draft;
-    const result = await Le(state.session, "applyPlayerAction", [{ ...state.actor, verb: "gpm.party.domestic.plan", partyId: state.partyId, plan }]);
+    const result = await De(state.session, "applyPlayerAction", [{ ...state.actor, verb: "gpm.party.domestic.plan", partyId: state.partyId, plan }]);
     if (ui._gpmCampaignPlanUi !== state || ui._mpSession !== state.session) return;
     if (!result?.ok) {
       state.status = ({ contest: "The target contest has changed. Choose another contest.",
@@ -512,7 +512,7 @@ function gpmBindCampaignPlan(profile, view, ui, refreshForecast = true) {
   const chambers = view.player?.pol?.chambers || [];
   state.contests = (data.contests || []).map(item => {
     const chamber = chambers.find(candidate => item.targetOrganId === `chamber:${candidate.id}`);
-    return chamber && !item.label ? { ...item, label: so(chamber) } : item;
+    return chamber && !item.label ? { ...item, label: Mi(chamber) } : item;
   });
   if (!state.dirty && !state.saving && (state.planSavedAt == null || state.planSavedAt < view.day)) state.draft = data.plan;
   const requested = ui._gpmDomesticOpen;
@@ -586,13 +586,13 @@ function patchPartyDomesticRenderer(js, replaceOnce) {
     '  if (view.party.agreement) tabs.push(["agreement", "Support Agreement", renderPartyAgreement(view, party, ui)]);\n  tabs.push(["laws", "Law Shortlist", gpmRenderPartyLaws()]);');
   js = replaceOnce(js, '    if (tab.id === "gpm-tab-regional")',
     '    if (tab.id === "gpm-tab-plan") gpmBindCampaignPlan(profile, view, ui);\n    if (tab.id === "gpm-tab-agreement") {\n      const party = view.player?.pol?.parties.find(item => item.id === view.party.agreement.partyId);\n      bindPartyAgreement(profile, view, party, ui);\n    }\n    if (tab.id === "gpm-tab-regional")');
-  js = replaceOnce(js, 'n.push(...FC(t));let r=eZe(t)',
-    'const gpmDeadlines=gpmDomesticSitroomRows(t,e);const gpmNearestContest=Hbt(t)?.contest?.id;' +
-    'n.push(...FC(t).filter(row=>row.id!=="elec"||!gpmNearestContest||!gpmDeadlines.some(entry=>entry.contestId===gpmNearestContest)),...gpmDeadlines);let r=eZe(t)');
-  js = replaceOnce(js, 'let p=tFt(this,a),m=nFt(this,a,l)',
-    'let p=[...gpmDomesticSitroomRows(a,this,true),...tFt(this,a)],m=nFt(this,a,l)');
-  js = replaceOnce(js, 'VYe(this._digest),this.refreshSitroom(this.sim);return',
-    'VYe(this._digest),gpmDismissDomesticRecent(this,nv(this.sim)),this.refreshSitroom(this.sim);return');
+  js = replaceOnce(js, 'n.push(...TE(t));let r=blt(t)',
+    'const gpmDeadlines=gpmDomesticSitroomRows(t,e);const gpmNearestContest=kNt(t)?.contest?.id;' +
+    'n.push(...TE(t).filter(row=>row.id!=="elec"||!gpmNearestContest||!gpmDeadlines.some(entry=>entry.contestId===gpmNearestContest)),...gpmDeadlines);let r=blt(t)');
+  js = replaceOnce(js, 'let p=hia(this,a),m=gia(this,a,l)',
+    'let p=[...gpmDomesticSitroomRows(a,this,true),...hia(this,a)],m=gia(this,a,l)');
+  js = replaceOnce(js, 'dlt(this._digest),this.refreshSitroom(this.sim);return',
+    'dlt(this._digest),gpmDismissDomesticRecent(this,l8(this.sim)),this.refreshSitroom(this.sim);return');
   const navigation = 'let k=i.target.closest("[data-mod]");if(k&&this.sim){this.openModule(k.dataset.mod,k.dataset.sub||void 0);return}';
   return replaceOnce(js, navigation,
     'let gpmDomesticLink=i.target.closest("[data-gpm-domestic-link]");if(gpmDomesticLink&&this.sim){gpmOpenDomesticAgendaLink(this,gpmDomesticLink);return}' + navigation);

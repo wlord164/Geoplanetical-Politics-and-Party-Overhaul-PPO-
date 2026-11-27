@@ -14,7 +14,7 @@ function gpmHistoricalActorRepresents(sim, actorId, key) {
 function gpmPlayerWarRole(sim, definition, row, war, key = sim.playerKey) {
   if (!key) return null;
   if (war) {
-    if (Do(war, key)) return war.participants?.[key]?.role || "principal";
+    if ($r(war, key)) return war.participants?.[key]?.role || "principal";
     if (!war.participants?.[key] && war.airShields?.[key]) return "support";
     if (war.participants?.[key]) {
       const hasAid = Array.from(sim.militarySupportPrograms?.values() || []).some(program =>
@@ -46,7 +46,7 @@ function gpmLeaveCatalogWar(sim, { definition, row }, countryKey) {
   row.departedActors = [...new Set([...(row.departedActors || []), ...departing])];
   sim.gpmHistoricalState.departures = true;
   const closed = definition.sides.some(side => side.every(actorId => departing.includes(actorId)));
-  row.history.push({ day: sim.day, term: "negotiated-peace", outcome: `${po(sim, sim.countries.get(countryKey)) || countryKey} signed a peace agreement` });
+  row.history.push({ day: sim.day, term: "negotiated-peace", outcome: `${Rr(sim, sim.countries.get(countryKey)) || countryKey} signed a peace agreement` });
   row.pending = null;
   if (closed) {
     row.status = "settled";
@@ -66,7 +66,7 @@ function gpmLeaveCatalogWar(sim, { definition, row }, countryKey) {
 }
 
 function gpmWarGoal(sim, goal, detailed) {
-  const countryName = key => po(sim, sim.countries.get(key)) || null;
+  const countryName = key => Rr(sim, sim.countries.get(key)) || null;
   const target = countryName(goal.selectedTargetActorKey || goal.targetCountryKey);
   const places = (goal.targetProvinceKeys || []).map(key => sim.world.provByKey.get(key)?.__name).filter(Boolean);
   switch (goal.type) {
@@ -126,7 +126,7 @@ function gpmWarContext(sim, definition, row, status) {
   }
   const regions = [...new Set([...(definition.geographicContext || []), ...(definition.regions || [])
     .map(region => region.name || sim.world.provByKey.get(region.key)?.__name).filter(Boolean)])];
-  const countries = [...new Set(definition.countryKeys.map(key => po(sim, gpmHistoricalCountry(sim, key))).filter(Boolean))];
+  const countries = [...new Set(definition.countryKeys.map(key => Rr(sim, gpmHistoricalCountry(sim, key))).filter(Boolean))];
   const place = gpmWarPlaceList.format((regions.length ? regions : countries).slice(0, 2));
   if (status === "occupation" || row.settlement === "negotiated-withdrawal") {
     return place ? `This report covers military presence in ${place}.` : "This report covers military presence in the disputed area.";
@@ -141,7 +141,7 @@ function gpmWarContext(sim, definition, row, status) {
 }
 
 function gpmWarRecentChanges(sim, war) {
-  const name = key => po(sim, sim.countries.get(key)) || null;
+  const name = key => Rr(sim, sim.countries.get(key)) || null;
   const rows = [];
   for (const entry of war?.log || []) {
     const place = sim.world.provinces[entry.provId]?.__name;
@@ -187,10 +187,10 @@ function gpmWarParticipant(sim, war, actorId, key, role) {
   else if (estimate?.range) strength = { label: estimate.range, scope };
   else if (Number.isFinite(estimate?.gamePersonnel)) strength = { label: countLabel(estimate.gamePersonnel), scope };
   const side = war?.participants?.[key]?.side;
-  const bilateralPrincipal = war && key && direct && side && Le(war, side).length === 1 &&
+  const bilateralPrincipal = war && key && direct && side && qe(war, side).length === 1 &&
     war.coalitions?.[side]?.principalKey === key;
   const kia = war?.personnelByCountry?.[key]?.kia ?? (bilateralPrincipal ? war.personnel?.[side === "A" ? "p" : "e"]?.kia : null);
-  return { id: actorId, countryKey: country?.key || key || null, name: gpmHistoricalShortName(actor) || po(sim, country) || key || actorId,
+  return { id: actorId, countryKey: country?.key || key || null, name: gpmHistoricalShortName(actor) || Rr(sim, country) || key || actorId,
     flagCode: country?.a2 || null, flagAsset: actor?.identity?.flag?.asset || null, role, strength,
     ...(associatedCountry?.a2 ? { associatedFlagCode: associatedCountry.a2, associatedFlagLabel: association.label } : {}),
     deaths: Number.isFinite(kia) ? Math.round(kia * 1e6) : null };
@@ -215,11 +215,11 @@ function gpmWarEntryReason(sim, war, opening = false) {
     case "status.subject_war_joined": return "Your country entered under its defense obligations.";
     case "military.voluntary_intervention": return "Your government intervened in the fighting.";
   }
-  if (war.participants?.[key] && !Do(war, key)) {
+  if (war.participants?.[key] && !$r(war, key)) {
     const aid = Array.from(sim.militarySupportPrograms?.values() || []).find(program =>
       program.conflictId === war.id && program.donorKey === key && ["active", "suspended"].includes(program.statusId));
     if (aid) {
-      const recipient = po(sim, sim.countries.get(aid.recipientKey)) || "the supported side";
+      const recipient = Rr(sim, sim.countries.get(aid.recipientKey)) || "the supported side";
       return aid.modeId === "request" ? `Your government accepted an aid request from ${recipient}.` :
         `Your government offered aid to ${recipient}.`;
     }
@@ -251,7 +251,7 @@ function gpmWarCard(sim, definition, row, war, status, name = definition.name, d
       return gpmWarParticipant(sim, war, gpmHistoricalWarActor(sim, definition, row, member), member,
         gpmPlayerWarRole(sim, definition, row, war, member));
     });
-    const liveGoals = [...new Set((war?.warGoals?.[side] || []).filter(goal => goal.status === "active" && Do(war, goal.actorKey))
+    const liveGoals = [...new Set((war?.warGoals?.[side] || []).filter(goal => goal.status === "active" && $r(war, goal.actorKey))
       .map(goal => gpmWarGoal(sim, goal, detailed)).filter(Boolean))];
     const catalogMembers = war ? participants.map(participant => participant.id) : members;
     return { label: index === 0 ? "DEF" : "ATK",
@@ -280,7 +280,7 @@ function gpmCheckWarEntry(sim, startup = null) {
     if (prior && prior.countryKey !== sim.playerKey && (war?.startDay ?? row.openedDay) !== sim.day) continue;
     const warCard = gpmWarCard(sim, definition, row, war, summaryStatus, gpmHistoricalTitles(sim, definition).shortTitle);
     warCard.entryReason = gpmWarEntryReason(sim, war, startup === "new") || warCard.entryReason;
-    H(sim, "gpm.war_entered", { id: definition.id, warId: war?.id || null, warCard },
+    q(sim, "gpm.war_entered", { id: definition.id, warId: war?.id || null, warCard },
       { category: "guerre", severity: "danger", audience: { countryKeys: [sim.playerKey] }, journal: false });
   }
 }

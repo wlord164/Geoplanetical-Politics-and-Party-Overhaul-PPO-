@@ -112,7 +112,7 @@ function gpmCongressCurrentQuote(sim, country, party, doctrine, identity, organi
   const isPlatform = doctrine.id === platform;
   const requiredRegions = Math.max(1, Math.min(organization.totalRegions,
     party.gpmCongressCharter?.branchAutonomy?.value === "autonomous" ? 1 : 2));
-  const activistsK = kL(Math.max(.003, Math.min(.055, activeMembers / 180000)));
+  const activistsK = Oq(Math.max(.003, Math.min(.055, activeMembers / 180000)));
   const cashM = gpmDomesticMoney(.0015 + activistsK * .30);
   const cost = { cashM, activistsK, influence: 0 };
   const restricted = partyForeignFundingGrants(party.gpmForeignFunding).reduce((sum, grant) => sum + grant.unspentM, 0);
@@ -158,7 +158,7 @@ function gpmCongressOrganizeCurrent(sim, country, party, input, policy = null) {
   state.affiliations[quote.id] = members;
   party.organization.treasuryM = partyForeignFundingTreasury(party,
     gpmDomesticMoney(party.organization.treasuryM - quote.cost.cashM));
-  party.organization.activistsK = kL(party.organization.activistsK - quote.cost.activistsK);
+  party.organization.activistsK = Oq(party.organization.activistsK - quote.cost.activistsK);
   gpmDomesticReceipt(sim, country, party, "congress-current", { cashM: -quote.cost.cashM, activistsK: -quote.cost.activistsK,
     details: quote.id });
   const result = { ok: true, changed: true, doctrineId: quote.id, label: quote.label, members, recruited };
@@ -171,7 +171,7 @@ function gpmCongressOrganizeCurrentAI(sim, country, party, data, policy) {
       (party.gpmCongressCurrents?.last?.day ?? -90) + 90 > sim.day) return null;
   const founder = gpmCongressDoctrine(data.identity.congressDoctrine?.platform ?? data.identity.currentCompatibility?.platform);
   if (!founder) return null;
-  const matching = uAe(country);
+  const matching = PUe(country);
   const options = gpmCongressCurrentOptions(sim, country, party, data.identity, data.sizeRecommendation);
   const ranked = options.filter(option => option.eligible).map(option => {
     const doctrine = gpmCongressDoctrine(option.id);
@@ -192,10 +192,10 @@ function gpmCongressOrganizeCurrentAI(sim, country, party, data, policy) {
 }
 
 function registerPartyCongressCurrents() {
-  gvt("gpm.party.currentOrganize", {
+  gNt("gpm.party.currentOrganize", {
     apply(sim, country, input) {
-      if (country.key !== sim.playerKey || yn(country) !== input.partyId) return { ok: false, reason: "party" };
-      return gpmCongressOrganizeCurrent(sim, country, AL(country, input.partyId), input);
+      if (country.key !== sim.playerKey || Lo(country) !== input.partyId) return { ok: false, reason: "party" };
+      return gpmCongressOrganizeCurrent(sim, country, Gq(country, input.partyId), input);
     },
   });
 }

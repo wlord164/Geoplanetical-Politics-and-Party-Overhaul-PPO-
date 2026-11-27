@@ -99,7 +99,7 @@ function gpmBuildFrontline(container, ui, session) {
 
 function gpmRefreshFrontlineEntry(ui) {
   if (ui.activeModule !== "military" || ui._subSel.military !== "frontline") return;
-  const host = K("content-body")?.querySelector("[data-gpm-frontline-entry]");
+  const host = Y("content-body")?.querySelector("[data-gpm-frontline-entry]");
   const session = ui.sim;
   if (!host || !session || host.frontlinePending) return;
   const revision = `${session.playerKey}|${session.day}|${session.status?.commitRevision}`;
@@ -108,7 +108,7 @@ function gpmRefreshFrontlineEntry(ui) {
   host.frontlineLastRequest = performance.now();
   const status = host.querySelector("[data-gpm-frontline-entry-status]");
   const wars = host.querySelector("[data-gpm-frontline-wars]");
-  void Je(session, "gpm.frontline", {}).then(result => {
+  void Ze(session, "gpm.frontline", {}).then(result => {
     if (!host.isConnected || ui.sim !== session) return;
     if (!Array.isArray(result?.wars)) throw new Error("Frontline wars unavailable");
     host.frontlineRevision = revision;
@@ -132,9 +132,9 @@ async function gpmOpenFrontline(ui, session) {
 }
 
 function gpmMountFrontline(ui, session, warId) {
-  const registry = K("war-registry");
-  const frame = K("mil-frame");
-  const consoleHost = K("war-console");
+  const registry = Y("war-registry");
+  const frame = Y("mil-frame");
+  const consoleHost = Y("war-console");
   const globe = ui.globe;
   const canvas = globe?.renderer?.domElement;
   if (!registry || !frame || !canvas || !consoleHost || consoleHost.parentElement !== frame) return;
@@ -225,7 +225,7 @@ function gpmRefreshFrontlineMap(ui) {
   if (!ui.militaryModeActive) return gpmCloseFrontline(ui);
   const state = ui._gpmFrontline;
   const session = ui.sim;
-  const view = session && Ci(session);
+  const view = session && Io(session);
   const key = view && ui._activeWarKey();
   const warId = view?.wars?.[key]?.id;
   if (state && (!warId || state.warId !== warId || session !== state.session ||
@@ -245,7 +245,7 @@ async function gpmLoadFrontline(state, force = false) {
   state.pending = true;
   state.lastRequest = performance.now();
   try {
-    const result = await Je(state.session, "gpm.frontline", { warId: state.warId });
+    const result = await Ze(state.session, "gpm.frontline", { warId: state.warId });
     if (state.ui._gpmFrontline !== state || request !== state.request) return;
     if (!Array.isArray(result?.wars)) throw new Error("Unexpected Frontline view");
     const wasWaiting = state.drawing?.kind === "line" && !state.data?.contacts?.length;
@@ -340,7 +340,7 @@ function gpmFrontlineArmySlots(plans) {
 function gpmFrontlinePortrait(state, id) {
   const person = state.data?.generals?.find(item => String(item.id) === String(id));
   const year = state.data?.year || new Date().getUTCFullYear();
-  const url = person && yse(person, year, "militaire");
+  const url = person && xpe(person, year, "militaire");
   return url ? `<img class="gpm-frontline-portrait" alt="${b(person.name)}" src="${b(url)}">`
     : '<span class="gpm-frontline-portrait gpm-frontline-portrait-empty" aria-hidden="true"></span>';
 }
@@ -376,7 +376,7 @@ function gpmPaintFrontlineRoster(state) {
         ? `[data-gpm-frontline-remove-army="${CSS.escape(active.gpmFrontlineRemoveArmy)}"]`
         : active?.gpmFrontlineAddSlot != null ? "[data-gpm-frontline-add-slot]" : null;
     state.rosterHtml = html;
-    state.roster.style.setProperty("--frontline-slot-width", `clamp(56px, calc((100vw - 64px) / ${state.slots}), var(--frontline-max-slot-width))`);
+    state.roster.style.setProperty("--frontline-slot-width", `clamp(56WR, calc((100qk - 64WR) / ${state.slots}), var(--frontline-max-slot-width))`);
     state.roster.innerHTML = html;
     if (focus) state.roster.querySelector(focus)?.focus({ preventScroll: true });
   }
@@ -649,13 +649,13 @@ function gpmFrontlineMidpoint(line) {
   for (let index = 0; index < spans.length; index++) {
     const distance = spans[index];
     if (distance > 0 && remaining <= distance) {
-      const from = ct(line[index][1], line[index][0], 1).normalize();
-      const to = ct(line[index + 1][1], line[index + 1][0], 1).normalize();
+      const from = ft(line[index][1], line[index][0], 1).normalize();
+      const to = ft(line[index + 1][1], line[index + 1][0], 1).normalize();
       const fraction = remaining / distance;
       const angle = from.angleTo(to);
       const vector = from.clone().multiplyScalar(Math.sin((1 - fraction) * angle)).addScaledVector(to, Math.sin(fraction * angle));
       if (vector.lengthSq() < 1e-12) return line[index];
-      const [lat, lon] = n2(vector);
+      const [lat, lon] = yh(vector);
       return [lon, lat];
     }
     remaining -= distance;
@@ -671,7 +671,7 @@ function gpmFrontlineContactParams(contact) {
 function gpmFrontlineScreenPoint(globe, point, lift = 1) {
   const radius = globe.sphere.geometry.parameters.radius;
   const [lon, lat] = point;
-  const world = ct(lat, lon, radius);
+  const world = ft(lat, lon, radius);
   if (world.dot(globe.camera.position) <= radius ** 2) return null;
   const map = world.multiplyScalar(lift).project(globe.camera);
   if (map.z < -1 || map.z > 1) return null;
@@ -879,7 +879,7 @@ async function gpmTraceFrontline(state, draw, contact) {
   gpmPaintFrontline(state);
   const current = () => state.ui._gpmFrontline === state && state.draft === draft && state.drawing === draw;
   try {
-    const result = await Je(state.session, "gpm.frontline.line", { warId: state.warId, afterId: draft.afterId, ...contact });
+    const result = await Ze(state.session, "gpm.frontline.line", { warId: state.warId, afterId: draft.afterId, ...contact });
     if (!current()) return;
     if (!result?.ok || !Array.isArray(result.line) || result.line.length < 2) {
       if (result?.reason === "front_changed") await gpmLoadFrontline(state, true);
@@ -905,12 +905,12 @@ async function gpmTraceFrontline(state, draw, contact) {
 
 function gpmClipFrontlinePreview(globe, from, to) {
   if (!from) return [];
-  const fromVector = ct(from[1], from[0], 1).normalize();
-  const toVector = ct(to[1], to[0], 1).normalize();
+  const fromVector = ft(from[1], from[0], 1).normalize();
+  const toVector = ft(to[1], to[0], 1).normalize();
   const steps = Math.max(1, Math.ceil(gpmFrontlineDistance(from, to) / 5));
   let last = null;
   for (let step = 1; step <= steps; step++) {
-    const [lat, lon] = n2(fromVector.clone().lerp(toVector, step / steps).normalize());
+    const [lat, lon] = yh(fromVector.clone().lerp(toVector, step / steps).normalize());
     if (globe._provinceAt(lon, lat) < 0) break;
     last = [lon, lat];
   }
@@ -924,7 +924,7 @@ async function gpmRouteFrontlineArrow(state, draw, arrow) {
   gpmPaintFrontline(state);
   const current = () => state.ui._gpmFrontline === state && state.draft === draft && state.drawing === draw;
   try {
-    const result = await Je(state.session, "gpm.frontline.route", { warId: state.warId, line: draft.contact ? undefined : draft.line, afterId: draft.afterId,
+    const result = await Ze(state.session, "gpm.frontline.route", { warId: state.warId, line: draft.contact ? undefined : draft.line, afterId: draft.afterId,
       validateArrow: arrow, ...gpmFrontlineContactParams(draft.contact) });
     if (!current()) return;
     if (!result?.ok || !Array.isArray(result.arrow) || result.arrow.length < 2) {
@@ -946,7 +946,7 @@ async function gpmSendFrontline(state, action, params) {
   gpmFrontlineSetDraw(state, null);
   let result;
   try {
-    result = await Le(state.session, "applyPlayerAction", [{ verb: `gpm.frontline.${action}`, warId: state.warId,
+    result = await De(state.session, "applyPlayerAction", [{ verb: `gpm.frontline.${action}`, warId: state.warId,
       ...params, ...gpmExpectedActor(state.playerKey) }]);
     if (state.ui._gpmFrontline !== state) return;
     if (result?.ok) {
@@ -1103,8 +1103,8 @@ function gpmFrontlineObjectiveBoundary(geometry, arrow, emphasized) {
 }
 
 function gpmAddFrontlineObjective(state, arrow, objective, color, opacity, emphasis) {
-  const radius = dt * 1.007;
-  const world = ([lon, lat]) => ct(lat, lon, radius);
+  const radius = ht * 1.007;
+  const world = ([lon, lat]) => ft(lat, lon, radius);
   const tip = arrow.at(-1);
   const dot = document.createElement("span");
   dot.className = "gpm-frontline-objective-dot" + (emphasis ? "" : " is-muted");
@@ -1158,7 +1158,7 @@ function gpmExtendFrontlineObjective(globe, local, opposite, center, start, axis
       screen = project(point);
       if (!screen) break;
     }
-    const [lat, lon] = n2(point);
+    const [lat, lon] = yh(point);
     if (globe._provinceAt(lon, lat) < 0) break;
     points.push(point);
     pixels += Math.hypot(screen[0] - previous[0], screen[1] - previous[1]);
@@ -1209,7 +1209,7 @@ function gpmFrontlineScreenBoundary(marker, origin, project, globe) {
   }
   return {
     points: [...ends[0].points.reverse(), ...left.path.reverse(), marker.center, ...right.path, ...ends[1].points].map(point => {
-      const [lat, lon] = n2(point);
+      const [lat, lon] = yh(point);
       return [lon, lat];
     }),
     pixels: left.length + right.length + ends[0].pixels + ends[1].pixels,
@@ -1308,8 +1308,8 @@ function gpmAddFrontlineLabel(state, path, color, opacity, name) {
   element.hidden = true;
   element.style.setProperty("--frontline-color", `#${color.toString(16).padStart(6, "0")}`);
   element.style.opacity = opacity;
-  const radius = dt * 1.007;
-  const vectors = path.map(([lon, lat]) => ct(lat, lon, 1).normalize());
+  const radius = ht * 1.007;
+  const vectors = path.map(([lon, lat]) => ft(lat, lon, 1).normalize());
   const spans = vectors.slice(1).map((b, index) => {
     const a = vectors[index];
     const tipSegment = index === vectors.length - 2;
@@ -1394,9 +1394,9 @@ function gpmTickFrontlineFormationMarks(state) {
 
 function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, objective = null, pixels = 0) {
   const segments = [];
-  const radius = dt * (arrow || objective ? 1.007 : 1.0012);
+  const radius = ht * (arrow || objective ? 1.007 : 1.0012);
   const add = (a, b) => segments.push(a.x, a.y, a.z, b.x, b.y, b.z);
-  const points = path.map(([lon, lat]) => ct(lat, lon, 1).normalize());
+  const points = path.map(([lon, lat]) => ft(lat, lon, 1).normalize());
   let length = 0;
   for (let index = 1; index < points.length; index++) {
     const a = points[index - 1];
@@ -1423,17 +1423,17 @@ function gpmAddFrontlinePath(state, path, color, arrow, opacity, emphasis = 0, o
     }
   }
   const addMesh = (ink, linewidth, alpha, order, name) => {
-    const geometry = new ys();
+    const geometry = new Bo();
     geometry.setPositions(segments);
     const style = { color: ink, linewidth, transparent: true, opacity: alpha, depthTest: true, depthWrite: false };
     if (objective) {
       const dashes = Math.max(2, Math.min(15, Math.round(pixels / 10.5)));
       Object.assign(style, { dashed: true, dashSize: length * .64 / dashes, gapSize: length * .36 / dashes });
     }
-    const material = new Uc(style);
+    const material = new yc(style);
     material.resolution.set(window.innerWidth, window.innerHeight);
     (state.globe._lineMats ||= []).push(material);
-    const mesh = new fd(geometry, material);
+    const mesh = new Cu(geometry, material);
     mesh.renderOrder = order + emphasis;
     mesh.frustumCulled = false;
     if (objective) {

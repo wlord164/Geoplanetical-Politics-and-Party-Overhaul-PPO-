@@ -30,11 +30,11 @@ function partySupportBaseView(sim, country, partyId, electorate) {
 function renderPartySupportBase(view) {
   const blocs = view.party?.supportBase?.blocs;
   const crisisIssues = view.party?.supportBase?.crisisIssues || [];
-  const percent = new Intl.NumberFormat(Ds(), { style: "percent", maximumFractionDigits: 1 });
+  const percent = new Intl.NumberFormat(il(), { style: "percent", maximumFractionDigits: 1 });
   const format = fraction => fraction > 0 && fraction < .001 ? "<" + percent.format(.001) : percent.format(fraction);
   const rows = blocs?.some(bloc => bloc.shareOfSupport > 0) ? blocs.map(bloc => `
     <li class="gpm-support-bloc">
-      <div class="gpm-support-bloc-line"><strong>${b(jr(bloc.id))}</strong><span class="num">${b(format(bloc.shareOfSupport))}</span></div>
+      <div class="gpm-support-bloc-line"><strong>${b(wr(bloc.id))}</strong><span class="num">${b(format(bloc.shareOfSupport))}</span></div>
       <div class="gpm-support-track" aria-hidden="true"><span style="width:${(100 * bloc.shareOfSupport).toFixed(2)}%"></span></div>
       <small>${b(format(bloc.withinBloc))} support within this bloc</small>
     </li>`).join("") : "";

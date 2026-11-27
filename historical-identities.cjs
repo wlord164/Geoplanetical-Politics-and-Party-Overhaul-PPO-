@@ -50,13 +50,13 @@ function gpmHistoricalGeneratedName(countryKey, gender, seed, inheritedSurname) 
 }
 
 function patchHistoricalNameWorker(source, replaceOnce) {
-  const createPerson = 'function C0(e,t={}){';
+  const createPerson = 'function ac(e,t={}){';
   let patched = replaceOnce(source, createPerson,
     `const gpmHistoricalNamePools=${JSON.stringify(historicalNamePools)};\n${gpmHistoricalGeneratedName}\n${createPerson}`);
-  patched = replaceOnce(patched, ':UA(d,l,r,t.surname!=null?t.surname:null),m={id:c',
-    ':(gpmHistoricalGeneratedName(a,l,r,t.surname)||UA(d,l,r,t.surname!=null?t.surname:null)),m={id:c');
-  return replaceOnce(patched, 'l=nbr(Js(e.key),s,i),c=r&&r.parties.find',
-    'l=gpmHistoricalGeneratedName(e.key,s,i)||nbr(Js(e.key),s,i),c=r&&r.parties.find');
+  patched = replaceOnce(patched, ':jD(u,s,a,t.surname!=null?t.surname:null),E={id:l',
+    ':(gpmHistoricalGeneratedName(a,s,a,t.surname)||jD(u,s,a,t.surname!=null?t.surname:null)),E={id:l');
+  return replaceOnce(patched, 's=kZa(bs(e.key),i,n),l=a&&a.parties.find',
+    's=gpmHistoricalGeneratedName(e.key,i,n)||kZa(bs(e.key),i,n),l=a&&a.parties.find');
 }
 
 function readAsset(file, extension, assets) {
@@ -200,7 +200,7 @@ function gpmNativeHistoricalPortrait(person, year, fallbackIcon) {
   const illustration = actorId && !image && gpmHistoricalDossierIllustrations[actorId];
   const illustrationImage = gpmHistoricalAssetUrl(illustration?.asset);
   const representative = historical?.representative;
-  const photo = gpmHistoricalAssetUrl(representative?.asset) || illustrationImage || image || pl(person, year);
+  const photo = gpmHistoricalAssetUrl(representative?.asset) || illustrationImage || image || Nl(person, year);
   const note = representative ? `Photo: ${representative.name} (faction representative)` :
     illustrationImage ? "Illustrative portrait" : historical && !image && photo ? "Game-generated portrait" : null;
   const title = representative ? [representative.name, representative.role, "Faction representative"].filter(Boolean).join(" · ") : note;
@@ -220,7 +220,7 @@ function gpmRefreshOpeningHeadOfGovernment(ui, row, opening) {
   row.setAttribute("data-gpm-opening-head-of-government", "");
   row.style.display = "";
   const photo = gpmHistoricalAssetUrl(gpmHistoricalPeople[opening.id]?.asset);
-  ui._isetHtml("crownAvatar", photo ? `<img class="il-av" src="${b(photo)}" alt="">` : Y.user);
+  ui._isetHtml("crownAvatar", photo ? `<img class="il-av" src="${b(photo)}" alt="">` : W.user);
   ui._iset("crownName", opening.name);
   ui._iset("crownRole", "Opening · " + opening.role);
 }
@@ -256,35 +256,35 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
       if (!file || !country.illustratedOpeningParties?.includes(id)) throw new Error("Invalid fictional representative portrait: " + key + "/" + id);
       return [key + "/" + id, readAsset(portrait.asset, "jpg", assets)];
     })));
-  const portraitSelector = 'function pl(e,t,a){';
+  const portraitSelector = 'function Nl(e,t,a){';
   let patched = replaceOnce(source, portraitSelector,
     `const gpmHistoricalPeople = ${JSON.stringify(people)};\n${gpmNativeHistoricalPortrait}\n${gpmHistoricalBirthYear}\n${gpmRefreshOpeningHeadOfGovernment}\n` +
     `const gpmFictionalPartyPortraits=${JSON.stringify(partyIllustrations)};\n` +
     `${portraitSelector}const portrait=gpmFictionalPartyPortraits[e?.gpmRegisterChair?.illustration];if(portrait)return gpmHistoricalAssetUrl(portrait);const person=gpmHistoricalPeople[e?.gpmHistoricalPerson];if(person&&!person.generatedFallback)return gpmHistoricalAssetUrl(person.asset);`);
-  patched = replaceOnce(patched, "let w=e.headOfStateId!==e.nationalExecutiveId?e.headOfState:null",
-    'l.disabled=false;l.removeAttribute("data-gpm-opening-head-of-government");let w=gpmShowSeparateHeadOfState(e)?e.headOfState:null');
-  patched = replaceOnce(patched, 'function BYe(e,t){',
-    'function gpmShowSeparateHeadOfState(country){const head=country.headOfState;return !!head&&country.headOfStateId!==country.nationalExecutiveId&&(!head.gpmHistoricalPerson||head.gpmHistoricalPerson!==country.nationalExecutive?.gpmHistoricalPerson)}function BYe(e,t){');
+  patched = replaceOnce(patched, "let S=e.headOfStateId!==e.nationalExecutiveId?e.headOfState:null",
+    'l.disabled=false;l.removeAttribute("data-gpm-opening-head-of-government");let S=gpmShowSeparateHeadOfState(e)?e.headOfState:null');
+  patched = replaceOnce(patched, 'function elt(e,t){',
+    'function gpmShowSeparateHeadOfState(country){const head=country.headOfState;return !!head&&country.headOfStateId!==country.nationalExecutiveId&&(!head.gpmHistoricalPerson||head.gpmHistoricalPerson!==country.nationalExecutive?.gpmHistoricalPerson)}function elt(e,t){');
   patched = replaceOnce(patched, "!!a.headOfState&&a.headOfStateId!==a.nationalExecutiveId", "gpmShowSeparateHeadOfState(a)||!!a.gpmOpeningHeadOfGovernment");
-  patched = replaceOnce(patched, 'let w=e.nationalExecutiveRoleId?o(', 'let w=gpmHistoricalPeople[n.gpmHistoricalPerson]?.role||(e.nationalExecutiveRoleId?o(');
+  patched = replaceOnce(patched, 'let S=e.nationalExecutiveRoleId?o(', 'let S=gpmHistoricalPeople[n.gpmHistoricalPerson]?.role||(e.nationalExecutiveRoleId?o(');
   patched = replaceOnce(patched, ':o("inspector.leader.title"),k=t.year', ':o("inspector.leader.title")),k=t.year');
   patched = replaceOnce(patched, '_=n.born?k-n.born:null', '_=gpmHistoricalBirthYear(n)==null?null:k-n.born');
-  patched = replaceOnce(patched, ':w.born?" \\xB7 "+o("inspector.leader.age"', ':gpmHistoricalBirthYear(w)!=null?" \\xB7 "+o("inspector.leader.age"');
+  patched = replaceOnce(patched, ':S.born?" \\xB7 "+o("inspector.leader.age"', ':gpmHistoricalBirthYear(S)!=null?" \\xB7 "+o("inspector.leader.age"');
   patched = replaceOnce(patched, 'e.born!=null&&a.push({y:e.born,txt:o("fiche.life.born")})',
     'gpmHistoricalBirthYear(e)!=null&&a.push({y:e.born,txt:o("fiche.life.born")})');
   patched = replaceOnce(patched, 'o("inspector.leader.age",{age:_}):""))}else a?',
     'o("inspector.leader.age",{age:_}):"")+(s.note?" · "+s.note:""))}else a?');
-  patched = replaceOnce(patched, '_refreshInspector(e,t){this._iset("countryName",G(e,e.key)),this._iset("regimeName",ry(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(w=>w.id===r)||null;if(n)',
-    '_refreshInspector(e,t){this._iset("countryName",G(e,e.key)),this._iset("regimeName",ry(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(w=>w.id===r)||null,s=gpmNativeHistoricalPortrait(n,t.year,Y.user);if(n)');
-  patched = replaceOnce(patched, "let s=n?pl(n,t.year):null;this._isetHtml(\"leaderAvatar\",s?`<img class=\"il-av\" src=\"${s}\" alt=\"\">`:Y.user)",
+  patched = replaceOnce(patched, '_refreshInspector(e,t){this._iset("countryName",j(e,e.key)),this._iset("regimeName",Q6(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(S=>S.id===r)||null;if(n)',
+    '_refreshInspector(e,t){this._iset("countryName",j(e,e.key)),this._iset("regimeName",Q6(e));let a=e.pol,n=e.nationalExecutive,r=e.nationalExecutivePartyId||a?.government?.leadPartyId,i=a?.parties?.find(S=>S.id===r)||null,s=gpmNativeHistoricalPortrait(n,t.year,Y.user);if(n)');
+  patched = replaceOnce(patched, "let s=n?Nl(n,t.year):null;this._isetHtml(\"leaderAvatar\",s?`<img class=\"il-av\" src=\"${s}\" alt=\"\">`:W.user)",
     'this._isetHtml("leaderAvatar",s.html)');
-  patched = replaceOnce(patched, "let k=t.year,_=pl(w,k);this._isetHtml(\"crownAvatar\",_?`<img class=\"il-av\" src=\"${_}\" alt=\"\">`:e.headOfStateRoleId===\"monarch\"?Y.crown:Y.user),this._iset(\"crownName\",Dt(w));let P=e.headOfStateRoleId===\"monarch\"?",
-    'let k=t.year,_=gpmNativeHistoricalPortrait(w,k,e.headOfStateRoleId==="monarch"?Y.crown:Y.user);this._isetHtml("crownAvatar",_.html),this._iset("crownName",Dt(w));let P=gpmHistoricalPeople[w.gpmHistoricalPerson]?.role||(e.headOfStateRoleId==="monarch"?');
-  patched = replaceOnce(patched, 'vd(e.headOfStateRoleId||"head_of_state",w.g);this._iset("crownRole",P+',
-    'vd(e.headOfStateRoleId||"head_of_state",w.g));this._iset("crownRole",P+');
-  patched = replaceOnce(patched, 'o("inspector.leader.age",{age:k-w.born}):""))}else l.style.display="none"}',
-    'o("inspector.leader.age",{age:k-w.born}):"")+(_.note?" · "+_.note:e.key?.startsWith("gpm-historical-")&&gpmHistoricalPeople[n?.gpmHistoricalPerson]&&!w.gpmHistoricalPerson?" · Simulated officeholder":""))}else if(e.gpmOpeningHeadOfGovernment)gpmRefreshOpeningHeadOfGovernment(this,l,e.gpmOpeningHeadOfGovernment);else l.style.display="none"}');
-  const flagSelector = 'function Mk(e){return kZ(e)||cie(e)}';
+  patched = replaceOnce(patched, "let k=t.year,_=Nl(S,k);this._isetHtml(\"crownAvatar\",_?`<img class=\"il-av\" src=\"${_}\" alt=\"\">`:e.headOfStateRoleId===\"monarch\"?W.crown:W.user),this._iset(\"crownName\",Ct(S));let P=e.headOfStateRoleId===\"monarch\"?",
+    'let k=t.year,_=gpmNativeHistoricalPortrait(S,k,e.headOfStateRoleId==="monarch"?W.crown:W.user);this._isetHtml("crownAvatar",_.html),this._iset("crownName",Ct(S));let P=gpmHistoricalPeople[S.gpmHistoricalPerson]?.role||(e.headOfStateRoleId==="monarch"?');
+  patched = replaceOnce(patched, 'c0(e.headOfStateRoleId||"head_of_state",S.g);this._iset("crownRole",P+',
+    'c0(e.headOfStateRoleId||"head_of_state",S.g));this._iset("crownRole",P+');
+  patched = replaceOnce(patched, 'o("inspector.leader.age",{age:k-S.born}):""))}else l.style.display="none"}',
+    'o("inspector.leader.age",{age:k-w.born}):"")+(_.note?" · "+_.note:e.key?.startsWith("gpm-historical-")&&gpmHistoricalPeople[n?.gpmHistoricalPerson]&&!S.gpmHistoricalPerson?" · Simulated officeholder":""))}else if(e.gpmOpeningHeadOfGovernment)gpmRefreshOpeningHeadOfGovernment(this,l,e.gpmOpeningHeadOfGovernment);else l.style.display="none"}');
+  const flagSelector = 'function XM(e){return Ite(e)||ide(e)}';
   const flagEntry = (flag, provisional) => ({
     asset: flag.asset, ratio: flag.ratio || 1.5, label: `${provisional ? "Provisional · " : ""}${flag.name}`,
   });
@@ -305,16 +305,16 @@ function patchHistoricalIdentityRenderer(source, replaceOnce) {
     `const gpmHistoricalDossierIllustrations = ${JSON.stringify(illustrations)};\n` +
     `${gpmHistoricalFlagUrls}\n` +
     `const gpmHistoricalPolityFlags=gpmHistoricalFlagUrls(${JSON.stringify(polityFlags)});\nconst gpmHistoricalVictoryFlags=gpmHistoricalFlagUrls(${JSON.stringify(victoryFlags)});\n` +
-    'function Mk(e){const key=Au(e);const victor=pb()?.gpmHistoricalFlags?.[key];return gpmHistoricalVictoryFlags[victor]||gpmHistoricalPolityFlags[key]||kZ(e)||cie(e)}');
-  patched = replaceOnce(patched, 'return` data-flag="${t}"`+HPe(iy(t))',
-    'const flag=iy(t);return` data-flag="${t}"${gpmHistoricalFlagLabel(flag)}`+HPe(flag)');
-  patched = replaceOnce(patched, 'function Pc(e){',
-    'function gpmHistoricalFlagLabel(flag){return flag?.label?` role="img" aria-label="${b(flag.label)}" title="${b(flag.label)}"`:""}function Pc(e){');
+    'function XM(e){const key=gd(e);const victor=b9()?.gpmHistoricalFlags?.[key];return gpmHistoricalVictoryFlags[victor]||gpmHistoricalPolityFlags[key]||Ite(e)||ide(e)}');
+  patched = replaceOnce(patched, 'return` data-flag="${t}"`+RLe(J6(t))',
+    'const flag=J6(t);return` data-flag="${t}"${gpmHistoricalFlagLabel(flag)}`+RLe(flag)');
+  patched = replaceOnce(patched, 'function tu(e){',
+    'function gpmHistoricalFlagLabel(flag){return flag?.label?` role="img" aria-label="${b(flag.label)}" title="${b(flag.label)}"`:""}function tu(e){');
   patched = replaceOnce(patched,
-    'l.setAttribute("data-flag",(e.__a2||"").toLowerCase()),l.style.backgroundColor=e.__dotColor;let c=Mi(e.__a2);l.style.backgroundImage=c?`url("${c}")`:"",T2(K("btn-start"),c);',
-    'l.setAttribute("data-flag",(e.__a2||"").toLowerCase());let c=iy(e.__a2);Pk(l,c);if(!c)l.style.backgroundColor=e.__dotColor;T2(K("btn-start"),c?.url||null);');
-  return replaceOnce(patched, 'let n=Au(e);return`<span class="flag ${a||""}" data-flag="${n}"${HPe(iy(n),',
-    'let n=Au(e);const flag=iy(n);return`<span class="flag ${a||""}" data-flag="${n}"${gpmHistoricalFlagLabel(flag)}${HPe(flag,');
+    'l.setAttribute("data-flag",(e.__a2||"").toLowerCase()),l.style.backgroundColor=e.__dotColor;let c=Li(e.__a2);l.style.backgroundImage=c?`url("${c}")`:"",jh(Y("btn-start"),c);',
+    'l.setAttribute("data-flag",(e.__a2||"").toLowerCase());let c=J6(e.__a2);eP(l,c);if(!c)l.style.backgroundColor=e.__dotColor;jh(Y("btn-start"),c?.url||null);');
+  return replaceOnce(patched, 'let n=gd(e);return`<span class="flag ${a||""}" data-flag="${n}"${RLe(J6(n),',
+    'let n=gd(e);const flag=J6(n);return`<span class="flag ${a||""}" data-flag="${n}"${gpmHistoricalFlagLabel(flag)}${RLe(flag,');
 }
 
 module.exports = { readIdentities, patchHistoricalIdentityRenderer, patchHistoricalNameWorker };

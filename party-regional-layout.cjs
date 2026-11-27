@@ -137,7 +137,7 @@ function gpmCreatePartyMapFeatures(topology, arcCoordinates) {
     const displayTopology = { arcs };
     return features.map((feature, index) => {
       const province = shapes[index];
-      return province ? { ...feature, geometry: W4(displayTopology, province).geometry } : feature;
+      return province ? { ...feature, geometry: Ly(displayTopology, province).geometry } : feature;
     });
   };
 }
@@ -173,9 +173,9 @@ function gpmRegionalMapLayout(features, displayFeatures = features) {
     if (geometry.has(feature)) return geometry.get(feature);
     const { type, coordinates } = feature.geometry;
     const polygons = type === "MultiPolygon" ? coordinates : type === "Polygon" ? [coordinates] : [];
-    const points = polygons.flatMap(polygon => (polygon[0] || []).map(([lon, lat]) => Rpe(lon, lat)));
-    const center = feature.__centroid || Kd(feature);
-    const sphere = center?.every(Number.isFinite) ? Rpe(...center) : null;
+    const points = polygons.flatMap(polygon => (polygon[0] || []).map(([lon, lat]) => x3e(lon, lat)));
+    const center = feature.__centroid || td(feature);
+    const sphere = center?.every(Number.isFinite) ? x3e(...center) : null;
     const extent = sphere ? points.reduce((max, point) => Math.max(max, distanceSq(point, sphere)), 0) : Infinity;
     const item = { points, sphere, radius: Math.sqrt(extent) };
     geometry.set(feature, item);
@@ -199,8 +199,8 @@ function gpmRegionalMapLayout(features, displayFeatures = features) {
   function plot(group, width, height, pad, minAspect, maxAspect, fitGroup = group) {
     const collection = { type: "FeatureCollection", features: group };
     const frame = fitGroup === group ? collection : { type: "FeatureCollection", features: fitGroup };
-    const projection = oBt(fitGroup).fitExtent([[pad, pad], [width - pad, height - pad]], frame);
-    const path = kh(projection);
+    const projection = Hea(fitGroup).fitExtent([[pad, pad], [width - pad, height - pad]], frame);
+    const path = Of(projection);
     const [[x0, y0], [x1, y1]] = path.bounds(frame);
     if (![x0, y0, x1, y1].every(Number.isFinite)) return null;
     let w = Math.max(1, x1 - x0) + pad * 2;
@@ -222,14 +222,14 @@ function gpmRegionalMapLayout(features, displayFeatures = features) {
     const [feature] = group;
     const parts = feature.geometry.coordinates.map(coordinates => ({
       type: "Feature", geometry: { type: "Polygon", coordinates },
-    })).map(shape => ({ shape, area: Y4(shape), center: Kd(shape) }));
+    })).map(shape => ({ shape, area: Oy(shape), center: td(shape) }));
     const largest = parts.reduce((best, part) => part.area > (best?.area || 0) ? part : best, null);
     if (!largest || !largest.center?.every(Number.isFinite)) return group;
     const nearbyLimit = 240 / 6371;
     const anchors = parts.filter(part => part.area >= largest.area * .025);
     const core = parts.filter(part => anchors.includes(part) ||
       (part.center?.every(Number.isFinite) && anchors.some(anchor => anchor.center?.every(Number.isFinite) &&
-        aHe(part.center, anchor.center) <= nearbyLimit)));
+        Tat(part.center, anchor.center) <= nearbyLimit)));
     return core.length && core.length < parts.length ? core.map(part => part.shape) : group;
   }
 

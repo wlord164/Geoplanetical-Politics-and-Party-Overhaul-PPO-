@@ -1,6 +1,6 @@
 Politics and Party Overhaul (PPO)
 
-This Windows patch supports Geoplanetical 1.1.6, Windows Steam depot 940231, manifest 4613876637531523744 (app build 26784265). Install Node.js LTS from https://nodejs.org/en/download if needed. Allow about 4 GB of free space on the Steam library drive for backups and staging.
+This Windows patch supports Geoplanetical 1.1.9, Windows Steam depot 940231, manifest 246297533406324981 (app build 26971237). Install Node.js LTS from https://nodejs.org/en/download if needed. Allow about 4 GB of free space on the Steam library drive for backups and staging.
 
 Close Geoplanetical and use Extract All on the PPO installer ZIP. Double-click Install Party Mod.cmd in the extracted folder. Run the new installer again to update a recognized PPO installation, including after Steam Verify Integrity restores the supported game files. Once the installer reports success, start the game through Steam. If Steam discovery fails, find the game folder with Steam's Browse Local Files and pass that folder as a quoted argument to Install Party Mod.cmd.
 

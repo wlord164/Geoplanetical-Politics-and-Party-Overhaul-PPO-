@@ -6,7 +6,7 @@ const { readCatalog } = require("./historical-conflicts.cjs");
 function gpmApplyOpeningPersonIdentity(person, identityId) {
   const identity = gpmRegisterPersonData.people[identityId];
   if (!identity || !person?.alive || (person.gpmHistoricalPerson && person.gpmHistoricalPerson !== identityId)) return false;
-  Object.assign(person, Ize(identity.name), { name: identity.name, gpmHistoricalPerson: identityId });
+  Object.assign(person, ait(identity.name), { name: identity.name, gpmHistoricalPerson: identityId });
   if (identity.biography) {
     person.g = identity.biography.gender;
     person.born = identity.biography.born;
@@ -15,7 +15,7 @@ function gpmApplyOpeningPersonIdentity(person, identityId) {
 }
 
 function gpmApplyIllustratedRepresentative(person, illustration) {
-  Object.assign(person, Ize(illustration.name), { name: illustration.name, g: illustration.gender });
+  Object.assign(person, ait(illustration.name), { name: illustration.name, g: illustration.gender });
 }
 
 function gpmRestoreRegisterPortraitPeople(sim) {
@@ -34,7 +34,7 @@ function gpmRestoreRegisterPortraitPeople(sim) {
 }
 
 function gpmOpeningOfficeHolder(country, role) {
-  const office = H7(country, role);
+  const office = D8(country, role);
   const mandate = office?.mandate;
   return office?.status === "occupied" && !office.acting && mandate?.startedDay === 0 &&
     mandate.ordinal === 1 && !mandate.sourceContestId && !mandate.sourceProcedureId
@@ -44,7 +44,7 @@ function gpmOpeningOfficeHolder(country, role) {
 function gpmRegisterExecutiveOffices(country, executive) {
   const offices = new Map();
   for (const [role, identityId] of executive) {
-    const resolved = Xe(country, role) || (role === "council_chair" ? y1(country) : null);
+    const resolved = rt(country, role) || (role === "council_chair" ? bl(country) : null);
     if (resolved && !offices.has(resolved)) offices.set(resolved, identityId);
   }
   return offices;
@@ -55,8 +55,8 @@ function gpmRegisterPersonSequence(person) {
 }
 
 function gpmOriginalExecutivePerson(country, person) {
-  if (person.seeded && person.name === ad.seed[country.key]?.name) return true;
-  if (person.seeded && person.role === "monarch" && person.name === ad.monarchSeed?.[country.key]?.name &&
+  if (person.seeded && person.name === cd.seed[country.key]?.name) return true;
+  if (person.seeded && person.role === "monarch" && person.name === cd.monarchSeed?.[country.key]?.name &&
       person._seed === Hu(country.key + ":crown")) return true;
   return person._seed === Hu(country.key + ":headgov:2026:" + (gpmRegisterPersonSequence(person) - 1));
 }
@@ -67,7 +67,7 @@ function gpmMoveMisassignedDeputyChair(sim, country, deputy, replacementId, head
   if (!gpmRegisterPersonData.people[replacementId] || !identityId || identityId === replacementId ||
       !chair || chair.partyId !== deputy.party ||
       !heads.some(([partyId, identities]) => partyId === deputy.party && identities.includes(identityId))) return;
-  const chairActor = $3t(sim, country, chair.partyId);
+  const chairActor = nIt(sim, country, chair.partyId);
   if (!gpmApplyOpeningPersonIdentity(chairActor, identityId)) return;
   chairActor.gpmRegisterChair = chair;
   delete deputy.gpmRegisterChair;
@@ -82,7 +82,7 @@ function gpmAssignOpeningGovernment(sim, country, register, restoring) {
   const validPerson = (person, role) => person?.alive && person.role === role && person.countryKey === country.key;
   const poolSeed = (person, slot) => Hu(country.key + ":pool:" + slot + ":" + (gpmRegisterPersonSequence(person) - 1));
   const initialDeputy = validPerson(deputy, "deputy") && deputy._seed === poolSeed(deputy, "deputy");
-  const initialGovernment = gpmOpeningOfficeHolder(country, y1(country)) && Dn(country)?.installedDay === 0;
+  const initialGovernment = gpmOpeningOfficeHolder(country, bl(country)) && ln(country)?.installedDay === 0;
   if (validPerson(deputy, "deputy") && (!restoring || (initialGovernment && initialDeputy))) {
     if (restoring) gpmMoveMisassignedDeputyChair(sim, country, deputy, government.deputy, heads);
     gpmApplyOpeningPersonIdentity(deputy, government.deputy);
@@ -90,7 +90,7 @@ function gpmAssignOpeningGovernment(sim, country, register, restoring) {
   for (const id of country.cabinetIds || []) {
     const minister = sim.people.get(id);
     if (!validPerson(minister, "minister")) continue;
-    const portfolio = nw.indexOf(minister.office);
+    const portfolio = II.indexOf(minister.office);
     const initialMinister = portfolio >= 0 && minister._seed === poolSeed(minister, "min" + portfolio) &&
       (sim.day === 0 || (initialDeputy &&
         gpmRegisterPersonSequence(minister) === gpmRegisterPersonSequence(deputy) + 1 + portfolio));
@@ -100,7 +100,7 @@ function gpmAssignOpeningGovernment(sim, country, register, restoring) {
   }
   if (!validPerson(chief, "chief_of_staff")) return;
   if (restoring) {
-    const initialChief = person => person._seed === Ma("chief:" + country.key + ":0:" + (gpmRegisterPersonSequence(person) - 1));
+    const initialChief = person => person._seed === qA("chief:" + country.key + ":0:" + (gpmRegisterPersonSequence(person) - 1));
     if (!initialChief(chief)) return;
     for (const person of sim.people.values()) {
       if (person.countryKey === country.key && gpmRegisterPersonSequence(person) < gpmRegisterPersonSequence(chief) &&
@@ -121,7 +121,7 @@ function gpmOpeningExecutiveDisplay(sim, country, actor) {
   const target = [...offices].find(([role]) => {
     if (gpmOpeningOfficeHolder(country, role) === actor.id) return true;
     if (domestic) return false;
-    const office = H7(country, role);
+    const office = D8(country, role);
     return office?.status === "occupied" && !office.acting && office.principal?.personId === actor.id &&
       office.mandate?.startedDay === 0 && office.mandate.sourceProcedureId === "sovereign-office";
   });
@@ -177,7 +177,7 @@ function gpmAssignOpeningRegisterPeople(sim, restoring) {
       country.leaderId, country.headGovId, country.monarchId, country.regentId,
       country.deputyId, country.partyDeputyId, country.militaryLoyalty?.chiefId, ...(country.cabinetIds || []),
     ]);
-    const nativeOffices = lt(country)?.offices || {};
+    const nativeOffices = Qt(country)?.offices || {};
     for (const office of Object.values(nativeOffices)) {
       occupied.add(office.principal?.personId);
       occupied.add(office.acting?.personId);
@@ -211,7 +211,7 @@ function gpmAssignOpeningRegisterPeople(sim, restoring) {
           person = (country.partyBench?.[partyId] || []).map(id => sim.people.get(id)).find(candidate =>
             candidate?.alive && candidate.countryKey === country.key && candidate.party === partyId &&
             !occupied.has(candidate.id) && !candidate.gpmHistoricalPerson);
-          person ||= $3t(sim, country, partyId);
+          person ||= nIt(sim, country, partyId);
           if (!gpmApplyOpeningPersonIdentity(person, identityId)) continue;
           assigned.set(identityId, person);
           occupied.add(person.id);
@@ -221,7 +221,7 @@ function gpmAssignOpeningRegisterPeople(sim, restoring) {
         if (person.alive && chair.partyId === (person.party ?? null)) chair.affiliations.push({ partyId, order });
       }
       if (fictionalRepresentative) {
-        const representative = $3t(sim, country, partyId);
+        const representative = nIt(sim, country, partyId);
         if (representative) {
           const illustration = gpmRegisterPersonData.illustrations[fictionalRepresentative.illustration];
           if (illustration) gpmApplyIllustratedRepresentative(representative, illustration);
@@ -238,7 +238,7 @@ function gpmAssignOpeningRegisterPeople(sim, restoring) {
       const identity = gpmRegisterPersonData.people[identityId];
       let person = assigned.get(identityId);
       if (!person) {
-        person = C0(sim, { countryKey: country.key, name: identity.name });
+        person = ac(sim, { countryKey: country.key, name: identity.name });
         if (!gpmApplyOpeningPersonIdentity(person, identityId)) continue;
         assigned.set(identityId, person);
       }
@@ -252,7 +252,7 @@ function gpmOpeningRegisterPartyCards(view, party) {
   if (["aggregate", "unaffiliated", "affiliation-unverified"].includes(kind)) return "";
   const bench = view.player.partyBench?.[party.id] || [];
   const render = people => people.map(person =>
-    pm(view, person, person.gpmRegisterChair?.fictionalRepresentative
+    M2(view, person, person.gpmRegisterChair?.fictionalRepresentative
       ? "Fictional party representative" : gpmOpeningRegisterRoles[person.gpmHistoricalPerson] || "")).join("");
   const benchPeople = ids => ids.map(id => view.people.get(id)).filter(Boolean);
   if (!kind) return render(benchPeople(bench.slice(0, 2)));
@@ -293,7 +293,7 @@ function gpmOpeningRegisterGovernmentCards(view) {
     person.gpmRegisterOpeningOffice && !booked.has(person.id)).map(person => {
     const { role, label } = person.gpmRegisterOpeningOffice;
     const title = label || (role === "head_of_gov" ? "Head of government" : "Head of state");
-    return pm(view, person, "Opening " + title);
+    return M2(view, person, "Opening " + title);
   }).join("");
 }
 
@@ -369,9 +369,9 @@ function gpmRenderOpeningSetupLeader(row, countryKey, organs, sovereignKey, gene
   const person = opening ? { ...generated?.portrait, ...opening } : generated.portrait;
   const role = gpmHistoricalPeople[opening?.gpmHistoricalPerson]?.role;
   row.classList.remove("hidden");
-  K("card-leader-ic").innerHTML = xr(person, 2026, { size: "sm" });
-  K("card-leader-name").textContent = opening?.name || Dt(person);
-  K("card-leader-role").textContent = role || o(`role.${generated?.roleToken || "president"}${generated?.g === "f" ? ".f" : ""}`);
+  Y("card-leader-ic").innerHTML = Sr(person, 2026, { size: "sm" });
+  Y("card-leader-name").textContent = opening?.name || Ct(person);
+  Y("card-leader-role").textContent = role || o(`role.${generated?.roleToken || "president"}${generated?.g === "f" ? ".f" : ""}`);
 }
 
 function openingPeopleData(data) {
@@ -413,33 +413,33 @@ function openingPeopleData(data) {
 }
 
 function patchRegisterPeopleWorker(source, replaceOnce, data) {
-  const anchor = "function $3t(e,t,a){";
+  const anchor = "function nIt(e,t,A){";
   let patched = replaceOnce(source, anchor,
     `const gpmRegisterPersonData = ${JSON.stringify(openingPeopleData(data))};\n` +
     [gpmApplyOpeningPersonIdentity, gpmApplyIllustratedRepresentative, gpmRestoreRegisterPortraitPeople,
       gpmOpeningOfficeHolder, gpmRegisterExecutiveOffices, gpmRegisterPersonSequence,
       gpmOriginalExecutivePerson, gpmMoveMisassignedDeputyChair, gpmAssignOpeningGovernment,
       gpmOpeningExecutiveDisplay, gpmOpeningAliasedGovernment, gpmAssignOpeningRegisterPeople, anchor].join("\n"));
-  const capture = "!o&&gpmUprising.captureStartingIdentities(b)";
-  patched = replaceOnce(patched, capture, "gpmAssignOpeningRegisterPeople(b,!!o)," + capture);
-  patched = replaceOnce(patched, "nationalExecutive:x0(p),headOfGovernment:x0(d),headOfState:x0(u)",
-    "nationalExecutive:x0(gpmOpeningExecutiveDisplay(e,o,p)),headOfGovernment:x0(gpmOpeningExecutiveDisplay(e,o,d)),headOfState:x0(gpmOpeningExecutiveDisplay(e,o,u)),gpmOpeningHeadOfGovernment:gpmOpeningAliasedGovernment(e,o)");
-  patched = replaceOnce(patched, "leader:o?Object.freeze(x0(o)):null,executiveLeader:n?Object.freeze(x0(n)):null,playerControl:r",
-    "leader:o?Object.freeze(x0(gpmOpeningExecutiveDisplay(e,a,o))):null,executiveLeader:n?Object.freeze(x0(gpmOpeningExecutiveDisplay(e,a,n))):null,playerControl:r");
-  patched = replaceOnce(patched, "headOfGovernment:x0(j0(e,t,\"head_of_gov\")),headOfStateId:ft(t,\"head_of_state\"),headOfState:x0(j0(e,t,\"head_of_state\"))",
-    "headOfGovernment:x0(gpmOpeningExecutiveDisplay(e,t,j0(e,t,\"head_of_gov\"))),headOfStateId:ft(t,\"head_of_state\"),headOfState:x0(gpmOpeningExecutiveDisplay(e,t,j0(e,t,\"head_of_state\")))");
-  patched = replaceOnce(patched, "representative:x0(o),sanctionDrag:",
-    "representative:x0(gpmOpeningExecutiveDisplay(e,a,o)),sanctionDrag:");
-  patched = replaceOnce(patched, "n.headOfState=hhe(l),n.headOfGovernment=hhe(c)",
-    "n.headOfState=hhe(gpmOpeningExecutiveDisplay(e,t,l)),n.headOfGovernment=hhe(gpmOpeningExecutiveDisplay(e,t,c))");
-  patched = replaceOnce(patched, ".filter(y=>y&&(y.countryKey===t.key||y.id===i)).map(hhe)",
-    ".filter(y=>y&&(y.countryKey===t.key||y.id===i)).map(y=>hhe(y.countryKey===t.key&&(y.id===i||y.id===s)?gpmOpeningExecutiveDisplay(e,t,y):y))");
-  return replaceOnce(patched, "person:hhe(a),people:[...i].map(d=>hhe(e.people?.get?.(d))).filter(Boolean)",
-    "person:hhe(gpmOpeningExecutiveDisplay(e,n,a)),people:[...i].map(d=>hhe(gpmOpeningExecutiveDisplay(e,n,e.people?.get?.(d)))).filter(Boolean)");
+  const capture = "!r&&gpmUprising.captureStartingIdentities(g)";
+  patched = replaceOnce(patched, capture, "gpmAssignOpeningRegisterPeople(g,!!r)," + capture);
+  patched = replaceOnce(patched, "nationalExecutive:nc(d),headOfGovernment:nc(u),headOfState:nc(c)",
+    "nationalExecutive:nc(gpmOpeningExecutiveDisplay(e,o,d)),headOfGovernment:nc(gpmOpeningExecutiveDisplay(e,o,u)),headOfState:nc(gpmOpeningExecutiveDisplay(e,o,c)),gpmOpeningHeadOfGovernment:gpmOpeningAliasedGovernment(e,o)");
+  patched = replaceOnce(patched, "leader:r?Object.freeze(nc(r)):null,executiveLeader:o?Object.freeze(nc(o)):null,playerControl:a",
+    "leader:r?Object.freeze(nc(gpmOpeningExecutiveDisplay(e,a,r))):null,executiveLeader:o?Object.freeze(nc(gpmOpeningExecutiveDisplay(e,a,o))):null,playerControl:a");
+  patched = replaceOnce(patched, "headOfGovernment:nc(fc(e,t,\"head_of_gov\")),headOfStateId:yt(t,\"head_of_state\"),headOfState:nc(fc(e,t,\"head_of_state\"))",
+    "headOfGovernment:nc(gpmOpeningExecutiveDisplay(e,t,fc(e,t,\"head_of_gov\"))),headOfStateId:yt(t,\"head_of_state\"),headOfState:nc(gpmOpeningExecutiveDisplay(e,t,fc(e,t,\"head_of_state\")))");
+  patched = replaceOnce(patched, "representative:nc(r),sanctionDrag:",
+    "representative:nc(gpmOpeningExecutiveDisplay(e,a,r)),sanctionDrag:");
+  patched = replaceOnce(patched, "o.headOfState=kbe(s),o.headOfGovernment=kbe(l)",
+    "o.headOfState=kbe(gpmOpeningExecutiveDisplay(e,t,s)),o.headOfGovernment=kbe(gpmOpeningExecutiveDisplay(e,t,l))");
+  patched = replaceOnce(patched, ".filter(p=>p&&(p.countryKey===t.key||p.id===n||t.dynastyId&&p.dynastyId===t.dynastyId)).map(kbe)",
+    ".filter(p=>p&&(p.countryKey===t.key||p.id===n||t.dynastyId&&p.dynastyId===t.dynastyId)).map(p=>kbe(p.countryKey===t.key&&(p.id===n||p.id===s)?gpmOpeningExecutiveDisplay(e,t,p):p))");
+  return replaceOnce(patched, "person:kbe(A),people:[...n].map(u=>kbe(e.people?.get?.(u))).filter(Boolean)",
+    "person:kbe(gpmOpeningExecutiveDisplay(e,n,A)),people:[...n].map(u=>kbe(gpmOpeningExecutiveDisplay(e,n,e.people?.get?.(u)))).filter(Boolean)");
 }
 
 function patchRegisterPeopleRenderer(source, replaceOnce, data) {
-  const partyCard = 'function pm(e,t,a,n=""){';
+  const partyCard = 'function M2(e,t,a,n=""){';
   const previewData = openingPeopleData(data);
   const setupOffices = Object.fromEntries(Object.entries(previewData.countries).map(([key, { executive }]) =>
     [key, executive.map(([role, id]) => [role, id, previewData.people[id].name])]));
@@ -457,22 +457,22 @@ function patchRegisterPeopleRenderer(source, replaceOnce, data) {
     `${gpmOpeningSetupIdentity}\n${gpmRenderOpeningSetupLeader}\n` +
     `${gpmOpeningRegisterPartyCards}\n${gpmOpeningRegisterGovernmentCards}\n${gpmOpeningRepresentativeCards}\n${partyCard}`);
   const setupPreview = 'return Object.freeze({countryKey:String(e.key),governmentPartyId:s,parties:';
-  const setupLeader = 'let d=K("card-leader"),p=qB(e.__key,i,_h(e.__key));p&&p.playAs?(d.classList.remove("hidden"),K("card-leader-ic").innerHTML=xr(p.portrait,2026,{size:"sm"}),K("card-leader-name").textContent=Dt(p.portrait),K("card-leader-role").textContent=o(`role.${p.roleToken}${p.g==="f"?".f":""}`)):d.classList.add("hidden")';
+  const setupLeader = 'let d=Y("card-leader"),p=az(e.__key,i,Bf(e.__key));p&&p.playAs?(d.classList.remove("hidden"),Y("card-leader-ic").innerHTML=Sr(p.portrait,2026,{size:"sm"}),Y("card-leader-name").textContent=Ct(p.portrait),Y("card-leader-role").textContent=o(`role.${p.roleToken}${p.g==="f"?".f":""}`)):d.classList.add("hidden")';
   const withSetup = replaceOnce(replaceOnce(patched, setupPreview,
     'return Object.freeze({countryKey:String(e.key),gpmOpeningOrgans:t.constitution.organs,governmentPartyId:s,parties:'), setupLeader,
-    'gpmRenderOpeningSetupLeader(K("card-leader"),e.__key,this._suPreview?.gpmOpeningOrgans,e.__sovereign,qB(e.__key,i,_h(e.__key)))');
-  const partyBench = 'g=(e.player.partyBench?.[i.id]||[]).slice(0,2).map(v=>e.people.get(v)).filter(Boolean).map(v=>pm(e,v,"","")).join("")';
+    'gpmRenderOpeningSetupLeader(Y("card-leader"),e.__key,this._suPreview?.gpmOpeningOrgans,e.__sovereign,az(e.__key,i,Bf(e.__key)))');
+  const partyBench = 'g=(e.player.partyBench?.[i.id]||[]).slice(0,2).map(v=>e.people.get(v)).filter(Boolean).map(v=>M2(e,v,"","")).join("")';
   const withCards = replaceOnce(withSetup, partyBench, "g=gpmOpeningRegisterPartyCards(e,i)");
-  const government = '${h&&h.id!==g?pm(t,h,o("role."+DK(a.constitution)+(h.g==="f"?".f":""))):""}';
+  const government = '${h&&h.id!==g?M2(t,h,o("role."+gQ(a.constitution)+(h.g==="f"?".f":""))):""}';
   let withGovernment = replaceOnce(withCards, government, government + '${gpmOpeningRegisterGovernmentCards(t)}');
-  const cabinet = '${pFe(this,t,s)}';
+  const cabinet = '${HQe(this,t,s)}';
   withGovernment = replaceOnce(withGovernment, cabinet, cabinet + '${gpmOpeningRepresentativeCards(t)}');
-  withGovernment = replaceOnce(withGovernment, 'd&&l.push(pm(t,d,a));for(let h of t.player.cabinetIds',
-    'd&&l.push(pm(t,d,gpmOpeningRegisterRoles[d.gpmHistoricalPerson]||a));for(let h of t.player.cabinetIds');
-  withGovernment = replaceOnce(withGovernment, 'y=pm(t,f,g),v=r.get(String(h))',
-    'y=pm(t,f,gpmOpeningRegisterRoles[f.gpmHistoricalPerson]||g),v=r.get(String(h))');
-  return replaceOnce(withGovernment, 'pm(t,p,o("fiche.role.chief_of_staff"),',
-    'pm(t,p,gpmOpeningRegisterRoles[p.gpmHistoricalPerson]||o("fiche.role.chief_of_staff"),');
+  withGovernment = replaceOnce(withGovernment, 'd&&l.push(M2(t,d,a));for(let h of t.player.cabinetIds',
+    'd&&l.push(M2(t,d,gpmOpeningRegisterRoles[d.gpmHistoricalPerson]||a));for(let h of t.player.cabinetIds');
+  withGovernment = replaceOnce(withGovernment, 'y=M2(t,f,g),v=r.get(String(h))',
+    'y=M2(t,f,gpmOpeningRegisterRoles[f.gpmHistoricalPerson]||g),v=r.get(String(h))');
+  return replaceOnce(withGovernment, 'M2(t,p,o("fiche.role.chief_of_staff"),',
+    'M2(t,p,gpmOpeningRegisterRoles[p.gpmHistoricalPerson]||o("fiche.role.chief_of_staff"),');
 }
 
 module.exports = { patchRegisterPeopleWorker, patchRegisterPeopleRenderer };

@@ -41,9 +41,9 @@ const { patchAgreementWorker } = require("./party-agreements.cjs");
 const { patchPartyDomesticRenderer } = require("./party-domestic-ui.cjs");
 const { patchSimulationViewTimeout } = require("./simulation-view-timeout.cjs");
 
-const version = "1.1.6";
-const rendererHash = "fb8bc4ff2b916fbd781af393f87a63120b6ee839c9bc8dc179a444ffb0373227";
-const workerHash = "88e16be58ec635a78681a3c94fcd50606426e36d030edbee36e66805eee65fa5";
+const version = "1.1.9";
+const rendererHash = "5bf93822d46c2a59bca6dfb382bfcbaa9dfdf775af60bbb05e1f998bc753decc";
+const workerHash = "346cb7a4d21cc9d9c963c8340a621acbb85e67e80400788a206d090ae74d8bc5";
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 const axes = [
   { id: "econ", title: "Economy", low: "Statist", high: "Market" },
@@ -142,7 +142,7 @@ function partyIdeologyLabel(party) {
   if (Object.hasOwn(gpmPresets, id)) return gpmPresets[id].label;
   if (party?.nameDesc?.gpmOpeningKind === "aggregate") return "";
   if (party?.nameDesc?.gpmOpeningName && !party.nameDesc.gpmOpeningIdeologySource) return "Ideology unverified";
-  return estimatePartyIdeology(party?.ideology) ?? o("pol.family." + mI(party));
+  return estimatePartyIdeology(party?.ideology) ?? o("pol.family." + rN(party));
 }
 
 function partyIdeologyBadge(party) {
@@ -238,12 +238,12 @@ function partyDialog({ create, parties = [], selectedPartyId, countryKey, submit
   const save = form.querySelector('[type="submit"]');
   const target = form.elements.targetParty;
   if (target) {
-    for (const party of parties) target.add(new Option(ba(party, countryKey), party.id));
+    for (const party of parties) target.add(new Option(Sa(party, countryKey), party.id));
     target.value = selectedPartyId;
     const fillIdentity = () => {
       const party = parties.find(item => item.id === target.value);
-      nameField.value = party ? ba(party, countryKey) : "";
-      tagField.value = party ? party.nameDesc?.gpmTag ?? Jl(party, parties, countryKey) : "";
+      nameField.value = party ? Sa(party, countryKey) : "";
+      tagField.value = party ? party.nameDesc?.gpmTag ?? _c(party, parties, countryKey) : "";
       error.hidden = true;
     };
     target.addEventListener("change", fillIdentity);
@@ -365,7 +365,7 @@ function mountPartyButtons() {
     if (document.querySelector(".gpm-party-dialog")) return;
     partyDialog({ create: true, submit: async draft => {
       const start = document.getElementById("btn-start");
-      if (start.disabled || !ye.setupPlayerControlIntent?.()?.partyId || !ye.setupSeedIntent?.()) {
+      if (start.disabled || !Se.setupPlayerControlIntent?.()?.partyId || !Se.setupSeedIntent?.()) {
         throw new Error("Choose a country and enter a valid world seed first.");
       }
       gpmNewParty = draft;
@@ -376,12 +376,12 @@ function mountPartyButtons() {
   document.addEventListener("click", async event => {
     const trigger = event.target.closest?.("[data-gpm-rename]");
     if (!trigger || openingRename || document.querySelector(".gpm-party-dialog")) return;
-    const session = Ue;
+    const session = Ve;
     const { countryKey, partyId, campaignId, controlRevision } = session?.playerControl || {};
     if (!partyId || !countryKey) return;
     const isCurrent = () => {
       const current = session.playerControl;
-      return Ue === session && current?.partyId === partyId && current.countryKey === countryKey &&
+      return Ve === session && current?.partyId === partyId && current.countryKey === countryKey &&
         current.campaignId === campaignId && current.controlRevision === controlRevision;
     };
     openingRename = trigger.disabled = true;
@@ -395,7 +395,7 @@ function mountPartyButtons() {
         parties, selectedPartyId: partyId, countryKey,
         submit: async draft => {
           if (!isCurrent()) throw new Error("The active campaign or party changed.");
-          const result = await Le(session, "applyPlayerAction", [{
+          const result = await De(session, "applyPlayerAction", [{
             verb: "gpm.party.rename", countryKey, expectedPartyId: partyId,
             expectedCampaignId: campaignId, expectedControlRevision: controlRevision,
             targetPartyId: draft.targetPartyId, rename: { name: draft.name, tag: draft.tag },
@@ -405,7 +405,7 @@ function mountPartyButtons() {
               ? "Enter a name of 1–100 characters and an optional abbreviation of up to 24 characters."
               : "The selected party could not be renamed. Close the dialog and try again.");
           }
-          if (Ue === session) ye.refreshTab?.(session);
+          if (Ve === session) Se.refreshTab?.(session);
         },
       });
     } catch (error) {
@@ -434,8 +434,8 @@ function validatePartyName(value) {
 function renameDomesticParty(sim, country, input) {
   const identity = validatePartyName(input.rename);
   if (!identity) return { ok: false, reason: "name" };
-  const control = Ho(sim);
-  const controlledParty = control.partyId && yP(country, control.partyId);
+  const control = Qo(sim);
+  const controlledParty = control.partyId && HS(country, control.partyId);
   if (!country || country !== sim.player || country.key !== input.countryKey || control.countryKey !== country.key ||
       !controlledParty || input.expectedPartyId !== control.partyId || gpmOpeningNonparty(controlledParty) ||
       (input.expectedCampaignId !== undefined && input.expectedCampaignId !== control.campaignId) ||
@@ -444,7 +444,7 @@ function renameDomesticParty(sim, country, input) {
   }
   const targetId = input.targetPartyId === undefined ? control.partyId : input.targetPartyId;
   if (typeof targetId !== "string" || !targetId) return { ok: false, reason: "party" };
-  const party = yP(country, targetId);
+  const party = HS(country, targetId);
   if (!party || gpmOpeningNonparty(party)) return { ok: false, reason: "party" };
   const descriptor = party.nameDesc || {};
   if (descriptor.gpmName === identity.name && descriptor.gpmTag === identity.tag &&
@@ -457,7 +457,7 @@ function renameDomesticParty(sim, country, input) {
 }
 
 function registerPartyRename() {
-  gvt("gpm.party.rename", { apply: renameDomesticParty });
+  gNt("gpm.party.rename", { apply: renameDomesticParty });
 }
 
 function isCustomParty(party) {
@@ -482,17 +482,17 @@ function createStartingParty(sim, draft) {
   const supportCap = gpmFoundingSupportCap(rules);
   const seedSupport = gpmFoundingSupportSeed(politics, rules);
   if (seedSupport <= 0) throw new Error("This country has no valid starting party support");
-  const previous = bho(politics.parties);
-  const change = J6a(politics, ideology, seedSupport, (party, parties) => {
-    sAe(party, Js(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
+  const previous = KXr(politics.parties);
+  const change = OFA(politics, ideology, seedSupport, (party, parties) => {
+    SUe(party, bs(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
     party.nameDesc = { ...party.nameDesc, gpmName: identity.name, gpmTag: identity.tag, gpmFounded: true };
     if (preset) party.nameDesc.gpmDeclaredIdeology = draft.ideologyPreset;
     if (presetMatches) party.nameDesc.gpmIdeologyPreset = draft.ideologyPreset;
   });
-  DTe(country, change, previous);
-  dAe(country, change, previous);
+  rze(country, change, previous);
+  kUe(country, change, previous);
   sim._reconcilePolity(country);
-  const party = yP(country, change.id);
+  const party = HS(country, change.id);
   if (!party) throw new Error("The new party was not registered");
   if (preset) gpmRecordPartyIdentity(party, draft.ideologyPreset);
   const hasSeats = (politics.chambers || []).some(chamber => (chamber.composition?.[party.id] || 0) > 0);
@@ -500,12 +500,12 @@ function createStartingParty(sim, draft) {
       !politics.parties.some(incumbent => incumbent.id !== party.id && incumbent.support > party.support)) {
     throw new Error("The new party did not qualify for a fair starting position");
   }
-  if (sim.people) tka(sim, country, sim._simYear || 2026);
+  if (sim.people) wXA(sim, country, sim._simYear || 2026);
   const founding = gpmApplyCampaignFounding(sim, country, party, rules, rules);
   sim.gpmCampaignFounding = { countryKey: country.key, partyId: party.id, ...founding };
   const result = sim.switchPlayerControl({ countryKey: country.key, partyId: change.id });
   if (!result?.ok) throw new Error(`Could not lead the new party (${result?.reason || "unknown"})`);
-  const control = Ho(sim);
+  const control = Qo(sim);
   if (control.controlsExecutive || control.controlsCabinet || control.heldOfficeIds.length) {
     throw new Error("The new party unexpectedly received a government office");
   }
@@ -513,7 +513,7 @@ function createStartingParty(sim, draft) {
 
 function gpmApplyEmergingPartyFounding(sim, country, change) {
   if (change.type !== "emerge") return;
-  const party = AL(country, change.id);
+  const party = Gq(country, change.id);
   const rules = gpmCampaignRulesFor(sim);
   if (party?.organization) gpmApplyCampaignFounding(sim, country, party, rules, rules);
 }
@@ -638,30 +638,30 @@ function patchRenderer(bytes) {
   // Patch display lookups, leaving country IDs, native search aliases, and save data intact.
   js = replaceOnce(js, 'const __geoWorker = typeof document ===',
     `${gpmExpectedActor}\nconst gpmOfficialCountryNames = ${JSON.stringify(officialCountryNames)};\nconst __geoWorker = typeof document ===`);
-  const countryName = 'function y4e(e){let t=id[Qv];';
+  const countryName = 'function Yve(e){let t=Xd[tv];';
   js = replaceOnce(js, countryName, `function gpmOfficialCountryName(key) {
-    return Qv === "en" && Object.hasOwn(gpmOfficialCountryNames, key) ? gpmOfficialCountryNames[key] : null;
+    return tv === "en" && Object.hasOwn(gpmOfficialCountryNames, key) ? gpmOfficialCountryNames[key] : null;
   }
-  function y4e(e){
+  function Yve(e){
     const officialName = typeof e === "string" && e.startsWith("country.") ? gpmOfficialCountryName(e.slice(8)) : null;
     if (officialName) return officialName;
-    let t=id[Qv];`);
-  const savedCountryName = '!Object.hasOwn(a,"customName")&&a.name?a.name:bd(a.key||e.playerKey,a.name||t)';
+    let t=Xd[tv];`);
+  const savedCountryName = '!Object.hasOwn(a,"customName")&&a.name?a.name:u0(a.key||e.playerKey,a.name||t)';
   js = replaceOnce(js, savedCountryName,
-    '!Object.hasOwn(a,"customName")&&a.name&&!(gpmOfficialCountryName(a.key||e.playerKey)&&UC(a.key||e.playerKey).includes(a.name))?a.name:bd(a.key||e.playerKey,a.name||t)');
-  const refreshCountryNames = 'function vk(e,t=null){!e||!e.features||(Xbt(t),uPe(e))}';
+    '!Object.hasOwn(a,"customName")&&a.name&&!(gpmOfficialCountryName(a.key||e.playerKey)&&DE(a.key||e.playerKey).includes(a.name))?a.name:u0(a.key||e.playerKey,a.name||t)');
+  const refreshCountryNames = 'function VM(e,t=null){!e||!e.features||(CNt(t),ZDe(e))}';
   js = replaceOnce(js, refreshCountryNames, `${refreshCountryNames}
   function gpmProjectCommittedCountryNames(bridge) {
     const shell = bridge.source?.readView?.(j.SHELL);
     if (!shell?.ready || !bridge.world?.features || bridge._gpmCountryNameShell === shell) return;
     bridge._gpmCountryNameShell = shell;
-    const changed = new Set(lb.keys());
+    const changed = new Set(h9.keys());
     for (const country of shell.countries) {
-      if ((country.customName || "") === (lb.get(country.key) || "")) changed.delete(country.key);
+      if ((country.customName || "") === (h9.get(country.key) || "")) changed.delete(country.key);
       else changed.add(country.key);
     }
     if (!changed.size) return;
-    vk(bridge.world, bridge.source);
+    VM(bridge.world, bridge.source);
     bridge.globe?.invalidateNationLabels?.([...changed]);
   }
   function gpmNationIdentityRow(session, hud, flags) {
@@ -672,17 +672,17 @@ function patchRenderer(bytes) {
     'n&&r.size&&this.onTerritoryProjected?.([...r])}gpmProjectCommittedCountryNames(this);return t}applyTerritoryChange(t){');
   js = replaceOnce(js, '_heroHtml(e,t,a,n){let r=this._fsDraftFlag()',
     '_heroHtml(e,t,a,n){const identity=gpmNationIdentityRow(e,t,n);let r=this._fsDraftFlag()');
-  js = replaceOnce(js, 's=!!n.customName,l=bd(t.key,t.name),', 's=!!identity.customName,l=bd(identity.key,identity.name),');
-  js = replaceOnce(js, '<span class="nid-name">${Pi(G(n,t.key))}</span>', '<span class="nid-name">${Pi(G(identity,identity.key))}</span>');
-  js = replaceOnce(js, 'function ba(e,t=e?.countryKey){', 'function ba(e,t=e?.countryKey){if(e?.nameDesc?.gpmName)return e.nameDesc.gpmName;');
-  js = replaceOnce(js, 's=r.nameDesc?.customTag||(i?N9(`${i}:${r.id}`)?.tag:null);s&&n.add(s)', 's=r.nameDesc?.customTag||(r.nameDesc?.gpmName?r.nameDesc.gpmTag:i?N9(`${i}:${r.id}`)?.tag:null);s&&n.add(s)');
-  js = replaceOnce(js, 'c=r.nameDesc?.customTag||s?.tag||Obt(l,n);n.add(c)', 'c=r.nameDesc?.customTag||(r.nameDesc?.gpmName?r.nameDesc.gpmTag:s?.tag)||Obt(l,n);n.add(c)');
-  const button = '<div class="mp-vd-name">${b(a?ba(a):s)}</div>';
+  js = replaceOnce(js, 's=!!n.customName,l=u0(t.key,t.name),', 's=!!identity.customName,l=u0(identity.key,identity.name),');
+  js = replaceOnce(js, '<span class="nid-name">${Bi(j(n,t.key))}</span>', '<span class="nid-name">${Bi(j(identity,identity.key))}</span>');
+  js = replaceOnce(js, 'function Sa(e,t=e?.countryKey){', 'function Sa(e,t=e?.countryKey){if(e?.nameDesc?.gpmName)return e.nameDesc.gpmName;');
+  js = replaceOnce(js, 's=r.nameDesc?.customTag||(i?XS(`${i}:${r.id}`)?.tag:null);s&&n.add(s)', 's=r.nameDesc?.customTag||(r.nameDesc?.gpmName?r.nameDesc.gpmTag:i?XS(`${i}:${r.id}`)?.tag:null);s&&n.add(s)');
+  js = replaceOnce(js, 'c=r.nameDesc?.customTag||s?.tag||pNt(l,n);n.add(c)', 'c=r.nameDesc?.customTag||(r.nameDesc?.gpmName?r.nameDesc.gpmTag:s?.tag)||pNt(l,n);n.add(c)');
+  const button = '<div class="mp-vd-name">${b(a?Sa(a):s)}</div>';
   js = replaceOnce(js, button, button + '${a?`<button type="button" class="k" data-gpm-rename>Rename Party</button><div class="gpm-my-ideology">${partyIdeologyBadge(a)}</div>`:""}');
-  js = replaceOnce(js, '<span>${o("pol.family."+mI(i))}</span>', '${partyIdeologyBadge(i)}');
+  js = replaceOnce(js, '<span>${o("pol.family."+rN(i))}</span>', '${partyIdeologyBadge(i)}');
   js = replaceOnce(js, '<div class="pa-axis" data-tip="${b(k)}"><div><span>${o(`political.ideology.${v}.neg`)}</span>', '<div class="pa-axis" data-tip="${b(k)}"><div><span>${o(`political.ideology.${v}.neg`)}</span><b class="gpm-axis-score">${partyAxisScore(i.ideology?.[v])}</b>');
-  js = replaceOnce(js, 'f=p?"pol.family."+mI(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?"myparty.hero.titleParty":f,g].filter(_=>Xe(_)).map(_=>o(_))', 'f=p?partyIdeologyLabel(p):"",g="pol.role."+(d.role==="partner"?"coalition":d.role),y=[d.id===n?o("myparty.hero.titleParty"):f,Xe(g)?o(g):""].filter(Boolean)');
-  const startButton = 'tt("btn-start").addEventListener("click",()=>';
+  js = replaceOnce(js, 'h=d?"pol.family."+rN(d):"",f="pol.role."+(u.role==="partner"?"coalition":u.role),g=[u.id===n?"myparty.hero.titleParty":h,f].filter(k=>Qe(k)).map(k=>o(k))', 'h=d?partyIdeologyLabel(d):"",f="pol.role."+(u.role==="partner"?"coalition":u.role),g=[u.id===n?o("myparty.hero.titleParty"):h,Qe(f)?o(f):""].filter(Boolean)');
+  const startButton = 'ct("btn-start").addEventListener("click",()=>';
   const rendererPresets = Object.fromEntries(Object.entries(presets).map(([id, { label, values, program, foundingChoice }]) =>
     [id, { label, values, program, foundingChoice }]));
   js = replaceOnce(js, startButton, [
@@ -706,26 +706,25 @@ function patchRenderer(bytes) {
   ].join("\n"));
   const partyCard = '${this._mpVerdictHtml(t,d,p,m)}</div>';
   js = replaceOnce(js, partyCard, partyCard + '\n      ${renderPartyProfile(t,p,this)}\n      <div class="wide mp-reading" data-mp-reading="gpm-organizing">${renderPartyOrganizing(t,this)}</div>');
-  js = replaceOnce(js, 'this._mpWire(e,t),GK(this,e,t)', 'this._mpWire(e,t),bindPartyProfile(e,t,p,this),bindPartyOrganizing(e,t,this),GK(this,e,t)');
+  js = replaceOnce(js, 'this._mpWire(e,t),sge(this,e.querySelector("[data-mp-customization]"),c,d,t),EQ(this,e,t)',
+    'this._mpWire(e,t),bindPartyProfile(e,t,p,this),bindPartyOrganizing(e,t,this),sge(this,e.querySelector("[data-mp-customization]"),c,d,t),EQ(this,e,t)');
   js = replaceOnce(js, '"data-bill-line","data-party-activity","data-mp-auto-fundraise","data-mp-parl-laws","data-mp-propose","data-mp-customize"].find(y=>a?.hasAttribute(y))', '"data-bill-line","data-party-activity","data-mp-auto-fundraise","data-mp-parl-laws","data-mp-propose","data-mp-customize","data-gpm-congress-size","data-gpm-congress-bargain","data-gpm-congress-priority","data-gpm-congress-vote","data-gpm-congress-priority-vote","data-gpm-profile-focus"].find(y=>a?.hasAttribute(y))');
   const refresh = 'this._mpRefreshReading(t,"identity",this._mpVerdictHtml(e,a,c,r))';
-  const bindCustomization = 'v0e(this,t.querySelector("[data-mp-customization]"),this._mpSession,a,e)';
-  // Refreshing the identity replaces the button. The customization host is a sibling of that reading.
-  js = replaceOnce(js, `this._mpSim=e,${bindCustomization};let n=`, 'this._mpSim=e;let n=');
-  js = replaceOnce(js, refresh, `${refresh},${bindCustomization},this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,c,this),bindPartyOrganizing(t,e,this)`);
-  js = replaceOnce(js, 'iJe(JP,null,"new",!1,e,void 0,a)', 'iJe(JP,null,"new",!1,{...e,partyModRules:gpmCampaignRulesForStart(),...gpmNewParty?{partyModCreate:gpmNewParty}:{}},void 0,a)');
+  // Stock 1.1.9 already rebinds customization immediately after refreshing the identity.
+  js = replaceOnce(js, refresh, `${refresh},this._mpRefreshReading(t,"gpm-support",renderPartySupportBase(e,this)),this._mpRefreshReading(t,"gpm-organizing",renderPartyOrganizing(e,this)),bindPartyProfile(t,e,c,this),bindPartyOrganizing(t,e,this)`);
+  js = replaceOnce(js, 'Aut(DR,null,"new",!1,e,void 0,a)', 'Aut(DR,null,"new",!1,{...e,partyModRules:gpmCampaignRulesForStart(),...gpmNewParty?{partyModCreate:gpmNewParty}:{}},void 0,a)');
   js = replaceOnce(js, 'playerControl:{partyId:a.partyId}', 'playerControl:{partyId:a.partyId,partyModRules:a.partyModRules,...a.partyModCreate?{partyModCreate:a.partyModCreate}:{}}');
   js = replaceOnce(js, '_bPolElectorat(e,t){', '_bPolElectorat(e,t){bindElectorateWidth(e);');
-  js = replaceOnce(js, 'let w=S.top||[],k=Math.max(0,1-w.reduce((N,O)=>N+O.v,0))', 'let w=S.votes||S.top||[],k=S.votes?0:Math.max(0,1-w.reduce((N,O)=>N+O.v,0))');
-  js = replaceOnce(js, 'w.map(N=>{let O=Math.round(N.v*100);', 'w.map(N=>{let O=N.v*100;');
-  js = replaceOnce(js, '${b(i(N.id))} \\xB7 ${$(O)}', '${b(i(N.id))} \\xB7 ${$(O,!1,2)}');
-  js = replaceOnce(js, 'this._chipById(n,N.id,{win:O===0})}<b class="num">${$(Math.round(N.v*100))}', 'this._chipById(n,N.id,{win:O===0})}<b class="num">${$(N.v*100,!1,2)}');
+  js = replaceOnce(js, 'let S=w.top||[],k=Math.max(0,1-S.reduce((L,O)=>L+O.v,0))', 'let S=w.votes||w.top||[],k=w.votes?0:Math.max(0,1-S.reduce((L,O)=>L+O.v,0))');
+  js = replaceOnce(js, 'S.map(L=>{let O=Math.round(L.v*100);', 'S.map(L=>{let O=L.v*100;');
+  js = replaceOnce(js, '${b(i(L.id))} \\xB7 ${F(O)}', '${b(i(L.id))} \\xB7 ${F(O,!1,2)}');
+  js = replaceOnce(js, 'this._chipById(n,L.id,{win:O===0})}<b class="num">${F(Math.round(L.v*100))}', 'this._chipById(n,L.id,{win:O===0})}<b class="num">${F(L.v*100,!1,2)}');
   js = patchLawLabels(js, replaceOnce);
-  js = replaceOnce(js, 'b3("publicFacilityPlannerActive","closePublicFacilityPlanner")',
-    'b3("publicFacilityPlannerActive","closePublicFacilityPlanner"),b3("gpmRegionalActive","closeGpmRegionalMap")');
-  js = replaceOnce(js, 'if(rn!=="game")return;if(ye.warRoomActive)', 'if(rn!=="game")return;if(gpmRegionalGlobeClick(ye,t))return;if(ye.warRoomActive)');
-  js = replaceOnce(js, 'we.onBodyChange=a=>{EN(a),ao.setActiveBody(a)',
-    'we.onBodyChange=a=>{if(a!=="earth")gpmCloseRegionalMap(ye);EN(a),ao.setActiveBody(a)');
+  js = replaceOnce(js, 'yg("publicFacilityPlannerActive","closePublicFacilityPlanner")',
+    'yg("publicFacilityPlannerActive","closePublicFacilityPlanner"),yg("gpmRegionalActive","closeGpmRegionalMap")');
+  js = replaceOnce(js, 'if(an!=="game")return;if(Se.warRoomActive)', 'if(an!=="game")return;if(gpmRegionalGlobeClick(Se,t))return;if(Se.warRoomActive)');
+  js = replaceOnce(js, 'Me.onBodyChange=a=>{HB(a),bi.setActiveBody(a)',
+    'Me.onBodyChange=a=>{if(a!=="earth")gpmCloseRegionalMap(Se);HB(a),bi.setActiveBody(a)');
   js = replaceOnce(js, '_refreshTabUnsafe(e=null){', '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);');
   js = replaceOnce(js, 'showScreen(e){for(let t of document.querySelectorAll(".screen"))',
     'showScreen(e){if(e!=="game")gpmCloseRegionalMap(this);for(let t of document.querySelectorAll(".screen"))');
@@ -756,18 +755,18 @@ function patchWorker(bytes) {
   js = replaceOnce(js, 't.name!==void 0&&(e.nameDesc.customName=t.name),t.tag!==void 0&&(e.nameDesc.customTag=t.tag)',
     't.name!==void 0&&(e.nameDesc.customName=t.name,typeof e.nameDesc.gpmName==="string"&&(e.nameDesc.gpmName=t.name)),t.tag!==void 0&&(e.nameDesc.customTag=t.tag,typeof e.nameDesc.gpmName==="string"&&(e.nameDesc.gpmTag=t.tag))');
   js = patchHistoricalOpeningTopology(js, replaceOnce, "worker");
-  js = replaceOnce(js, "function bRt(){",
-    readFileSync(join(__dirname, "historical-province-climate.js"), "utf8") + "\nfunction bRt(){");
-  js = replaceOnce(js, "i0a(b,P.climate,P.provinces,k)",
-    "i0a(b,P.climate,gpmHistoricalClimateProvinceMap(b.world,P.provinces),k)");
+  js = replaceOnce(js, "function Zzt(){",
+    readFileSync(join(__dirname, "historical-province-climate.js"), "utf8") + "\nfunction Zzt(){");
+  js = replaceOnce(js, "GbA(g,y.climate,y.provinces,M)",
+    "GbA(g,y.climate,gpmHistoricalClimateProvinceMap(g.world,y.provinces),M)");
   js = replaceOnce(js, 'throw new Error("natural-hazards:world-missing");let t=new Set',
-    'throw new Error("natural-hazards:world-missing");gpmHistoricalProvinceHazards(e.world,blt);let t=new Set');
-  js = replaceOnce(js, "function Pma(e){let t={};",
+    'throw new Error("natural-hazards:world-missing");gpmHistoricalProvinceHazards(e.world,H4t);let t=new Set');
+  js = replaceOnce(js, "function SkA(e){let t={};",
     readFileSync(join(__dirname, "historical-province-transport.js"), "utf8") +
-    "\nfunction Pma(e){gpmHistoricalProvinceTransport(e.world,Sue);let t={};");
-  js = replaceOnce(js, "function Ima(e,t,a=null){let r=Sma(t);LMe(r);",
-    "function Ima(e,t,a=null){let r=Sma(t);LMe(r);gpmHistoricalProvinceTransport(e.world,Sue,r.byProvince);");
-  const startSimulation = 'async function Zkt(e,t,a=[]){';
+    "\nfunction SkA(e){gpmHistoricalProvinceTransport(e.world,Wae);let t={};");
+  js = replaceOnce(js, "function wkA(e,t,A=null){let a=vkA(t);iOe(a);",
+    "function wkA(e,t,A=null){let a=vkA(t);iOe(a);gpmHistoricalProvinceTransport(e.world,Wae,a.byProvince);");
+  const startSimulation = 'async function Pjt(e,t,A=[]){';
   js = replaceOnce(js, startSimulation, [
     ...campaignRules.declarations, ...campaignFounding, ...domesticForecast,
     "const gpmAxes = " + JSON.stringify(axes) + ";",
@@ -791,102 +790,103 @@ function patchWorker(bytes) {
     "registerPartyCongressCharter();",
     startSimulation,
   ].join("\n"));
-  js = replaceOnce(js, 'yield"domestic.weekly"),t.has(tr.WEEKLY_POLITICS)', 'yield"domestic.weekly"),_e("advancePartyModDay",()=>advancePartyModDay(e)),t.has(tr.WEEKLY_POLITICS)');
+  js = replaceOnce(js, 'yield"domestic.weekly"),t.has(ea.WEEKLY_POLITICS)', 'yield"domestic.weekly"),we("advancePartyModDay",()=>advancePartyModDay(e)),t.has(ea.WEEKLY_POLITICS)');
   js = replaceOnce(js, 'organization:t.organization?structuredClone(t.organization):null,campaigns:',
     'organization:partyOrganizationForMerger(t),funding:t.gpmForeignFunding?structuredClone(t.gpmForeignFunding):null,domestic:t.gpmDomestic?.membership?{membership:structuredClone(t.gpmDomestic.membership)}:null,currents:t.gpmCongressCurrents?structuredClone(t.gpmCongressCurrents):null,campaigns:');
-  js = replaceOnce(js, 'DTe(t,n,s),dAe(t,n,s),',
-    'DTe(t,n,s),dAe(t,n,s),gpmTransferPartyLifecycle(e,t,n,s),');
-  js = replaceOnce(js, 'w.pol.parties=(i.pol.parties||[]).map(R=>({...JSON.parse(JSON.stringify(R)),campaigns:{},parliament:{lastProposalDay:null,lastConfidenceDay:null}}))',
-    'w.pol.parties=(i.pol.parties||[]).map(R=>gpmPartyForCountryBirth(R,typeof t.gpmUprisingFounderId==="string"?null:P))');
-  js = replaceOnce(js, 'e.people&&Q3t(e,w),I&&(I.__bornIdentity=zk(BLe(w,I))),w}function Oko',
-    'e.people&&Q3t(e,w),I&&(I.__bornIdentity=zk(BLe(w,I))),gpmCommitCountryBirthParties(i,w,t.gpmUprisingFounderId,P),w}function Oko');
+  js = replaceOnce(js, 'rze(t,o,i),kUe(t,o,i),',
+    'rze(t,o,i),kUe(t,o,i),gpmTransferPartyLifecycle(e,t,o,i),');
+  js = replaceOnce(js, 'b.pol.parties=(n.pol.parties||[]).map(P=>({...JSON.parse(JSON.stringify(P)),campaigns:{},parliament:{lastProposalDay:null,lastConfidenceDay:null}}))',
+    'b.pol.parties=(n.pol.parties||[]).map(P=>gpmPartyForCountryBirth(P,typeof t.gpmUprisingFounderId==="string"?null:y))');
+  js = replaceOnce(js, 'e.people&&sIt(e,b),v&&(v.__bornIdentity=FR(Y$e(b,v))),b}function i0o',
+    'e.people&&sIt(e,b),v&&(v.__bornIdentity=FR(Y$e(b,v))),gpmCommitCountryBirthParties(n,b,t.gpmUprisingFounderId,y),b}function i0o');
   // Preserve existing balances and exact refunds in base currency units.
-  js = replaceOnce(js, 'a.treasuryM=jW(CK(a.treasuryM||0,0,1e4))', 'a.treasuryM=jW(CK(a.treasuryM||0,0,1e4),6)');
-  js = replaceOnce(js, 'Xu=1e3,d3e=1e4,NNa=10', 'Xu=1e6,d3e=1e4,NNa=10');
-  js = replaceOnce(js, 'var LNa=1e8/1e3,R4o=LNa/Xu', 'var LNa=Xu,R4o=LNa/Xu');
-  js = replaceOnce(js, 'n.organization.treasuryM=kL(n.organization.treasuryM-o.cost.budgetM)', 'n.organization.treasuryM=partyForeignFundingTreasury(n,jW(n.organization.treasuryM-o.cost.budgetM,6))');
-  js = replaceOnce(js, 'n.treasuryM=SF(re(W5(n.treasuryM),W5(i)))', 'n.treasuryM=partyForeignFundingTreasury(o,SF(re(W5(n.treasuryM),W5(i))))');
-  js = replaceOnce(js, 'i.treasuryM=SF(re(W5(i.treasuryM),W5(s)))', 'i.treasuryM=partyForeignFundingTreasury(Uc(t,a),SF(re(W5(i.treasuryM),W5(s))))');
-  js = replaceOnce(js, 'c.organization.treasuryM=f/Xu,u.organization.treasuryM=y/Xu',
-    'c.organization.treasuryM=partyForeignFundingTreasury(c,f/Xu),u.organization.treasuryM=y/Xu');
-  js = replaceOnce(js, 'n.treasuryM=u/Xu,n.activistsK=Fn(n.activistsK-i.activistsK)',
-    'n.treasuryM=partyForeignFundingTreasury(Uc(e,t.parent),u/Xu),n.activistsK=Fn(n.activistsK-i.activistsK)');
-  js = replaceOnce(js, 'I*=t1t(b,p.id)', 'I*=t1t(b,p.id)*partyOrganizingWeight(b,p.id)');
-  js = replaceOnce(js, 'function Kqa(e,t,a){return gAe(e.parties,[{share:1,', 'function Kqa(e,t,a){return gAe(e.parties,[{id:t.id,share:1,');
+  js = replaceOnce(js, 'A.treasuryM=rq(yT(A.treasuryM||0,0,1e4))', 'A.treasuryM=rq(yT(A.treasuryM||0,0,1e4),6)');
+  js = replaceOnce(js, 'Xu=1e3,Eye=1e4,Hna=10', 'Xu=1e6,Eye=1e4,Hna=10');
+  js = replaceOnce(js, 'var jna=1e8/1e3,xYr=jna/Xu', 'var jna=Xu,xYr=jna/Xu');
+  js = replaceOnce(js, 'o.organization.treasuryM=Oq(o.organization.treasuryM-r.cost.budgetM)', 'o.organization.treasuryM=partyForeignFundingTreasury(o,rq(o.organization.treasuryM-r.cost.budgetM,6))');
+  js = replaceOnce(js, 'o.treasuryM=Iz(se(D3(o.treasuryM),D3(n)))', 'o.treasuryM=partyForeignFundingTreasury(o,Iz(se(D3(o.treasuryM),D3(n))))');
+  js = replaceOnce(js, 'n.treasuryM=Iz(se(D3(n.treasuryM),D3(i)))', 'n.treasuryM=partyForeignFundingTreasury(K0(t,a),Iz(se(D3(n.treasuryM),D3(i))))');
+  js = replaceOnce(js, 'l.organization.treasuryM=B/Xu,c.organization.treasuryM=p/Xu',
+    'l.organization.treasuryM=partyForeignFundingTreasury(l,B/Xu),c.organization.treasuryM=p/Xu');
+  js = replaceOnce(js, 'o.treasuryM=c/Xu,o.activistsK=gn(o.activistsK-n.activistsK)',
+    'o.treasuryM=partyForeignFundingTreasury(K0(e,t.parent),c/Xu),o.activistsK=gn(o.activistsK-i.activistsK)');
+  js = replaceOnce(js, 'b*=_8t(h,E.id)', 'b*=_8t(h,E.id)*partyOrganizingWeight(h,E.id)');
+  js = replaceOnce(js, 'function v1a(e,t,A){return TUe(e.parties,[{share:1,', 'function v1a(e,t,A){return TUe(e.parties,[{id:t.id,share:1,');
   // Build the controlled party's private summaries before publishing the public roster.
-  js = replaceOnce(js, 'function htn({querySim:e,country:t,partyId:a}){',
-    'function htn({querySim:e,country:t,partyId:a},gpmElectorate,gpmFunding,gpmPlan,gpmFactionData){');
-  js = replaceOnce(js, 'function k8r(e){let t=e?.player;', 'function k8r(e){let gpmElectorate,t=e?.player;');
-  js = replaceOnce(js, 'devShowIds:!!e._devShowIds,player:n,people:u,dynasties:d,',
-    'devShowIds:!!e._devShowIds,player:{...n,...vt(e,t)},people:u,dynasties:d,');
-  js = replaceOnce(js, 'electorate:Dr(o._electorateBreakdown(n)),electoral:', 'electorate:(gpmElectorate=Dr(o._electorateBreakdown(n))),electoral:');
-  js = replaceOnce(js, 'party:htn(r)}}var gtn',
-    'party:htn(r,gpmElectorate,partyForeignFundingView(e,t,r.partyId),{...gpmDomesticView(e,t,r.partyId),agenda:gpmDomesticAgenda(e,t,r.partyId),recentResult:gpmPartyElectionRecapView(t,r.partyId)},gpmFactionCongressData(e,t,r.partyId))}}var gtn');
-  js = replaceOnce(js, 'outreach:K6a(e,t,a),negotiations:LLa(e,t,a)',
-    'outreach:K6a(e,t,a),organizing:partyOrganizingView(e,t,a),campaignPlan:gpmPlan,congress:gpmFactionData,' +
-    'regionalCampaign:partyRegionalCampaignView(e,t,a),agreement:partyAgreementView(e,t,a),foreignFunding:gpmFunding,' +
-    'supportBase:partySupportBaseView(e,t,a,gpmElectorate),negotiations:LLa(e,t,a)');
-  js = replaceOnce(js, 'function Ngt(e,t,a){', `${isCustomParty}\n${gpmApplyEmergingPartyFounding}\nfunction Ngt(e,t,a){`);
-  js = replaceOnce(js, 'n=J6a(a,f,m*.55,u)', 'n=J6a(a,f,gpmFoundingSupportSeed(a,gpmCampaignRulesFor(e)),u)');
-  js = replaceOnce(js, 'e._reconcilePolity(t),Ngt(e,t,n)',
-    'e._reconcilePolity(t),gpmApplyEmergingPartyFounding(e,t,n),Ngt(e,t,n)');
-  js = replaceOnce(js, 'if((y.support||0)<.06&&(h.support||0)<.06&&Ed(y.ideology,h.ideology)<.35)', 'if(!isCustomParty(y)&&!isCustomParty(h)&&(y.support||0)<.06&&(h.support||0)<.06&&Ed(y.ideology,h.ideology)<.35)');
-  js = replaceOnce(js, 'let m=i.find(f=>(f._starve||0)>=24);', 'let m=i.find(f=>!isCustomParty(f)&&(f._starve||0)>=24);');
-  js = replaceOnce(js, 'this.sim=b,t.profileWorldTrade===!0', 'this.sim=b,o?retirePartyCongresses(b):t.playerControl?.partyModCreate&&createStartingParty(b,t.playerControl.partyModCreate),t.profileWorldTrade===!0');
-  js = replaceOnce(js, 'comp:e.nameDesc.comp||null,...e.nameDesc.customName?{customName:e.nameDesc.customName}:{},...e.nameDesc.customTag?{customTag:e.nameDesc.customTag}:{}}:null}function N8r', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null,gpmDeclaredIdeology:e.nameDesc.gpmDeclaredIdeology||null,gpmHistoricalIdeology:e.nameDesc.gpmHistoricalIdeology||null,gpmHistoricalIdeologyEquivalent:e.nameDesc.gpmHistoricalIdeologyEquivalent||null,...e.nameDesc.customName?{customName:e.nameDesc.customName}:{},...e.nameDesc.customTag?{customTag:e.nameDesc.customTag}:{}}:null}function N8r');
-  js = replaceOnce(js, 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y}))', 'top:d.slice(0,3).map(([f,y])=>({id:f,v:y})),votes:d.map(([f,y])=>({id:f,v:y}))');
+  js = replaceOnce(js, 'function RTo({querySim:e,country:t,partyId:A}){',
+    'function RTo({querySim:e,country:t,partyId:A},gpmElectorate,gpmFunding,gpmPlan,gpmFactionData){');
+  js = replaceOnce(js, 'function Uja(e){let t=e?.player;', 'function Uja(e){let gpmElectorate,t=e?.player;');
+  js = replaceOnce(js, 'devShowIds:!!e._devShowIds,player:o,people:c,dynasties:u,',
+    'devShowIds:!!e._devShowIds,player:{...o,...vt(e,t)},people:c,dynasties:u,');
+  js = replaceOnce(js, 'electorate:qa(r._electorateBreakdown(o)),electoral:', 'electorate:(gpmElectorate=qa(r._electorateBreakdown(o))),electoral:');
+  js = replaceOnce(js, 'party:RTo(a)}}var DTo',
+    'party:RTo(a,gpmElectorate,partyForeignFundingView(e,t,a.partyId),{...gpmDomesticView(e,t,a.partyId),agenda:gpmDomesticAgenda(e,t,a.partyId),recentResult:gpmPartyElectionRecapView(t,a.partyId)},gpmFactionCongressData(e,t,a.partyId))}}var DTo');
+  js = replaceOnce(js, 'outreach:mFA(e,t,A),negotiations:Rda(e,t,A)',
+    'outreach:mFA(e,t,A),organizing:partyOrganizingView(e,t,A),campaignPlan:gpmPlan,congress:gpmFactionData,' +
+    'regionalCampaign:partyRegionalCampaignView(e,t,A),agreement:partyAgreementView(e,t,A),foreignFunding:gpmFunding,' +
+    'supportBase:partySupportBaseView(e,t,A,gpmElectorate),negotiations:Rda(e,t,A)');
+  js = replaceOnce(js, 'function ZDt(e,t,A){', `${isCustomParty}\n${gpmApplyEmergingPartyFounding}\nfunction ZDt(e,t,A){`);
+  js = replaceOnce(js, 'o=OFA(A,B,E*.55,c)', 'o=OFA(A,B,gpmFoundingSupportSeed(A,gpmCampaignRulesFor(e)),c)');
+  js = replaceOnce(js, 'e._reconcilePolity(t),ZDt(e,t,o)',
+    'e._reconcilePolity(t),gpmApplyEmergingPartyFounding(e,t,o),ZDt(e,t,o)');
+  js = replaceOnce(js, 'if((p.support||0)<.06&&(Q.support||0)<.06&&_1(p.ideology,Q.ideology)<.35)', 'if(!isCustomParty(p)&&!isCustomParty(Q)&&(p.support||0)<.06&&(Q.support||0)<.06&&_1(p.ideology,Q.ideology)<.35)');
+  js = replaceOnce(js, 'let E=n.find(B=>(B._starve||0)>=24);', 'let E=n.find(B=>!isCustomParty(B)&&(B._starve||0)>=24);');
+  js = replaceOnce(js, 'this.sim=g,gwe(M=>be(g,{domain:"economy.finance",code:"finance-ledger.entries-off-grid",repair:"entries_settled_on_grid",context:M})),t.profileWorldTrade===!0',
+    'this.sim=g,r?retirePartyCongresses(g):t.playerControl?.partyModCreate&&createStartingParty(g,t.playerControl.partyModCreate),gwe(M=>be(g,{domain:"economy.finance",code:"finance-ledger.entries-off-grid",repair:"entries_settled_on_grid",context:M})),t.profileWorldTrade===!0');
+  js = replaceOnce(js, 'comp:e.nameDesc.comp||null,...e.nameDesc.customName?{customName:e.nameDesc.customName}:{},...e.nameDesc.customTag?{customTag:e.nameDesc.customTag}:{}}:null}function Aza', 'comp:e.nameDesc.comp||null,gpmName:e.nameDesc.gpmName||null,gpmTag:e.nameDesc.gpmTag||null,gpmIdeologyPreset:e.nameDesc.gpmIdeologyPreset||null,gpmDeclaredIdeology:e.nameDesc.gpmDeclaredIdeology||null,gpmHistoricalIdeology:e.nameDesc.gpmHistoricalIdeology||null,gpmHistoricalIdeologyEquivalent:e.nameDesc.gpmHistoricalIdeologyEquivalent||null,...e.nameDesc.customName?{customName:e.nameDesc.customName}:{},...e.nameDesc.customTag?{customTag:e.nameDesc.customTag}:{}}:null}function Aza');
+  js = replaceOnce(js, 'top:u.slice(0,3).map(([B,p])=>({id:B,v:p}))', 'top:u.slice(0,3).map(([B,p])=>({id:B,v:p})),votes:u.map(([B,p])=>({id:B,v:p}))');
   js = patchLawVoteSnapshots(js, replaceOnce);
-  js = replaceOnce(js, 'id:r.__provId,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,partyPerf:',
-    'id:r.__provId,key:r.__provKey,name:r.__name||"",pop:r.__pop||0,lean:r.__lean}));return{regions:a,day:e.day||0,partyPerf:');
-  js = replaceOnce(js, 'function bAe(e,t,a=null){', 'function bAe(e,t,a=null,gpmApplyRegions=true){');
-  js = replaceOnce(js, 'return{id:p.id,name:p.name||"",pop:p.pop||0,shares:U6a',
-    'return{id:p.id,key:p.key,name:p.name||"",pop:p.pop||0,shares:U6a');
-  js = replaceOnce(js, 'if(m>0)for(let h in p.shares)p.shares[h]/=m;let f=null,y=-1;',
-    'if(m>0)for(let h in p.shares)p.shares[h]/=m;if(gpmApplyRegions)p.shares=partyRegionalShares(e,p.shares,p.key,t.day);let f=null,y=-1;');
-  js = replaceOnce(js, 'function JOe(e,t){let a=t.pol;if(!a)return;', 'function JOe(e,t){let a=t.pol;if(!a)return;gpmBindCampaignPolity(e,a);');
-  js = replaceOnce(js, 'countries.set(i.key,i);let c=[],u=(v,b,S)=>',
-    'countries.set(i.key,i);gpmBindCampaignPolity(e,i.pol);let c=[],u=(v,b,S)=>');
+  js = replaceOnce(js, 'id:a.__provId,name:a.__name||"",pop:a.__pop||0,lean:a.__lean}));return{regions:A,partyPerf:',
+    'id:a.__provId,key:a.__provKey,name:a.__name||"",pop:a.__pop||0,lean:a.__lean}));return{regions:A,day:e.day||0,partyPerf:');
+  js = replaceOnce(js, 'function OUe(e,t,A=null){', 'function OUe(e,t,A=null,gpmApplyRegions=true){');
+  js = replaceOnce(js, 'return{id:d.id,name:d.name||"",pop:d.pop||0,shares:PFA',
+    'return{id:d.id,key:d.key,name:d.name||"",pop:d.pop||0,shares:PFA');
+  js = replaceOnce(js, 'if(E>0)for(let Q in d.shares)d.shares[Q]/=E;let B=null,p=-1;',
+    'if(E>0)for(let Q in d.shares)d.shares[Q]/=E;if(gpmApplyRegions)d.shares=partyRegionalShares(e,d.shares,d.key,t.day);let B=null,p=-1;');
+  js = replaceOnce(js, 'function $qe(e,t){let A=t.pol;if(!A)return;', 'function $qe(e,t){let A=t.pol;if(!A)return;gpmBindCampaignPolity(e,A);');
+  js = replaceOnce(js, 'countries.set(n.key,n);let l=[],c=(f,g,h)=>',
+    'countries.set(n.key,n);gpmBindCampaignPolity(e,n.pol);let l=[],c=(f,g,h)=>');
   // Regional seat rules use the adjusted local shares. National rules use their population-weighted change.
-  js = replaceOnce(js, 'function LO(e,t,a=null){let r=a?.kind||null', 'function LO(e,t,a=null,gpmForecast=null){let r=a?.kind||null');
-  js = replaceOnce(js, 'd=u&&c.score||0,p=r6t(l,d,B4o(e,t,l,u?c:null));',
-    'd=gpmForecast?.partyId===l.id?gpmForecast.score:u&&c.score||0,p=r6t(gpmForecast?.base?{...l,support:gpmForecast.base[l.id]??l.support}:l,d,gpmForecast?.promiseEffect?.(l,u?c:null)??B4o(e,t,l,u?c:null));');
+  js = replaceOnce(js, 'function vO(e,t,A=null){let a=A?.kind||null', 'function vO(e,t,A=null,gpmForecast=null){let a=A?.kind||null');
+  js = replaceOnce(js, 'u=c&&l.score||0,d=kPt(s,u,FYr(e,t,s,c?l:null));',
+    'u=gpmForecast?.partyId===s.id?gpmForecast.score:c&&l.score||0,d=kPt(gpmForecast?.base?{...s,support:gpmForecast.base[s.id]??s.support}:s,u,gpmForecast?.promiseEffect?.(s,c?l:null)??FYr(e,t,s,c?l:null));');
   // Native energy promise previews read the same infrastructure totals for each party.
-  js = replaceOnce(js, "function y0e(e){let t=new Map,a=(r,o)=>",
-    "function y0e(e){const gpmPreview=gpmPromisePreviewInfrastructure?.get(e);if(gpmPreview?.plantSites)return gpmPreview.plantSites;let t=new Map,a=(r,o)=>");
-  js = replaceOnce(js, "a(r.provKey,r.src).pendingGW+=Math.max(0,r.gw||0));return t}",
-    "a(r.provKey,r.src).pendingGW+=Math.max(0,r.gw||0));if(gpmPreview)gpmPreview.plantSites=t;return t}");
-  js = replaceOnce(js, "function Jzr(e,t){let a=e.finance",
-    "function Jzr(e,t){const gpmCommitments=gpmPromisePreviewInfrastructure?.get(e)?.commitments;" +
-    "if(gpmCommitments?.has(t))return gpmCommitments.get(t);let a=e.finance");
-  js = replaceOnce(js, "return{committedMonthlyBn:V(o),payableBn:r.get(a)||0}}",
-    'const gpmResult={committedMonthlyBn:V(o),payableBn:r.get(a)||0};' +
+  js = replaceOnce(js, "function bpe(e){let t=new Map,A=(a,r)=>",
+    "function bpe(e){const gpmPreview=gpmPromisePreviewInfrastructure?.get(e);if(gpmPreview?.plantSites)return gpmPreview.plantSites;let t=new Map,A=(a,r)=>");
+  js = replaceOnce(js, "A(a.provKey,a.src).pendingGW+=Math.max(0,a.gw||0));return t}",
+    "A(a.provKey,a.src).pendingGW+=Math.max(0,a.gw||0));if(gpmPreview)gpmPreview.plantSites=t;return t}");
+  js = replaceOnce(js, "function p8r(e,t){let A=e.finance",
+    "function p8r(e,t){const gpmCommitments=gpmPromisePreviewInfrastructure?.get(e)?.commitments;" +
+    "if(gpmCommitments?.has(t))return gpmCommitments.get(t);let A=e.finance");
+  js = replaceOnce(js, "return{committedMonthlyBn:J(r),payableBn:a.get(A)||0}}",
+    'const gpmResult={committedMonthlyBn:J(r),payableBn:a.get(A)||0};' +
     'if(gpmCommitments&&t&&typeof t==="object")gpmCommitments.set(t,gpmResult);return gpmResult}');
-  js = replaceOnce(js, 'let l=WO(t,i,e.day||0,o.contestId||null);return m3e(e,t,a,l,o)',
-    'let l=WO(t,i,e.day||0,o.contestId||null);return partyCampaignSpendPreview(e,t,a,l,o)');
-  js = replaceOnce(js, 'if(s.transfer)return dao(s,t,a,{rulingId:r,rig:mAe(e,o),polity:n,electoralMap:i});let l={},c=0;',
-    'if(s.transfer)return dao(s,t,a,{rulingId:r,rig:mAe(e,o),polity:n,electoralMap:i});if(n&&["direct","equal-per-state","delegated"].includes(e.selectMode||"direct"))t=partyRegionalNationalShares(n,i,t);let l={},c=0;');
-  js = replaceOnce(js, 'let C=W6a(w,I,e.apportionment);for(let M in C)',
-    'let C=W6a(w,I,e.apportionment);if(i?.gpmDistrictSeats)i.gpmDistrictSeats.set(S.id,{total:I,seats:C});for(let M in C)');
-  js = replaceOnce(js, 'd=g=>{let v=f1t(c,g),b={};',
-    'd=g=>{i?.gpmDistrictSeats?.clear();let v=f1t(c,g),b={};');
-  js = replaceOnce(js, 'reportOrder:[]},M=r.parties.filter(ee=>b[ee.id]!=null).map(ee=>({id:ee.id,votes:Math.max(0,S[ee.id]||0)}))',
-    'reportOrder:[]},gpmNational=partyRegionalNationalShares(r,tD(e,t),S),M=r.parties.filter(ee=>b[ee.id]!=null).map(ee=>({id:ee.id,votes:Math.max(0,gpmNational[ee.id]||0)}))');
-  js = replaceOnce(js, 'u=c6t(e,t,c,i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}',
-    'u=c6t(e,t,partyRegionalNationalShares(t.pol,tD(e,t),c),i),d={day:i,electionDay:r.nextDay,kind:o,contestId:n,values:u}');
-  js = replaceOnce(js, 'nHe(r,a,t.params||{})',
-    '(a==="gpm.foreignFunding"?partyForeignFundingDirectory(r,t.params||{}):a==="gpm.partyLawShortlist"?partyLawShortlist(r):nHe(r,a,t.params||{}))');
+  js = replaceOnce(js, 'let s=OI(t,n,e.day||0,r.contestId||null);return pye(e,t,A,s,r)',
+    'let s=OI(t,n,e.day||0,r.contestId||null);return partyCampaignSpendPreview(e,t,A,s,r)');
+  js = replaceOnce(js, 'if(i.transfer)return ykr(i,t,A,{rulingId:a,rig:DUe(e,r),polity:o,electoralMap:n});let s={},l=0;',
+    'if(i.transfer)return ykr(i,t,A,{rulingId:a,rig:DUe(e,r),polity:o,electoralMap:n});if(o&&["direct","equal-per-state","delegated"].includes(e.selectMode||"direct"))t=partyRegionalNationalShares(o,n,t);let s={},l=0;');
+  js = replaceOnce(js, 'let w=IFA(b,v,e.apportionment);for(let I in w)',
+    'let w=IFA(b,v,e.apportionment);if(i?.gpmDistrictSeats)i.gpmDistrictSeats.set(S.id,{total:v,seats:w});for(let I in w)');
+  js = replaceOnce(js, 'u=m=>{let f=q8t(l,m),g={};',
+    'u=m=>{i?.gpmDistrictSeats?.clear();let f=q8t(l,m),g={};');
+  js = replaceOnce(js, 'reportOrder:[]},I=a.parties.filter(te=>g[te.id]!=null).map(te=>({id:te.id,votes:Math.max(0,h[te.id]||0)}))',
+    'reportOrder:[]},gpmNational=partyRegionalNationalShares(a,VO(e,t),h),I=a.parties.filter(te=>g[te.id]!=null).map(te=>({id:te.id,votes:Math.max(0,gpmNational[te.id]||0)}))');
+  js = replaceOnce(js, 'c=Qye(e,t,l,n),u={day:n,electionDay:a.nextDay,kind:r,contestId:o,values:c}',
+    'c=Qye(e,t,partyRegionalNationalShares(t.pol,VO(e,t),l),n),u={day:n,electionDay:a.nextDay,kind:r,contestId:o,values:c}');
+  js = replaceOnce(js, 'Oot(a,A,t.params||{})',
+    '(A==="gpm.foreignFunding"?partyForeignFundingDirectory(a,t.params||{}):A==="gpm.partyLawShortlist"?partyLawShortlist(a):Oot(a,A,t.params||{}))');
   // Publish summaries while keeping private party state on the worker.
-  js = replaceOnce(js, 'n.pol.parties=C8r(t.pol);',
-    'n.pol.parties=C8r(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party);');
+  js = replaceOnce(js, 'o.pol.parties=Gja(t.pol);',
+    'o.pol.parties=Gja(t.pol).map(({gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...party})=>party);');
   const { patchHistoricalConflictsWorker } = require("./historical-conflicts.cjs");
   const { patchHistoricalNameWorker } = require("./historical-identities.cjs");
   let historical = replaceOnce(patchHistoricalConflictsWorker(patchUprisingWorker(js, replaceOnce), replaceOnce),
-    'this.sim=b,!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)',
-    'this.sim=b,gpmInitializeCampaignRules(b,t.playerControl?.partyModRules,o),gpmMigrateDomesticCampaign(b),o&&(gpmMigrateFactionDoctrines(b),gpmCongressMigrateCurrents(b)),!o&&gpmUprising.captureStartingIdentities(b),o?retirePartyCongresses(b)');
-  historical = replaceOnce(historical, '(a==="gpm.historicalMap"?',
-    '(a==="gpm.partyFactionQuote"?gpmFactionQuote(r,r.player,AL(r.player,yn(r.player)),t.params||{},"player"):' +
-    'a==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(r),founding:r.gpmCampaignFounding??null}:' +
-    'a==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(r,r.player,yn(r.player),t.params?.contestId):a==="gpm.historicalMap"?');
+    'this.sim=g,!r&&gpmUprising.captureStartingIdentities(g),r?retirePartyCongresses(g)',
+    'this.sim=g,gpmInitializeCampaignRules(g,t.playerControl?.partyModRules,r),gpmMigrateDomesticCampaign(g),r&&(gpmMigrateFactionDoctrines(g),gpmCongressMigrateCurrents(g)),!r&&gpmUprising.captureStartingIdentities(g),r?retirePartyCongresses(g)');
+  historical = replaceOnce(historical, '(A==="gpm.historicalMap"?',
+    '(A==="gpm.partyFactionQuote"?gpmFactionQuote(a,a.player,Gq(a.player,Lo(a.player)),t.params||{},"player"):' +
+    'A==="gpm.campaignRules"?{rules:gpmCampaignRulesFor(a),founding:a.gpmCampaignFounding??null}:' +
+    'A==="gpm.partyCampaignPlanForecast"?partyCampaignPlanForecast(a,a.player,Lo(a.player),t.params?.contestId):A==="gpm.historicalMap"?');
   const { patchWorkingCapital } = require("./working-capital.cjs");
   const { patchTerritorialPayroll } = require("./territorial-payroll.cjs");
   historical = patchWorkingCapital(historical, replaceOnce);
@@ -894,25 +894,25 @@ function patchWorker(bytes) {
   let worker = patchHistoricalNameWorker(patchSudanReunificationWorker(historical, replaceOnce), replaceOnce);
   worker = patchDomesticWorker(worker, replaceOnce);
   worker = patchAgreementWorker(worker, replaceOnce);
-  worker = replaceOnce(worker, ',situation:jUe(e,a),space:e.space?hXo(e,a.key):null,pressures:yXo(e,a),technology:',
-    ',situation:jUe(e,a),gpmDomesticAgenda:gpmDomesticAgenda(e,a,yn(a)),space:e.space?hXo(e,a.key):null,pressures:yXo(e,a),technology:');
-  worker = replaceOnce(worker, 'e._onLegislative(t,s,m,v,p,S)?.electionResolved===!0?e._politicalCampaigns.delete(d):s.composition=m',
-    '(()=>{const recap=gpmPartyElectionRecap(e,t,s,f,m,p,l);if(e._onLegislative(t,s,m,v,p,S)?.electionResolved===!0){e._politicalCampaigns.delete(d);gpmStorePartyElectionRecap(t,recap)}else s.composition=m})()');
-  worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,...a})',
-    '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...a})');
+  worker = replaceOnce(worker, ',situation:urt(e,A),space:e.space?Q_o(e,A.key):null,pressures:p_o(e,A),technology:',
+    ',situation:urt(e,A),gpmDomesticAgenda:gpmDomesticAgenda(e,A,Lo(A)),space:e.space?Q_o(e,A.key):null,pressures:p_o(e,A),technology:');
+  worker = replaceOnce(worker, 'e._onLegislative(t,i,E,f,d,h)?.electionResolved===!0?e._politicalCampaigns.delete(u):i.composition=E',
+    '(()=>{const recap=gpmPartyElectionRecap(e,t,i,B,E,d,s);if(e._onLegislative(t,i,E,f,d,h)?.electionResolved===!0){e._politicalCampaigns.delete(u);gpmStorePartyElectionRecap(t,recap)}else i.composition=E})()');
+  worker = replaceOnce(worker, '({gpmUprisingPreparations,gpmForeignFunding,...A})',
+    '({gpmUprisingPreparations,gpmForeignFunding,gpmDomestic,gpmFactionPolitics,gpmCharter,...A})');
   worker = patchFactionPeopleWorker(worker, replaceOnce);
   worker = patchFactionDevelopmentWorker(worker, replaceOnce);
-  worker = replaceOnce(worker, 'afe(this,this.player),a.changed&&(aNe(this),vLe(this))',
-    'afe(this,this.player),gpmFactionSeparatePartyLeader(this,this.player,AL(this.player,yn(this.player))),a.changed&&(aNe(this),vLe(this))');
+  worker = replaceOnce(worker, 'G5e(this,this.player),A.changed&&(Nze(this),y$e(this))',
+    'G5e(this,this.player),gpmFactionSeparatePartyLeader(this,this.player,Gq(this.player,Lo(this.player))),A.changed&&(Nze(this),y$e(this))');
   worker = require("./party-radicalization.cjs").patchPoliticalCrisisWorker(worker, replaceOnce);
   worker = replaceOnce(worker, 'const __geoWorker = typeof document ===',
     `${gpmActionMatchesActor}\nconst __geoWorker = typeof document ===`);
-  const playerActionActor = 'let c=Ho(e);return Te(e,e.player,{...s,speakerId:c.representativeId,partyId:c.partyId,roleId:c.parliamentaryRole})';
+  const playerActionActor = 'let l=Qo(e);return Ke(e,e.player,{...i,speakerId:l.representativeId,partyId:l.partyId,roleId:l.parliamentaryRole})';
   // The host stamps the currently controlled actor, so validate the captured actor first.
   worker = replaceOnce(worker, playerActionActor,
-    `let c=Ho(e);
-    if(!gpmActionMatchesActor(s,c))return{ok:false,reason:"stale_actor",message:"Player control changed. Refresh this view and try again."};
-    return Te(e,e.player,{...s,speakerId:c.representativeId,partyId:c.partyId,roleId:c.parliamentaryRole})`);
+    `let l=Qo(e);
+    if(!gpmActionMatchesActor(i,l))return{ok:false,reason:"stale_actor",message:"Player control changed. Refresh this view and try again."};
+    return Ke(e,e.player,{...i,speakerId:l.representativeId,partyId:l.partyId,roleId:l.parliamentaryRole})`);
   worker = patchOpeningRegisterWorker(worker, replaceOnce);
   worker = patchRegisterPeopleWorker(worker, replaceOnce, openingRegister);
   return Buffer.from(require("./frontline-worker.cjs").patchFrontlineWorker(worker, replaceOnce));
@@ -940,7 +940,7 @@ function partyOrganizationForMerger(party) {
   const organization = structuredClone(party.organization);
   const reservedForOrganizing = [...(party.gpmOrganizing?.projects || []), ...(party.gpmRegional?.projects || [])]
     .reduce((sum, project) => sum + project.activistsK, 0);
-  organization.activistsK = kL(Math.min(1e5, organization.activistsK + reservedForOrganizing));
+  organization.activistsK = Oq(Math.min(1e5, organization.activistsK + reservedForOrganizing));
   const returnedFactionEscrow = (party.gpmFactionPolitics?.offers || []).reduce((cash, offer) =>
     offer.status === "accepted" ? cash + offer.cashM : cash, 0);
   if (returnedFactionEscrow) organization.treasuryM = gpmDomesticMoney(organization.treasuryM + returnedFactionEscrow);
@@ -949,12 +949,12 @@ function partyOrganizationForMerger(party) {
 
 function gpmTransferPartyLifecycle(sim, country, event, snapshots) {
   if (event.type === "split") {
-    const parent = Uc(country, event.parent);
-    const child = Uc(country, event.child);
+    const parent = K0(country, event.parent);
+    const child = K0(country, event.child);
     if (parent && child) gpmDomesticMoveMembers(parent, child, .25);
   }
   if (!event.gone || !event.into) return;
-  const survivor = Uc(country, event.into);
+  const survivor = K0(country, event.into);
   if (!survivor?.organization) return;
   const old = snapshots.get(event.gone);
   partyForeignFundingMerge(sim, country, survivor, event.gone, old?.funding);
@@ -976,9 +976,9 @@ function gpmPartyForCountryBirth(party, share) {
   if (copy.outreach) copy.outreach.project = null;
 
   if (copy.organization && share !== null) {
-    const treasury = Iw(copy.organization.treasuryM);
+    const treasury = NI(copy.organization.treasuryM);
     const reserved = partyForeignFundingGrants(party.gpmForeignFunding)
-      .reduce((sum, grant) => sum + Iw(grant.unspentM), 0);
+      .reduce((sum, grant) => sum + NI(grant.unspentM), 0);
     copy.organization.treasuryM = Math.floor(Math.max(0, treasury - reserved) * share) / Xu;
     const activists = Math.round((copy.organization.activistsK || 0) * 1000);
     copy.organization.activistsK = Math.floor(activists * share) / 1000;
@@ -990,12 +990,12 @@ function gpmCommitCountryBirthParties(parent, child, founderId, share) {
   if (typeof founderId === "string") return;
   for (const copy of child.pol?.parties || []) {
     if (!copy.organization) continue;
-    const previous = Uc(parent, copy.id);
+    const previous = K0(parent, copy.id);
     const organization = previous?.organization;
     if (!organization) continue;
     gpmDomesticMoveMembers(previous, copy, share);
-    organization.treasuryM = (Iw(organization.treasuryM) - Iw(copy.organization.treasuryM)) / Xu;
-    organization.activistsK = kL(organization.activistsK - copy.organization.activistsK);
+    organization.treasuryM = (NI(organization.treasuryM) - NI(copy.organization.treasuryM)) / Xu;
+    organization.activistsK = Oq(organization.activistsK - copy.organization.activistsK);
   }
 }
 

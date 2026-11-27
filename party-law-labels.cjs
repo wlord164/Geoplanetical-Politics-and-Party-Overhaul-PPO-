@@ -1,11 +1,11 @@
 function partyLawResultContext(event, context) {
-  const snapshot = S2(context);
+  const snapshot = Dh(context);
   const countryKey = event.payload?.countryKey || snapshot?.countryKey;
   const sim = context?.sim;
   if (!countryKey || !sim) return snapshot;
 
-  const player = sim.readView?.(j.POLITICS)?.player;
-  const parliament = sim.readView?.(j.SITROOM)?.parliament;
+  const player = sim.readView?.(G.POLITICS)?.player;
+  const parliament = sim.readView?.(G.SITROOM)?.parliament;
   const savedParties = (player?.key === countryKey ? player.pol?.parties : null)
     || (parliament?.countryKey === countryKey ? parliament.parties : null);
   return { ...snapshot, countryKey, savedParties };
@@ -20,7 +20,7 @@ function partyLawResultIdeology(row, snapshot, saved) {
   const recorded = atVote?.view?.family || snapshot?.view?.family || row.family || saved?.view?.family || saved?.family;
   if (typeof recorded !== 'string' || !recorded) return '';
   const key = recorded.startsWith('pol.family.') ? recorded : `pol.family.${recorded}`;
-  return Xe(key) ? o(key) : recorded;
+  return Qe(key) ? o(key) : recorded;
 }
 
 function partyLawVoteDetail(country, rows) {
@@ -32,17 +32,17 @@ function partyLawVoteDetail(country, rows) {
       id: party.id,
       ideology: party.ideology ? { ...party.ideology } : null,
       nameDesc: party.nameDesc ? { ...party.nameDesc } : null,
-      view: { family: gf(party), color: PC(party) },
+      view: { family: Am(party), color: W7(party) },
     };
     return { ...row, gpmVoteProfile };
   });
 }
 
 function patchLawLabels(js, replaceOnce) {
-  const formatter = 'function fI(e=[],t={}){';
+  const formatter = 'function sN(e=[],t={}){';
   js = replaceOnce(js, formatter, `${partyLawResultContext}\n${partyLawResultIdeology}\n${formatter}`);
   js = replaceOnce(js,
-    'let a=(t?.parties||[]).map(i=>({...i,countryKey:i.countryKey||t.countryKey})),n=S3(a,t?.countryKey),r=t?.institutionState?.government||t||{};return e.map(i=>{let s=i.partyId??i.id,l=a.find(p=>p.id===s),',
+    'let a=(t?.parties||[]).map(i=>({...i,countryKey:i.countryKey||t.countryKey})),n=Q4(a,t?.countryKey),r=t?.institutionState?.government||t||{};return e.map(i=>{let s=i.partyId??i.id,l=a.find(p=>p.id===s),',
     `let a=(t?.parties||[]).map(i=>({...i,countryKey:i.countryKey||t.countryKey}));
     const snapshots=new Map(a.map(party=>[party.id,party]));
     const saved=new Map((t?.savedParties||[]).map(party=>[party.id,party]));
@@ -54,43 +54,43 @@ function patchLawLabels(js, replaceOnce) {
       named.add(id);
       a.push({...profile,id,countryKey:t?.countryKey});
     }
-    let n=S3(a,t?.countryKey),r=t?.institutionState?.government||t||{};return e.map(i=>{let s=i.partyId??i.id,l=snapshots.get(s)||i.gpmVoteProfile||saved.get(s),`);
+    let n=Q4(a,t?.countryKey),r=t?.institutionState?.government||t||{};return e.map(i=>{let s=i.partyId??i.id,l=snapshots.get(s)||i.gpmVoteProfile||saved.get(s),`);
   js = replaceOnce(js,
     'u=l?.view?.family?`pol.family.${l.view.family}`:null,d=`pol.role.${c==="partner"?"coalition":c}`;',
     'u=partyLawResultIdeology(i,snapshots.get(s),saved.get(s)),d=`pol.role.${c==="partner"?"coalition":c}`;');
   js = replaceOnce(js,
-    'identity:[u,d].filter(p=>p&&Xe(p)).map(p=>o(p)).join(" \\xB7 "),family:u&&Xe(u)?o(u):"",',
-    'identity:[u,Xe(d)?o(d):""].filter(Boolean).join(" \\xB7 "),family:u,');
-  js = replaceOnce(js, 'aj(e.payload,S2(t),{ccy:', 'aj(e.payload,partyLawResultContext(e,t),{ccy:');
+    'identity:[u,d].filter(p=>p&&Qe(p)).map(p=>o(p)).join(" \\xB7 "),family:u&&Qe(u)?o(u):"",',
+    'identity:[u,Qe(d)?o(d):""].filter(Boolean).join(" \\xB7 "),family:u,');
+  js = replaceOnce(js, 'aK(e.payload,Dh(t),{ccy:', 'aK(e.payload,partyLawResultContext(e,t),{ccy:');
   js = replaceOnce(js,
-    'parties:fI(a.parties,S2(t)),stages:zk(a.history,S2(t)),approvalCost:',
-    'parties:fI(a.parties,partyLawResultContext(e,t)),stages:zk(a.history,S2(t)),approvalCost:');
+    'parties:sN(a.parties,Dh(t)),stages:vP(a.history,Dh(t)),approvalCost:',
+    'parties:sN(a.parties,partyLawResultContext(e,t)),stages:vP(a.history,Dh(t)),approvalCost:');
   return replaceOnce(js,
-    'parties:fI(a.parties,S2(t)),stages:zk(a.history,S2(t))}}});H("politics.snap_election_rejected"',
-    'parties:fI(a.parties,partyLawResultContext(e,t)),stages:zk(a.history,S2(t))}}});H("politics.snap_election_rejected"');
+    'parties:sN(a.parties,Dh(t)),stages:vP(a.history,Dh(t))}}});K("politics.snap_election_rejected"',
+    'parties:sN(a.parties,partyLawResultContext(e,t)),stages:vP(a.history,Dh(t))}}});K("politics.snap_election_rejected"');
 }
 
 function patchLawVoteSnapshots(js, replaceOnce) {
-  const law = 'function J3e(e,t,a,r=!1,o={}){';
+  const law = 'function K5e(e,t,A,a=!1,r={}){';
   js = replaceOnce(js, law, `${partyLawVoteDetail}\n${law}`);
   js = replaceOnce(js,
-    'if(n)return Q3e(e,t,a,null,{passes:!0,decreed:!0,history:[]});let c={executiveStages:!1}',
-    'if(n)return Q3e(e,t,a,null,{passes:!0,decreed:!0,history:[]});if(!a.parliamentaryVote)l.detail=partyLawVoteDetail(t,l.detail);let c={executiveStages:!1}');
+    'if(o)return _5e(e,t,A,null,{passes:!0,decreed:!0,history:[]});let l={executiveStages:!1}',
+    'if(o)return _5e(e,t,A,null,{passes:!0,decreed:!0,history:[]});if(!A.parliamentaryVote)s.detail=partyLawVoteDetail(t,s.detail);let l={executiveStages:!1}');
   js = replaceOnce(js,
-    'parties:r.detail.map(v=>({partyId:v.id,seats:v.seats,vote:!!v.vote,yesSeats:v.yesSeats??null,noSeats:v.noSeats??null,role:v.role||null}))',
-    'parties:r.detail.map(v=>({partyId:v.id,seats:v.seats,vote:!!v.vote,yesSeats:v.yesSeats??null,noSeats:v.noSeats??null,role:v.role||null,gpmVoteProfile:(a.parliamentaryVote?.detail?.find(row=>row.id===v.id)||v).gpmVoteProfile||null}))');
+    'parties:a.detail.map(f=>({partyId:f.id,seats:f.seats,vote:!!f.vote,yesSeats:f.yesSeats??null,noSeats:f.noSeats??null,role:f.role||null}))',
+    'parties:a.detail.map(f=>({partyId:f.id,seats:f.seats,vote:!!f.vote,yesSeats:f.yesSeats??null,noSeats:f.noSeats??null,role:f.role||null,gpmVoteProfile:(a.parliamentaryVote?.detail?.find(row=>row.id===f.id)||f).gpmVoteProfile||null}))');
   js = replaceOnce(js,
-    'detail:(n.parliamentaryVote.detail||[]).map(d=>({partyId:d.id,seats:d.seats,vote:!!d.vote,yesSeats:d.yesSeats??null,noSeats:d.noSeats??null,role:d.role||null}))',
-    'detail:(n.parliamentaryVote.detail||[]).map(d=>({partyId:d.id,seats:d.seats,vote:!!d.vote,yesSeats:d.yesSeats??null,noSeats:d.noSeats??null,role:d.role||null,gpmVoteProfile:d.gpmVoteProfile||null}))');
+    'detail:(o.parliamentaryVote.detail||[]).map(u=>({partyId:u.id,seats:u.seats,vote:!!u.vote,yesSeats:u.yesSeats??null,noSeats:u.noSeats??null,role:u.role||null}))',
+    'detail:(o.parliamentaryVote.detail||[]).map(u=>({partyId:u.id,seats:u.seats,vote:!!u.vote,yesSeats:u.yesSeats??null,noSeats:u.noSeats??null,role:u.role||null,gpmVoteProfile:u.gpmVoteProfile||null}))');
   js = replaceOnce(js,
-    'let l=a.fc||f5e(i,s,a.params,e._electoralMap(t)),c,u=!1,d=!1,p=[],m=!1,f=null;if(r)c=!0;',
-    'let l=a.fc||f5e(i,s,a.params,e._electoralMap(t)),c,u=!1,d=!1,p=[],m=!1,f=null;if(!n)l.detail=partyLawVoteDetail(t,l.detail);if(r)c=!0;');
+    'let s=A.fc||m7e(n,i,A.params,e._electoralMap(t)),l,c=!1,u=!1,d=[],E=!1,B=null;if(a)l=!0;',
+    'let s=A.fc||m7e(n,i,A.params,e._electoralMap(t)),l,c=!1,u=!1,d=[],E=!1,B=null;if(!n)s.detail=partyLawVoteDetail(t,s.detail);if(a)l=!0;');
   js = replaceOnce(js,
-    'parties:(l.detail||[]).map(w=>({partyId:w.id,seats:Number(w.seats||0),vote:!!w.vote,yesSeats:w.yesSeats??null,noSeats:w.noSeats??null,role:w.role||null}))',
-    'parties:(l.detail||[]).map(w=>({partyId:w.id,seats:Number(w.seats||0),vote:!!w.vote,yesSeats:w.yesSeats??null,noSeats:w.noSeats??null,role:w.role||null,gpmVoteProfile:w.gpmVoteProfile||null}))');
+    'parties:(s.detail||[]).map(b=>({partyId:b.id,seats:Number(b.seats||0),vote:!!b.vote,yesSeats:b.yesSeats??null,noSeats:b.noSeats??null,role:b.role||null}))',
+    'parties:(s.detail||[]).map(b=>({partyId:b.id,seats:Number(b.seats||0),vote:!!b.vote,yesSeats:b.yesSeats??null,noSeats:b.noSeats??null,role:b.role||null,gpmVoteProfile:b.gpmVoteProfile||null}))');
   return replaceOnce(js,
-    'p={currencyCode:a.ccy?.code||null,leadPartyId:lt(a)?.government?.leadPartyId||null,coalitionPartyIds:(lt(a)?.government?.coalitionPartyIds||[]).map(String),parties:(u.parties||[]).map(m=>({id:String(m.id),countryKey:a.key,nameDesc:db(m.nameDesc),view:{color:PC(m),family:gf(m)}}))',
-    'p={countryKey:a.key,currencyCode:a.ccy?.code||null,leadPartyId:lt(a)?.government?.leadPartyId||null,coalitionPartyIds:(lt(a)?.government?.coalitionPartyIds||[]).map(String),parties:(u.parties||[]).map(m=>({id:String(m.id),countryKey:a.key,nameDesc:db(m.nameDesc),ideology:db(m.ideology||null),view:{color:PC(m),family:gf(m)}}))');
+    'd={currencyCode:A.ccy?.code||null,leadPartyId:Qt(A)?.government?.leadPartyId||null,coalitionPartyIds:(Qt(A)?.government?.coalitionPartyIds||[]).map(String),parties:(c.parties||[]).map(E=>({id:String(E.id),countryKey:A.key,nameDesc:Qb(E.nameDesc),view:{color:W7(E),family:Am(E)}}))',
+    'd={countryKey:A.key,currencyCode:A.ccy?.code||null,leadPartyId:Qt(A)?.government?.leadPartyId||null,coalitionPartyIds:(Qt(A)?.government?.coalitionPartyIds||[]).map(String),parties:(c.parties||[]).map(E=>({id:String(E.id),countryKey:A.key,nameDesc:Qb(E.nameDesc),ideology:Qb(E.ideology||null),view:{color:W7(E),family:Am(E)}}))');
 }
 
 module.exports = { patchLawLabels, patchLawVoteSnapshots };

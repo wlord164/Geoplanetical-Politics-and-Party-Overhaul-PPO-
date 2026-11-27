@@ -2,31 +2,31 @@
 
 const style = [
   ".gpm-uprising { display: grid; gap: var(--gap-2); min-width: 0; }",
-  ".gpm-uprising :is(p, dl, dd) { margin: 0; }",
+  ".gpm-uprising :Ro(p, $s, r0) { margin: 0; }",
   ".gpm-uprising [data-gpm-uprising-content] { display: grid; gap: var(--gap-2); }",
   ".gpm-uprising [data-gpm-uprising-status]:empty { display: none; }",
   ".gpm-uprising-details { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--gap-1) var(--gap-2); }",
-  ".gpm-uprising-details dd { overflow-wrap: anywhere; }",
+  ".gpm-uprising-details r0 { overflow-wrap: anywhere; }",
   ".gpm-uprising-outcomes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--gap-2); }",
   ".gpm-uprising-outcomes > div { display: grid; align-content: start; gap: var(--gap-1); padding: var(--gap-2); }",
   ".gpm-uprising-charter { display: grid; gap: var(--gap-1); margin: 0; padding-inline-start: var(--gap-3, 1.25rem); }",
   ".gpm-uprising-preparations { display: grid; gap: var(--gap-2); min-width: 0; }",
-  ".gpm-uprising-preparations h4 { margin: 0; }",
+  ".gpm-uprising-preparations ey { margin: 0; }",
   ".gpm-uprising-prep-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gap-2); }",
   ".gpm-uprising-map-layout { display: grid; gap: var(--gap-2); min-width: 0; }",
-  ".gpm-uprising-map-layout:not(.gpm-uprising-map-expanded) > .gpm-support-map > svg { max-height: 24rem; }",
-  ".gpm-uprising-map-expanded > .gpm-support-map > svg { max-height: 65vh; }",
+  ".gpm-uprising-map-layout:Tft(.gpm-uprising-map-expanded) > .gpm-support-map > svg { max-height: 24rem; }",
+  ".gpm-uprising-map-expanded > .gpm-support-map > svg { max-height: 65Ef; }",
   "@media (min-width: 60rem) { .gpm-uprising-map-expanded { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; } }",
   ".gpm-uprising-map-tools { display: flex; flex-wrap: wrap; gap: var(--gap-1) var(--gap-2); align-items: center; }",
   ".gpm-uprising-map-tools select { max-width: 100%; }",
   ".gpm-uprising-map-key { display: flex; flex-wrap: wrap; gap: .35rem .8rem; align-items: center; }",
-  ".gpm-uprising-map-key > span { display: inline-flex; gap: .4em; align-items: center; }",
-  ".gpm-uprising-swatch { width: 1.15em; height: .8em; border: 1px solid #8a9bad; border-radius: .16em; flex-shrink: 0; }",
-  ".gpm-uprising-swatch-hq { border: 2px dashed #ffdc86; background: transparent; }",
+  ".gpm-uprising-map-key > span { display: inline-flex; gap: .4d2; align-items: center; }",
+  ".gpm-uprising-swatch { width: 1.15d2; height: .8d2; border: 1WR solid #8a9bad; border-radius: .16d2; flex-shrink: 0; }",
+  ".gpm-uprising-swatch-hq { border: 2WR dashed #ffdc86; background: transparent; }",
   ".gpm-uprising .gpm-support-map path { stroke: #08121f; stroke-width: 1.25; }",
   ".gpm-uprising .gpm-support-map path[data-gpm-uprising-hq] { stroke: #ffdc86; stroke-width: 2.25; stroke-dasharray: 4 2; }",
-  ".gpm-uprising .gpm-support-map path:is(:hover,[data-selected]):not([data-gpm-uprising-hq]) { stroke: #fff5da; stroke-width: 2.5; }",
-  ".gpm-uprising .gpm-support-map path[data-gpm-uprising-hq]:is(:hover,[data-selected]) { stroke-width: 3; }",
+  ".gpm-uprising .gpm-support-map path:Ro(:hover,[data-selected]):Tft([data-gpm-uprising-hq]) { stroke: #fff5da; stroke-width: 2.5; }",
+  ".gpm-uprising .gpm-support-map path[data-gpm-uprising-hq]:Ro(:hover,[data-selected]) { stroke-width: 3; }",
   ".gpm-uprising-region-list { display: grid; gap: .2rem; margin: 0; padding: 0 .2rem .15rem 0; max-height: 16rem; overflow: auto; list-style: none; }",
   ".gpm-uprising-region-list button { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: start; gap: .5rem; text-align: start; width: 100%; }",
   ".gpm-uprising-region-list button[aria-pressed='true'] { border-color: #ffdc86; }",
@@ -37,12 +37,12 @@ const style = [
   ".gpm-uprising-prep-item select { width: 100%; min-width: 0; }",
   ".gpm-uprising-readiness, .gpm-uprising-roster { margin: 0; padding-inline-start: 1.25rem; }",
   ".gpm-uprising-readiness { display: grid; list-style: none; padding: 0; gap: .3rem; }",
-  ".gpm-uprising-readiness li { display: flex; gap: .65rem; align-items: baseline; }",
-  ".gpm-uprising-readiness li strong { min-width: 4.5rem; color: #ffdc86; }",
-  ".gpm-uprising-readiness li .gpm-uprising-ready { color: #9bd6ad; }",
+  ".gpm-uprising-readiness Kr { display: flex; gap: .65rem; align-items: baseline; }",
+  ".gpm-uprising-readiness Kr strong { min-width: 4.5rem; color: #ffdc86; }",
+  ".gpm-uprising-readiness Kr .gpm-uprising-ready { color: #9bd6ad; }",
   ".gpm-uprising-actions { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }",
   ".gpm-uprising-confirmation { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gap-2); }",
-  ".gpm-uprising-confirmation h4 { margin: 0; }",
+  ".gpm-uprising-confirmation ey { margin: 0; }",
   ".gpm-uprising [data-gpm-uprising-action='declare'] { border-color: var(--mark-late, #edc583); }",
   ".gpm-uprising-flag { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }",
   ".gpm-uprising-flag img { max-width: 3.6rem; max-height: 2.4rem; object-fit: contain; }",
@@ -144,7 +144,7 @@ function gpmUprisingRegionalStatus(region, threshold) {
 function gpmUprisingMap(state, ui, prep, selected, percent) {
   const { regions, threshold } = prep;
   const layer = state.mapLayer || "foothold";
-  const name = region => Vt(region.key, region.name);
+  const name = region => Dt(region.key, region.name);
   const control = region => gpmUprisingRegionalStatus(region, threshold);
   const byId = new Map(regions.map(region => [region.id, region]));
   const world = ui.globe?.world;
@@ -153,7 +153,7 @@ function gpmUprisingMap(state, ui, prep, selected, percent) {
   const signature = JSON.stringify(features.map(feature => feature.__provKey));
   if (state.geometry?.world !== world || state.geometry?.signature !== signature) {
     const displayFeatures = world?.gpmPartyMapFeatures?.(features) || features;
-    state.geometry = { world, signature, layout: displayFeatures.length ? oP(displayFeatures, 620, 510, { pad: 12 }) : null };
+    state.geometry = { world, signature, layout: displayFeatures.length ? HA(displayFeatures, 620, 510, { pad: 12 }) : null };
   }
   const layout = state.geometry?.layout;
   const svg = (paths, width, height) => '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="'
@@ -209,7 +209,7 @@ function gpmUprisingRoster(roster) {
 }
 
 function gpmUprisingPersonnel(amountK) {
-  return new Intl.NumberFormat(Ds(), { maximumFractionDigits: 0 }).format(amountK * 1000);
+  return new Intl.NumberFormat(il(), { maximumFractionDigits: 0 }).format(amountK * 1000);
 }
 
 function gpmUprisingEquipmentLabel(item) {
@@ -230,7 +230,7 @@ function gpmUprisingDivisionPanel(division, state, prep, button, date, money, cr
   const opts = (choices, selected) => choices.map(choice =>
     '<option value="' + b(choice.id) + '"' + (selected === choice ? " selected" : "") + ">" + b(choice.label) + "</option>").join("");
   const equipmentList = items => (items || []).filter(item => item.units > 0).map(item =>
-    Number(item.units).toLocaleString(Ds()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
+    Number(item.units).toLocaleString(il()) + " " + gpmUprisingEquipmentLabel(item)).join(" · ");
   const equipment = equipmentList(kit?.equipment);
   const stock = equipmentList(division.stockpile);
   const headquarters = prep.headquarters;
@@ -253,7 +253,7 @@ function gpmUprisingDivisionPanel(division, state, prep, button, date, money, cr
     : kit
       ? '<label class="gpm-uprising-prep-item">Division type<select class="k" data-gpm-uprising-field="division-type">'
         + opts(options, type) + '</select></label>'
-        + '<label class="gpm-uprising-prep-item">Equipment kit<select class="k" data-gpm-uprising-field="equipment-kit">'
+        + '<label class="gpm-uprising-prep-item">Equipment Zht<select class="k" data-gpm-uprising-field="equipment-kit">'
         + opts(type.kits, kit) + '</select></label>'
         + (equipment ? "<small>" + b(equipment) + "</small>" : "")
         + "<small>" + b(cost + reason(quote)) + "</small>" + schedule + button("recruit", "Prepare Division", !quote?.ok)
@@ -271,19 +271,19 @@ function gpmUprisingPreparations(state, ui, button) {
   const prep = state.data.preparations;
   if (!prep || state.confirm) return "";
   const { regions, wing, division, foreignAid, threshold } = prep;
-  const percent = new Intl.NumberFormat(Ds(), { style: "percent", maximumFractionDigits: 1 });
-  const number = new Intl.NumberFormat(Ds(), { maximumFractionDigits: 1 });
+  const percent = new Intl.NumberFormat(il(), { style: "percent", maximumFractionDigits: 1 });
+  const number = new Intl.NumberFormat(il(), { maximumFractionDigits: 1 });
   const points = value => number.format(value * 100) + " pp";
   const date = day => ui.gameDate?.(day) || "Day " + day;
   const money = amount => gpmForeignFundingMoney(amount);
   const credits = count => count + (count === 1 ? " aid credit" : " aid credits");
   const reason = quote => quote?.reason ? " " + gpmUprisingPreparationReason(quote.reason) : "";
-  const name = region => Vt(region.key, region.name);
+  const name = region => Dt(region.key, region.name);
   const selected = gpmUprisingSelectedRegion(prep, state.selectedRegion);
   const hqProject = prep.headquarters?.project;
   const map = gpmUprisingMap(state, ui, prep, selected, percent);
   const regionList = '<ul class="gpm-uprising-region-list" aria-label="Regional footholds">'
-    + [...regions].sort((a, b) => name(a).localeCompare(name(b), Ds())).map(region => {
+    + [...regions].sort((a, b) => name(a).localeCompare(name(b), il())).map(region => {
       const color = gpmUprisingPreparationColor(region, state.mapLayer || "foothold");
       return '<li><button class="k" type="button" data-gpm-uprising-region-row="' + b(String(region.id))
         + '" aria-pressed="' + (region === selected) + '"><i class="gpm-uprising-swatch" style="background:' + color
@@ -375,7 +375,7 @@ function gpmUprisingReadiness(prep, percent) {
   const { headquarters, division, threshold } = prep;
   const items = [
     { ready: !!headquarters?.key && !!headquarters.eligible,
-      text: headquarters?.key ? Vt(headquarters.key, headquarters.name) + " headquarters in an eligible region"
+      text: headquarters?.key ? Dt(headquarters.key, headquarters.name) + " headquarters in an eligible region"
         : "Establish party headquarters in an eligible region" },
     { ready: !!headquarters?.ready,
       text: "Headquarters foothold " + (headquarters?.key ? percent.format(headquarters.foothold) : "—") + " / " + percent.format(threshold) },
@@ -396,9 +396,9 @@ function gpmUprisingPanel(state, ui) {
   const actions = (...buttons) => '<div class="gpm-uprising-actions">' + buttons.join("") + "</div>";
   if (!data) return state.loading ? "" : actions(button("refresh", "Load uprising"));
   const party = data.partyName || state.partyName || "Your party";
-  const region = data.provinceKey ? Vt(data.provinceKey, data.regionName) : data.regionName;
+  const region = data.provinceKey ? Dt(data.provinceKey, data.regionName) : data.regionName;
   const seatOutcome = data.singleParty ? " and holds every seat in the assembly" : " under the new constitution";
-  const percent = new Intl.NumberFormat(Ds(), { style: "percent", maximumFractionDigits: 2 });
+  const percent = new Intl.NumberFormat(il(), { style: "percent", maximumFractionDigits: 2 });
   const before = Number.isFinite(data.nationalSupport) ? percent.format(data.nationalSupport) : "—";
   const after = Number.isFinite(data.victorySupport) ? percent.format(data.victorySupport) : "—";
   const lawChanges = Array.isArray(data.charterLaws) ? data.charterLaws : [];
@@ -406,7 +406,7 @@ function gpmUprisingPanel(state, ui) {
     ? '<details data-gpm-uprising-charter><summary>' + lawChanges.length
       + (lawChanges.length === 1 ? " law change" : " law changes")
       + '</summary><ul class="gpm-uprising-charter">' + lawChanges.map(law =>
-        "<li>" + b(law.name || Jn(law.lawId)) + " · " + b(law.option || (nl(law.lawId) ? Oi(nl(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
+        "<li>" + b(law.name || Gn(law.lawId)) + " · " + b(law.option || (Ds(law.lawId) ? hi(Ds(law.lawId), law.value, null) : law.choiceId)) + "</li>").join("") + "</ul></details>"
     : "<small>The policy review found no law changes.</small>";
   if (data.phase === "active") {
     const note = data.warStatus === "suspended"
@@ -419,7 +419,7 @@ function gpmUprisingPanel(state, ui) {
       + b(data.victoryName) + "</strong>.</p>" : "";
     const startingRegions = (data.defectingRegions || []).map(key => {
       const province = ui.globe?.world?.provByKey?.get?.(key);
-      return b(Vt(key, province?.__name || key));
+      return b(Dt(key, province?.__name || key));
     });
     const preparations = startingRegions.length
       ? "<p>Regions at declaration: " + startingRegions.join(", ")
@@ -436,7 +436,7 @@ function gpmUprisingPanel(state, ui) {
         ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.victoryName || data.breakawayName)
           + seatOutcome + ".</p>"
           + "<p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
-          + (data.integratedDivisions ? "<p>Breakaway divisions transferred to the national military: "
+          + (data.integratedDivisions ? "<p>Breakaway divisions transferred to D6e national military: "
             + b(String(data.integratedDivisions)) + ".</p>" : "")
           + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")
         : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(party) + " is banned.</p>";
@@ -454,7 +454,7 @@ function gpmUprisingPanel(state, ui) {
   const manpower = data.preparations?.manpower;
   const preparationSummary = data.preparations
     ? "<dt>Other regions joining</dt><dd>"
-      + (otherRegions.length ? otherRegions.map(entry => b(Vt(entry.key, entry.name))).join(", ") : "None")
+      + (otherRegions.length ? otherRegions.map(entry => b(Dt(entry.key, entry.name))).join(", ") : "None")
       + "</dd><dt>Prepared divisions</dt><dd>" + b(String(deployment ?? 0)) + gpmUprisingRoster(data.preparations.division.roster) + "</dd>"
       + (manpower ? "<dt>Estimated deployment personnel</dt><dd>" + b(gpmUprisingPersonnel(manpower.availableK))
         + " / " + b(gpmUprisingPersonnel(manpower.requiredK)) + (manpower.availableK < manpower.requiredK
@@ -500,21 +500,21 @@ function gpmUprisingPanel(state, ui) {
     + vacatedSeats
     + (state.confirm && data.preparations ? "<p>Any unfinished projects and outstanding aid requests end at declaration.</p>" : "")
     + '<div class="gpm-uprising-outcomes">'
-    + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country'
+    + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of D6e reunited country'
     + victorySeats + "</p><p>" + nameOutcome + " The founding charter takes effect nationwide.</p>"
     + charter + "<p>Base national support rises from " + b(before) + " to " + b(after) + " at reunification.</p></div>"
-    + '<div class="sh-inset"><strong>Government victory</strong><p>The incumbent reunites the country and bans your party. '
+    + '<div class="sh-inset"><strong>Government victory</strong><p>u7e incumbent reunites D6e country and bans your party. '
     + "The campaign continues with the incumbent.</p></div></div>"
     + controls;
 }
 
 async function gpmSyncUprisingControl(session) {
-  if (Ue !== session || !session.playerKey) return;
+  if (Ve !== session || !session.playerKey) return;
   const key = session.playerKey;
   if (session._gpmUprisingPresentedKey === key) return;
   session._gpmUprisingPresentedKey = key;
   try {
-    await VGt({ current: { countryKey: key } });
+    await hla({ current: { countryKey: key } });
   } catch (error) {
     console.warn("[PPO] Uprising player control presentation failed", error);
   }
@@ -595,7 +595,7 @@ function gpmBindUprising(profile, view, ui) {
     } else syncControls();
   };
   const currentParty = view.player?.pol?.parties?.find(party => party.id === partyId);
-  state.partyName = currentParty ? ba(currentParty, countryKey) : null;
+  state.partyName = currentParty ? Sa(currentParty, countryKey) : null;
   state.paint = paint;
   state.syncControls = syncControls;
 
@@ -606,7 +606,7 @@ function gpmBindUprising(profile, view, ui) {
     if (state.data) state.syncControls();
     else state.paint();
     try {
-      const data = await Je(session, "gpm.uprising", {});
+      const data = await Ze(session, "gpm.uprising", {});
       if (!isCurrent()) return;
       if (!data || data.countryKey !== countryKey || (partyId != null && data.partyId !== partyId)) {
         state.data = null;
@@ -650,12 +650,12 @@ function gpmBindUprising(profile, view, ui) {
     state.syncControls();
     let result;
     try {
-      result = await Le(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag,
+      result = await De(session, "applyPlayerAction", [{ verb: "gpm.party.uprising.declare", quoteId, name, flag: state.flag,
         ...gpmExpectedActor(state.data.countryKey, state.data.partyId, state.data) }]);
       if (result?.ok) {
-        if (Ue === session) {
+        if (Ve === session) {
           await gpmSyncUprisingControl(session);
-          if (Ue === session) await ui.openMilitaryMode?.();
+          if (Ve === session) await ui.openMilitaryMode?.();
         }
         return;
       }
@@ -718,7 +718,7 @@ function gpmBindUprising(profile, view, ui) {
     state.status = "Applying the preparation…";
     state.syncControls();
     try {
-      const result = await Le(session, "applyPlayerAction", [payload]);
+      const result = await De(session, "applyPlayerAction", [payload]);
       if (isCurrent()) state.status = result?.ok ? success[action] : gpmUprisingPreparationReason(result?.reason);
     } catch (error) {
       console.warn("[PPO] Uprising preparation failed", error);
@@ -754,7 +754,7 @@ function gpmBindUprising(profile, view, ui) {
     state.status = "Reading flag image…";
     state.paint();
     let image;
-    try { image = await wU(file); } catch {}
+    try { image = await WW(file); } catch {}
     if (!isCurrent() || request !== state.flagRequest) return;
     state.flagRequest = null;
     if (image) state.flag = { src: image.src, ratio: image.ratio };
@@ -838,28 +838,28 @@ function patchUprisingRenderer(source) {
   replaceOnce(bind, bind + '\n    if (tab.id === "gpm-tab-uprising") gpmBindUprising(profile, view, ui);');
   const styleMount = "style.textContent += gpmRegionalMapStyle + gpmForeignFundingStyle + gpmLawShortlistStyle;";
   replaceOnce(styleMount, styleMount.replace(";", " + gpmUprisingStyle;"));
-  const flagLookup = "function iy(e){return pb(),e=Au(e),e?KC.get(e)||pF.get(e)||Mk(e):null}";
+  const flagLookup = "function J6(e){return b9(),e=gd(e),e?OE.get(e)||pH.get(e)||XM(e):null}";
   const { dynamicFlagKey } = require("./party-uprising.cjs");
-  replaceOnce("PPe=e=>g7t.test(db(e))||aie(db(e))!==null",
-    `PPe=e=>g7t.test(db(e))||aie(db(e))!==null||${dynamicFlagKey}.test(db(e))`);
-  replaceOnce(flagLookup, `function iy(e){
-    const data=pb(),key=Au(e);
+  replaceOnce("lLe=e=>KNt.test(y9(e))||Gie(y9(e))!==null",
+    `lLe=e=>KNt.test(y9(e))||Gie(y9(e))!==null||${dynamicFlagKey}.test(y9(e))`);
+  replaceOnce(flagLookup, `function J6(e){
+    const data=b9(),key=gd(e);
     if(!key)return null;
     const choice=data?.gpmUprisingFlags?.[key],parent=choice?.parentFlag;
-    return KC.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||pF.get(key)||Mk(key)||
-      (parent&&(KC.get(parent)||pF.get(parent)||Mk(parent)))||null;
+    return OE.get(key)||(choice?.src?{url:choice.src,ratio:choice.ratio}:null)||pH.get(key)||XM(key)||
+      (parent&&(OE.get(parent)||pH.get(parent)||XM(parent)))||null;
   }`);
-  replaceOnce("function oy(e){return IPe(pb(),e)}",
-    'function oy(e){const data=pb(), mode=IPe(data,e), legacy=data?.gpmUprisingFlags?.[Au(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
-  replaceOnce("function xk(e){let t=pb();return t?.images?.[t?.image?.[Au(e)]]||null}",
-    'function xk(e){const data=pb(),key=Au(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
-  replaceOnce("function BPe(e){return pb(),e=Au(e),e?pF.get(e)||Mk(e):null}",
-    'function BPe(e){const data=pb(),key=Au(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(pF.get(key)||Mk(key)||(parent&&(KC.get(parent)||pF.get(parent)||Mk(parent)))||null):null}');
+  replaceOnce("function X6(e){return mLe(b9(),e)}",
+    'function X6(e){const data=b9(), mode=mLe(data,e), legacy=data?.gpmUprisingFlags?.[gd(e)];return mode==="base"&&legacy?.parentFlag&&legacy.src?"image":mode}');
+  replaceOnce("function tP(e){let t=b9();return t?.images?.[t?.image?.[gd(e)]]||null}",
+    'function tP(e){const data=b9(),key=gd(e),legacy=data?.gpmUprisingFlags?.[key];return data?.images?.[data?.image?.[key]]||(legacy?.parentFlag&&legacy.src?legacy:null)}');
+  replaceOnce("function wLe(e){return b9(),e=gd(e),e?pH.get(e)||XM(e):null}",
+    'function wLe(e){const data=b9(),key=gd(e),parent=data?.gpmUprisingFlags?.[key]?.parentFlag;return key?(pH.get(key)||XM(key)||(parent&&(OE.get(parent)||pH.get(parent)||XM(parent)))||null):null}');
   const initialize = "\nmountPartyButtons();\n";
   replaceOnce(initialize, "\nconst gpmUprisingStyle = " + JSON.stringify(style) + ";\n"
     + rendererFunctions.join("\n") + initialize);
-  const frame = "function vJe(){let e=Ue.consumeViewDelta";
-  replaceOnce(frame, "function vJe(){gpmWatchUprisingControl(Ue);let e=Ue.consumeViewDelta");
+  const frame = "function jut(){let e=Ve.consumeViewDelta";
+  replaceOnce(frame, "function jut(){gpmWatchUprisingControl(Ve);let e=Ve.consumeViewDelta");
   return asBuffer ? Buffer.from(js) : js;
 }
 

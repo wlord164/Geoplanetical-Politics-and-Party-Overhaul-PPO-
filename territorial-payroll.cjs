@@ -12,9 +12,9 @@ function gpmMoveTerritorialPayroll(source, target, workers, movedWorkers) {
   const share = movedWorkers / source[workers];
   for (const [field, matchedWorkers] of Object.entries(gpmTerritorialPayrollWorkers)) {
     if (matchedWorkers !== workers) continue;
-    const movedPayroll = et(source[field]) * share;
-    source[field] = et(source[field]) - movedPayroll;
-    target[field] = et(target[field]) + movedPayroll;
+    const movedPayroll = lt(source[field]) * share;
+    source[field] = lt(source[field]) - movedPayroll;
+    target[field] = lt(target[field]) + movedPayroll;
   }
 }
 
@@ -69,7 +69,7 @@ function gpmRepairLegacyOpeningPayroll(sim, metadata) {
       repaired++;
     }
   }
-  for (const key of repairedCountries) ps(finance, sim.countries.get(key));
+  for (const key of repairedCountries) Oi(finance, sim.countries.get(key));
   if (repaired) sim.reportRuntimeRecovery?.({
     code: "finance.historical_opening_payroll", domain: "finance", repair: "redistribute-legacy-opening-payroll-by-workers",
     context: { sectors: repaired, countries: repairedCountries.size },
@@ -80,14 +80,14 @@ function patchTerritorialPayroll(source, replaceOnce) {
   // Preserve wages and contributions per worker when productive assets and
   // employment move in different proportions. Keep the territorial share for
   // payroll records with no workers available to supply a proportion.
-  source = replaceOnce(source, "function Got(e,t){",
-    `const gpmTerritorialPayrollWorkers=${JSON.stringify(payrollWorkers)};\n${gpmMoveTerritorialPayroll}\n${gpmRepairLegacyOpeningPayroll}\nfunction Got(e,t){`);
-  source = replaceOnce(source, "for(let S of Sia){let P=et(u[S])*p;u[S]=et(u[S])-P,m[S]=et(m[S])+P}",
-    "for(let S of Sia){if(et(u[gpmTerritorialPayrollWorkers[S]])>0)continue;let P=et(u[S])*p;u[S]=et(u[S])-P,m[S]=et(m[S])+P}");
-  source = replaceOnce(source, "u[S]=Math.max(0,et(u[S])-P),m[S]=Math.max(0,et(m[S])+P)}let b={requiredEmploymentM:i",
-    "gpmMoveTerritorialPayroll(u,m,S,P),u[S]=Math.max(0,et(u[S])-P),m[S]=Math.max(0,et(m[S])+P)}let b={requiredEmploymentM:i");
-  const restoreBoundary = "gpmHistoricalRestoreOpeningCapitals(b)";
-  return replaceOnce(source, restoreBoundary, restoreBoundary + ",gpmRepairLegacyOpeningPayroll(b,t.savePayload?.meta)");
+  source = replaceOnce(source, "function zmt(e,t){",
+    `const gpmTerritorialPayrollWorkers=${JSON.stringify(payrollWorkers)};\n${gpmMoveTerritorialPayroll}\n${gpmRepairLegacyOpeningPayroll}\nfunction zmt(e,t){`);
+  source = replaceOnce(source, "for(let h of j8A){let y=lt(c[h])*d;c[h]=lt(c[h])-y,E[h]=lt(E[h])+y}",
+    "for(let h of j8A){if(lt(c[gpmTerritorialPayrollWorkers[h]])>0)continue;let y=lt(c[h])*d;c[h]=lt(c[h])-y,E[h]=lt(E[h])+y}");
+  source = replaceOnce(source, "c[h]=Math.max(0,lt(c[h])-y),E[h]=Math.max(0,lt(E[h])+y)}let g={requiredEmploymentM:n",
+    "gpmMoveTerritorialPayroll(c,E,h,y),c[h]=Math.max(0,lt(c[h])-y),E[h]=Math.max(0,lt(E[h])+y)}let g={requiredEmploymentM:n");
+  const restoreBoundary = "gpmHistoricalRestoreOpeningCapitals(g)";
+  return replaceOnce(source, restoreBoundary, restoreBoundary + ",gpmRepairLegacyOpeningPayroll(g,t.savePayload?.meta)");
 }
 
 module.exports = { patchTerritorialPayroll };

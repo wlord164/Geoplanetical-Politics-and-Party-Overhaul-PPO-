@@ -2,16 +2,16 @@
 
 function partyAgreementContext(country) {
   if (!country?.pol) return null;
-  const institution = lt(country);
+  const institution = Qt(country);
   const government = institution?.government;
-  const power = QO(country, "confidence");
-  const chamber = j3e(country, "confidence");
+  const power = YO(country, "confidence");
+  const chamber = I5e(country, "confidence");
   if (government?.status !== "minority" || !government.leadPartyId || !chamber ||
       power?.target !== "head_of_gov" || power.holder !== `chamber:${chamber.id}` ||
       !government.confidenceOrganIds?.includes(power.holder)) return null;
   const contestId = `election:chamber:${chamber.id}`;
   const contest = institution.contests?.[contestId];
-  const holder = ft(country, power.target);
+  const holder = yt(country, power.target);
   if (!holder || contest?.type !== "chamber" || contest.targetOrganId !== power.holder ||
       government.formationProcedureId !== contestId) return null;
   const seats = Object.entries(chamber.composition || {}).sort(([a], [b]) => a.localeCompare(b));
@@ -38,7 +38,7 @@ function partyAgreementStatus(country, day, agreement, context = undefined) {
   if (!agreement || !["offered", "active"].includes(agreement.status)) return agreement?.status || null;
   if (context === undefined) context = partyAgreementContext(country);
   if (!context || context.key !== agreement.scopeKey || context.government.leadPartyId !== agreement.leadId ||
-      !partyCongressEligible(AL(country, agreement.leadId), true) ||
+      !partyCongressEligible(Gq(country, agreement.leadId), true) ||
       !partyAgreementPartners(country, context, true).some(party => party.id === agreement.supportId)) return "lapsed";
   if (day >= (agreement.status === "offered" ? agreement.offerUntilDay : agreement.untilDay)) return "expired";
   if (agreement.status === "active" && agreement.tabledDay == null && day >= agreement.billDueDay) return "missed";
@@ -59,22 +59,22 @@ function partyAgreementReview(sim, country) {
 }
 
 function partyAgreementTerms(sim, country, leadId, supportId, existing = false) {
-  const lead = AL(country, leadId);
-  const support = AL(country, supportId);
+  const lead = Gq(country, leadId);
+  const support = Gq(country, supportId);
   if (!partyCongressEligible(lead, existing) || !partyCongressEligible(support, existing)) return [];
   const day = sim.day || 0;
-  const candidates = MLa(sim, country, supportId, false).map(entry => ({
+  const candidates = Qda(sim, country, supportId, false).map(entry => ({
     ...entry,
-    interest: lVe(lead, entry.law, country.laws[entry.law.id], country) -
-      lVe(lead, entry.law, entry.choice.value, country),
+    interest: Kst(lead, entry.law, country.laws[entry.law.id], country) -
+      Kst(lead, entry.law, entry.choice.value, country),
     programme: partyCongressProgrammeLawBonus(support, entry.law.id, day, entry.choice.value),
-  })).filter(entry => entry.interest >= -8 && ygt(country, entry.law).ok)
+  })).filter(entry => entry.interest >= -8 && CDt(country, entry.law).ok)
     .sort((a, b) => b.programme - a.programme || b.appeal + b.interest - (a.appeal + a.interest) ||
       a.law.id.localeCompare(b.law.id));
   const terms = [];
   for (const entry of candidates.slice(0, 8)) {
     const lawId = entry.law.id;
-    const value = or(entry.choice.value);
+    const value = pa(entry.choice.value);
     const forecast = sim.forecastBillFor(country, entry.law, value, { sponsorKind: "government", sponsorPartyId: leadId });
     if (!forecast?.fc || !forecast.procedureKind || forecast.decreed) continue;
     terms.push({ id: JSON.stringify([lawId, entry.choice.id, value]), lawId, value,
@@ -86,7 +86,7 @@ function partyAgreementTerms(sim, country, leadId, supportId, existing = false) 
 
 function partyAgreementOpenReason(sim, country, context, partyId) {
   if (!context) return "government";
-  if (!partyCongressEligible(AL(country, partyId))) return "party";
+  if (!partyCongressEligible(Gq(country, partyId))) return "party";
   const day = sim.day || 0;
   if (day - context.government.installedDay > 90) return "window";
   const state = partyAgreementState(country);
@@ -146,7 +146,7 @@ function partyAgreementApply(sim, country, party, action, input) {
       return { ok: true, changed: true };
     }
     const term = partyAgreementTerms(sim, country, agreement.leadId, agreement.supportId, true)
-      .find(option => option.lawId === agreement.lawId && yo(option.value, agreement.value));
+      .find(option => option.lawId === agreement.lawId && ir(option.value, agreement.value));
     if (!term) return { ok: false, reason: "stale" };
     const untilDay = Math.min(day + 120, context.contest.nextDay ?? Infinity);
     if (untilDay - day < 14) return { ok: false, reason: "window" };
@@ -168,7 +168,7 @@ function partyAgreementApply(sim, country, party, action, input) {
     if (sim.playerControlsParty?.(country, party.id) && !sim.playerControlsGovernment(country)) {
       return { ok: false, reason: "government" };
     }
-    const bill = R8(sim, country, agreement.lawId, agreement.value,
+    const bill = lh(sim, country, agreement.lawId, agreement.value,
       { sponsorKind: "government", sponsorPartyId: party.id, notify: sim.playerKey === country.key });
     return bill.ok ? { ok: true, changed: true } : bill;
   }
@@ -179,7 +179,7 @@ function partyAgreementBillTabled(sim, country, bill) {
   const agreement = partyAgreementState(country)?.current;
   if (bill.sponsorKind !== "government" || agreement?.status !== "active" ||
       agreement.tabledDay != null || agreement.leadId !== bill.sponsorPartyId ||
-      agreement.lawId !== bill.lawId || !yo(agreement.value, bill.target) ||
+      agreement.lawId !== bill.lawId || !ir(agreement.value, bill.target) ||
       partyAgreementStatus(country, sim.day, agreement) !== "active") return;
   agreement.tabledDay = sim.day;
   agreement.procedureId = bill.id;
@@ -193,7 +193,7 @@ function partyAgreementConfidenceRows(sim, country, sponsorId, rows, motion = nu
   if (active && (active.day0 < agreement.acceptedDay || active.targetOfficeId !== "head_of_gov" ||
       agreement.priorMotionIds?.includes(active.id))) return rows;
   const day = sim.day || 0;
-  const voteDay = resolving ? day : Math.max(day, active?.voteDay ?? day + cLa);
+  const voteDay = resolving ? day : Math.max(day, active?.voteDay ?? day + eda);
   if (partyAgreementStatus(country, voteDay, agreement) !== "active") return rows;
   return rows.map(row => row.id === agreement.supportId && row.seats > 0
     ? { ...row, pYes: 0, yesSeats: 0, vote: false, gpmAgreementId: agreement.id } : row);
@@ -220,7 +220,7 @@ function partyAgreementView(sim, country, partyId, includeOptions = false) {
 function partyAgreementQuery(sim) {
   const country = sim.player;
   if (!country?.pol) return null;
-  return partyAgreementView(sim, country, yn(country), true);
+  return partyAgreementView(sim, country, Lo(country), true);
 }
 
 function partyAgreementAgenda(sim, country, partyId) {
@@ -243,7 +243,7 @@ function advancePartyAgreementsAI(sim, country, party) {
   const agreement = state?.current;
   if (agreement?.status === "offered" && agreement.targetId === party.id) {
     const compatible = partyAgreementTerms(sim, country, agreement.leadId, agreement.supportId, true)
-      .some(term => term.lawId === agreement.lawId && yo(term.value, agreement.value));
+      .some(term => term.lawId === agreement.lawId && ir(term.value, agreement.value));
     return partyAgreementApply(sim, country, party, compatible ? "accept" : "decline", { id: agreement.id });
   }
   if (agreement?.status === "active" && agreement.leadId === party.id && agreement.tabledDay == null) {
@@ -263,10 +263,10 @@ function advancePartyAgreementsAI(sim, country, party) {
 
 function registerPartyAgreements() {
   for (const action of ["offer", "accept", "decline", "withdraw", "end", "table"]) {
-    gvt("gpm.party.agreement." + action, {
+    gNt("gpm.party.agreement." + action, {
       apply(sim, country, input) {
-        if (country.key !== sim.playerKey || yn(country) !== input.partyId) return { ok: false, reason: "party" };
-        return partyAgreementApply(sim, country, AL(country, input.partyId), action, input);
+        if (country.key !== sim.playerKey || Lo(country) !== input.partyId) return { ok: false, reason: "party" };
+        return partyAgreementApply(sim, country, Gq(country, input.partyId), action, input);
       },
     });
   }
@@ -277,29 +277,29 @@ function patchAgreementWorker(source, replaceOnce) {
     partyAgreementReview, partyAgreementTerms, partyAgreementOpenReason, partyAgreementOptions, partyAgreementApply,
     partyAgreementBillTabled, partyAgreementConfidenceRows, partyAgreementView, partyAgreementQuery, partyAgreementAgenda,
     advancePartyAgreementsAI, registerPartyAgreements].join("\n");
-  const anchor = "function wLa(e,t,a=null){";
+  const anchor = "function Eda(e,t,A=null){";
   source = replaceOnce(source, anchor, methods + "\n" + anchor);
   source = replaceOnce(source, "registerPartyCongressSize();\n",
     "registerPartyCongressSize();\nregisterPartyAgreements();\n");
   const changes = [
-    ['function NF(e,t){let a=wLa(e,e.approval,t),', 'function NF(e,t,sim,motion=null,resolving=false){let a=partyAgreementConfidenceRows(sim,e,t,wLa(e,e.approval,t),motion,resolving),'],
-    ['let i=PLa(e,t,a),s=NF(t,a);', 'let i=PLa(e,t,a),s=NF(t,a,e);'],
-    ['forecast:NF(t,a)}}}function dgt', 'forecast:NF(t,a,e)}}}function dgt'],
-    ['fc:NF(t,a)};return t.procedures', 'fc:NF(t,a,e)};return t.procedures'],
-    ['let c=NF(t,a.sponsorPartyId),u={targetOrgan:o}', 'let c=NF(t,a.sponsorPartyId,e,a,true),u={targetOrgan:o}'],
-    ['Myo(e,t,s.id,NF(t,s.id))', 'Myo(e,t,s.id,NF(t,s.id,e))'],
-    ['partyConfidenceForecastFor(t,a){return NF(t,a)}', 'partyConfidenceForecastFor(t,a){return NF(t,a,this)}'],
-    ['function $La(e){for(let t of e.countries.values())if(t?.procedures?.length){',
-      'function $La(e){for(let t of e.countries.values())if(t?.gpmSupportAgreement&&partyAgreementReview(e,t),t?.procedures?.length){'],
-    ['return t.procedures.push(v),u==="government"&&(t.approval=', 'return t.procedures.push(v),partyAgreementBillTabled(e,t,v),u==="government"&&(t.approval='],
-    ['appeal:A8(I+s*w,2)', 'appeal:A8(I+s*w+6*partyCongressProgrammeLawBonus(o,y.id,e.day||0,P.value),2)'],
-    ['let l=i.reaction.appeal*.65+i.reaction.partyFit*.25+(i.feasibility.score||0)*.1;return s.reaction.appeal*.65+s.reaction.partyFit*.25+(s.feasibility.score||0)*.1-l',
-      'let l=u=>u.reaction.appeal*.65+u.reaction.partyFit*.25+(u.feasibility.score||0)*.1+(u.promise.kind===yF ? .12*partyCongressProgrammeLawBonus(o,u.promise.subjectId,e.day||0,u.promise.target) : 0);return l(s)-l(i)'],
-    ['score:l.reaction.appeal*.65+l.reaction.partyFit*.25+(l.feasibility?.score||0)*n',
-      'score:l.reaction.appeal*.65+l.reaction.partyFit*.25+(l.feasibility?.score||0)*n+(l.promise.kind===yF ? .12*partyCongressProgrammeLawBonus(a,l.promise.subjectId,e.day||0,l.promise.target) : 0)'],
-    ['nHe(r,a,t.params||{})', '(a==="gpm.partyAgreement"?partyAgreementQuery(r):nHe(r,a,t.params||{}))'],
-    ['|| margin(b) - margin(a) || b.gain - a.gain || K(a.lawId, b.lawId));',
-      '|| Number(b.programme || partyCongressProgrammeLawBonus(party,b.lawId,day,b.value))-Number(a.programme || partyCongressProgrammeLawBonus(party,a.lawId,day,a.value))\n    || margin(b) - margin(a) || b.gain - a.gain || K(a.lawId, b.lawId));'],
+    ['function Jz(e,t){let A=Eda(e,e.approval,t),', 'function Jz(e,t,sim,motion=null,resolving=false){let A=partyAgreementConfidenceRows(sim,e,t,Eda(e,e.approval,t),motion,resolving),'],
+    ['let n=dda(e,t,A),i=Jz(t,A);', 'let n=dda(e,t,A),i=Jz(t,A,e);'],
+    ['forecast:Jz(t,A)}}}function vDt', 'forecast:Jz(t,A,e)}}}function vDt'],
+    ['fc:Jz(t,A)};return t.procedures', 'fc:Jz(t,A,e)};return t.procedures'],
+    ['let l=Jz(t,A.sponsorPartyId),c={targetOrgan:r}', 'let l=Jz(t,A.sponsorPartyId,e,A,true),c={targetOrgan:r}'],
+    ['FZr(e,t,i.id,Jz(t,i.id))', 'FZr(e,t,i.id,Jz(t,i.id,e))'],
+    ['partyConfidenceForecastFor(t,A){return Jz(t,A)}', 'partyConfidenceForecastFor(t,A){return Jz(t,A,this)}'],
+    ['function Fda(e){for(let t of e.countries.values())if(t?.procedures?.length){',
+      'function Fda(e){for(let t of e.countries.values())if(t?.gpmSupportAgreement&&partyAgreementReview(e,t),t?.procedures?.length){'],
+    ['return t.procedures.push(g),u==="government"&&(t.approval=', 'return t.procedures.push(g),partyAgreementBillTabled(e,t,g),u==="government"&&(t.approval='],
+    ['appeal:B6(v+i*b,2)', 'appeal:B6(v+i*b+6*partyCongressProgrammeLawBonus(r,p.id,e.day||0,y.value),2)'],
+    ['let s=n.reaction.appeal*.65+n.reaction.partyFit*.25+(n.feasibility.score||0)*.1;return i.reaction.appeal*.65+i.reaction.partyFit*.25+(i.feasibility.score||0)*.1-s',
+      'let s=u=>u.reaction.appeal*.65+u.reaction.partyFit*.25+(u.feasibility.score||0)*.1+(u.promise.kind===bz ? .12*partyCongressProgrammeLawBonus(r,u.promise.subjectId,e.day||0,u.promise.target) : 0);return s(i)-s(n)'],
+    ['score:s.reaction.appeal*.65+s.reaction.partyFit*.25+(s.feasibility?.score||0)*o',
+      'score:s.reaction.appeal*.65+s.reaction.partyFit*.25+(s.feasibility?.score||0)*o+(s.promise.kind===bz ? .12*partyCongressProgrammeLawBonus(A,s.promise.subjectId,e.day||0,s.promise.target) : 0)'],
+    ['Oot(a,A,t.params||{})', '(A==="gpm.partyAgreement"?partyAgreementQuery(a):Oot(a,A,t.params||{}))'],
+    ['|| margin(b) - margin(a) || b.gain - a.gain || k(a.lawId, b.lawId));',
+      '|| Number(b.programme || partyCongressProgrammeLawBonus(party,b.lawId,day,b.value))-Number(a.programme || partyCongressProgrammeLawBonus(party,a.lawId,day,a.value))\n    || margin(b) - margin(a) || b.gain - a.gain || k(a.lawId, b.lawId));'],
   ];
   return changes.reduce((code, [before, after]) => replaceOnce(code, before, after), source);
 }
@@ -322,13 +322,13 @@ function partyAgreementReason(reason) {
 
 function partyAgreementPartyName(view, partyId) {
   const party = view.player?.pol?.parties?.find(item => item.id === partyId);
-  return party ? ba(party, view.player.key) : partyId;
+  return party ? Sa(party, view.player.key) : partyId;
 }
 
 function partyAgreementLawName(view, terms) {
-  const name = Jn(terms.lawId);
-  const definition = nl(terms.lawId);
-  const value = definition ? Oi(definition, terms.value, view.player) : "";
+  const name = Gn(terms.lawId);
+  const definition = Ds(terms.lawId);
+  const value = definition ? hi(definition, terms.value, view.player) : "";
   return value ? name + " · " + value : name;
 }
 
@@ -431,7 +431,7 @@ function bindPartyAgreement(host, view, party, ui) {
           withdraw: "Offer withdrawn.", end: "Support agreement ended.", table: "Agreed bill introduced.",
         })[action];
       }
-      const current = await Je(session, "gpm.partyAgreement", {});
+      const current = await Ze(session, "gpm.partyAgreement", {});
       if (!isCurrent() || current?.partyId !== party.id) return;
       state.choices = current;
       state.data = current;

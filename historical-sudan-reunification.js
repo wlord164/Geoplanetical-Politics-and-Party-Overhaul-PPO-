@@ -18,7 +18,7 @@ function gpmHistoricalCultureCountry(key) {
 function gpmHistoricalIdentifyPerson(person, actorId, office = "leader") {
   const identity = gpmHistoricalActorById(actorId)?.identity?.[office];
   if (!person || !identity) return false;
-  Object.assign(person, Ize(identity.name), {
+  Object.assign(person, ait(identity.name), {
     name: identity.name, g: identity.g || "m", born: identity.born ?? null, seeded: false,
     gpmHistoricalPerson: `${actorId}:${office}`,
   });
@@ -29,23 +29,23 @@ function gpmHistoricalIdentifyPerson(person, actorId, office = "leader") {
 function gpmSudanIdentifyIncumbent(sim, fresh = false) {
   const country = sim.countries.get(gpmSudanCountryKey);
   if (!country) return;
-  const chair = j0(sim, country, "head_of_state", { exercising: false });
-  if (chair?.alive && chair.seeded && chair.name === ad.seed[gpmSudanCountryKey]?.name) {
+  const chair = fc(sim, country, "head_of_state", { exercising: false });
+  if (chair?.alive && chair.seeded && chair.name === cd.seed[gpmSudanCountryKey]?.name) {
     gpmHistoricalIdentifyPerson(chair, gpmSudanIncumbentActor);
   }
-  const pm = j0(sim, country, "head_of_gov", { exercising: false });
-  const office = Xe(country, "head_of_gov");
+  const pm = fc(sim, country, "head_of_gov", { exercising: false });
+  const office = rt(country, "head_of_gov");
   if (pm?.alive && pm !== chair && !pm.gpmHistoricalPerson && (fresh ||
-      H7(country, office)?.mandate?.startedDay === 0 && pm._seed === Ma(`${country.key}:constitutional-office:${office}`))) {
+      D8(country, office)?.mandate?.startedDay === 0 && pm._seed === qA(`${country.key}:constitutional-office:${office}`))) {
     gpmHistoricalIdentifyPerson(pm, gpmSudanIncumbentActor, "headOfGovernment");
   }
 }
 
 function gpmSudanSeedIdentity(sim, country) {
   gpmSudanIdentifyIncumbent(sim, true);
-  gpmHistoricalIdentifyPerson(j0(sim, country, "head_of_state"), gpmSudanRivalActor);
-  if (Xe(country, "head_of_state") !== Xe(country, "head_of_gov")) {
-    gpmHistoricalIdentifyPerson(j0(sim, country, "head_of_gov"), gpmSudanRivalActor, "headOfGovernment");
+  gpmHistoricalIdentifyPerson(fc(sim, country, "head_of_state"), gpmSudanRivalActor);
+  if (rt(country, "head_of_state") !== rt(country, "head_of_gov")) {
+    gpmHistoricalIdentifyPerson(fc(sim, country, "head_of_gov"), gpmSudanRivalActor, "headOfGovernment");
   }
   sim.gpmHistoricalState.conflicts[gpmSudanConflictId].gpmVerifiedLeadership = true;
 }
@@ -58,17 +58,17 @@ function gpmSudanRestoreIdentity(sim) {
   const republic = Number.isInteger(reunificationDay) && sim.countries.get(gpmSudanCountryKey);
   const country = sim.countries.get(gpmSudanRivalKey) || republic;
   if (!country) return;
-  if (country === republic && lt(country).government?.formationProcedureId !== "gpm.historical.sudan.transition") return;
+  if (country === republic && Qt(country).government?.formationProcedureId !== "gpm.historical.sudan.transition") return;
   const installedDay = country === republic ? reunificationDay : 0;
   const offices = [["head_of_state", "leader"], ["head_of_gov", "headOfGovernment"]];
   for (const [role, office] of offices) {
-    if (role === "head_of_gov" && Xe(country, role) === Xe(country, "head_of_state")) continue;
-    const assignment = H7(country, role);
+    if (role === "head_of_gov" && rt(country, role) === rt(country, "head_of_state")) continue;
+    const assignment = D8(country, role);
     const person = sim.people.get(assignment?.principal?.personId);
     if (!person?.alive || person.gpmHistoricalPerson || assignment.mandate?.startedDay !== installedDay ||
         (assignment.mandate.sourceProcedureId && assignment.mandate.sourceProcedureId !== "gpm.historical.sudan.transition")) continue;
     if (country !== republic) {
-      const originalSeed = role === "head_of_state" ? Hu(`${country.key}:secede`) : Ma(`${country.key}:constitutional-office:${Xe(country, role)}`);
+      const originalSeed = role === "head_of_state" ? Hu(`${country.key}:secede`) : qA(`${country.key}:constitutional-office:${rt(country, role)}`);
       if (person._seed !== originalSeed) continue;
     }
     gpmHistoricalIdentifyPerson(person, gpmSudanRivalActor, office);
@@ -87,15 +87,15 @@ function gpmHistoricalCivilWarTerms(sim, war, winner, loser, terms, options, bas
     winner === gpmSudanRivalKey && loser === gpmSudanCountryKey);
   const playerUprising = gpmUprising.matches(sim, war);
   const wartime = gpmHistoricalOpeningWar(sim, war);
-  if (!isSudan && !playerUprising && !wartime) return PD(sim, war, winner, loser, terms, options);
-  const gainedProvinceKeys = pU(sim, war, winner, loser).map(province => province.key);
+  if (!isSudan && !playerUprising && !wartime) return hG(sim, war, winner, loser, terms, options);
+  const gainedProvinceKeys = jV(sim, war, winner, loser).map(province => province.key);
   if (basis === "military-gains" && !gainedProvinceKeys.length) {
     return { ok: false, reasonId: "civil_war_no_territorial_gains" };
   }
   const evidence = { basis, gainedProvinceKeys, ...(basis === "negotiated-concession" ? { concessionBy: loser } : {}) };
   // The continuing state keeps its ID. Reunification follows the native occupation cleanup.
   const finalTerms = isSudan || wartime ? [{ type: "status_quo", targetKey: loser }] : terms;
-  const result = PD(sim, war, winner, loser, finalTerms, options);
+  const result = hG(sim, war, winner, loser, finalTerms, options);
   if (!result.ok) return result;
   if (isSudan) row.pendingReunification = { winner, decidedDay: sim.day, evidence };
   else if (wartime) wartime.row.pendingOpeningOutcome = { winner, decidedDay: sim.day, evidence };
@@ -106,27 +106,27 @@ function gpmHistoricalCivilWarTerms(sim, war, winner, loser, terms, options, bas
 function gpmSudanTasisParty(sim, country) {
   const existing = country.pol.parties.find(party => party.gpmHistoricalActorId === gpmSudanRivalActor);
   if (existing) return existing;
-  const previous = bho(country.pol.parties);
+  const previous = KXr(country.pol.parties);
   const actor = gpmHistoricalCatalog.actors[gpmSudanRivalActor];
-  const change = J6a(country.pol, {}, .02, (party, parties) => {
-    sAe(party, Js(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
+  const change = OFA(country.pol, {}, .02, (party, parties) => {
+    SUe(party, bs(country.key), (country.hash ^ sim.rngSeed0) >>> 0, parties);
     party.nameDesc = { ...party.nameDesc, gpmName: actor.name, gpmTag: "Tasis" };
     party.gpmHistoricalActorId = gpmSudanRivalActor;
   });
-  DTe(country, change, previous);
-  dAe(country, change, previous);
+  rze(country, change, previous);
+  kUe(country, change, previous);
   sim._reconcilePolity(country);
-  const party = yP(country, change.id);
+  const party = HS(country, change.id);
   if (!party) throw new Error("Sudan transitional coalition could not be registered");
   return party;
 }
 
 function gpmSudanTransferOfficial(sim, country, office, partyId, person) {
-  const role = Aa(country, office).role;
-  if (!person?.alive) return C0(sim, { countryKey: country.key, party: partyId, role, since: sim._simYear });
+  const role = ZA(country, office).role;
+  if (!person?.alive) return ac(sim, { countryKey: country.key, party: partyId, role, since: sim._simYear });
   // The rival polity remains in the institution graph until territorial reunification completes.
   // Carry its current holder into Sudan without prematurely invalidating the rival's office assignment.
-  const successor = C0(sim, { countryKey: country.key, party: partyId, role, since: sim._simYear,
+  const successor = ac(sim, { countryKey: country.key, party: partyId, role, since: sim._simYear,
     name: person.name, given: person.given, surname: person.surname, culture: person.culture,
     g: person.g, born: person.born, bornMonth: person.bornMonth, seed: person._seed,
     traits: person.traits, ideal: person.ideal, background: person.background });
@@ -138,40 +138,40 @@ function gpmSudanTransferOfficial(sim, country, office, partyId, person) {
 
 function gpmSudanInstallTasis(sim, country, rival) {
   const party = gpmSudanTasisParty(sim, country);
-  const office = Xe(country, "head_of_gov");
-  const stateOffice = Xe(country, "head_of_state");
+  const office = rt(country, "head_of_gov");
+  const stateOffice = rt(country, "head_of_state");
   const actor = gpmHistoricalCatalog.actors[gpmSudanRivalActor];
-  const official = () => "gpm.historical.sudan.transition:" + country.key + ":" + lt(country).revision;
-  const chair = j0(sim, rival, "head_of_state");
-  const primeMinister = j0(sim, rival, "head_of_gov");
+  const official = () => "gpm.historical.sudan.transition:" + country.key + ":" + Qt(country).revision;
+  const chair = fc(sim, rival, "head_of_state");
+  const primeMinister = fc(sim, rival, "head_of_gov");
   const head = gpmSudanTransferOfficial(sim, country, office, party.id, stateOffice === office ? chair || primeMinister : primeMinister);
   const occupant = person => ({ personId: person.id, partyId: party.id, controllerRef: { kind: "party", id: party.id } });
   const government = { coalitionPartyIds: [party.id], supportPartyIds: [], status: "installed" };
-  const install = tc(sim, country, {
-    intent: "government.install", transitionId: official(), expectedRevision: lt(country).revision, day: sim.day,
+  const install = A0(sim, country, {
+    intent: "government.install", transitionId: official(), expectedRevision: Qt(country).revision, day: sim.day,
     head: occupant(head), leadPartyId: party.id, formationProcedureId: "gpm.historical.sudan.transition", ...government,
   });
   if (!install.ok) throw new Error("Sudan transitional executive failed: " + JSON.stringify(install));
 
   // The charter commits to decentralization. Leave the timetable and detailed regional institutions for gameplay.
   const chamber = country.pol.chambers[0];
-  const draft = jSt(country, chamber, { stateStructure: "decentralized" });
+  const draft = MGt(country, chamber, { stateStructure: "decentralized" });
   const president = stateOffice === office ? head :
     gpmSudanTransferOfficial(sim, country, stateOffice, party.id, chair === primeMinister ? null : chair);
-  const institution = lt(country);
-  const transition = tc(sim, country, {
+  const institution = Qt(country);
+  const transition = A0(sim, country, {
     intent: "constitution.reconcile", transitionId: official(), expectedRevision: institution.revision,
     constitutionRevision: institution.constitutionRevision + 1, day: sim.day,
     sourceProcedureId: "gpm.historical.sudan.transition", constitution: draft.constitution,
     chambers: draft.draftChambers, government, replaceHeadOfState: occupant(president),
   });
-  if (!transition.ok || Kt(country) !== party.id) {
+  if (!transition.ok || Ut(country) !== party.id) {
     throw new Error("Sudan charter framework failed: " + JSON.stringify(transition));
   }
   Object.assign(country.pol.regime, draft.polity.regime);
-  E5(sim, country, sim._simYear);
-  WNa(country);
-  afe(sim, country);
+  S3(sim, country, sim._simYear);
+  qna(country);
+  G5e(sim, country);
   sim._reclassRegime(country, true);
   gpmHistoricalApplyLaws(sim, country, actor.charterLawValues);
   country.gpmHistoricalAdministration = actor.administrationName;
@@ -186,13 +186,13 @@ function gpmSudanReunify(sim) {
   const country = sim.countries.get(gpmSudanCountryKey);
   const rival = sim.countries.get(gpmSudanRivalKey);
   if (!country || !rival) throw new Error("Sudan postwar territorial actors are unavailable");
-  const territory = y5(sim, rival.key)?.provinceIds;
+  const territory = tm(sim, rival.key)?.provinceIds;
   if (!territory?.length) throw new Error("Sudan rival territory is unavailable");
   const plan = { moves: [{ provIds: territory, to: country.key, claimPolicy: "settle_claims" }] };
-  const validation = a9t(sim, plan);
+  const validation = bKt(sim, plan);
   if (!validation.ok) throw new Error("Sudan reunification could not proceed: " + validation.reasonId);
   const tasisWon = decision.winner === rival.key;
-  const partyId = tasisWon ? gpmSudanInstallTasis(sim, country, rival) : Kt(country);
+  const partyId = tasisWon ? gpmSudanInstallTasis(sim, country, rival) : Ut(country);
   const legalParties = (country.pol?.parties || []).filter(party => party.legal !== false);
   const playerPartySurvives = legalParties.some(party => party.id === country.pol.playerPartyId);
   if (sim.playerKey === rival.key || sim.playerKey === country.key && !playerPartySurvives) {
@@ -200,11 +200,11 @@ function gpmSudanReunify(sim) {
     const handoff = successor && sim.switchPlayerControl({ countryKey: country.key, partyId: successor.id });
     if (!handoff?.ok) throw new Error("Sudan postwar control handoff failed");
   }
-  const returned = Gw(sim, plan);
+  const returned = rw(sim, plan);
   if (!returned.ok || sim.countries.has(rival.key)) throw new Error("Sudan wartime administration could not retire");
   gpmRetireBreakawayFlag(sim, rival, tasisWon ? country : null);
   // The Tasis charter gives its own English rendering of the continuing state name.
-  $Rt(sim, country.key, tasisWon ? "Republic of Sudan" : "");
+  CVt(sim, country.key, tasisWon ? "Republic of Sudan" : "");
   const winnerActor = row.nativeActors?.[decision.winner] || (tasisWon ? gpmSudanRivalActor : "sdn-saf");
   row.settlement = tasisWon ? "tasis-reunification" : "saf-reunification";
   row.reunifiedDay = sim.day;

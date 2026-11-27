@@ -22,9 +22,19 @@ function applyHistoricalOpeningTopology(stock, delta) {
       gpmOpeningSourceProvince: sourceKey, gpmOpeningLandShare: landShare,
     } });
   }
+  // Preserve shared edges when the stock map has fused two of the original arcs.
+  const rewriteRing = ring => ring.flatMap(ref => {
+    const parts = delta.arcSubdivisions?.[ref < 0 ? ~ref : ref];
+    if (!parts) return [ref];
+    return ref < 0 ? parts.slice().reverse().map(part => ~part) : parts;
+  });
   const originals = object.geometries.map(source => {
     const replacement = delta.replacements[source.id];
-    if (!replacement) return source;
+    if (!replacement) {
+      const arcs = source.type === "Polygon" ? source.arcs.map(rewriteRing)
+        : source.arcs.map(part => part.map(rewriteRing));
+      return { ...source, arcs };
+    }
     const { anchor, type, arcs } = replacement;
     const properties = { ...source.properties, gpmOpeningSubdivision: true,
       popw: Math.max(0, source.properties.popw - subdivisions.get(source.id)) };
@@ -179,9 +189,9 @@ const declaration = `const gpmHistoricalOpeningTopology = ${JSON.stringify(topol
 
 function patchHistoricalOpeningTopology(source, replaceOnce, target) {
   const renderer = target === "renderer";
-  const stock = renderer ? "sx" : "uoe";
-  const world = renderer ? "function Ffe(){let e=W4(vh,vh.objects.countries)," :
-    "function bRt(){let e=Ghe(MHe,MHe.objects.countries),";
+  const stock = renderer ? "GR" : "pue";
+  const world = renderer ? "function vbe(){let e=Ly(Ef,Ef.objects.countries)," :
+    "function Zzt(){let e=eve(rnt,rnt.objects.countries),";
   const stockCopy = `t={...${stock},objects:{...${stock}.objects,provinces:{...${stock}.objects.provinces,geometries:${stock}.objects.provinces.geometries.map(`;
   const openingCopy = stockCopy.replaceAll(stock, "openingTopology");
   let result = replaceOnce(source, world + stockCopy, declaration + world +
@@ -190,15 +200,15 @@ function patchHistoricalOpeningTopology(source, replaceOnce, target) {
     // Fill and borders must use the same vertices on both sides of a subdivided province.
     result = replaceOnce(result, "p=(_,P=0)=>{let R=_;if(P)",
       "p=(_,P=0,keepVertices=false)=>{let R=_;if(P)");
-    result = replaceOnce(result, "N*N+O*O<a||(M.push([I,A]),x=I,C=A)",
-      "(!keepVertices&&N*N+O*O<a)||(M.push([I,A]),x=I,C=A)");
-    result = replaceOnce(result, "A=[],N=[],O=[];m(p(L[0],I),I,A,N);for(let B=1;B<L.length;B++)L[B].length<4||(O.push(A.length/2),m(p(L[B],I),I,A,N))",
-      "A=[],N=[],O=[],keepVertices=!!(_.properties?.gpmOpeningSubdivision||_.properties?.gpmOpeningSourceProvince);m(p(L[0],I,keepVertices),I,A,N);for(let B=1;B<L.length;B++)L[B].length<4||(O.push(A.length/2),m(p(L[B],I,keepVertices),I,A,N))");
+    result = replaceOnce(result, "L*L+O*O<a||(M.push([C,A]),x=C,T=A)",
+      "(!keepVertices&&L*L+O*O<a)||(M.push([C,A]),x=C,T=A)");
+    result = replaceOnce(result, "A=[],L=[],O=[];m(p(E[0],C),C,A,L);for(let N=1;N<E.length;N++)E[N].length<4||(O.push(A.length/2),m(p(E[N],C),C,A,L))",
+      "A=[],L=[],O=[],keepVertices=!!(_.properties?.gpmOpeningSubdivision||_.properties?.gpmOpeningSourceProvince);m(p(E[0],C,keepVertices),C,A,L);for(let N=1;N<E.length;N++)E[N].length<4||(O.push(A.length/2),m(p(E[N],C,keepVertices),C,A,L))");
   } else {
-    const validator = "function HCt(e,t){let a=t.sat?.territory";
+    const validator = "function gqt(e,t){let A=t.sat?.territory";
     result = replaceOnce(result, validator, gpmMigrateHistoricalOpeningOccupation.toString() + "\n" +
       gpmMigrateHistoricalOpeningTerritory.toString() +
-      "\nfunction HCt(e,t){gpmMigrateHistoricalOpeningTerritory(e.world,t);let a=t.sat?.territory");
+      "\nfunction gqt(e,t){gpmMigrateHistoricalOpeningTerritory(e.world,t);let A=t.sat?.territory");
   }
   return result;
 }
