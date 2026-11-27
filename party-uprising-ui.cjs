@@ -2,31 +2,31 @@
 
 const style = [
   ".gpm-uprising { display: grid; gap: var(--gap-2); min-width: 0; }",
-  ".gpm-uprising :Ro(p, $s, r0) { margin: 0; }",
+  ".gpm-uprising :is(p, dl, dd) { margin: 0; }",
   ".gpm-uprising [data-gpm-uprising-content] { display: grid; gap: var(--gap-2); }",
   ".gpm-uprising [data-gpm-uprising-status]:empty { display: none; }",
   ".gpm-uprising-details { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--gap-1) var(--gap-2); }",
-  ".gpm-uprising-details r0 { overflow-wrap: anywhere; }",
+  ".gpm-uprising-details dd { overflow-wrap: anywhere; }",
   ".gpm-uprising-outcomes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--gap-2); }",
   ".gpm-uprising-outcomes > div { display: grid; align-content: start; gap: var(--gap-1); padding: var(--gap-2); }",
   ".gpm-uprising-charter { display: grid; gap: var(--gap-1); margin: 0; padding-inline-start: var(--gap-3, 1.25rem); }",
   ".gpm-uprising-preparations { display: grid; gap: var(--gap-2); min-width: 0; }",
-  ".gpm-uprising-preparations ey { margin: 0; }",
+  ".gpm-uprising-preparations h4 { margin: 0; }",
   ".gpm-uprising-prep-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gap-2); }",
   ".gpm-uprising-map-layout { display: grid; gap: var(--gap-2); min-width: 0; }",
-  ".gpm-uprising-map-layout:Tft(.gpm-uprising-map-expanded) > .gpm-support-map > svg { max-height: 24rem; }",
-  ".gpm-uprising-map-expanded > .gpm-support-map > svg { max-height: 65Ef; }",
+  ".gpm-uprising-map-layout:not(.gpm-uprising-map-expanded) > .gpm-support-map > svg { max-height: 24rem; }",
+  ".gpm-uprising-map-expanded > .gpm-support-map > svg { max-height: 65vh; }",
   "@media (min-width: 60rem) { .gpm-uprising-map-expanded { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; } }",
   ".gpm-uprising-map-tools { display: flex; flex-wrap: wrap; gap: var(--gap-1) var(--gap-2); align-items: center; }",
   ".gpm-uprising-map-tools select { max-width: 100%; }",
   ".gpm-uprising-map-key { display: flex; flex-wrap: wrap; gap: .35rem .8rem; align-items: center; }",
-  ".gpm-uprising-map-key > span { display: inline-flex; gap: .4d2; align-items: center; }",
-  ".gpm-uprising-swatch { width: 1.15d2; height: .8d2; border: 1WR solid #8a9bad; border-radius: .16d2; flex-shrink: 0; }",
-  ".gpm-uprising-swatch-hq { border: 2WR dashed #ffdc86; background: transparent; }",
+  ".gpm-uprising-map-key > span { display: inline-flex; gap: .4em; align-items: center; }",
+  ".gpm-uprising-swatch { width: 1.15em; height: .8em; border: 1px solid #8a9bad; border-radius: .16em; flex-shrink: 0; }",
+  ".gpm-uprising-swatch-hq { border: 2px dashed #ffdc86; background: transparent; }",
   ".gpm-uprising .gpm-support-map path { stroke: #08121f; stroke-width: 1.25; }",
   ".gpm-uprising .gpm-support-map path[data-gpm-uprising-hq] { stroke: #ffdc86; stroke-width: 2.25; stroke-dasharray: 4 2; }",
-  ".gpm-uprising .gpm-support-map path:Ro(:hover,[data-selected]):Tft([data-gpm-uprising-hq]) { stroke: #fff5da; stroke-width: 2.5; }",
-  ".gpm-uprising .gpm-support-map path[data-gpm-uprising-hq]:Ro(:hover,[data-selected]) { stroke-width: 3; }",
+  ".gpm-uprising .gpm-support-map path:is(:hover,[data-selected]):not([data-gpm-uprising-hq]) { stroke: #fff5da; stroke-width: 2.5; }",
+  ".gpm-uprising .gpm-support-map path[data-gpm-uprising-hq]:is(:hover,[data-selected]) { stroke-width: 3; }",
   ".gpm-uprising-region-list { display: grid; gap: .2rem; margin: 0; padding: 0 .2rem .15rem 0; max-height: 16rem; overflow: auto; list-style: none; }",
   ".gpm-uprising-region-list button { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: start; gap: .5rem; text-align: start; width: 100%; }",
   ".gpm-uprising-region-list button[aria-pressed='true'] { border-color: #ffdc86; }",
@@ -37,12 +37,12 @@ const style = [
   ".gpm-uprising-prep-item select { width: 100%; min-width: 0; }",
   ".gpm-uprising-readiness, .gpm-uprising-roster { margin: 0; padding-inline-start: 1.25rem; }",
   ".gpm-uprising-readiness { display: grid; list-style: none; padding: 0; gap: .3rem; }",
-  ".gpm-uprising-readiness Kr { display: flex; gap: .65rem; align-items: baseline; }",
-  ".gpm-uprising-readiness Kr strong { min-width: 4.5rem; color: #ffdc86; }",
-  ".gpm-uprising-readiness Kr .gpm-uprising-ready { color: #9bd6ad; }",
+  ".gpm-uprising-readiness li { display: flex; gap: .65rem; align-items: baseline; }",
+  ".gpm-uprising-readiness li strong { min-width: 4.5rem; color: #ffdc86; }",
+  ".gpm-uprising-readiness li .gpm-uprising-ready { color: #9bd6ad; }",
   ".gpm-uprising-actions { display: flex; flex-wrap: wrap; gap: var(--gap-2); align-items: center; }",
   ".gpm-uprising-confirmation { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--gap-2); }",
-  ".gpm-uprising-confirmation ey { margin: 0; }",
+  ".gpm-uprising-confirmation h4 { margin: 0; }",
   ".gpm-uprising [data-gpm-uprising-action='declare'] { border-color: var(--mark-late, #edc583); }",
   ".gpm-uprising-flag { display: flex; align-items: center; flex-wrap: wrap; gap: var(--gap-2); }",
   ".gpm-uprising-flag img { max-width: 3.6rem; max-height: 2.4rem; object-fit: contain; }",
@@ -253,7 +253,7 @@ function gpmUprisingDivisionPanel(division, state, prep, button, date, money, cr
     : kit
       ? '<label class="gpm-uprising-prep-item">Division type<select class="k" data-gpm-uprising-field="division-type">'
         + opts(options, type) + '</select></label>'
-        + '<label class="gpm-uprising-prep-item">Equipment Zht<select class="k" data-gpm-uprising-field="equipment-kit">'
+        + '<label class="gpm-uprising-prep-item">Equipment kit<select class="k" data-gpm-uprising-field="equipment-kit">'
         + opts(type.kits, kit) + '</select></label>'
         + (equipment ? "<small>" + b(equipment) + "</small>" : "")
         + "<small>" + b(cost + reason(quote)) + "</small>" + schedule + button("recruit", "Prepare Division", !quote?.ok)
@@ -436,7 +436,7 @@ function gpmUprisingPanel(state, ui) {
         ? "<p><strong>Breakaway victory.</strong> " + b(party) + " governs the reunited " + b(data.victoryName || data.breakawayName)
           + seatOutcome + ".</p>"
           + "<p>" + b(data.government) + ". The founding laws are in effect.</p>" + charter
-          + (data.integratedDivisions ? "<p>Breakaway divisions transferred to D6e national military: "
+          + (data.integratedDivisions ? "<p>Breakaway divisions transferred to the national military: "
             + b(String(data.integratedDivisions)) + ".</p>" : "")
           + (Number.isFinite(data.victorySupport) ? "<p>Base national support at reunification was " + b(after) + ".</p>" : "")
         : "<p><strong>Government victory.</strong> " + b(data.parentName) + " is reunited. " + b(party) + " is banned.</p>";
@@ -500,10 +500,10 @@ function gpmUprisingPanel(state, ui) {
     + vacatedSeats
     + (state.confirm && data.preparations ? "<p>Any unfinished projects and outstanding aid requests end at declaration.</p>" : "")
     + '<div class="gpm-uprising-outcomes">'
-    + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of D6e reunited country'
+    + '<div class="sh-inset"><strong>Breakaway victory</strong><p>Your party takes executive control of the reunited country'
     + victorySeats + "</p><p>" + nameOutcome + " The founding charter takes effect nationwide.</p>"
     + charter + "<p>Base national support rises from " + b(before) + " to " + b(after) + " at reunification.</p></div>"
-    + '<div class="sh-inset"><strong>Government victory</strong><p>u7e incumbent reunites D6e country and bans your party. '
+    + '<div class="sh-inset"><strong>Government victory</strong><p>The incumbent reunites the country and bans your party. '
     + "The campaign continues with the incumbent.</p></div></div>"
     + controls;
 }

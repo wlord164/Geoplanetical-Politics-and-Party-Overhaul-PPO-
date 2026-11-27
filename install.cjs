@@ -48,112 +48,13 @@ const previousStock = [{
   worker: "20a49734f11daa32d905dc9e07c7704d9d0aa73ab8dcc0902f6e81ce7e1be0bd",
 }];
 
-// Earlier PPO profiles require original backups for the same stock build.
-const previousPpo = [
-  {
-    archive: "f08d9cab8fab638636c0014cf502e9caa7822b61f30177cd38375b7d58a71791",
-    worker: "119085fd71255638d6519c56a6b3d2920016488eb21e3a9f929c2f9bb0e32414",
-    renderer: "e455e5b73597b437f03cc613660a7573bbb379b8c5ca85b8608c6620a8c59658",
-    executable: "9c687bdfae7db8e8144c2641e580fcd9b3bec6d2f816b220dce4f6c90deebc31",
-  },
-  {
-    archive: "f4eee8e553491eb99b2dafbb010a30cec0243bac4f4b76f8a529855eec5b6f00",
-    worker: "91b6559e972b01bec966de892fbdbe8dd2fc5c6fb79b80336440b085e1cc446b",
-    renderer: "3a5964de7db1e55d1ec21b4137eae420686ff30397c4841e69abeea668a9f977",
-    executable: "83cb98a42162d129810d9bb85298a7c4ab8e12bb01f6d8719874e4c9c6663a16",
-  },
-  {
-    archive: "a730683a95d2946f79e5c9f5c2fdd2b8afa858f4e1e26918a63af311a24ca7d3",
-    worker: "4f86e3b4da4cf67a7cef6c4327b8c26abd600db614db0a32129e900fde6efd69",
-    renderer: "71a10a69ea1b8b8b5239da8799e78e5074479a89ea41016545305b97f26cfa66",
-    executable: "86c5bf1bb8c3bc67aeb2cfb770acfb19519f617844298179c530b1b764b17793",
-  },
-  {
-    archive: "35e748519f71defaab22d80de8e9ec357224541a55177ce2b5d5e9d1c695e003",
-    worker: "0aa0a5cd6907394f7d944fc6db3c6821210944b17b9b56f51c867bfb60f64272",
-    renderer: "8cf92561daa5d16aca7f0c80836312784ecffe4766dbfe52871fd85af3021bce",
-    executable: "f3dca07eb1c80051f4643b7a065ecc38d385884d7d5febcef268a7157304085f",
-  },
-  {
-    archive: "94bb7bf6112b3c96485b3db81240a83c0cbf74efc90ac723c997fc5fd9026215",
-    worker: "888095fc72efafa090e26d13048c70b34fd1a83fc3b8f9a577b3fe8f1f32e9a6",
-    renderer: "2e22888a1448f95c5bbb5e6378dd4d6f9366ba7eacbc80d35a56c91fe5b61ffb",
-    executable: "255751fe9ccad317eb2b25360a8289ee3c7ce8fef2adad83b8fd7ab4d9cbcc1e",
-  },
-  {
-    archive: "8bbbd4321491e84df3ead42595ba08b3b384488e83045ac088dcc416cada16bf",
-    worker: "bbc5fb228b1e3f540d25b9a2604f83c376ae8734e2a50b4ae8465799f4ba2475",
-    renderer: "18e6f67c497340a4a578c78e8db723ff48f0f0dc80852140f8bae9569a97b487",
-    executable: "a67da9b8a4756c76dcfb5356688262181404bae08a59894a8c6cea2713fc7c12",
-  },
-  {
-    archive: "5fd01775c68a6738db8f421f1151727e5a0cb0b129b062610e85e120e4e46a89",
-    worker: "ee6727bed0f5ce0275f2631d22f1a7f8d61fa8700aa1081ff45dba235f085a81",
-    renderer: "b8336545e60dbf937c53c082e9ceb4dfa52c1a4209c6016f16f79b0e940aa831",
-    executable: "bf978ebad99231a9ada2f08b06a566f0b0d437b21946baab8541da6861ab8d2b",
-  },
-  {
-    archive: "35e9e5b1cbb6364aed1a4f96fb96559c90ca7d9da4abfc10f48f6c3ed50dd8ab",
-    worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
-    renderer: "d88aca00ce6b2a3ee786d0f97c455aa9e9c9ef724611dac9ec0aa2e64a7d533c",
-    executable: "01dfd47c478e0c7e55cff5fa6aa2fa92882abeb623ba4dc4126b7800d10b107d",
-  },
-  {
-    archive: "04d3bae0448e22d1290a9739170203a566f86023c0e5dce224d446330f15063c",
-    worker: "6de9d9d4c0b8d57346d5c43a28ad512bbfccb3f1d9394d0161454551213e861c",
-    renderer: "5ed1548b9b3111c922a14a5e88c05e79164018f6c96905c2d914ff236794649f",
-    executable: "b6cbc5a1bd785639ef2d29f3fd9dffc08fa03b995c0118fb44f081a0adb13212",
-  },
-  {
-    archive: "4e9270f4134821b800903d069fd0c041ea8858ed7eb98ccbfa6e6e4902b1e400",
-    worker: "c567198e9a89867352563638ee2eac5d56bfbe56bea79bf22071c3faa43633f1",
-    renderer: "481e578fd2ac0359fdc2f4c7a5c15eb1d96536fee6aa444a4b232c58b6e24edb",
-    executable: "5d7891671060725896a31ae64f59395132fb791de14b6c2d65766a33b89cab69",
-  },
-  {
-    archive: "30f4f0a1607d04ab0e7042bdf47191038803c01227f1764f448ea58642fe7511",
-    worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
-    renderer: "0c028319b2327e961b767a2d1539b6451ccc31a45f1f6905e22fa94bbc713b8e",
-    executable: "25b5ea86441d54727f7da998f6d0009159c9f73cbfd327f5084fdbd4a7636a63",
-  },
-  {
-    archive: "4b4ffa7c97933f23761e268bbc99cc8077b8ad7f1a46287bd0c03a624ea8ad86",
-    worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
-    renderer: "783286fb75b1ccec2311c43aecd6d7cba7ffcf58128dca404eee825635489db0",
-    executable: "72a7ad994d033ad3c33fe75202a90a54e0e2dbce7be62fb342f1d4bf8d32cbc7",
-  },
-  {
-    archive: "5a59f18a8d3929e89f1bfd967719d53de3bad8d00c455e834e15b3cfa831622f",
-    worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
-    renderer: "25880fef714d1b49502ee15361517f083a8ea9fa14a06899f735ceea146e022f",
-    executable: "6fce322253ad8aa1182de180de7bf2e789d1c22d46e5b7fe0dd538eff4253a90",
-  },
-  {
-    archive: "f314e76934cbf76c46d4fefa17f7364394f640e9b1af6062d8d76fb910e70e4f",
-    worker: "494b513845f6e67b5820c9a82d08ab7a8507ba3b4a98e31135072fdd795aa685",
-    renderer: "8eb97e1f1018a22ecf22cd94b9b0577019fbc4c8fc60682be04a2b984018d023",
-    executable: "532db995ae818f4522943ca26be6e43cffa93cbc0be7b30a3c24333e223e5c52",
-  },
-  {
-    archive: "2462cc1ce3ee379f178456be9205d8b4191add85fd4a1153e5b3a59e378b3b12",
-    worker: "cb0220527c2c79bf87564bf180c8b025ffc4ea064bf0aa1d878c4ca9ca41bdde",
-    renderer: "a96bb0df3fe2309dc93d31e94dc3036c11b539f190f8e9246f99043e1c6d7a78",
-    executable: "6b4e7ca72dfe906fd878dd2ca90b8ee6b65872f6e23a6df2a684034f329be6ad",
-  },
-  {
-    archive: "c95d1bba66e65dd95393cb3ca192554edf40a27c9c9805528ae4f977b286a467",
-    worker: "c761533d7d905227cf3cbe3a07639b4dbf86c2607c454e4c7f2d60e53658cb0d",
-    renderer: "466f77b2d304dd38271ccefb6a54070e000f94831f23f76bb143657551e61237",
-    executable: "3b32d3ec9201e7ee5031babea57eeb866ee26210db5ed2503267b03c08dc6c29",
-  },
-  {
-    archive: "fa7aa57af4fa630fa69d3794c1c2ba6a80a7ba6c037f857372565195ee58311a",
-    worker: "4ff8fffa15ebeccc051e63ba8c460ddd194b3a2aa8f8ec1f33a5478ff9592b2d",
-    renderer: "7372b06c7103d3ebaed1f5549f14c44d7869da4b1c7cb44f5be3b911e9407744",
-    executable: "884efea0beb5fe1877a4c4da0660773b3f397e63e88794fbceb29b9295420f66",
-  },
-];
-
+// Exact PPO releases built against currentStock. Stock backups from older Steam builds are handled above.
+const previousPpo = [{
+  archive: "294484bc13f09783c3c53943a09146bec61bd59f9b307b1784812aa6ead607b0",
+  worker: "5aa359a5d9d522f03e5bcf6acb1e73b438ad996ef5c2474766ac35e579f9917c",
+  renderer: "c425c14dd8aa2ac7d26347eb231f2748c193c12a61141cd59aba2db30791a5ab",
+  executable: "a7dcf185d7828bdf49b4d0f90147b696a59aa20ca3e9990a113eb137062d6028",
+}];
 const backups = { archive: "backupArchive", worker: "backupWorker", executable: "backupExecutable" };
 
 function steamGamePath() {

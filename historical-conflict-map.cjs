@@ -1345,7 +1345,7 @@ function gpmPositionHistoricalMap(globe) {
         const top = (y - 5).toFixed(1);
         button.style.width = length.toFixed(1) + "px";
         button.style.height = "10px";
-        button.style.transform = `translate3d(${left}px, ${top}WR, 0) rotate(${heading.toFixed(1)}deg)`;
+        button.style.transform = `translate3d(${left}px, ${top}px, 0) rotate(${heading.toFixed(1)}deg)`;
         button.hidden = false;
         label.el.hidden = false;
         const areaKey = id + ":" + item.id;

@@ -2,6 +2,7 @@ const gpmFrontlineColors = ["blue", "amber", "green", "violet", "red", "cyan"];
 const gpmFrontlineModes = ["hold", "advance"];
 const gpmFrontlineSectorKm = 95;
 const gpmFrontlineArrowKm = 90;
+const gpmFrontlineLiveLineCache = new WeakMap();
 
 function gpmFrontlineArmyRoot(plans, plan) {
   while (plan?.afterId) plan = plans.find(item => item.id === plan.afterId);
@@ -263,9 +264,15 @@ function gpmFrontlineClearOrders(sim, plan) {
   }
 }
 
-function gpmFrontlineClose(sim, war) {
-  if (war.gpmFrontline?.length) for (const plan of war.gpmFrontline) gpmFrontlineClearOrders(sim, plan);
-  delete war.gpmFrontline;
+function gpmFrontlineClose(sim, war, owner = null) {
+  const remaining = [];
+  for (const plan of war.gpmFrontline || []) {
+    if (owner !== null && plan.owner !== owner) remaining.push(plan);
+    else gpmFrontlineClearOrders(sim, plan);
+  }
+  if (remaining.length) war.gpmFrontline = remaining;
+  else delete war.gpmFrontline;
+  gpmFrontlineLiveLineCache.delete(war);
 }
 
 function gpmFrontlineSuspend(sim, war) {
@@ -275,6 +282,7 @@ function gpmFrontlineSuspend(sim, war) {
     plan.resumeRequired = true;
     gpmFrontlineClearOrders(sim, plan);
   }
+  gpmFrontlineLiveLineCache.delete(war);
 }
 
 function gpmFrontlineChange(sim, country, input, operation) {
@@ -311,7 +319,7 @@ function gpmFrontlineChange(sim, country, input, operation) {
   } else {
     war.gpmFrontline = record ? plans.map(item => item === record ? plan : item) : [...plans, plan];
   }
-  if (record) war._gpmFrontlineLiveLines?.delete(record.id);
+  gpmFrontlineLiveLineCache.delete(war);
   if (wasActive && !wholeArmy) gpmFrontlineClearOrders(sim, record);
   if (operation === "mode" && record.mode === "hold") {
     for (const id of record.formationIds) {
@@ -354,6 +362,13 @@ function gpmFrontlinePlanState(sim, war, plan) {
   return plan.mode === "advance" ? "advancing" : "holding";
 }
 
+function gpmFrontlineCachedLines(war) {
+  const cached = gpmFrontlineLiveLineCache.get(war);
+  const field = war.field;
+  return cached && cached.field === field && cached.generation === field?._gen && cached.tick === field?._tick
+    ? cached.lines : undefined;
+}
+
 function gpmFrontlineView(sim, input) {
   const owner = sim.playerKey;
   const eligibleWars = [...sim.conflicts?.values?.() || []].filter(war => gpmFrontlineWar(sim, war, owner));
@@ -363,6 +378,7 @@ function gpmFrontlineView(sim, input) {
   if (!war) return { wars, warId: null, day: sim.day ?? 0, formations: [], stations: [], contacts: [], plans: [], generals: [] };
   const plans = (war.gpmFrontline || []).filter(plan => plan.owner === owner);
   const active = gpmFrontlineActivePlans(war, owner);
+  const liveLines = gpmFrontlineCachedLines(war);
   const side = war.participants[owner].side;
   const formations = Ve(sim, sim.countries.get(owner)).filter(unit => unit.domain === "land" && unit.type !== "reserve").map(unit => {
     const assigned = active.find(plan => plan.formationIds.includes(unit.id)) ||
@@ -383,8 +399,7 @@ function gpmFrontlineView(sim, input) {
       const slots = war.frontSlots?.[side];
       const activePlan = active.includes(plan);
       const positions = activePlan ? plan.formationIds.map(id => slots?.[id]?.ll).filter(eoe) : [];
-      const tracked = (Object.is(war._gpmFrontlineLiveLineGeneration, war.field?._gen) && war._gpmFrontlineLiveLines?.get(plan.id)) ||
-        gpmFrontlineTrackedLine(war, plan, positions);
+      const tracked = liveLines?.get(plan.id) || gpmFrontlineTrackedLine(war, plan, positions);
       const displayArrow = !plan.completed && activePlan && gpmFrontlineDisplayArrow(sim, war, plan.arrow, tracked);
       return { ...summary, armyId: army.id, name: army.name, slot: army.slot, generalId: army.generalId,
         arrow: plan.completed ? [] : plan.arrow, status: gpmFrontlinePlanState(sim, war, plan),
@@ -502,7 +517,7 @@ function gpmFrontlineComplete(sim, war) {
     plan.completed = true;
     plan.mode = "hold";
     plan.holdLineUnavailable = !line;
-    war._gpmFrontlineLiveLines?.delete(plan.id);
+    gpmFrontlineLiveLineCache.get(war)?.lines.delete(plan.id);
     gpmFrontlineClearOrders(sim, plan);
     const successor = war.gpmFrontline.find(item => item.afterId === plan.id);
     if (successor) {
@@ -519,8 +534,9 @@ function gpmFrontlineSlots(sim, war, side, units, stations, defaultSlots, staffO
   const targetIds = new Set(active.flatMap(plan => plan.formationIds));
   const available = new Set(stations.map(station => station.id));
   const plannedSlots = {};
-  war._gpmFrontlineLiveLines = new Map();
-  war._gpmFrontlineLiveLineGeneration = war.field?._gen;
+  const lines = new Map();
+  const field = war.field;
+  gpmFrontlineLiveLineCache.set(war, { field, generation: field?._gen, tick: field?._tick, lines });
   for (const plan of active) {
     const group = units.filter(unit => unit.owner === plan.owner && plan.formationIds.includes(unit.id));
     let ranked = gpmFrontlineRank(plan, stations).filter(({ station }) => available.has(station.id));
@@ -551,7 +567,7 @@ function gpmFrontlineSlots(sim, war, side, units, stations, defaultSlots, staffO
     }
     const positions = group.map(unit => plannedSlots[unit.id]?.ll).filter(eoe);
     const tracked = gpmFrontlineTrackedLine(war, plan, positions);
-    war._gpmFrontlineLiveLines.set(plan.id, tracked || []);
+    lines.set(plan.id, tracked || []);
   }
   const ordinary = units.filter(unit => !(unit.owner === sim.playerKey && targetIds.has(unit.id)));
   for (const unit of ordinary) {

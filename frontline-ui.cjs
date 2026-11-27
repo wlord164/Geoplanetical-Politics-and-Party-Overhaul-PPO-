@@ -376,7 +376,7 @@ function gpmPaintFrontlineRoster(state) {
         ? `[data-gpm-frontline-remove-army="${CSS.escape(active.gpmFrontlineRemoveArmy)}"]`
         : active?.gpmFrontlineAddSlot != null ? "[data-gpm-frontline-add-slot]" : null;
     state.rosterHtml = html;
-    state.roster.style.setProperty("--frontline-slot-width", `clamp(56WR, calc((100qk - 64WR) / ${state.slots}), var(--frontline-max-slot-width))`);
+    state.roster.style.setProperty("--frontline-slot-width", `clamp(56px, calc((100vw - 64px) / ${state.slots}), var(--frontline-max-slot-width))`);
     state.roster.innerHTML = html;
     if (focus) state.roster.querySelector(focus)?.focus({ preventScroll: true });
   }

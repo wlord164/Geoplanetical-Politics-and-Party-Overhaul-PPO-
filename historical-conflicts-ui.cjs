@@ -1243,7 +1243,7 @@ function patchHistoricalConflictsRenderer(source, replaceOnce) {
   const newsHeadline = 'case"war.player_declared":return o("news.war.head",{a:a(t.playerKey),b:a(t.enemyKey)});';
   js = replaceOnce(js, newsHeadline, 'case"military.support_activated":return `${a(t.donorKey)} agreed to support ${a(t.recipientKey)}`;case"military.support_refused":return t.modeId==="offer"?`${a(t.recipientKey)} declined support from ${a(t.donorKey)}`:`${a(t.donorKey)} declined a support request from ${a(t.recipientKey)}`;' + newsHeadline);
   const refresh = '_refreshTabUnsafe(e=null){gpmRefreshRegionalMap(this);';
-  return replaceOnce(js, refresh, refresh + 'if(this.activeModule==="military"&&this._subSel.military==="historical-conflicts")gpmHistoricalConflictsView(K("content-body")?.querySelector("[data-gpm-history]"),this,this.sim);');
+  return replaceOnce(js, refresh, refresh + 'if(this.activeModule==="military"&&this._subSel.military==="historical-conflicts")gpmHistoricalConflictsView(document.getElementById("content-body")?.querySelector("[data-gpm-history]"),this,this.sim);');
 }
 
 module.exports = { patchHistoricalConflictsRenderer };

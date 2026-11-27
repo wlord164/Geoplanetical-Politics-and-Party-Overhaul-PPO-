@@ -518,6 +518,7 @@ function gpmUprisingLeaveNativeWar(sim, war, country) {
     }
     // Abort sorties involving the departing country, then withdraw just its assigned formations.
     hSt(sim, war, sim.day, "withdrawn", countryKey);
+    gpmFrontlineClose(sim, war, countryKey);
     e8t(sim, war.id, null, countryKey);
     const coalition = war.coalitions[side];
     const principalLeft = coalition.principalKey === countryKey;
